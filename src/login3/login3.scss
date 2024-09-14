@@ -1,0 +1,234 @@
+.login3{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &_logo{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &_image{
+            width: 324px !important;
+            height: 140px !important;
+        }
+        &_title{            
+            font-family: Open Sans;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 36px;
+            text-align: center;
+            margin: 0px !important;
+            margin-top: 16px !important;
+
+
+        }
+
+    }
+    &_form{
+        width: 540px;
+        height: 760px;
+        
+        border-radius: 20px ;
+           
+        margin-top: 24px;
+    
+        box-shadow: -2px 2px 20px 0px #0000001F;
+        
+        &-wrap{
+            padding: 32px 58px 32px 58px;
+        }
+        &-header{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            &-content{
+                color: #3B82F6;
+                width: 288px;
+                height: 48px;               
+                //styleName: SemiBold/36;
+                font-family: Open Sans;
+                font-size: 36px;
+                font-weight: 600;
+                line-height: 48px;
+                text-align: center;
+                margin: 0px !important;
+
+            }
+        }
+        &-name{
+            margin-top: 32px;
+            &-label{
+                //styleName: SemiBold/14;
+                font-family: Open Sans;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 22px;
+                margin-bottom: 0px;
+               
+            }
+            &-input{
+                
+                
+                height: 48px;
+                padding: 12px 12px 12px 20px;
+                gap: 0px;
+                border-radius: 8px ;
+                border: 1px 0px 0px 0px;
+                opacity: 0px;
+                margin-top: 8px;
+                border: 1px solid #C7C7C7
+                
+
+
+            }
+        }
+        &-email{
+                       
+           
+            &-label{
+                //styleName: SemiBold/14;
+                
+                
+                
+                font-family: Open Sans;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 22px;
+               
+                margin: 0px !important;
+                margin-top: 20px !important;
+
+
+            }
+            &-input{
+               
+                padding: 12px 12px 12px 20px;
+               
+                border-radius: 8px ;
+                border: 1px ;
+                background: #F1F3F6;    
+                margin-top: 8px;
+                border: 1px solid #C7C7C7
+                
+
+            }
+
+        }
+        &-pw{
+                       
+           
+            &-label{
+                //styleName: SemiBold/14;
+                
+                gap: 0px;
+                
+                font-family: Open Sans;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 22px;
+                text-align: left;
+                margin: 0px !important;
+                margin-top: 20px !important;
+
+
+            }
+            &-input{
+                width: 424px;
+                height: 48px;
+                padding: 12px 12px 12px 20px;
+                gap: 0px;
+                border-radius: 8px ;
+                border: 1px ;
+                 
+                margin-top: 8px;
+                border: 1px solid #C7C7C7
+                
+
+            }&-label2{
+                //styleName: Regular/14;
+                font-family: Open Sans;
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 22px;
+                text-align: left;
+                color:  #646464;
+                margin-top: 4px;
+                margin-bottom: 0px;
+
+
+            }
+
+        }
+        &-repw{
+                       
+           
+            &-label{
+                //styleName: SemiBold/14;
+                
+                gap: 0px;
+                
+                font-family: Open Sans;
+                font-size: 14px;
+                font-weight: 600;
+                line-height: 22px;
+                text-align: left;
+                margin: 0px !important;
+                margin-top: 20px !important;
+
+
+            }
+            &-input{
+                width: 424px;
+                height: 48px;
+                padding: 12px 12px 12px 20px;
+                gap: 0px;
+                border-radius: 8px ;
+                border: 1px ;
+                 
+                margin-top: 8px;
+                border: 1px solid #C7C7C7
+                
+
+            }
+
+        }
+        &-login{
+            margin-top: 32px;                  
+            border-radius: 8px ;
+            
+            &-btn{
+                background: #3B82F6;
+                color: #FFFFFF;
+
+                //styleName: Bold/16;
+                width: 424px;
+                height: 48px;
+                font-family: Open Sans;
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 24px;
+                text-align: center;
+ 
+            }
+        }
+        &-p1{
+            margin-top: 32px;
+            margin-bottom: 0px;
+        }
+        &-hr{
+            margin-top: 24px;
+            margin-bottom: 0px;
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ccc, transparent);
+            margin: 20px 0;
+        }
+        &-p2{
+            margin-top: 24px;
+
+        }
+       
+       
+
+
+    }
+}

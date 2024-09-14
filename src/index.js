@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import Login2 from './login2/login2';
+import Login3 from './login3/login3';
+import Login from './login/login';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root') );
 root.render(
   <React.StrictMode>
-    <App />
+    <Login3 />
   </React.StrictMode>
 );
 
