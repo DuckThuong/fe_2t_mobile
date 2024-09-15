@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Login2 from './login2/login2';
 import Login3 from './login3/login3';
