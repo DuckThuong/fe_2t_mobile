@@ -5,7 +5,7 @@ import { Button } from "antd";
 import React from "react";
 import './login3.scss'
 
-const Login3 = () =>{
+const SignIn3 = () =>{
     return(
         <div className="login3">
             <div className="login3_logo">
@@ -60,4 +60,4 @@ const Login3 = () =>{
         </div>
     )
 };
-export default Login3;
+export default SignIn3;

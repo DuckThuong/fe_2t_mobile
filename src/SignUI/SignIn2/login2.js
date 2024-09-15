@@ -7,7 +7,7 @@ import React from "react";
 import './login2.scss'
 
 
-const login2 = () =>{
+const SignIn2 = () =>{
     return(
         <div className="login2">
             <div className="login2_logo">
@@ -40,7 +40,7 @@ const login2 = () =>{
                  
                     <p className="login2_form-p1">
                         ログインすることにより、 当社の<a href="/">利用規約</a>および <br/>
-                        <a href="/"> プライバシー規約</a> に同意したとみなされます。
+                        <a href="/">プライバシー規約</a> に同意したとみなされます。
                         
                     </p>
                     <div className="login2_form-div">
@@ -56,4 +56,4 @@ const login2 = () =>{
         </div>
     )
 };
-export default login2;
+export default SignIn2;
