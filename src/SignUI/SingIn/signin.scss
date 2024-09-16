@@ -1,4 +1,4 @@
-.login2{
+.signin{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +25,7 @@
     }
     &_form{
         width: 540px;
-        height: 524x;
+        height: 470px;
         
         border-radius: 20px ;
            
@@ -42,7 +42,7 @@
             align-items: center;
             &-content{
                 color: #3B82F6;
-                width: 390px;
+                width: 288px;
                 height: 48px;               
                 //styleName: SemiBold/36;
                 font-family: Open Sans;
@@ -53,23 +53,6 @@
                 margin: 0px !important;
 
             }
-        }
-        &-title{
-            margin-top: 32px;
-            width: 396px;
-            height: 48px;
-           
-            &-content{
-                    //styleName: Regular/16;
-                font-style: Open Sans;
-                font-size: 16px;
-                font-weight: 400;
-                line-height: 24px;
-                color: #343434;
-            
-
-            }
-
         }
         &-email{
                        
@@ -85,7 +68,7 @@
                 line-height: 22px;
                 text-align: left;
                 margin: 0px !important;
-                margin-top: 32px !important;
+                margin-top: 48px !important;
 
 
             }
@@ -103,8 +86,44 @@
             }
 
         }
-
-        &-login2{
+        // &-pw{
+        //     margin-top: 20px;
+        //     width: Hug (424px)px;
+        //     height: Hug (78px)px;
+        //     top: 210px;
+        //     left: 58px;
+        //     gap: 8px;
+        //     opacity: 0px;
+        //     &-min{
+        //         font-family: Open Sans;
+        //         font-size: 14px;
+        //         font-weight: 600;
+        //         line-height: 22px;
+        //         display: flex;
+                
+                
+        //         position: relative;
+        //         &-label{
+        //             font-family: Open Sans;
+        //             font-size: 14px;
+        //             font-weight: 400;
+        //             line-height: 22px;
+        //             text-align: left;
+                    
+    
+    
+        //         }
+        //         &-a{
+        //             color: #3B82F6;
+        //             position: absolute;
+        //             right: 0px;
+    
+        //         }
+    
+        //     }
+            
+        // }
+        &-login{
             margin-top: 32px;                  
             border-radius: 8px ;
             
@@ -139,24 +158,38 @@
             text-align: left;
             color: #343434;
             margin-top: 32px;
-            margin-bottom: 0px !important;
 
         }
-        &-div{
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        &-hr{
             margin-top: 24px;
-            &-a1{
-                //styleName: Regular/16;
-                font-family: Open Sans;
-                font-size: 16px;
-                font-weight: 400;
-                line-height: 24px;
-                text-align: left;
-                color:#3B82F6 ;
-            }
+            // border: 1px solid;
+            
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #ccc, transparent);
+            margin: 20px 0;
+
+            
+
+
+
+
         }
-       
+        &-p2{
+            margin-top: 24px;
+            
+            height: 24px;
+            font-family: Open Sans;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            text-align: left;
+            color: #343434;
+
+
+
+        }
+
+
     }
 }

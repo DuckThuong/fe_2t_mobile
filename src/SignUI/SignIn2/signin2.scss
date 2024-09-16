@@ -1,4 +1,4 @@
-.login{
+.signin{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -25,7 +25,7 @@
     }
     &_form{
         width: 540px;
-        height: 470px;
+        height: 524x;
         
         border-radius: 20px ;
            
@@ -42,7 +42,7 @@
             align-items: center;
             &-content{
                 color: #3B82F6;
-                width: 288px;
+                width: 390px;
                 height: 48px;               
                 //styleName: SemiBold/36;
                 font-family: Open Sans;
@@ -53,6 +53,23 @@
                 margin: 0px !important;
 
             }
+        }
+        &-title{
+            margin-top: 32px;
+            width: 396px;
+            height: 48px;
+           
+            &-content{
+                    //styleName: Regular/16;
+                font-style: Open Sans;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                color: #343434;
+            
+
+            }
+
         }
         &-email{
                        
@@ -68,7 +85,7 @@
                 line-height: 22px;
                 text-align: left;
                 margin: 0px !important;
-                margin-top: 48px !important;
+                margin-top: 32px !important;
 
 
             }
@@ -86,44 +103,8 @@
             }
 
         }
-        // &-pw{
-        //     margin-top: 20px;
-        //     width: Hug (424px)px;
-        //     height: Hug (78px)px;
-        //     top: 210px;
-        //     left: 58px;
-        //     gap: 8px;
-        //     opacity: 0px;
-        //     &-min{
-        //         font-family: Open Sans;
-        //         font-size: 14px;
-        //         font-weight: 600;
-        //         line-height: 22px;
-        //         display: flex;
-                
-                
-        //         position: relative;
-        //         &-label{
-        //             font-family: Open Sans;
-        //             font-size: 14px;
-        //             font-weight: 400;
-        //             line-height: 22px;
-        //             text-align: left;
-                    
-    
-    
-        //         }
-        //         &-a{
-        //             color: #3B82F6;
-        //             position: absolute;
-        //             right: 0px;
-    
-        //         }
-    
-        //     }
-            
-        // }
-        &-login{
+
+        &-signin{
             margin-top: 32px;                  
             border-radius: 8px ;
             
@@ -158,38 +139,24 @@
             text-align: left;
             color: #343434;
             margin-top: 32px;
+            margin-bottom: 0px !important;
 
         }
-        &-hr{
+        &-div{
+            width: 100%;
+            display: flex;
+            justify-content: center;
             margin-top: 24px;
-            // border: 1px solid;
-            
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #ccc, transparent);
-            margin: 20px 0;
-
-            
-
-
-
-
+            &-a1{
+                //styleName: Regular/16;
+                font-family: Open Sans;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                text-align: left;
+                color:#3B82F6 ;
+            }
         }
-        &-p2{
-            margin-top: 24px;
-            
-            height: 24px;
-            font-family: Open Sans;
-            font-size: 16px;
-            font-weight: 400;
-            line-height: 24px;
-            text-align: left;
-            color: #343434;
-
-
-
-        }
-
-
+       
     }
 }
