@@ -12,6 +12,7 @@ const options = [
   ];
 
 const Login = () =>{
+  //Bấm click vào nút đăng kí -> nhảy được sang màn đăng kí.
     return(
         <div className="login">
             <div className="login_logo">

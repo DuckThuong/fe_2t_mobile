@@ -8,6 +8,7 @@ import './signin2.scss'
 
 
 const signin2 = () =>{
+    //Lấy được email từ trang trước và lưu lại được mật khẩu và email để nhập vào trang tiếp theo.
     return(
         <div className="signin2">
             <div className="signin2_logo">

@@ -3,10 +3,12 @@ import { Form } from "antd";
 import { Input } from "antd";
 import { Button } from "antd";
 import { Checkbox } from "antd";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import "./signin.scss";
+import { useLocation } from "react-router-dom";
 const options = [{ label: "Bạn tin tôi đánh bạn không", value: "1" }];
 const SignIn = () => {
+  //Nhập email vào input và lưu được email lại để truyền sang trang tiếp theo.
   return (
     <div className="signin">
       <div className="signin_logo">

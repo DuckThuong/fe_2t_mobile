@@ -4,6 +4,7 @@ import React from "react";
 import { Suspense } from "react";
 
 export const SuspenseWrapper = (props) => {
+  //Sử lý trạng thái loadding cho trang web.
   return (
     <Suspense
       key={"suspense-" + random(10)}

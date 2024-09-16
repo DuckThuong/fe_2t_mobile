@@ -6,6 +6,8 @@ import React from "react";
 import './signin3.scss'
 
 const Signin3 = () =>{
+    //Tự động fill email và mật khẩu đã lưu từ trang trước vào input và bắt lỗi đúng mật khẩu.\
+    //Cái button bên dưới thì link trở lại về màn đăng nhập.
     return(
         <div className="signin3">
             <div className="signin3_logo">
