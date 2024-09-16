@@ -25,17 +25,7 @@ const SignIn = () => {
             <p className="login_form-email-label">Eメールアドレス</p>
             <Input className="login_form-email-input" />
           </div>
-          {/* <div className="login-form-pw">
-                        <div className="login_form-pw-min">
-                             <p className="login_form-pw-min-label">Mật khẩu</p>
-                             <a href="/" className="login_form-pw-min-a">Bạn quên mật khẩu</a>
 
-                        </div>
-                        
-                       
-                        <Input className="login_form-input-pw" placeholder="nhập mật khẩu"/>
-
-                    </div> */}
           <div className="login_form-login">
             <Button className="login_form-login-btn">登録する</Button>
           </div>
@@ -47,15 +37,6 @@ const SignIn = () => {
           <p className="login_form-p2">
             すでにアカウントをお持ちですか?  <a href="/">次へ</a>
           </p>
-          {/* <div>
-                        <Checkbox.Group 
-                        className="login_form-checkbox" options={options}/>
-                        
-                    </div>
-                    <div className="div_button_signin">
-                        
-                        <Button  className="btn_button-SIGNIN">SIGN IN</Button>
-                    </div> */}
         </Form>
       </div>
     </div>

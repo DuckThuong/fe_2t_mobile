@@ -15,7 +15,6 @@ const SignIn3 = () =>{
             </div>
             <div className="login3_form">
                 <Form className="login3_form-wrap">
-                
                     <div className="login3_form-header">
                         <p className="login3_form-header-content">アカウントを作成</p>
 
@@ -40,8 +39,6 @@ const SignIn3 = () =>{
                         <Input className="login3_form-repw-input" />
                         
                     </div>
-                    
-                    
                     <div className="login3_form-login">
                         
                         <Button  className="login3_form-login-btn">登録する</Button>
