@@ -3,7 +3,7 @@ import RoutesApp from "../routers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 
-export const App = () => {
+const App = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -25,3 +25,4 @@ export const App = () => {
     </QueryClientProvider>
   );
 };
+export default App;

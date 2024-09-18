@@ -4,7 +4,7 @@ import React from "react";
 import "./login.scss";
 import FormWrap from "../Components/Form/FormWrap/index";
 import { FormInput } from "../Components/Form/FormInput/index";
-import { CustomButton } from '../Components/buttons/CustomButton';
+import { CustomButton } from "../Components/buttons/CustomButton";
 const options = [{ label: "ログインしたままにする", value: "1" }];
 
 const Login = () => {
@@ -27,33 +27,45 @@ const Login = () => {
             <p className="login_form-email-label">Eメールまたは携帯電話番号</p>
             <FormInput
               name={"email"}
-              className="login_form-email-input"
-              placeholder="Eメールまたは携帯電話番号"
+              formItemProps={{
+                className: "login_form-email-input",
+              }}
             />
           </div>
           <div className="login-form-pw">
             <p className="login_form-pw-label">パスワード</p>
             <FormInput
               name={"password"}
-              className="login_form-pw-input"
-              placeholder="パスワード"
+              formItemProps={{
+                className: "login_form-pw-input",
+              }}
             />
           </div>
 
           <div className="login_form-login">
-            <CustomButton content="ログイン" className="login_form-login-btn"/>
+            <CustomButton
+              content="ログイン"
+              buttonProps={{
+                className: "login_form-login-btn",
+              }}
+            />
           </div>
 
           <p className="login_form-p1">
-            ●●●の<a>利用規約</a>と<a>プライバシー規約に同意</a>いただける場
+            ●●●の<a href="/">利用規約</a>と
+            <a href="/">プライバシー規約に同意</a>
+            いただける場
             <br />
             合はログインしてください。
           </p>
           <Checkbox.Group className="login_form-cb" options={options} />
           <div className="login_form-btnlogin">
-            <CustomButton content='今すぐ、ご登録ください。' className="login_form-btnlogin-btn"/>
-              
-          
+            <CustomButton
+              content="今すぐ、ご登録ください。"
+              buttonProps={{
+                className: "login_form-btnlogin-btn",
+              }}
+            />
           </div>
         </FormWrap>
       </div>
