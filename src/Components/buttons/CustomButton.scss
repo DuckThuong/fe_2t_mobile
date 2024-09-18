@@ -1,0 +1,87 @@
+@import '../../styles/mixins';
+@import '../../styles/variables';
+
+.custom-button {
+  &__default {
+    border-radius: 8px !important;
+    font-size: 16px;
+    height: 48px;
+    color: $text_checkbox_color;
+  }
+
+  &__link {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+    color: $primary_color !important;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: none;
+    border-radius: unset !important;
+    @include sm {
+      font-size: 14px !important;
+    }
+
+    //&-underline {
+    //  &::before {
+    //    content: '';
+    //    position: absolute;
+    //    top: 20px;
+    //    display: block;
+    //    width: 100%;
+    //    height: 1px;
+    //    background: #3b82f6;
+    //    //margin: 16px 0;
+    //  }
+    //}
+  }
+
+  &__cancel {
+    background: $white-color;
+    color: $text_checkbox_color;
+    font-weight: 700;
+    border: 1px solid $bg_select;
+  }
+
+  &__primary {
+    background: $primary_color;
+    color: $white_color;
+    font-weight: 700;
+    border: 1px solid $primary_color;
+  }
+
+  &__text {
+    background: transparent !important;
+    color: $text_header_modal_color;
+    font-weight: 600;
+    height: auto !important;
+    font-size: 14px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: transparent !important;
+      color: $primary_color !important;
+    }
+  }
+
+  &__styled {
+    .ant-btn {
+      height: 46px;
+      padding: 12px;
+      border: 1px solid $primary_color;
+      background: $primary_color;
+      color: $white-color;
+      font-size: 16px !important;
+      font-weight: 700 !important;
+      line-height: 1;
+    }
+
+    &-disable {
+      background: $disable_color !important;
+      border-color: $disable_color !important;
+    }
+  }
+}

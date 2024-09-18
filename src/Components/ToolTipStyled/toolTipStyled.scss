@@ -1,0 +1,14 @@
+@import '../../styles/variables';
+@import '../../styles/mixins.scss';
+
+.tool-tip-styled {
+  &__container {
+  }
+
+  &__popup {
+    max-width: 500px;
+    @include sm {
+      max-width: 300px;
+    }
+  }
+}

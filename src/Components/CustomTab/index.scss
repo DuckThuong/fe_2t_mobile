@@ -1,0 +1,54 @@
+@import '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
+.tab-custom {
+  .ant-tabs-nav-wrap {
+    background: $light_grayish_blue_color;
+    .ant-tabs-nav-list {
+      .ant-tabs-tab {
+        display: flex;
+        padding: 8px 20px;
+        justify-content: center;
+        align-items: center;
+        border-right: 1px solid $silver_color;
+        background: $light_grayish_blue_color;
+        margin: 0 !important;
+        &-active {
+          border-top: 4px solid $primary_color;
+          background: $white_color;
+        }
+        &:nth-child(5) {
+          border-right: unset !important;
+        }
+        .in-tab {
+          gap: 2px;
+          display: flex;
+          &-number {
+            color: $orange_color;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px;
+            @include md {
+              font-size: 12px;
+              font-style: normal;
+              line-height: 150%;
+            }
+          }
+          &-text {
+            color: $text_title_color;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px;
+            text-shadow: none !important;
+            @include md {
+              font-size: 12px;
+              font-style: normal;
+              line-height: 150%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

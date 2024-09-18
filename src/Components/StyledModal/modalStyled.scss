@@ -1,0 +1,66 @@
+@import '../../styles/variables';
+@import '../../styles/mixins.scss';
+
+.styled-modal__popup {
+  // height: 600px !important;
+  .ant-modal-title {
+    color: $text_header_modal_color;
+    font-family: $font_primary;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    @include sm {
+      font-size: 16px;
+    }
+  }
+
+  .ant-modal-close {
+    top: 22px;
+    right: 28px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .ant-modal-content {
+    padding: 0;
+    border-radius: 0;
+  }
+
+  .ant-modal-header {
+    border-bottom: 1px solid $border_color;
+    padding: 20px 32px 23px 32px !important;
+    margin-bottom: 0 !important;
+    @include sm {
+      padding: 20px !important;
+    }
+  }
+
+  .ant-modal-footer {
+    padding: 20px 32px 23px 32px !important;
+    border-top: 1px solid $border_color;
+  }
+
+  .ant-modal-body {
+    // max-height: 600px;
+    padding: 24px 32px;
+    // overflow-y: scroll;
+    /* width */
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: #dbdddf;
+      border-radius: 8px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: #00297a;
+      border-radius: 8px;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+@import '../../styles/variables';
+@import '../../styles/mixins.scss';
+
+.tabs-detail-shipment {
+  &__container {
+    .ant-tabs-nav-wrap {
+      padding: 0;
+      background: #eef0f4;
+      .ant-tabs-tab {
+        border-radius: 0px !important;
+        height: 40px;
+        border-right: 1px solid $silver_color;
+        color: $text_header_modal_color;
+        padding: 8px 20px;
+        margin: 0 !important;
+
+        @include sm {
+          padding: 8px 10px;
+        }
+
+        &:first-child {
+          margin: 0;
+        }
+        @include sm {
+          padding: 8px 10px;
+        }
+        &:last-child {
+          @include sm {
+            border-right: none !important ;
+          }
+        }
+
+        .ant-tabs-tab-btn {
+          color: $text_header_modal_color !important;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 24px;
+          text-shadow: unset !important;
+
+          @include sm {
+            font-size: 12px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .ant-tabs-nav {
+      margin-bottom: 0 !important;
+
+      &:before {
+        content: unset !important;
+      }
+    }
+
+    .ant-tabs-ink-bar {
+      margin-top: 4px;
+      background: $primary_color !important;
+    }
+
+    .ant-tabs-tab-active {
+      border-right: 0 !important;
+      border-left: 0 !important;
+      background-color: #fff;
+      border-top: 4px solid #3b82f6 !important;
+    }
+  }
+}

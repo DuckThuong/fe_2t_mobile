@@ -1,0 +1,11 @@
+@import '../../styles/variables.scss';
+
+.custom__col-wrap {
+  &-fit-content {
+    flex: unset !important;
+  }
+
+  &-scroll {
+    overflow: auto;
+  }
+}

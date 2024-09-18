@@ -1,0 +1,54 @@
+@import '../../styles/variables.scss';
+
+.collapse-custom {
+  &__container {
+    border: unset !important;
+    background-color: transparent !important;
+    align-items: center;
+
+    .ant-collapse-item {
+      border-bottom: 0 !important;
+    }
+
+    .ant-collapse-header {
+      padding: 0 !important;
+      border-radius: unset !important;
+
+      .ant-collapse-expand-icon {
+        padding-inline-end: 0 !important;
+        padding-inline-start: 0 !important;
+        transform: rotate(-90deg) !important;
+        transition: transform 300ms;
+      }
+
+      .ant-collapse-header-text {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 18px;
+        color: $text_title_color;
+      }
+    }
+
+    .ant-collapse-item-active {
+      .ant-collapse-expand-icon {
+        transform: rotate(0deg) !important;
+      }
+    }
+
+    .ant-collapse-content {
+      border-top: unset !important;
+
+      .ant-collapse-content-box {
+        padding: 12px 0 0 0 !important;
+      }
+    }
+  }
+
+  &__remove-rotate {
+    .ant-collapse-header {
+      .ant-collapse-expand-icon {
+        transform: unset !important;
+      }
+    }
+  }
+}
