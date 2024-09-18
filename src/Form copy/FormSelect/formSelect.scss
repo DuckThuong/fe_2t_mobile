@@ -1,0 +1,143 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.form__select {
+  .ant-select {
+    height: 48px;
+
+    .ant-select-selector {
+      height: 48px;
+      //28737
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid $border_color !important;
+      box-shadow: unset !important;
+      background: $bg_select;
+
+      &:focus-within {
+        border-color: $primary_color;
+      }
+    }
+  }
+
+  .ant-select-selection-search-input {
+    height: 48px;
+  }
+
+  .ant-select-selection-item {
+    line-height: 1.4;
+    font-size: 16px;
+    color: $text_title_color;
+    @include sm {
+      font-size: 14px;
+    }
+  }
+
+  .ant-select-selection-placeholder {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20px;
+    @include sm {
+      font-size: 14px;
+    }
+  }
+
+  .ant-form-item-required {
+    flex-direction: row-reverse;
+    margin-left: -10px !important;
+
+    &::before {
+      margin-right: 0;
+      margin-left: 5px;
+    }
+
+    &::after {
+      position: unset !important;
+      content: '' !important;
+    }
+  }
+
+  .ant-form-item-has-error {
+    .ant-select-selector {
+      border: 1px solid $error_color !important;
+    }
+  }
+
+  .ant-form-item-label {
+    height: 30px !important;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+
+    label {
+      font-size: 14px !important;
+      display: flex;
+      float: left;
+      font-weight: 600;
+      color: $text_title_color;
+      &:after {
+        content: none;
+      }
+    }
+  }
+
+  // multiple
+  .ant-select-multiple {
+    .ant-select-selector {
+      padding: 8px 12px;
+
+      .ant-select-selection-overflow {
+        height: auto;
+        // margin-top: -5px;
+
+        margin-top: -4px;
+      }
+
+      .ant-select-selection-search-input {
+        height: 22px !important;
+      }
+
+      .ant-select-selection-search {
+        margin-left: 0 !important;
+      }
+    }
+
+    .ant-select-selection-item {
+      margin-top: 0 !important;
+      background-color: #e9f5fd;
+      margin-bottom: 0;
+      color: $text_title_color;
+    }
+
+    .ant-checkbox-wrapper {
+      display: none;
+    }
+
+    .ant-select-selection-item-content {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .ant-select-selection-item-remove {
+      svg {
+        path {
+          fill: #292f33;
+        }
+      }
+    }
+  }
+}
+
+.form__select {
+  &-select-popup-select {
+    .rc-virtual-list-scrollbar-thumb {
+      background-color: #00297a !important;
+      width: 4px !important;
+    }
+
+    .rc-virtual-list-scrollbar {
+      display: block !important;
+    }
+  }
+}

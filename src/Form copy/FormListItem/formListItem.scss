@@ -1,0 +1,39 @@
+@import '../../../styles/variables';
+
+.form-list-item {
+  &__btn-add {
+    text-align: left;
+  }
+
+  &__input {
+    .ant-input {
+      background: $bg_select;
+      border-color: $border_color;
+    }
+  }
+
+  &__input-number {
+    .ant-form-item-control-input-content {
+      background: $bg_select;
+      border-color: $border_color;
+      input {
+        background: $bg_select;
+        border-color: $border_color;
+      }
+    }
+  }
+
+  &__radio {
+    .ant-radio {
+      .ant-radio-inner {
+        background-color: $white-color;
+        border-width: 2px;
+
+        &::after {
+          background-color: $primary_color;
+          transform: scale(0.5);
+        }
+      }
+    }
+  }
+}

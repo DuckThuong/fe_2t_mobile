@@ -1,0 +1,72 @@
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
+.radio__form {
+  &-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &-radio {
+    .ant-form-item-label {
+      height: 30px !important;
+      font-size: 16px;
+      line-height: 21px;
+
+      label {
+        display: flex;
+        float: left;
+        color: $text_title_color;
+      }
+    }
+
+    .ant-radio {
+      .ant-radio-inner {
+        background-color: $white-color;
+        border-width: 1px;
+
+        &::after {
+          background-color: $primary_color;
+          transform: scale(0.5);
+        }
+      }
+    }
+
+    .ant-radio-wrapper {
+      span {
+        color: $text_checkbox_color !important;
+
+        &.ant-radio {
+          height: 16px;
+        }
+
+        &:last-child {
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 130%; /* 20.8px */
+
+          padding-right: 0;
+          display: flex;
+          @include sm {
+            font-size: 14px;
+          }
+        }
+      }
+
+      &-checked {
+        span {
+          &:last-child {
+            font-size: 14px;
+            font-style: normal;
+            line-height: 130%; /* 20.8px */
+            @include sm {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
