@@ -1,9 +1,6 @@
 import { Form, Image } from "antd";
-import { Input } from "antd";
-import { Button } from "antd";
 import { Checkbox } from "antd";
 import React from "react";
-// import './login.scss'
 import "./login.scss";
 import FormWrap from "../Components/Form/FormWrap/index";
 import { FormInput } from "../Components/Form/FormInput/index";
@@ -12,7 +9,6 @@ const options = [{ label: "ログインしたままにする", value: "1" }];
 
 const Login = () => {
   const [form] = Form.useForm();
-  //Bấm click vào nút đăng kí -> nhảy được sang màn đăng kí.
   return (
     <div className="login">
       <div className="login_logo">
