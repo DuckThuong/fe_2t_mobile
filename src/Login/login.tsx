@@ -23,22 +23,23 @@ const Login = () => {
           <div className="login_form-header">
             <p className="login_form-header-content">ログイン</p>
           </div>
-          <div className="login-form-email">
-            <p className="login_form-email-label">Eメールまたは携帯電話番号</p>
+          <div className="login_form-email">
+            <p className="login_form-label">Eメールまたは携帯電話番号</p>
             <FormInput
               name={"email"}
               formItemProps={{
-                className: "login_form-email-input",
+                className: "login_form-input",
               }}
             />
           </div>
-          <div className="login-form-pw">
-            <p className="login_form-pw-label">パスワード</p>
+          <div className="login_form-pw">
+            <p className="login_form-label">パスワード</p>
             <FormInput
               name={"password"}
               formItemProps={{
-                className: "login_form-pw-input",
+                className: "login_form-input",
               }}
+              isPassword
             />
           </div>
 
@@ -46,24 +47,26 @@ const Login = () => {
             <CustomButton
               content="ログイン"
               buttonProps={{
-                className: "login_form-login-btn",
+                className: "login_form-login-button",
               }}
             />
           </div>
 
-          <p className="login_form-p1">
+          <p className="login_form-privacy">
             ●●●の<a href="/">利用規約</a>と
             <a href="/">プライバシー規約に同意</a>
             いただける場
             <br />
             合はログインしてください。
           </p>
-          <Checkbox.Group className="login_form-cb" options={options} />
-          <div className="login_form-btnlogin">
+
+          <Checkbox.Group className="login_form-submit" options={options} />
+
+          <div className="login_form-signIn">
             <CustomButton
               content="今すぐ、ご登録ください。"
               buttonProps={{
-                className: "login_form-btnlogin-btn",
+                className: "login_form-signIn-button",
               }}
             />
           </div>
