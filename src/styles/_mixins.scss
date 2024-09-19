@@ -1,0 +1,42 @@
+@import 'breakpoints';
+
+// Small devices
+@mixin sm {
+  @media screen and (max-width: #{$screen-sm-max}) {
+    @content;
+  }
+}
+
+// Medium devices
+@mixin md {
+  @media screen and (max-width: #{$screen-md-max}) {
+    @content;
+  }
+}
+
+// Large devices
+@mixin lg {
+  @media screen and (max-width: #{$screen-lg-max}) {
+    @content;
+  }
+}
+
+// Extra large devices
+@mixin xl {
+  @media screen and (max-width: #{$screen-xl-max}) {
+    @content;
+  }
+}
+
+@mixin xxl {
+  @media screen and (max-width: #{$screen-xxl-max}) {
+    @content;
+  }
+}
+
+// Custom devices
+@mixin rwd($screen) {
+  @media screen and (max-width: ($screen + 'px')) {
+    @content;
+  }
+}

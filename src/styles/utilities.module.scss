@@ -1,0 +1,40 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@import './variables';
+.Toastify__toast-container {
+  width: unset !important;
+  min-width: 250px !important;
+  .toast__notification {
+    &-error {
+      background-color: $error_color;
+      color: $white_color;
+      min-width: 200px;
+      height: 56px;
+      border-radius: 8px;
+      .Toastify__toast-body {
+        font-family: $font_primary;
+        font-size: 12px;
+        font-weight: 600;
+        margin: unset !important;
+      }
+      .Toastify__close-button {
+        display: none;
+      }
+    }
+    &-success {
+      background-color: $success_color;
+      color: $white_color;
+      min-width: 200px;
+      height: 56px;
+      border-radius: 8px;
+      .Toastify__toast-body {
+        font-family: $font_primary;
+        font-size: 12px;
+        font-weight: 600;
+        margin: unset !important;
+      }
+      .Toastify__close-button {
+        display: none;
+      }
+    }
+  }
+}

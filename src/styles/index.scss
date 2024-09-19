@@ -1,0 +1,12 @@
+@import './variables.scss';
+@import './global.scss';
+@import './mixins.scss';
+@import './font.scss';
+@import './utilities.module.scss';
+body {
+  font-family: $font_primary !important;
+}
+
+.font-base {
+  font-family: $font_primary !important;
+}

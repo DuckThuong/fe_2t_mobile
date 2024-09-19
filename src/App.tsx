@@ -1,5 +1,5 @@
 import React from "react";
-import RoutesApp from "../routers";
+import RoutesApp from "./routers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 

@@ -1,0 +1,130 @@
+@import 'font.scss';
+.font-base {
+  font-family: $font_primary !important;
+}
+
+.font-weight-normal {
+  font-weight: normal !important;
+}
+
+.font-weight-bold {
+  font-weight: bold !important;
+}
+
+.font-weight-300 {
+  font-weight: 300 !important;
+}
+
+.font-weight-400 {
+  font-weight: 400 !important;
+}
+
+.font-weight-500 {
+  font-weight: 500 !important;
+}
+
+.font-weight-600 {
+  font-weight: 600 !important;
+}
+
+.font-weight-700 {
+  font-weight: 700 !important;
+}
+
+.font-weight-800 {
+  font-weight: 800 !important;
+}
+
+.font-weight-900 {
+  font-weight: 900 !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-left {
+  text-align: left !important;
+}
+
+.color-primary {
+  color: $primary_color !important;
+}
+
+.color-text-primary {
+  color: $text_primary_color !important;
+}
+
+.color-text-secondary {
+  color: $text_secondary_color !important;
+}
+
+.color-text-tertiary {
+  color: $text_tertiary_color !important;
+}
+
+@for $i from 10 through 48 {
+  .font-size-#{$i} {
+    font-size: #{$i}px !important;
+  }
+}
+
+@for $i from 0 through 700 {
+  .height-#{$i} {
+    height: #{$i}px !important;
+  }
+  .width-#{$i} {
+    width: #{$i}px !important;
+  }
+}
+
+@for $i from 0 through 100 {
+  .m-t-#{$i} {
+    margin-top: #{$i}px !important;
+  }
+  .m-r-#{$i} {
+    margin-right: #{$i}px !important;
+  }
+  .m-b-#{$i} {
+    margin-bottom: #{$i}px !important;
+  }
+  .m-l-#{$i} {
+    margin-left: #{$i}px !important;
+  }
+  .m-#{$i} {
+    margin: #{$i}px !important;
+  }
+  .m-t-b-#{$i} {
+    margin-top: #{$i}px !important;
+    margin-bottom: #{$i}px !important;
+  }
+  .m-l-r-#{$i} {
+    margin-left: #{$i}px !important;
+    margin-right: #{$i}px !important;
+  }
+
+  .m-l-#{$i}-n {
+    margin-left: -#{$i}px !important;
+  }
+}
+
+@for $i from 0 through 100 {
+  .gap-#{$i} {
+    gap: #{$i}px !important;
+  }
+  .p-t-#{$i} {
+    padding-top: #{$i}px !important;
+  }
+  .p-r-#{$i} {
+    padding-right: #{$i}px !important;
+  }
+  .p-b-#{$i} {
+    padding-bottom: #{$i}px !important;
+  }
+  .p-l-#{$i} {
+    padding-left: #{$i}px !important;
+  }
+  .p-#{$i} {
+    padding: #{$i}px !important;
+  }
+}

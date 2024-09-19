@@ -2,7 +2,6 @@ import { Image } from "antd";
 import { Form } from "antd";
 import { Input } from "antd";
 import { Button } from "antd";
-import { Checkbox } from "antd";
 import React from "react";
 import './signin2.scss'
 
