@@ -1,12 +1,10 @@
 import {  Image } from "antd";
-import React, { useEffect } from "react"; // Thêm useEffect
 import "./login.scss";
 import { Link } from "react-router-dom";
 import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
-import { Account, PassWord, useAccount } from "../../account";
 
 const Login = () => {
   return (
