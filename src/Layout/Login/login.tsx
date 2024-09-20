@@ -18,7 +18,7 @@ const Login = () => {
         <p className="login_logo_title">ログイン</p>
       </div>
       <div className="login_form">
-        <FormWrap form={form} className="login_form-wrap">
+        <FormWrap className="login_form-wrap">
           <div className="login_form-header">
             <p className="login_form-header-content">ログイン</p>
           </div>
