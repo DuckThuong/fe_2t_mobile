@@ -3,9 +3,9 @@ import { Form } from "antd";
 import { Input } from "antd";
 import { Button } from "antd";
 import React from "react";
-import './signin3.scss'
+import './signin.scss'
 
-const Signin3 = () =>{
+const ClaimAccount = () =>{
     //Tự động fill email và mật khẩu đã lưu từ trang trước vào input và bắt lỗi đúng mật khẩu.\
     //Cái button bên dưới thì link trở lại về màn đăng nhập.
     return(
@@ -62,4 +62,4 @@ const Signin3 = () =>{
         </div>
     )
 };
-export default Signin3;
+export default ClaimAccount;

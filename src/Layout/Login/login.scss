@@ -9,6 +9,7 @@
     &_image {
       width: 324px !important;
       height: 140px !important;
+      object-fit: cover;
     }
     &_title {
       font-family: Open Sans;
@@ -113,20 +114,15 @@
       margin-top: 32px;
       margin-bottom: 0px !important;
     }
-    &-submit {
+    &-checkbox {
       margin-top: 24px;
-      .ant-checkbox-inner {
-        width: 20px;
-        height: 20px;
-        border: 1px solid #858792;
-      }
-      span {
+      .form__checkbox-title {
+        color: #646464 !important;
         font-family: Open Sans;
         font-size: 14px;
         font-weight: 400;
         line-height: 22px;
         text-align: left;
-        color: #646464;
       }
     }
     &-signIn {

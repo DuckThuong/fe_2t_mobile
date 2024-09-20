@@ -1,14 +1,18 @@
 import { Form, Image } from "antd";
-import { Checkbox } from "antd";
 import React from "react";
 import "./login.scss";
-import FormWrap from "../Components/Form/FormWrap/index";
-import { FormInput } from "../Components/Form/FormInput/index";
-import { CustomButton } from "../Components/buttons/CustomButton";
-const options = [{ label: "ログインしたままにする", value: "1" }];
-
+import { Link, useNavigate } from "react-router-dom";
+import FormWrap from "../../Components/Form/FormWrap";
+import { FormInput } from "../../Components/Form/FormInput";
+import { CustomButton } from "../../Components/buttons/CustomButton";
+import { FormCheckbox } from "../../Components/Form/FormCheckbox";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 const Login = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
+  const handleToSignIn = () => {
+    navigate(CUSTOMER_ROUTER_PATH.SIGN_IN);
+  };
   return (
     <div className="login">
       <div className="login_logo">
@@ -32,14 +36,13 @@ const Login = () => {
               }}
             />
           </div>
-          <div className="login_form-pw">
+          <div className="login_form-password">
             <p className="login_form-label">パスワード</p>
             <FormInput
               name={"password"}
               formItemProps={{
                 className: "login_form-input",
               }}
-              isPassword
             />
           </div>
 
@@ -52,21 +55,35 @@ const Login = () => {
             />
           </div>
 
-          <p className="login_form-privacy">
-            ●●●の<a href="/">利用規約</a>と
-            <a href="/">プライバシー規約に同意</a>
-            いただける場
-            <br />
-            合はログインしてください。
-          </p>
+          <div className="login_form-privacy">
+            <span>●●●の</span>
+            <Link className="login_form-privacy-link" to={"/"}>
+              利用規約
+            </Link>
+            <span>と</span>
+            <Link className="login_form-privacy-link" to={"/"}>
+              プライバシー規約に同意
+            </Link>
+            <span>いただける場</span>
+            <span>合はログインしてください。</span>
+          </div>
 
-          <Checkbox.Group className="login_form-submit" options={options} />
+          <div className="login_form-checkbox ">
+            <FormCheckbox
+              name={"submit"}
+              content={"ログインしたままにする"}
+              formItemProps={{
+                className: "login_form-checkbox-sumit",
+              }}
+            />
+          </div>
 
           <div className="login_form-signIn">
             <CustomButton
               content="今すぐ、ご登録ください。"
               buttonProps={{
                 className: "login_form-signIn-button",
+                onClick: handleToSignIn,
               }}
             />
           </div>
