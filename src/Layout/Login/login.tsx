@@ -31,7 +31,10 @@ const Login = () => {
             />
           </div>
           <div className="login_form-password">
-            <p className="login_form-label">パスワード</p>
+            <div className="login_form-password-title">
+              <span className="login_form-label">パスワード </span>
+              <span className="login_form-password-title-forgot">パスワードを忘れた場合</span>
+            </div>
             <FormInput
               name={"password"}
               formItemProps={{
