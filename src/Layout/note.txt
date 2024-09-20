@@ -1,9 +1,10 @@
-Bài tập: 
-1. Link được trang EmailInput vào trang Login: Sau khi bấm vào button Sign In của màn Login thì chuyển sang 
-màn EmailInput để bắt đầu đăng kí tài khoản.
-2. Từ màn EmailInput link được sang màn PrivacyCode: Sau khi nhập xong email (bắt lỗi nếu để trống input), bấm vào button
-submit của màn EmailInput thì sẽ chuyển sang màn PrivacyCode mang theo được email của màn Email đã nhập sang.
-3. Ở màn PrivacyCode: hiện email của màn EmailInput lên text title, tạo code submit fix cứng để submit sang màn tiếp theo (bắt lỗi nếu để trống input),
-hiện thông báo khi submit thành công, hiện error khi submit fail.
-4. Ở màn ClaimAccount: fill được email đã nhập ở màn EmailInput vào input email, ở phần nhập lại mật khẩu check điều kiện để 2 mật khẩu giống nhau,
-các input phải được bắt lỗi nếu để trống. Sau khi đăng kí thành công hiện thông báo, khi bấm button thì back về màn login.
+2. Bài tập:
+a. Tạo 4 màn của màn Forgot password
+b. Link màn đầu tiên của màn forgot vào text "パスワードを忘れた場合" ở màn Login.
+c. Truyền Email của màn đầu tiên của Forgot password sang màn thứ 2. Ở text "ログイン画面へ戻る" khi click phải
+back về màn Login.
+d. Ở màn thứ 2, hiển được Email đã truyền từ trang trước lên text "Eメール@gmail.com". Ở text "認証コードを再発行" 
+khi click vào phải quay trở về được màn hình trước đó.
+e. Ở màn thứ 3, email từ màn đầu tiên phải được fill vào input email. Input email phải set trạng thái là disable(email không 
+được nhập tay từ ngoài vào), bắt lỗi mật khẩu mới và mật khẩu cũ phải giống nhau mới cho ấn button để next.
+f. Button ở màn cuối cùng back về màn Login
