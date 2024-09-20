@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxProps, Form, FormItemProps, Tooltip } from 'antd';
+import { Checkbox, CheckboxProps, Form, FormItemProps } from 'antd';
 import React, { ReactNode } from 'react';
 import './formCheckbox.scss';
 import { NamePath } from 'antd/es/form/interface';

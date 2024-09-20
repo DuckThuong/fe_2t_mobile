@@ -37,7 +37,7 @@ export const settingSlice = createSlice({
     let itemLocale = languageData[0];
     let isDarkMode = false;
     const locale = localStorage.getItem('locale');
-    const filterLocale = languageData.find((x) => x.locale == locale);
+    const filterLocale = languageData.find((x) => x.locale === locale);
     if (filterLocale) {
       itemLocale = filterLocale;
     }
@@ -45,7 +45,7 @@ export const settingSlice = createSlice({
     // const savedIsDarkMode = localStorage.getItem('isDarkMode');
     const savedIsDarkMode = false;
     if (savedIsDarkMode) {
-      isDarkMode = savedIsDarkMode == 'true';
+      isDarkMode = savedIsDarkMode === 'true';
     }
     return {
       locale: itemLocale,
