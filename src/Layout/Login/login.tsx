@@ -1,12 +1,11 @@
-import { Form, Image } from "antd";
+import {  Image } from "antd";
 import React from "react";
 import "./login.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 const Login = () => {
   return (
     <div className="login">
@@ -78,7 +77,6 @@ const Login = () => {
               content="今すぐ、ご登録ください。"
               buttonProps={{
                 className: "login_form-signIn-button",
-                onClick: handleToSignIn,
               }}
             />
           </div>
