@@ -14,15 +14,15 @@ export const CustomerRouter = () => (
       element={<SuspenseWrapper component={<Login />} />}
     ></Route>
     <Route
-      path={CUSTOMER_ROUTER_PATH.SIGN_IN}
+      path={CUSTOMER_ROUTER_PATH.EMAIL_INPUT}
       element={<SuspenseWrapper component={<EmailInput />} />}
     ></Route>
     <Route
-      path={CUSTOMER_ROUTER_PATH.SIGN_IN2}
+      path={CUSTOMER_ROUTER_PATH.PRIVACY_CODE}
       element={<SuspenseWrapper component={<PrivacyCode />} />}
     ></Route>
     <Route
-      path={CUSTOMER_ROUTER_PATH.SIGN_IN3}
+      path={CUSTOMER_ROUTER_PATH.CLAIM_ACCOUNT}
       element={<SuspenseWrapper component={<ClaimAccount />} />}
     ></Route>
   </Routes>

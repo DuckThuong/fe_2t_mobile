@@ -8,11 +8,6 @@ import { CustomButton } from "../../Components/buttons/CustomButton";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 const Login = () => {
-  const [form] = Form.useForm();
-  const navigate = useNavigate();
-  const handleToSignIn = () => {
-    navigate(CUSTOMER_ROUTER_PATH.SIGN_IN);
-  };
   return (
     <div className="login">
       <div className="login_logo">

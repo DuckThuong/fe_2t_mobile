@@ -50,7 +50,6 @@ const PrivacyCode = () => {
               }}
             />
           </div>
-
           <div className="signin-code_form-footer">
             <p className="signin-code_form-footer-content">
               ログインすることにより、 当社の<a href="/">利用規約</a>および{" "}

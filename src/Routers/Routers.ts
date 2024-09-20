@@ -6,14 +6,14 @@ export const ACTION = {
 };
 export const CUSTOMER_ROUTE_NAME = {//customer router name: tên của các màn mà trang web muốn hướng đến
   LOG_IN: "",
-  SIGN_IN: "sign_in",
-  SIGN_IN2: "sign_in2",
-  SIGN_IN3: "sign_in3",
+  EMAIL_INPUT: "email_input",
+  PRIVACY_CODE: "privacy_code",
+  CLAIM_ACCOUNT: "claim_account",
 };
 export const CUSTOMER_ROUTER_PATH = { //gộp 2 cái trên lại thì ra cục này, đường dẫn hoàn chỉnh: Customer path
   LOG_IN: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.LOG_IN}`,
-  SIGN_IN: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.SIGN_IN}`,
-  SIGN_IN2: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.SIGN_IN2}`,
-  SIGN_IN3: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.SIGN_IN3}`,
+  EMAIL_INPUT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.EMAIL_INPUT}`,
+  PRIVACY_CODE: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.PRIVACY_CODE}`,
+  CLAIM_ACCOUNT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.CLAIM_ACCOUNT}`,
   // đường dẫn này viết bằng JSON
 };
