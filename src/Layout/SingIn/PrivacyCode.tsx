@@ -33,8 +33,9 @@ const PrivacyCode = () => {
             <p className="signin-code_form-label">
               一時パスワードを入力してください
             </p>
+            
             <FormInput
-              name={"email"}
+              name={"code"}
               formItemProps={{
                 className: "signin-code_form-input",
               }}
