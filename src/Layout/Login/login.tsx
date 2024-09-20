@@ -6,7 +6,9 @@ import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
+import { Account, PassWord } from "../../account";
 const Login = () => {
+
   return (
     <div className="login">
       <div className="login_logo">
