@@ -2,9 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "./Routers";
 import React from "react";
 import { SuspenseWrapper } from "../SuspenseWrapper";
-import EmailInput from "../Layout/SignUI/SingIn/EmailInput";
-import PrivacyCode from "../Layout/SignUI/SingIn/PrivacyCode";
-import ClaimAccount from "../Layout/SignUI/SingIn/ClaimAccount";
+import EmailInput from "../Layout/SingIn/EmailInput";
+import PrivacyCode from "../Layout/SingIn/PrivacyCode";
+import ClaimAccount from "../Layout/SingIn/ClaimAccount";
 import Login from "../Layout/Login/login";
 
 export const CustomerRouter = () => (

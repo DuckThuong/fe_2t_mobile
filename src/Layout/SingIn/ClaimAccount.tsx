@@ -1,8 +1,8 @@
 import { Image } from "antd";
 import "./signin.scss";
-import FormWrap from "../../../Components/Form/FormWrap";
-import { FormInput } from "../../../Components/Form/FormInput";
-import { CustomButton } from "../../../Components/buttons/CustomButton";
+import FormWrap from "../../Components/Form/FormWrap";
+import { FormInput } from "../../Components/Form/FormInput";
+import { CustomButton } from "../../Components/buttons/CustomButton";
 import { Link } from "react-router-dom";
 
 const ClaimAccount = () => {

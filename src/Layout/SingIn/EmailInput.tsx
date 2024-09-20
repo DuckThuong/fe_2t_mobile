@@ -1,9 +1,9 @@
 import { Image } from "antd";
 import "./signin.scss";
 import { Link } from "react-router-dom";
-import FormWrap from "../../../Components/Form/FormWrap";
-import { FormInput } from "../../../Components/Form/FormInput";
-import { CustomButton } from "../../../Components/buttons/CustomButton";
+import FormWrap from "../../Components/Form/FormWrap";
+import { FormInput } from "../../Components/Form/FormInput";
+import { CustomButton } from "../../Components/buttons/CustomButton";
 const options = [{ label: "Bạn tin tôi đánh bạn không", value: "1" }];
 const EmailInput = () => {
   //Nhập email vào input và lưu được email lại để truyền sang trang tiếp theo.

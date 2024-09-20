@@ -4,9 +4,9 @@ import { Input } from "antd";
 import { Button } from "antd";
 import React from "react";
 import "./signin.scss";
-import { FormInput } from "../../../Components/Form/FormInput";
-import FormWrap from "../../../Components/Form/FormWrap";
-import { CustomButton } from "../../../Components/buttons/CustomButton";
+import { FormInput } from "../../Components/Form/FormInput";
+import FormWrap from "../../Components/Form/FormWrap";
+import { CustomButton } from "../../Components/buttons/CustomButton";
 
 const PrivacyCode = () => {
   //Lấy được email từ trang trước và lưu lại được mật khẩu và email để nhập vào trang tiếp theo.
