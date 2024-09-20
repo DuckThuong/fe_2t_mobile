@@ -1,9 +1,12 @@
 import { Image } from "antd";
 import "./signin.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
+import { useForm } from "antd/es/form/Form";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { Account } from "./../../account";
 const EmailInput = () => {
   //Nhập email vào input và lưu được email lại để truyền sang trang tiếp theo.
   return (
@@ -54,7 +57,10 @@ const EmailInput = () => {
           </div>
           <div className="signin-email_form-border-top"></div>
           <span className="signin-email_form-footer">
-            すでにアカウントをお持ちですか? <Link to={"/"} className="signin-email_form-footer-link">次へ</Link>
+            すでにアカウントをお持ちですか?{" "}
+            <Link to={"/"} className="signin-email_form-footer-link">
+              次へ
+            </Link>
           </span>
         </FormWrap>
       </div>

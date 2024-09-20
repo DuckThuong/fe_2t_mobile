@@ -1,4 +1,4 @@
-import {  Image } from "antd";
+import { Image } from "antd";
 import "./login.scss";
 import { Link } from "react-router-dom";
 import FormWrap from "../../Components/Form/FormWrap";
