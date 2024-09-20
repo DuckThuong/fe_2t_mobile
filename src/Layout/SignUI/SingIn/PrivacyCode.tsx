@@ -4,51 +4,70 @@ import { Input } from "antd";
 import { Button } from "antd";
 import React from "react";
 import "./signin.scss";
+import { FormInput } from "../../../Components/Form/FormInput";
+import FormWrap from "../../../Components/Form/FormWrap";
+import { CustomButton } from "../../../Components/buttons/CustomButton";
 
 const PrivacyCode = () => {
   //Lấy được email từ trang trước và lưu lại được mật khẩu và email để nhập vào trang tiếp theo.
   return (
-    <div className="signin2">
-      <div className="signin2_logo">
+    <div className="signin-code">
+      <div className="signin-code_logo">
         <Image
           src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
-          className="signin2_logo_image"
+          className="signin-code_logo_image"
         />
-        <p className="signin2_logo_title">セラーセントラル</p>
+        <p className="signin-code_logo_title">セラーセントラル</p>
       </div>
-      <div className="signin2_form">
-        <Form className="signin2_form-wrap">
-          <div className="signin2_form-header">
-            <p className="signin2_form-header-content">Eメールアドレスの確認</p>
+      <div className="signin-code_form">
+        <FormWrap className="signin-code_form-wrap">
+          <div className="signin-code_form-header">
+            <p className="signin-code_form-header-content">
+              Eメールアドレスの確認
+            </p>
           </div>
-          <div className="signin2_form-title">
-            <p className="signin2_form-title-content">
+          <div className="signin-code_form-title">
+            <p className="signin-code_form-title-content">
               メールアドレスを確認するために一時パスワードを <br />
-              <a href="/">Eメール@gmail.com</a> に送信しました{" "}
+              <a href="/">Eメール@gmail.com</a> に送信しました
               <a href="/">(宛先を変更する)</a>{" "}
             </p>
           </div>
-          <div className="signin2-form-email">
-            <p className="signin2_form-email-label">
+          <div className="signin-code-form-email">
+            <p className="signin-code_form-label">
               一時パスワードを入力してください
             </p>
-            <Input className="signin2_form-email-input" />
+            <FormInput
+              name={"email"}
+              formItemProps={{
+                className: "signin-code_form-input",
+              }}
+            />
           </div>
 
-          <div className="signin2_form-signin2">
-            <Button className="signin2_form-signin2-btn">
-              アカウントの作成
-            </Button>
+          <div className="signin-code_form-code">
+            <CustomButton
+              content="アカウントの作成"
+              buttonProps={{
+                className: "signin-code_form-button-submit",
+              }}
+            />
           </div>
 
-          <p className="signin2_form-p1">
-            ログインすることにより、 当社の<a href="/">利用規約</a>および <br />
-            <a href="/">プライバシー規約</a> に同意したとみなされます。
-          </p>
-          <div className="signin2_form-div">
-            <a className="signin2_form-div-a1">コードを再送</a>
+          <div className="signin-code_form-footer">
+            <p className="signin-code_form-footer-content">
+              ログインすることにより、 当社の<a href="/">利用規約</a>および{" "}
+              <br />
+              <a href="/">プライバシー規約</a> に同意したとみなされます。
+            </p>
+            <CustomButton
+              content="コードを再送"
+              buttonProps={{
+                className: "signin-code_form-footer-button",
+              }}
+            />
           </div>
-        </Form>
+        </FormWrap>
       </div>
     </div>
   );

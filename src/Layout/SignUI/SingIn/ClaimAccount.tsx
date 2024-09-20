@@ -1,65 +1,113 @@
 import { Image } from "antd";
-import { Form } from "antd";
-import { Input } from "antd";
-import { Button } from "antd";
-import React from "react";
-import './signin.scss'
+import "./signin.scss";
+import FormWrap from "../../../Components/Form/FormWrap";
+import { FormInput } from "../../../Components/Form/FormInput";
+import { CustomButton } from "../../../Components/buttons/CustomButton";
+import { Link } from "react-router-dom";
 
-const ClaimAccount = () =>{
-    //Tự động fill email và mật khẩu đã lưu từ trang trước vào input và bắt lỗi đúng mật khẩu.\
-    //Cái button bên dưới thì link trở lại về màn đăng nhập.
-    return(
-        <div className="signin3">
-            <div className="signin3_logo">
-                <Image  src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg" 
-                 className="signin3_logo_image"/>
-                <p className="signin3_logo_title">セラーセントラル</p>
-            </div>
-            <div className="signin3_form">
-                <Form className="signin3_form-wrap">
-                
-                    <div className="signin3_form-header">
-                        <p className="signin3_form-header-content">アカウントを作成</p>
+const ClaimAccount = () => {
+  //Tự động fill email và mật khẩu đã lưu từ trang trước vào input và bắt lỗi đúng mật khẩu.\
+  //Cái button bên dưới thì link trở lại về màn đăng nhập.
+  return (
+    <div className="signin-account">
+      <div className="signin-account_logo">
+        <Image
+          src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
+          className="signin-account_logo_image"
+        />
+        <p className="signin-account_logo_title">セラーセントラル</p>
+      </div>
+      <div className="signin-account_form">
+        <FormWrap className="signin-account_form-wrap">
+          <div className="signin-account_form-header">
+            <p className="signin-account_form-header-content">
+              アカウントを作成
+            </p>
+          </div>
+          <div className="signin-account_form-input">
+            <p className="signin-account_form-label">氏名</p>
+            <FormInput
+              name={"name"}
+              formItemProps={{
+                className: "signin-account_form-input-name",
+              }}
+              inputProps={{
+                placeholder: "氏名",
+              }}
+            />
+          </div>
+          <div className="signin-account_form-input">
+            <p className="signin-account_form-label">
+              <b>Eメールアドレス</b>
+            </p>
+            <FormInput
+              name={"email"}
+              formItemProps={{
+                className: "signin-account_form-input-email",
+              }}
+              inputProps={{
+                placeholder: "Eメールアドレス",
+              }}
+            />
+          </div>
+          <div className="signin-account_form-input">
+            <p className="signin-account_form-label">パスワード</p>
+            <FormInput
+              name={"email"}
+              formItemProps={{
+                className: "signin-account_form-input-password",
+              }}
+              inputProps={{
+                placeholder: "パスワード",
+              }}
+            />
+            <p className="signin-account_form-icon">
+              <a href="/">! </a>パスワードは最低6文字ありますか？
+            </p>
+          </div>
+          <div className="signin-account_form-input">
+            <p className="signin-account_form-label">
+              もう一度パスワードを入力してください
+            </p>
+            <FormInput
+              name={"email"}
+              formItemProps={{
+                className: "signin-account_form-input-confirm",
+              }}
+            />
+          </div>
 
-                    </div>
-                    <div className="signin3_form-name">
-                        <p className="signin3_form-name-label"><b>氏名</b></p>
-                        <Input className="signin3_form-name-input" placeholder="氏名"/>
-                        
-                    </div>
-                    <div className="signin3_form-email">
-                        <p className="signin3_form-email-label"><b>Eメールアドレス</b></p>
-                        <Input className="signin3_form-email-input" placeholder="Eメール@gmail.com"/>
-                       
-                    </div>
-                    <div className="signin3_form-pw">
-                        <p className="signin3_form-pw-label"><b>パスワード</b></p>
-                        <Input className="signin3_form-pw-input" placeholder="パスワード"/>
-                        <p className="signin3_form-pw-label2"><a href="/">!  </a>パスワードは最低6文字ありますか？</p>
-                    </div>
-                    <div className="signin3_form-repw">
-                        <p className="signin3_form-repw-label"><b>もう一度パスワードを入力してください</b></p>
-                        <Input className="signin3_form-repw-input" />
-                        
-                    </div>
-                    
-                    
-                    <div className="signin3_form-login">
-                        
-                        <Button  className="signin3_form-login-btn">登録する</Button>
-                    </div>
-                    <p className="signin3_form-p1">
-                        ●●●の <a href="/">利用規約</a> と <a href="/">プライバシー規約</a> に同意いただける場合はログインしてください。
-                        
-                    </p>
-                    <hr className="signin3_form-hr"></hr>
-                    <p className="signin3_form-p2">
-                        すでにアカウントをお持ちですか?  <a href="/">次へ</a>
-                    </p>
-                   
-                </Form>
-            </div>
-        </div>
-    )
+          <div className="signin-account_form-button">
+            <CustomButton
+              content="登録する"
+              buttonProps={{
+                className: "signin-account_form-button-submit",
+              }}
+            />
+          </div>
+          <div className="signin-email_form-privacy">
+            <span className="signin-email_form-footer">●●●の</span>
+            <Link className="signin-email_form-privacy-link" to={"/"}>
+              利用規約
+            </Link>
+            <span>と</span>
+            <Link className="signin-email_form-privacy-link" to={"/"}>
+              プライバシー規約に同意
+            </Link>
+            <span className="signin-email_form-footer">いただける場</span>
+            <span className="signin-email_form-footer">
+              合はログインしてください。
+            </span>
+          </div>
+          <hr className="signin-account_form-hr"></hr>
+          <div className="signin-account_form-footer">
+            <p>
+              すでにアカウントをお持ちですか?  <a href="/">次へ</a>
+            </p>
+          </div>
+        </FormWrap>
+      </div>
+    </div>
+  );
 };
 export default ClaimAccount;
