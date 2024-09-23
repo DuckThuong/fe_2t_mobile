@@ -1,20 +1,33 @@
-import { useState } from "react";
 
-export const Account = {
-  admin: "TrinhThuong26022003@gmail.com",
-  TuanAnh: "nguyentuananh-it@gmail.com",
-  KhanhHung: "KhanhHungTran@gmail.com",
+export const users = [
+  {
+    username: "admin",
+    email: "TrinhThuong26022003@gmail.com",
+    password: "26022003",
+    verifyCode: "11111111"
+  },
+  {
+    username: "TuanAnh",
+    email: "nguyentuananh-it@gmail.com",
+    password: "nguyentuananh-it",
+    verifyCode: "22222222"
+  },
+  {
+    username: "KhanhHung",
+    email: "KhanhHungTran@gmail.com",
+    password: "KhanhHungTran",
+    verifyCode: "33333333"
+  },
+];
+
+export const getAccount = (username: string) => {
+  return users.find(user => user.username === username);
 };
 
-export const PassWord = {
-  admin: "26022003",
-  TuanAnh: "nguyentuananh-it",
-  KhanhHung: "KhanhHungTran",
-};
-
-export const verifyCode = {
-  admin: "admin1234",
-  TuanAnh: "nguyentuananh-it",
-  KhanhHung: "khanhhunggg",
+export const updatePassword = (username: string, newPassword: string) => {
+  const user = getAccount(username);
+  if (user) {
+    user.password = newPassword;
+  }
 };
 
