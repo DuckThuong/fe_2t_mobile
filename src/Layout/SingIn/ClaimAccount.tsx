@@ -3,11 +3,14 @@ import "./signin.scss";
 import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 
 const ClaimAccount = () => {
-  //Tự động fill email và mật khẩu đã lưu từ trang trước vào input và bắt lỗi đúng mật khẩu.\
-  //Cái button bên dưới thì link trở lại về màn đăng nhập.
+  const navigate = useNavigate();
+  const handleNextStep = () => {
+    navigate(CUSTOMER_ROUTER_PATH.LOG_IN);
+  };
   return (
     <div className="signin-account">
       <div className="signin-account_logo">
@@ -15,30 +18,30 @@ const ClaimAccount = () => {
           src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
           className="signin-account_logo_image"
         />
-        <p className="signin-account_logo_title">セラーセントラル</p>
+        <p className="signin-account_logo_title">REPO WEB</p>
       </div>
       <div className="signin-account_form">
         <FormWrap className="signin-account_form-wrap">
           <div className="signin-account_form-header">
             <p className="signin-account_form-header-content">
-              アカウントを作成
+              Create an account
             </p>
           </div>
           <div className="signin-account_form-input">
-            <p className="signin-account_form-label">氏名</p>
+            <p className="signin-account_form-label">Full name</p>
             <FormInput
               name={"name"}
               formItemProps={{
                 className: "signin-account_form-input-name",
               }}
               inputProps={{
-                placeholder: "氏名",
+                placeholder: "Full name",
               }}
             />
           </div>
           <div className="signin-account_form-input">
             <p className="signin-account_form-label">
-              <b>Eメールアドレス</b>
+              <b>Email address</b>
             </p>
             <FormInput
               name={"email"}
@@ -46,28 +49,28 @@ const ClaimAccount = () => {
                 className: "signin-account_form-input-email",
               }}
               inputProps={{
-                placeholder: "Eメールアドレス",
+                placeholder: "Email address",
               }}
             />
           </div>
           <div className="signin-account_form-input">
-            <p className="signin-account_form-label">パスワード</p>
+            <p className="signin-account_form-label">Password</p>
             <FormInput
               name={"email"}
               formItemProps={{
                 className: "signin-account_form-input-password",
               }}
               inputProps={{
-                placeholder: "パスワード",
+                placeholder: "Password",
               }}
             />
             <p className="signin-account_form-icon">
-              <a href="/">! </a>パスワードは最低6文字ありますか？
+              <a href="/">! </a>Does your password have at least 6 characters?
             </p>
           </div>
           <div className="signin-account_form-input">
             <p className="signin-account_form-label">
-              もう一度パスワードを入力してください
+              Please enter your password again
             </p>
             <FormInput
               name={"email"}
@@ -79,30 +82,34 @@ const ClaimAccount = () => {
 
           <div className="signin-account_form-button">
             <CustomButton
-              content="登録する"
+              content="Register"
               buttonProps={{
                 className: "signin-account_form-button-submit",
+                onClick: handleNextStep,
               }}
             />
           </div>
           <div className="signin-email_form-privacy">
-            <span className="signin-email_form-footer">●●●の</span>
+            <span className="signin-email_form-footer">●●● of </span>
             <Link className="signin-email_form-privacy-link" to={"/"}>
-              利用規約
+              Terms of service
             </Link>
-            <span>と</span>
+            <span> and </span>
             <Link className="signin-email_form-privacy-link" to={"/"}>
-              プライバシー規約に同意
+              I agree to the privacy terms.
             </Link>
-            <span className="signin-email_form-footer">いただける場</span>
             <span className="signin-email_form-footer">
-              合はログインしてください。
+              {" "}
+              Place where you can get it.{" "}
+            </span>
+            <span className="signin-email_form-footer">
+              If so, please log in.
             </span>
           </div>
           <hr className="signin-account_form-hr"></hr>
           <div className="signin-account_form-footer">
             <p>
-              すでにアカウントをお持ちですか?  <a href="/">次へ</a>
+              Already have an account?  <a href="/"> next</a>
             </p>
           </div>
         </FormWrap>

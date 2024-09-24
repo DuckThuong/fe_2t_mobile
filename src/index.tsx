@@ -1,8 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "bootstrap/dist/css/bootstrap.css";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import { Spin } from "antd/lib";
+import "./index.scss";
 const App = React.lazy(() => import("./App"));
 
 const root = ReactDOM.createRoot(
@@ -10,6 +12,14 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    <App />
+    <Suspense
+      fallback={
+        <div className="isLoadding">
+          <Spin className="isLoadding-spin" size="large" />
+        </div>
+      }
+    >
+      <App />
+    </Suspense>
   </Provider>
 );

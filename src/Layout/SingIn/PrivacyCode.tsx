@@ -3,9 +3,14 @@ import "./signin.scss";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { CustomButton } from "../../Components/buttons/CustomButton";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { useNavigate } from "react-router-dom";
 
 const PrivacyCode = () => {
-  //Lấy được email từ trang trước và lưu lại được mật khẩu và email để nhập vào trang tiếp theo.
+  const navigate = useNavigate();
+  const handleNextStep = () => {
+    navigate(CUSTOMER_ROUTER_PATH.CLAIM_ACCOUNT);
+  };
   return (
     <div className="signin-code">
       <div className="signin-code_logo">
@@ -13,27 +18,27 @@ const PrivacyCode = () => {
           src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
           className="signin-code_logo_image"
         />
-        <p className="signin-code_logo_title">セラーセントラル</p>
+        <p className="signin-code_logo_title">REPO WEB</p>
       </div>
       <div className="signin-code_form">
         <FormWrap className="signin-code_form-wrap">
           <div className="signin-code_form-header">
-            <p className="signin-code_form-header-content">
-              Eメールアドレスの確認
-            </p>
+            <p className="signin-code_form-header-content">Email Address</p>
           </div>
           <div className="signin-code_form-title">
             <p className="signin-code_form-title-content">
-              メールアドレスを確認するために一時パスワードを <br />
-              <a href="/">Eメール@gmail.com</a> に送信しました
-              <a href="/">(宛先を変更する)</a>{" "}
+              Please enter a temporary password to confirm your email address.{" "}
+              <br />
+              sent to
+              <a href="/">Email@gmail.com</a> or
+              <a href="/"> (change destination)</a>{" "}
             </p>
           </div>
           <div className="signin-code-form-email">
             <p className="signin-code_form-label">
-              一時パスワードを入力してください
+              Please enter your temporary password
             </p>
-            
+
             <FormInput
               name={"code"}
               formItemProps={{
@@ -44,20 +49,23 @@ const PrivacyCode = () => {
 
           <div className="signin-code_form-code">
             <CustomButton
-              content="アカウントの作成"
+              content="Create an account"
               buttonProps={{
                 className: "signin-code_form-button-submit",
+                onClick: handleNextStep,
               }}
             />
           </div>
           <div className="signin-code_form-footer">
             <p className="signin-code_form-footer-content">
-              ログインすることにより、 当社の<a href="/">利用規約</a>および{" "}
+              By logging in, you can access our
+              <a href="/"> terms of service </a> and
               <br />
-              <a href="/">プライバシー規約</a> に同意したとみなされます。
+              <a href="/">Privacy terms</a> you will be deemed to have agreed to
+              this.
             </p>
             <CustomButton
-              content="コードを再送"
+              content="Resend code"
               buttonProps={{
                 className: "signin-code_form-footer-button",
               }}

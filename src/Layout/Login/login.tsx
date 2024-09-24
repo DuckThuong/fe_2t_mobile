@@ -1,12 +1,36 @@
 import { Image } from "antd";
 import "./login.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
+import { getAccount } from "../../account";
+import { useForm } from "antd/es/form/Form";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 
 const Login = () => {
+  const [form] = useForm();
+  const admin = getAccount("admin");
+  const navigate = useNavigate();
+
+  const onClick = () => {
+    console.log(form.getFieldsValue());
+    if (
+      form.getFieldValue("email") === admin?.email &&
+      form.getFieldValue("password") === admin?.password
+    ) {
+      alert("Đăng nhập thành công");
+    } else {
+      alert("Tài khoản hoặc mật khẩu không chính xác");
+    }
+  };
+  const handleForgotPassword = () => {
+    navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
+  };
+  const handleRegister = () => {
+    navigate(CUSTOMER_ROUTER_PATH.EMAIL_INPUT);
+  };
   return (
     <div className="login">
       <div className="login_logo">
@@ -14,15 +38,15 @@ const Login = () => {
           src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
           className="login_logo_image"
         />
-        <p className="login_logo_title">ログイン</p>
+        <p className="login_logo_title">REPO WEB</p>
       </div>
       <div className="login_form">
-        <FormWrap className="login_form-wrap">
+        <FormWrap form={form} className="login_form-wrap">
           <div className="login_form-header">
-            <p className="login_form-header-content">ログイン</p>
+            <p className="login_form-header-content">LOGIN</p>
           </div>
           <div className="login_form-email">
-            <p className="login_form-label">Eメールまたは携帯電話番号</p>
+            <p className="login_form-label">Email Address</p>
             <FormInput
               name={"email"}
               formItemProps={{
@@ -32,8 +56,13 @@ const Login = () => {
           </div>
           <div className="login_form-password">
             <div className="login_form-password-title">
-              <span className="login_form-label">パスワード </span>
-              <span className="login_form-password-title-forgot">パスワードを忘れた場合</span>
+              <span className="login_form-label">Password </span>
+              <span
+                onClick={handleForgotPassword}
+                className="login_form-password-title-forgot"
+              >
+                Forgot password
+              </span>
             </div>
             <FormInput
               name={"password"}
@@ -45,30 +74,31 @@ const Login = () => {
 
           <div className="login_form-login">
             <CustomButton
-              content="ログイン"
+              content="Login"
               buttonProps={{
                 className: "login_form-login-button",
+                onClick: onClick,
               }}
             />
           </div>
 
           <div className="login_form-privacy">
-            <span>●●●の</span>
+            <span>●●● of </span>
             <Link className="login_form-privacy-link" to={"/"}>
-              利用規約
+              Terms of service
             </Link>
-            <span>と</span>
+            <span> and </span>
             <Link className="login_form-privacy-link" to={"/"}>
-              プライバシー規約に同意
+              I agree to the privacy terms.
             </Link>
-            <span>いただける場</span>
-            <span>合はログインしてください。</span>
+            <span> Place where you can get it. </span>
+            <span>If so, please log in.</span>
           </div>
 
           <div className="login_form-checkbox ">
             <FormCheckbox
               name={"submit"}
-              content={"ログインしたままにする"}
+              content={"Stay logged in"}
               formItemProps={{
                 className: "login_form-checkbox-sumit",
               }}
@@ -77,9 +107,10 @@ const Login = () => {
 
           <div className="login_form-signIn">
             <CustomButton
-              content="今すぐ、ご登録ください。"
+              content="Register Now"
               buttonProps={{
                 className: "login_form-signIn-button",
+                onClick: handleRegister,
               }}
             />
           </div>
