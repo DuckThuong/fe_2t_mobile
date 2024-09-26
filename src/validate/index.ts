@@ -1,15 +1,13 @@
-import { Rule } from 'antd/lib/form';
-import { IntlShape } from 'react-intl';
-import { _validator } from './validator.validate';
+import { Rule } from "antd/lib/form";
+import { _validator } from "./validator.validate";
 
 interface Validate {
   [key: string]: Rule[];
 }
 
-export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown) => Validate = (
-  intl,
+export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   _option?,
-  data?,
+  data?
 ) => {
   if (!_option) {
     _option = [];
@@ -18,8 +16,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const email = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
-        email: intl.formatMessage({ id: 'validate.email' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
+        email: "Vui lòng nhập đúng định dạng",
       }),
     },
     ..._option,
@@ -28,8 +26,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const password = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
-        password: intl.formatMessage({ id: 'validate.password' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
+        password: "Nhập mật khẩu đi",
       }),
     },
     ..._option,
@@ -38,7 +36,7 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const required = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
       }),
     },
     ..._option,
@@ -46,8 +44,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const space = [
     {
       validator: _validator({
-        space: intl.formatMessage({ id: 'validate.space' }),
-        required: intl.formatMessage({ id: 'validate.required' }),
+        space: "Không được nhập khoảng trống",
+        required: "Nhập dữ liệu vào đi thằng lồn",
       }),
     },
     ..._option,
@@ -55,8 +53,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const userName = [
     {
       validator: _validator({
-        space: intl.formatMessage({ id: 'validate.space' }),
-        required: intl.formatMessage({ id: 'validate.required' }),
+        space: "Không được nhập khoảng trống",
+        required: "Nhập dữ liệu vào đi thằng lồn",
       }),
     },
     ..._option,
@@ -65,8 +63,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const phone = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
-        phone: intl.formatMessage({ id: 'validate.phone' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
+        phone: "Nhập số điện thoại vào",
       }),
     },
     ..._option,
@@ -75,7 +73,7 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const postCode = [
     {
       validator: _validator({
-        postCode: intl.formatMessage({ id: 'validate.postcode' }),
+        postCode: "Nhập đúng mã code đi",
       }),
     },
     ..._option,
@@ -84,8 +82,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const passport = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
-        number: intl.formatMessage({ id: 'validate.number' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
+        number: "Vui lòng nhập số",
       }),
     },
     ..._option,
@@ -94,8 +92,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const number = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
-        number: intl.formatMessage({ id: 'validate.number' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
+        number: "Vui lòng nhập số",
       }),
     },
     ..._option,
@@ -104,8 +102,8 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
   const cardNumber = [
     {
       validator: _validator({
-        required: intl.formatMessage({ id: 'validate.required' }),
-        number: intl.formatMessage({ id: 'validate.card' }),
+        required: "Nhập dữ liệu vào đi thằng lồn",
+        number: "Vui lòng nhập số",
       }),
     },
     ..._option,
@@ -114,10 +112,10 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
     {
       validator: _validator(
         {
-          required: intl.formatMessage({ id: 'validate.required' }),
-          expirationDate: intl.formatMessage({ id: 'validate.expirationDate' }),
+          required: "Nhập dữ liệu vào đi thằng lồn",
+          expirationDate: "Vui lòng nhập ngày hết hạn",
         },
-        data,
+        data
       ),
     },
   ];
@@ -125,10 +123,10 @@ export const ValidateLibrary: (intl: IntlShape, _option?: any[], data?: unknown)
     {
       validator: _validator(
         {
-          required: intl.formatMessage({ id: 'validate.required' }),
-          dob: intl.formatMessage({ id: 'validate.dob' }),
+          required: "Nhập dữ liệu vào đi thằng lồn",
+          dob: "Vui lòng nhập ngày sinh",
         },
-        data,
+        data
       ),
     },
   ];
