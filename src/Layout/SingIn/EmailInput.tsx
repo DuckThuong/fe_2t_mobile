@@ -5,6 +5,7 @@ import FormWrap from "../../Components/Form/FormWrap";
 import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { LogoForm } from "../../Components/LogoForm/LogoForm";
 const EmailInput = () => {
   const navigate = useNavigate();
   const handleNextStep = () => {
@@ -12,12 +13,8 @@ const EmailInput = () => {
   };
   return (
     <div className="signin-email">
-      <div className="signin-email_logo">
-        <Image
-          src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
-          className="signin-email_logo-image"
-        />
-        <p className="signin-email_logo-title">REPO WEB</p>
+      <div>
+        <LogoForm />
       </div>
       <div className="signin-email_form">
         <FormWrap className="signin-email_form-wrap">
@@ -47,7 +44,7 @@ const EmailInput = () => {
           </div>
           <div className="signin-email_form-privacy">
             <span className="signin-email_form-footer">●●● of </span>
-            
+
             <Link className="signin-email_form-privacy-link" to={"/"}>
               Terms of service
             </Link>

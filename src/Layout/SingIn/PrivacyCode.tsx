@@ -5,6 +5,7 @@ import FormWrap from "../../Components/Form/FormWrap";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useNavigate } from "react-router-dom";
+import { LogoForm } from "../../Components/LogoForm/LogoForm";
 
 const PrivacyCode = () => {
   const navigate = useNavigate();
@@ -13,12 +14,8 @@ const PrivacyCode = () => {
   };
   return (
     <div className="signin-code">
-      <div className="signin-code_logo">
-        <Image
-          src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
-          className="signin-code_logo_image"
-        />
-        <p className="signin-code_logo_title">REPO WEB</p>
+      <div>
+        <LogoForm />
       </div>
       <div className="signin-code_form">
         <FormWrap className="signin-code_form-wrap">

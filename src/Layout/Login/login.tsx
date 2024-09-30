@@ -8,6 +8,7 @@ import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { getAccount } from "../../account";
 import { useForm } from "antd/es/form/Form";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { LogoForm } from "../../Components/LogoForm/LogoForm";
 
 const Login = () => {
   const [form] = useForm();
@@ -33,12 +34,8 @@ const Login = () => {
   };
   return (
     <div className="login">
-      <div className="login_logo">
-        <Image
-          src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
-          className="login_logo_image"
-        />
-        <p className="login_logo_title">REPO WEB</p>
+      <div>
+        <LogoForm />
       </div>
       <div className="login_form">
         <FormWrap form={form} className="login_form-wrap">

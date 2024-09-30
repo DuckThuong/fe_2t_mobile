@@ -1,41 +1,33 @@
+@import "../../styles/mixins";
+@import "../../styles/variables.scss";
 .login {
   display: flex;
   flex-direction: column;
   align-items: center;
-  &_logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    &_image {
-      width: 324px !important;
-      height: 140px !important;
-      object-fit: cover;
-    }
-    &_title {
-      font-family: Open Sans;
-      font-size: 24px;
-      font-weight: 600;
-      line-height: 36px;
-      text-align: center;
-      margin: 0px !important;
-      margin-top: 16px !important;
-    }
-  }
   &_form {
     width: 540px;
     height: 658px;
     border-radius: 20px;
     margin-top: 24px;
     box-shadow: -2px 2px 20px 0px #0000001f;
+    @include sm {
+      margin-top: 0;
+      width: 100%;
+      box-shadow: none !important;
+    }
     &-wrap {
       padding: 32px 58px 32px 58px;
+      @include sm {
+        padding-top: 0;
+        padding: 24px;
+      }
     }
     &-header {
       display: flex;
       flex-direction: column;
       align-items: center;
       &-content {
-        color: #007BFF;
+        color: #007bff;
         width: 390px;
         height: 48px;
         font-family: Open Sans;
@@ -57,7 +49,7 @@
           font-weight: 400;
           line-height: 22px;
           text-align: left;
-          color: #007BFF;
+          color: #007bff;
           cursor: pointer;
         }
       }
@@ -81,6 +73,9 @@
         opacity: 0px;
         margin-top: 8px;
         border: 1px solid #c7c7c7;
+        @include sm {
+          width: 100%;
+        }
       }
       .ant-input-affix-wrapper {
         width: 424px;
@@ -103,10 +98,13 @@
       border-radius: 8px;
 
       &-button {
-        background: #007BFF !important;
-        border: #007BFF !important;
+        background: #007bff !important;
+        border: #007bff !important;
         width: 424px;
         height: 48px;
+        @include sm {
+          width: 100%;
+        }
         span {
           color: #ffffff !important;
           font-family: Open Sans;
@@ -128,6 +126,9 @@
       color: #343434;
       margin-top: 32px;
       margin-bottom: 0px !important;
+      @include sm {
+        width: 100%;
+      }
     }
     &-checkbox {
       margin-top: 24px;
@@ -149,7 +150,9 @@
         background-color: #ffffff !important;
         border: 1px solid #eef0f4 !important;
         box-shadow: -2px 2px 20px 0px #0000001f;
-
+        @include sm {
+          width: 100%;
+        }
         span {
           font-family: Open Sans;
           font-size: 16px;

@@ -5,6 +5,7 @@ import { FormInput } from "../../Components/Form/FormInput";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { Link, useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { LogoForm } from "../../Components/LogoForm/LogoForm";
 
 const ClaimAccount = () => {
   const navigate = useNavigate();
@@ -13,12 +14,8 @@ const ClaimAccount = () => {
   };
   return (
     <div className="signin-account">
-      <div className="signin-account_logo">
-        <Image
-          src="https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
-          className="signin-account_logo_image"
-        />
-        <p className="signin-account_logo_title">REPO WEB</p>
+      <div>
+        <LogoForm />
       </div>
       <div className="signin-account_form">
         <FormWrap className="signin-account_form-wrap">
