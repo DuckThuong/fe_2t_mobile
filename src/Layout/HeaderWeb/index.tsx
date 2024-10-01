@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./headerInventory.scss";
+import "./headerWeb.scss";
 import { Drawer, Popover } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store";
@@ -7,8 +7,8 @@ import { logout } from "../../store/authSlice";
 import useSize from "../../hooks/useSize";
 import useUser from "../../hooks/useUser";
 import { Tooltip } from "antd/lib";
-import { SvgHamburger } from "./../../Components/@svg/SvgHamburger/index";
-import { SvgSetting } from "./../../Components/@svg/SvgSetting/index";
+import { SvgHamburger } from "../../Components/@svg/SvgHamburger/index";
+import { SvgSetting } from "../../Components/@svg/SvgSetting/index";
 import {
   CUSTOMER_ROUTE_NAME,
   CUSTOMER_ROUTER_PATH,
@@ -75,7 +75,7 @@ const listSettingItem = (
   );
 };
 
-export const HeaderInventory: React.FC<Props> = ({ ...props }) => {
+export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
   const { name } = props;
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
