@@ -5,6 +5,7 @@ import { CUSTOMER_ROUTER_PATH } from "../Routers/Routers";
 export interface AuthState {
   loading: boolean;
   error?: string | null;
+  authUser?: any;
 }
 
 const initialState: AuthState = {

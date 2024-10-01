@@ -1,4 +1,3 @@
-import { Image } from "antd";
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
 import FormWrap from "../../Components/Form/FormWrap";
@@ -9,36 +8,51 @@ import { getAccount } from "../../account";
 import { useForm } from "antd/es/form/Form";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-
+import { useEffect, useState } from "react";
+import SuccessNotification from "../Notification/SuccessNotification";
+import ErrorNotification from "../Notification/ErrorNotification";
 const Login = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
   const navigate = useNavigate();
+  const [notification, setNotification] = useState<React.ReactElement | null>(null);
 
-  const onClick = () => {
-    console.log(form.getFieldsValue());
+  const onFinish = () => {
     if (
       form.getFieldValue("email") === admin?.email &&
       form.getFieldValue("password") === admin?.password
     ) {
-      alert("Đăng nhập thành công");
+      setNotification(
+        <SuccessNotification
+          message={"Chào mừng đến với trang web quản lý sinh viên"}
+        />
+      );
+      navigate(CUSTOMER_ROUTER_PATH.EMAIL_INPUT);
     } else {
-      alert("Tài khoản hoặc mật khẩu không chính xác");
+      setNotification(
+        <ErrorNotification message={"Tài khoản hoặc mật khẩu không chính xác"} />
+      );
     }
   };
+
   const handleForgotPassword = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
   };
-  const handleRegister = () => {
-    navigate(CUSTOMER_ROUTER_PATH.EMAIL_INPUT);
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      onFinish();
+    }
   };
+
   return (
     <div className="login">
+      {notification}
       <div>
         <LogoForm />
       </div>
       <div className="login_form">
-        <FormWrap form={form} className="login_form-wrap">
+        <FormWrap onFinish={onFinish} form={form} className="login_form-wrap">
           <div className="login_form-header">
             <p className="login_form-header-content">LOGIN</p>
           </div>
@@ -48,6 +62,9 @@ const Login = () => {
               name={"email"}
               formItemProps={{
                 className: "login_form-input",
+              }}
+              inputProps={{
+                onKeyPress: handleKeyPress,
               }}
             />
           </div>
@@ -66,6 +83,9 @@ const Login = () => {
               formItemProps={{
                 className: "login_form-input",
               }}
+              inputProps={{
+                onKeyPress: handleKeyPress,
+              }}
             />
           </div>
 
@@ -74,7 +94,6 @@ const Login = () => {
               content="Login"
               buttonProps={{
                 className: "login_form-login-button",
-                onClick: onClick,
               }}
             />
           </div>
@@ -102,15 +121,15 @@ const Login = () => {
             />
           </div>
 
-          <div className="login_form-signIn">
+          {/* <div className="login_form-signIn">
             <CustomButton
               content="Register Now"
               buttonProps={{
                 className: "login_form-signIn-button",
-                onClick: handleRegister,
+                onFinish: handleRegister,
               }}
             />
-          </div>
+          </div> */}
         </FormWrap>
       </div>
     </div>

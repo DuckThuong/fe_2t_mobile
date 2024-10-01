@@ -1,13 +1,27 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { useForm } from "antd/es/form/Form";
+import { getAccount } from "../../account";
+import ErrorNotification from "../Notification/ErrorNotification";
 export const ForgotCodeInput = () => {
   const navigate = useNavigate();
+  const [form] = useForm();
+  const admin = getAccount("admin");
+  const location = useLocation();
   const handleNextStep = () => {
-    navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
+    if (location.state.email === admin?.email) {
+      if (form.getFieldValue("code") === admin?.verifyCode) {
+        navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
+      } else {
+        <ErrorNotification
+          message={"Tài khoản hoặc mật khẩu không chính xác"}
+        />;
+      }
+    }
   };
   return (
     <div className="forgot-password_code">
