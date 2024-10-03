@@ -1,29 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./notification.scss";
 import { SvgXIcon } from "../../Components/@svg/SvgXIcon";
 
 interface NotificationLabelProps {
   message: string;
   type: "success" | "error";
-  isVisible: boolean;
-  setIsVisible: (visible: boolean) => void;
 }
 
 const NotificationLabel: React.FC<NotificationLabelProps> = ({
   message,
   type,
-  isVisible,
-  setIsVisible,
 }) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isClosing, setIsClosing] = useState(false);
+
   useEffect(() => {
     if (isVisible) {
       const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 3000); // 3 seconds
+        setIsClosing(true);
+        setTimeout(() => setIsVisible(false), 500); // Match the animation duration
+      }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup the timer on component unmount
+      return () => clearTimeout(timer);
     }
-  }, [isVisible, setIsVisible]);
+  }, [isVisible]);
 
   const getLabelStyle = () => {
     switch (type) {
@@ -39,12 +39,18 @@ const NotificationLabel: React.FC<NotificationLabelProps> = ({
   if (!isVisible) return null;
 
   return (
-    <div className="notification_label" style={getLabelStyle()}>
+    <div
+      className={`notification_label ${isClosing ? "closing" : ""}`}
+      style={getLabelStyle()}
+    >
       {message}
       <button
         className="notification_label-button"
         style={getLabelStyle()}
-        onClick={() => setIsVisible(false)}
+        onClick={() => {
+          setIsClosing(true);
+          setTimeout(() => setIsVisible(false), 500); 
+        }}
       >
         <SvgXIcon />
       </button>

@@ -14,10 +14,7 @@ const Login = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
   const navigate = useNavigate();
-  const [notification, setNotification] = useState<React.ReactElement | null>(
-    null
-  );
-  const [isNotificationVisible, setIsNotificationVisible] = useState(true);
+  
   const onFinish = () => {
     if (
       form.getFieldValue("email") === admin?.email &&
@@ -43,8 +40,6 @@ const Login = () => {
       <NotificationLabel
         message="Sai tài khoản hoặc mật khẩu"
         type={"success"}
-        isVisible={true}
-        setIsVisible={setIsNotificationVisible}
       />
       <div>
         <LogoForm />
