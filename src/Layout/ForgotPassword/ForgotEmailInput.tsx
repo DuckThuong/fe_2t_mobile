@@ -1,4 +1,4 @@
-import { Form, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
@@ -6,7 +6,6 @@ import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useForm } from "antd/es/form/Form";
 import { getAccount } from "../../account";
-import ErrorNotification from "../Notification/ErrorNotification";
 export const ForgotEmailInput = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
@@ -20,7 +19,6 @@ export const ForgotEmailInput = () => {
         },
       });
     } else {
-      <ErrorNotification message={"Tài khoản hoặc mật khẩu không chính xác"} />;
     }
   };
   return (

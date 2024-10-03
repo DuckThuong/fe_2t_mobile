@@ -9,8 +9,6 @@ import { useForm } from "antd/es/form/Form";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { useEffect, useState } from "react";
-import SuccessNotification from "../Notification/SuccessNotification";
-import ErrorNotification from "../Notification/ErrorNotification";
 const Login = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
@@ -22,16 +20,9 @@ const Login = () => {
       form.getFieldValue("email") === admin?.email &&
       form.getFieldValue("password") === admin?.password
     ) {
-      setNotification(
-        <SuccessNotification
-          message={"Chào mừng đến với trang web quản lý sinh viên"}
-        />
-      );
       navigate(CUSTOMER_ROUTER_PATH.EMAIL_INPUT);
     } else {
-      setNotification(
-        <ErrorNotification message={"Tài khoản hoặc mật khẩu không chính xác"} />
-      );
+      
     }
   };
 
