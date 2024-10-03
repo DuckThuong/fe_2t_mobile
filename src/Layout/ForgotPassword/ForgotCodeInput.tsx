@@ -6,7 +6,6 @@ import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useForm } from "antd/es/form/Form";
 import { getAccount } from "../../account";
-import ErrorNotification from "../Notification/ErrorNotification";
 export const ForgotCodeInput = () => {
   const navigate = useNavigate();
   const [form] = useForm();
@@ -17,9 +16,6 @@ export const ForgotCodeInput = () => {
       if (form.getFieldValue("code") === admin?.verifyCode) {
         navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
       } else {
-        <ErrorNotification
-          message={"Tài khoản hoặc mật khẩu không chính xác"}
-        />;
       }
     }
   };

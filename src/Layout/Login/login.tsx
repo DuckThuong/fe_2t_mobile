@@ -9,12 +9,15 @@ import { useForm } from "antd/es/form/Form";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { useEffect, useState } from "react";
+import NotificationLabel from "../Notification";
 const Login = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
   const navigate = useNavigate();
-  const [notification, setNotification] = useState<React.ReactElement | null>(null);
-
+  const [notification, setNotification] = useState<React.ReactElement | null>(
+    null
+  );
+  const [isNotificationVisible, setIsNotificationVisible] = useState(true);
   const onFinish = () => {
     if (
       form.getFieldValue("email") === admin?.email &&
@@ -22,7 +25,6 @@ const Login = () => {
     ) {
       navigate(CUSTOMER_ROUTER_PATH.EMAIL_INPUT);
     } else {
-      
     }
   };
 
@@ -38,7 +40,12 @@ const Login = () => {
 
   return (
     <div className="login">
-      {notification}
+      <NotificationLabel
+        message="Sai tài khoản hoặc mật khẩu"
+        type={"success"}
+        isVisible={true}
+        setIsVisible={setIsNotificationVisible}
+      />
       <div>
         <LogoForm />
       </div>

@@ -1,0 +1,28 @@
+.notification {
+  &_label {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    width: fit-content;
+    height: 60px;
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    &-button {
+      border: none !important;
+      padding: 5px;
+      svg{
+        width: 20px;
+        height: 20px;
+        path{
+          fill: white;
+        }
+      }
+    }
+  }
+}
