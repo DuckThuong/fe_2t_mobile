@@ -14,14 +14,23 @@ const Login = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
   const navigate = useNavigate();
-  
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+
   const onFinish = () => {
     if (
       form.getFieldValue("email") === admin?.email &&
       form.getFieldValue("password") === admin?.password
     ) {
-      navigate(CUSTOMER_ROUTER_PATH.EMAIL_INPUT);
+      navigate(CUSTOMER_ROUTER_PATH.LIST_STUDENT);
+      setNotification({ message: "Thành Công", type: "success" });
     } else {
+      setNotification({
+        message: "Sai tài khoản hoặc mật khẩu",
+        type: "error",
+      });
     }
   };
 
@@ -38,8 +47,8 @@ const Login = () => {
   return (
     <div className="login">
       <NotificationLabel
-        message="Sai tài khoản hoặc mật khẩu"
-        type={"success"}
+        message={notification?.message}
+        type={notification?.type.toString()}
       />
       <div>
         <LogoForm />

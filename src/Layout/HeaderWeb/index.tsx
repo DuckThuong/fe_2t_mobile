@@ -97,7 +97,7 @@ export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
   };
 
   const handleProfileSeller = async () => {
-    navigate(CUSTOMER_ROUTER_PATH.CLAIM_ACCOUNT);
+    navigate(CUSTOMER_ROUTER_PATH.LOG_IN);
   };
 
   const handleVisibleChange = (visible: boolean) => {
@@ -173,7 +173,7 @@ export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
             ) : (
               <p
                 className="m-b-0 cursor-pointer"
-                onClick={() => navigate(CUSTOMER_ROUTER_PATH.CLAIM_ACCOUNT)}
+                onClick={() => navigate(CUSTOMER_ROUTER_PATH.LIST_STUDENT)}
               >
                 <SvgSetting />
               </p>

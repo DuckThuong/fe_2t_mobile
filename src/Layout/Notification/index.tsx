@@ -3,8 +3,8 @@ import "./notification.scss";
 import { SvgXIcon } from "../../Components/@svg/SvgXIcon";
 
 interface NotificationLabelProps {
-  message: string;
-  type: "success" | "error";
+  message: any;
+  type: "success" | "error" | any;
 }
 
 const NotificationLabel: React.FC<NotificationLabelProps> = ({
@@ -49,7 +49,7 @@ const NotificationLabel: React.FC<NotificationLabelProps> = ({
         style={getLabelStyle()}
         onClick={() => {
           setIsClosing(true);
-          setTimeout(() => setIsVisible(false), 500); 
+          setTimeout(() => setIsVisible(false), 500);
         }}
       >
         <SvgXIcon />
