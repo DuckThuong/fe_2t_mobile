@@ -4162,7 +4162,7 @@ data-view-byte-offset@^1.0.0:
     es-errors "^1.3.0"
     is-data-view "^1.0.1"
 
-dayjs@^1.11.11, "dayjs@>= 1.x":
+dayjs@^1.11.11, dayjs@^1.11.13, "dayjs@>= 1.x":
   version "1.11.13"
   resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.13.tgz"
   integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
@@ -7272,6 +7272,7 @@ multicast-dns@^7.2.5:
     react-redux "^9.1.2"
     react-router-dom "^6.26.2"
     react-scripts "5.0.1"
+    react-toastify "^10.0.5"
     typescript "^4.9.5"
     web-vitals "^2.1.4"
 

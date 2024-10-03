@@ -1,11 +1,10 @@
-import React, { ReactNode } from 'react';
-import { Select, Checkbox, SelectProps } from 'antd';
-import { useIntl } from 'react-intl';
-import type { CheckboxChangeEvent } from 'antd/es/checkbox';
-import './index.scss';
-import { SvgDropSelect } from '../../@svg/SvgDropSelect';
-import { SvgDownSelect } from '../../@svg/SvgDownSelect';
-import { useMemo } from 'react';
+import React, { ReactNode } from "react";
+import { Select, Checkbox, SelectProps } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import "./index.scss";
+import { SvgDropSelect } from "../../@svg/SvgDropSelect";
+import { SvgDownSelect } from "../../@svg/SvgDownSelect";
+import { useMemo } from "react";
 
 const { Option } = Select;
 
@@ -24,20 +23,33 @@ interface CustomSelectCheckboxProps {
 }
 
 const CustomSelectCheckbox: React.FC<CustomSelectCheckboxProps> = React.memo(
-  ({ options, onChange, defaultVisibleFields, placeholder, footerDropdown, selectProps }) => {
-    const intl = useIntl();
+  ({
+    options,
+    onChange,
+    defaultVisibleFields,
+    placeholder,
+    footerDropdown,
+    selectProps,
+  }) => {
     const initialCheckedValues = React.useMemo(
-      () => Object.keys(defaultVisibleFields ?? {}).filter((key) => defaultVisibleFields![key]),
-      [defaultVisibleFields],
+      () =>
+        Object.keys(defaultVisibleFields ?? {}).filter(
+          (key) => defaultVisibleFields![key]
+        ),
+      [defaultVisibleFields]
     );
 
-    const [checkedValues, setCheckedValues] = React.useState<string[]>(initialCheckedValues);
-    const [isDropdownOpenTopRight, setIsDropdownOpenTopRight] = React.useState(false);
+    const [checkedValues, setCheckedValues] =
+      React.useState<string[]>(initialCheckedValues);
+    const [isDropdownOpenTopRight, setIsDropdownOpenTopRight] =
+      React.useState(false);
 
     const handleCheckboxChange = (e: CheckboxChangeEvent) => {
       const value = e.target.value as string;
       setCheckedValues((prev) => {
-        const newCheckedValues = e.target.checked ? [...prev, value] : prev.filter((v) => v !== value);
+        const newCheckedValues = e.target.checked
+          ? [...prev, value]
+          : prev.filter((v) => v !== value);
 
         onChange(newCheckedValues);
         return newCheckedValues;
@@ -60,16 +72,18 @@ const CustomSelectCheckbox: React.FC<CustomSelectCheckboxProps> = React.memo(
         {...selectProps}
         className="select-checkbox"
         onChange={handleSelectChange}
-        suffixIcon={isDropdownOpenTopRight ? <SvgDropSelect /> : <SvgDownSelect />}
+        suffixIcon={
+          isDropdownOpenTopRight ? <SvgDropSelect /> : <SvgDownSelect />
+        }
         onDropdownVisibleChange={handleDropdownVisibleChange}
         placeholder={
           placeholder || (
             <div className="select-checkbox__placeholder">
               <div className="select-checkbox__placeholder-setting">
-                {intl.formatMessage({ id: 'inventory.setting' })}:
+                Không có dữ liệu để hiển thị
               </div>
               <div className="select-checkbox__placeholder-hide">
-                {intl.formatMessage({ id: 'inventory.hideItem' }, { item: remainingCount })}
+                Vui lòng chọn một mục
               </div>
             </div>
           )
@@ -79,7 +93,11 @@ const CustomSelectCheckbox: React.FC<CustomSelectCheckboxProps> = React.memo(
             {options.map((option) => (
               <div
                 key={option.value}
-                className={`select-checkbox__option ${checkedValues.includes(option.value) ? 'select-checkbox__option-checked' : ''}`}
+                className={`select-checkbox__option ${
+                  checkedValues.includes(option.value)
+                    ? "select-checkbox__option-checked"
+                    : ""
+                }`}
               >
                 <Checkbox
                   value={option.value}
@@ -96,7 +114,7 @@ const CustomSelectCheckbox: React.FC<CustomSelectCheckboxProps> = React.memo(
         )}
       />
     );
-  },
+  }
 );
 
 export default CustomSelectCheckbox;

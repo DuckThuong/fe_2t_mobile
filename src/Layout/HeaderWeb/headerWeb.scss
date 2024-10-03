@@ -120,12 +120,12 @@
   }
 
   &__fullName {
-    max-width: 124px;
+    width: fit-content !important;
     height: 30px;
     display: flex;
     align-items: center;
     background-color: $white_color;
-    padding: 4px 8px 4px 8px;
+    padding: 4px 10px 4px 10px !important;
     border-radius: 4px;
     span {
       max-width: 124px;

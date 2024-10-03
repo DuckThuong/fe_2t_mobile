@@ -1,10 +1,9 @@
-import React, { ReactNode, useEffect } from 'react';
-import { Select, Radio, SelectProps } from 'antd';
-import { useIntl } from 'react-intl';
-import type { RadioChangeEvent, RadioProps } from 'antd/es/radio';
-import './index.scss';
-import { SvgDropSelect } from '../../@svg/SvgDropSelect';
-import { SvgDownSelect } from '../../@svg/SvgDownSelect';
+import React, { ReactNode, useEffect } from "react";
+import { Select, Radio, SelectProps } from "antd";
+import type { RadioChangeEvent, RadioProps } from "antd/es/radio";
+import "./index.scss";
+import { SvgDropSelect } from "../../@svg/SvgDropSelect";
+import { SvgDownSelect } from "../../@svg/SvgDownSelect";
 
 const { Option } = Select;
 
@@ -25,19 +24,31 @@ interface CustomSelectRadioProps {
 }
 
 const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
-  ({ options, onChange, defaultVisibleField, placeholder, footerDropdown, radioProps, selectProps }) => {
-    console.log('options', options);
+  ({
+    options,
+    onChange,
+    defaultVisibleField,
+    placeholder,
+    footerDropdown,
+    radioProps,
+    selectProps,
+  }) => {
+    console.log("options", options);
 
-    const intl = useIntl();
     const defaultKey = React.useMemo(() => {
-      if (defaultVisibleField && typeof defaultVisibleField === 'object') {
-        return Object.keys(defaultVisibleField).find((key) => defaultVisibleField[key]) || '';
+      if (defaultVisibleField && typeof defaultVisibleField === "object") {
+        return (
+          Object.keys(defaultVisibleField).find(
+            (key) => defaultVisibleField[key]
+          ) || ""
+        );
       }
-      return '';
+      return "";
     }, [defaultVisibleField]);
 
     const [checkedValue, setCheckedValue] = React.useState<string>(defaultKey);
-    const [isDropdownOpenTopRight, setIsDropdownOpenTopRight] = React.useState(false);
+    const [isDropdownOpenTopRight, setIsDropdownOpenTopRight] =
+      React.useState(false);
     useEffect(() => {
       if (!checkedValue && options.length > 0) {
         setCheckedValue(options[0].value);
@@ -59,16 +70,18 @@ const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
         {...selectProps}
         className="select-radio"
         onChange={handleRadioChange}
-        suffixIcon={isDropdownOpenTopRight ? <SvgDropSelect /> : <SvgDownSelect />}
+        suffixIcon={
+          isDropdownOpenTopRight ? <SvgDropSelect /> : <SvgDownSelect />
+        }
         onDropdownVisibleChange={handleDropdownVisibleChange}
         placeholder={
           placeholder || (
             <div className="select-radio__placeholder">
               <div className="select-radio__placeholder-setting">
-                {intl.formatMessage({ id: 'inventory.setting' })}:
+                Không có dữ liệu để hiển thị:
               </div>
               <div className="select-radio__placeholder-hide">
-                {intl.formatMessage({ id: `shipments.time.${checkedValue}` })}
+                Vui lòng chọn một mục
               </div>
             </div>
           )
@@ -78,7 +91,11 @@ const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
             {options.map((option) => (
               <div
                 key={option.value}
-                className={`select-radio__option ${checkedValue === option.value ? 'select-radio__option-checked' : ''}`}
+                className={`select-radio__option ${
+                  checkedValue === option.value
+                    ? "select-radio__option-checked"
+                    : ""
+                }`}
               >
                 <Radio
                   value={option.value}
@@ -95,7 +112,7 @@ const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
         )}
       />
     );
-  },
+  }
 );
 
 export default CustomSelectRadio;
