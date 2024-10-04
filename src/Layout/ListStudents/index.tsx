@@ -11,144 +11,13 @@ import { HeaderWeb } from "../HeaderWeb";
 import CustomSelectCheckbox from "./../../Components/Form/FormSelectCheckbox/index";
 import CustomSelectRadio from "./../../Components/Form/FormSelectRadio/index";
 import "./listStudents.scss";
-import dayjs from "dayjs";
-const conlumns = [
-  {
-    title: "STT",
-    dataIndex: "stt",
-    key: "stt",
-    render: (text, record, index) => {
-      return <p style={{ color: "black" }}>{index + 1}</p>;
-    },
-  },
-  {
-    title: "Mã sinh viên",
-    dataIndex: "studentMsv",
-    key: "studentsMsv",
-    render: (record) => {
-      return (
-        <>
-          <p className="list-student_data-studentsMsv">{record}</p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Họ và tên",
-    dataIndex: "studentName",
-    key: "studentName",
-    render: (record) => {
-      return (
-        <>
-          <p className="list-student_data-studentName">{record}</p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Lớp",
-    dataIndex: "studentClass",
-    key: "studentClass",
-    render: (record) => {
-      return (
-        <>
-          <p className="list-student_data-studentClass">{record}</p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Khóa",
-    dataIndex: "studentCourse",
-    key: "studentCourse",
-    render: (record) => {
-      return (
-        <>
-          <p className="list-student_data-studentCourse">{record}</p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Ngày sinh",
-    dataIndex: "studentDob",
-    key: "studentDob",
-    render: (record) => {
-      return (
-        <>
-          <p className="m-0 list-student_data-studentDob">
-            {dayjs.unix(record).format("DDMMYYYY")}
-          </p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Giới tính",
-    dataIndex: "studentGender",
-    key: "studentGender",
-    render: (record) => {
-      return (
-        <>
-          <p className="list-student_data-studentGender">{record}</p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Trạng thái",
-    dataIndex: "studentState",
-    key: "studentState",
-    render: (record) => {
-      return (
-        <>
-          <p className="list-student_data-studentState">{record}</p>
-        </>
-      );
-    },
-  },
-  {
-    title: "Chi tiết",
-    dataIndex: "studentOption",
-    key: "studentOption",
-    render: () => {
-      return (
-        <>
-          <CustomButton
-            content="Chi tiết"
-            buttonProps={{
-              className: "list-student_data-studentOption",
-            }}
-          />
-        </>
-      );
-    },
-  },
-];
-const data = [
-  {
-    stt: 1,
-    studentMsv: "SV001",
-    studentName: "Nguyễn Văn A",
-    studentClass: "10A1",
-    studentCourse: "K21",
-    studentDob: 1633046400,
-    studentGender: "Nam",
-    studentState: "Active",
-    studentOption: "Details",
-  },
-  {
-    stt: 2,
-    studentMsv: "SV002",
-    studentName: "Trần Thị B",
-    studentClass: "10A2",
-    studentCourse: "K22",
-    studentDob: 1601510400,
-    studentGender: "Nữ",
-    studentState: "Inactive",
-    studentOption: "Details",
-  },
-];
+import { useNavigate } from "react-router-dom";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { FileExcelOutlined, PrinterOutlined } from "@ant-design/icons";
+import * as XLSX from "xlsx";
+import { TableRowSelection } from "antd/es/table/interface";
 enum majorSelector {
   CNTT = "Công nghệ thông tin",
   TMDT = "Thương mại điện tử",
@@ -158,6 +27,8 @@ enum majorSelector {
 }
 enum courseSelector {
   ALL = "ALL",
+  K17 = "K17",
+  K18 = "K18",
   K19 = "K19",
   K20 = "K20",
   K21 = "K21",
@@ -165,11 +36,23 @@ enum courseSelector {
   K23 = "K23",
   K24 = "K24",
 }
+// interface DataType {
+//   key: number;
+//   studentMsv: string;
+//   studentName: string;
+//   studentClass: string;
+//   studentCourse: string;
+//   studentDob: string;
+//   studentGender: string;
+//   studentState: string;
+//   studentOption: string;
+// }
+
 export const ListStudents = () => {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
-
+  const navigate = useNavigate();
   const majorOption = Object.values(majorSelector).map((major) => ({
     label: major,
     value: major,
@@ -178,40 +61,255 @@ export const ListStudents = () => {
     label: course,
     value: course,
   }));
-
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: (selectedKeys) => {
-      setSelectedRowKeys(selectedKeys);
+  const conlumns = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (text, record, index) => {
+        return <p style={{ color: "black", fontWeight: "600" }}>{index + 1}</p>;
+      },
     },
-  };
-  useEffect(() => {
-    const handleTableScroll = () => {
-      if (tableWrapperRef.current && scrollRef.current) {
-        scrollRef.current.scrollLeft = tableWrapperRef.current.scrollLeft;
-      }
-    };
-
-    const handleDivScroll = () => {
-      if (tableWrapperRef.current && scrollRef.current) {
-        tableWrapperRef.current.scrollLeft = scrollRef.current.scrollLeft;
-      }
-    };
-
-    if (tableWrapperRef.current && scrollRef.current) {
-      tableWrapperRef.current.addEventListener("scroll", handleTableScroll);
-      scrollRef.current.addEventListener("scroll", handleDivScroll);
-    }
-    return () => {
-      if (tableWrapperRef.current && scrollRef.current) {
-        tableWrapperRef.current.removeEventListener(
-          "scroll",
-          handleTableScroll
+    {
+      title: "MÃ SINH VIÊN",
+      dataIndex: "studentMsv",
+      key: "studentsMsv",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentsMsv">{record}</p>
+          </>
         );
-        scrollRef.current.removeEventListener("scroll", handleDivScroll);
-      }
-    };
-  }, []);
+      },
+    },
+    {
+      title: "HỌ VÀ TÊN",
+      dataIndex: "studentName",
+      key: "studentName",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentName">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "LỚP",
+      dataIndex: "studentClass",
+      key: "studentClass",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentClass">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "KHÓA",
+      dataIndex: "studentCourse",
+      key: "studentCourse",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentCourse">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "NGÀY SINH",
+      dataIndex: "studentDob",
+      key: "studentDob",
+      render: (record) => {
+        return (
+          <>
+            <p className="m-0 list-student_data-studentDob">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "GIỚI TÍNH",
+      dataIndex: "studentGender",
+      key: "studentGender",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentGender">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "TRẠNG THÁI",
+      dataIndex: "studentState",
+      key: "studentState",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentState">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "CHI TIẾT",
+      dataIndex: "studentOption",
+      key: "studentOption",
+      render: () => {
+        return (
+          <>
+            <CustomButton
+              content="Chi tiết"
+              buttonProps={{
+                className: "list-student_data-studentOption",
+                icon: <FontAwesomeIcon icon={faCircleInfo} />,
+                onClick: () => {
+                  navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
+                },
+              }}
+            />
+          </>
+        );
+      },
+    },
+  ];
+  const data = [
+    {
+      key: 1,
+      studentMsv: "21A100100373",
+      studentName: "Trịnh Đức Thưởng",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "28/07/2003",
+      studentGender: "Nam",
+      studentState: "Đang học",
+      studentOption: "Details",
+    },
+    {
+      key: 2,
+      studentMsv: "21A100100140",
+      studentName: "Lương Thu Hoài",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "1/10/2003",
+      studentGender: "Nữ",
+      studentState: "Đang học",
+      studentOption: "Details",
+    },
+    {
+      key: 3,
+      studentMsv: "21A100100137",
+      studentName: "Nguyễn Minh Hòa",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "15/11/2003",
+      studentGender: "Nữ",
+      studentState: "Tốt nghiệp",
+      studentOption: "Details",
+    },
+    {
+      key: 4,
+      studentMsv: "21A100100331",
+      studentName: "Nguyễn Minh Tuấn",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "15/01/2003",
+      studentGender: "Nam",
+      studentState: "Bảo lưu",
+      studentOption: "Details",
+    },
+    {
+      key: 5,
+      studentMsv: "21A100100337",
+      studentName: "Trần Minh Thư",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "25/11/2003",
+      studentGender: "Nữ",
+      studentState: "Nghỉ học",
+      studentOption: "Details",
+    },
+    {
+      key: 6,
+      studentMsv: "21A100100327",
+      studentName: "Trần Minh Tuấn",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "25/5/2003",
+      studentGender: "Nam",
+      studentState: "Nghỉ học",
+      studentOption: "Details",
+    },
+    {
+      key: 7,
+      studentMsv: "21A100100344",
+      studentName: "Trịnh Văn Mạnh",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "25/11/2003",
+      studentGender: "Nam",
+      studentState: "Học Thạc Sĩ",
+      studentOption: "Details",
+    },
+    {
+      key: 8,
+      studentMsv: "21A100100437",
+      studentName: "Hoàng Bảo Ngọc",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "03/02/2003",
+      studentGender: "Nữ",
+      studentState: "Lười học",
+      studentOption: "Details",
+    },
+    {
+      key: 9,
+      studentMsv: "21A100100537",
+      studentName: "Trần Khánh Hùng",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "25/11/2003",
+      studentGender: "Nam",
+      studentState: "Bùng học",
+      studentOption: "Details",
+    },
+    {
+      key: 10,
+      studentMsv: "21A100100347",
+      studentName: "Phạm Duy Trường",
+      studentClass: "2110A01",
+      studentCourse: "K21",
+      studentDob: "25/11/2003",
+      studentGender: "Nam",
+      studentState: "Tốt nghiệp",
+      studentOption: "Details",
+    },
+  ];
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    if (selectedRowKeys?.length > 0) {
+      setSelectedRowKeys(
+        newSelectedRowKeys?.filter((item) => item !== selectedRowKeys[0])
+      );
+    } else {
+      console.log("vào đây");
+      setSelectedRowKeys(newSelectedRowKeys);
+    }
+  };
+  const rowSelection: TableRowSelection<any> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
+  const hasSelected = selectedRowKeys?.length > 0;
+  const handleExportExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "StudentsList");
+    XLSX.writeFile(workbook, "DanhSachSinhVien.xlsx");
+  };
   useEffect(() => {
     const handleTableScroll = () => {
       if (tableWrapperRef.current && scrollRef.current) {
@@ -241,7 +339,7 @@ export const ListStudents = () => {
   }, []);
   return (
     <div className="list-student">
-      <HeaderWeb name="REPO_WEB" />
+      <HeaderWeb name="REPO_WEB" disAble={true} />
       <div className="list-student_header">
         <h1 className="list-student_header-title">Danh sách sinh viên</h1>
         <p className="list-student_header-sub">
@@ -333,16 +431,35 @@ export const ListStudents = () => {
           <TableWrap
             setSize={() => {}}
             scrollValue={{ x: 1366 }}
-            tableWidth={1800}
-            isHidePagination
+            tableWidth={1416}
             rootClassName="list-student_table-wrap"
-            isScroll
             tableWrapperRef={tableWrapperRef}
             tableProps={{
               columns: conlumns,
               dataSource: data,
               rowHoverable: false,
               rowSelection: rowSelection,
+            }}
+          />
+        </div>
+        <div className="list-student_button">
+          <CustomButton
+            content="In danh sách"
+            buttonProps={{
+              className: "list-student_button-print",
+              icon: <PrinterOutlined />,
+              onClick: () => {
+                window.print();
+              },
+            }}
+          />
+          <CustomButton
+            content="Xuất Excel"
+            buttonProps={{
+              className: "list-student_button-excel",
+              icon: <FileExcelOutlined />,
+              onClick: handleExportExcel,
+              disabled: !hasSelected,
             }}
           />
         </div>

@@ -144,6 +144,18 @@
     }
   }
 
+  &__float {
+    &-button {
+      position: absolute;
+      top: 64px;
+      left: 24px;
+      width: 40px !important;
+      height: 40px;
+      border-radius: 50% !important;
+      box-shadow: 1px 1px 8px 0px #0000001f;
+    }
+  }
+
   &__col {
     &-left {
       display: flex;

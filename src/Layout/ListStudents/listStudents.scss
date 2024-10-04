@@ -27,7 +27,7 @@
       margin-bottom: 0 !important;
     }
   }
-  &_content{
+  &_content {
     padding: 10px;
   }
   &_sidebar {
@@ -43,6 +43,10 @@
     &-scroll {
       position: relative;
       @include sm {
+        width: 1200px;
+        max-width: 1400px !important;
+      }
+      @include lg {
         width: 1200px;
         max-width: 1400px !important;
       }
@@ -162,6 +166,7 @@
           line-height: 22px;
           text-align: left;
           color: #3b82f6;
+          background-color: $empty_avatar_color !important;
           &::after {
             display: inline-flex;
             float: right;
@@ -192,9 +197,57 @@
             line-height: 22px;
             text-align: left;
             color: #343434;
+            margin-bottom: 0 !important;
           }
         }
       }
+    }
+    .custom-pagination {
+      height: 36px;
+      border-bottom: 1px solid $gray_blur_color;
+    }
+  }
+  &_data {
+    &-studentState {
+      width: fit-content;
+      min-width: 120px;
+      height: 20px;
+      padding: 25px;
+      background-color: $empty_avatar_color;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 400;
+      font-style: 16px;
+    }
+    &-studentOption {
+      width: 120px;
+      height: 40px;
+      color: white;
+      background-color: #3b82f6;
+      font-weight: 600;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+    }
+  }
+  &_button {
+    display: flex;
+    justify-content: end;
+    padding: 15px 20px;
+    &-print {
+      background-color: #3b82f6;
+      color: $white_color;
+      font-weight: 600;
+      font-style: 24px;
+    }
+    &-excel {
+      margin-left: 10px;
+      background-color: $success_color;
+      color: $white_color;
+      font-weight: 600;
+      font-style: 24px;
     }
   }
 }
