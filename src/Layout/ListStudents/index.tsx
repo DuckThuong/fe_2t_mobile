@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SvgMagnifyingGlassSubmit } from "../../Components/@svg/SvgMagnifyingGlassSubmit";
 import { CustomButton } from "../../Components/buttons/CustomButton";
 import ColWrap from "../../Components/ColWrap";
@@ -12,7 +12,6 @@ import CustomSelectCheckbox from "./../../Components/Form/FormSelectCheckbox/ind
 import CustomSelectRadio from "./../../Components/Form/FormSelectRadio/index";
 import "./listStudents.scss";
 import dayjs from "dayjs";
-import { render } from "@testing-library/react";
 const conlumns = [
   {
     title: "STT",
@@ -168,6 +167,9 @@ enum courseSelector {
 }
 export const ListStudents = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const tableWrapperRef = useRef<HTMLDivElement>(null);
+
   const majorOption = Object.values(majorSelector).map((major) => ({
     label: major,
     value: major,
@@ -183,6 +185,60 @@ export const ListStudents = () => {
       setSelectedRowKeys(selectedKeys);
     },
   };
+  useEffect(() => {
+    const handleTableScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        scrollRef.current.scrollLeft = tableWrapperRef.current.scrollLeft;
+      }
+    };
+
+    const handleDivScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        tableWrapperRef.current.scrollLeft = scrollRef.current.scrollLeft;
+      }
+    };
+
+    if (tableWrapperRef.current && scrollRef.current) {
+      tableWrapperRef.current.addEventListener("scroll", handleTableScroll);
+      scrollRef.current.addEventListener("scroll", handleDivScroll);
+    }
+    return () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        tableWrapperRef.current.removeEventListener(
+          "scroll",
+          handleTableScroll
+        );
+        scrollRef.current.removeEventListener("scroll", handleDivScroll);
+      }
+    };
+  }, []);
+  useEffect(() => {
+    const handleTableScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        scrollRef.current.scrollLeft = tableWrapperRef.current.scrollLeft;
+      }
+    };
+
+    const handleDivScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        tableWrapperRef.current.scrollLeft = scrollRef.current.scrollLeft;
+      }
+    };
+
+    if (tableWrapperRef.current && scrollRef.current) {
+      tableWrapperRef.current.addEventListener("scroll", handleTableScroll);
+      scrollRef.current.addEventListener("scroll", handleDivScroll);
+    }
+    return () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        tableWrapperRef.current.removeEventListener(
+          "scroll",
+          handleTableScroll
+        );
+        scrollRef.current.removeEventListener("scroll", handleDivScroll);
+      }
+    };
+  }, []);
   return (
     <div className="list-student">
       <HeaderWeb name="REPO_WEB" />
@@ -192,99 +248,104 @@ export const ListStudents = () => {
           Trang này hiển thị thông tin liên quan đến thông tin sinh viên{" "}
         </p>
       </div>
-      <div className="list-student_sidebar">
-        <RowWrap
-          isGutter={true}
-          isWrap={true}
-          isAutoFillRow={true}
-          styleFill={"between"}
-          gutter={[16, 16]}
-          className="list-student_sidebar-scroll"
-        >
-          <ColWrap
-            colProps={{ span: 8 }}
-            className="list-student_sidebar-colLeft"
+      <div className="list-student_content">
+        <div className="list-student_sidebar" ref={scrollRef}>
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[16, 16]}
+            className="list-student_sidebar-scroll"
           >
-            <CustomSelectRadio
-              options={majorOption}
-              onChange={() => {}}
-              placeholder="Chuyên ngành"
-              radioProps={{
-                rootClassName: "radio-colLeft-select",
-              }}
-              selectProps={{
-                popupClassName: "radio-popup",
-              }}
-            />
-            <CustomSelectCheckbox
-              options={courseOption}
-              onChange={() => {}}
-              placeholder="Khóa"
-              footerDropdown={
-                <div className="list-student_sidebar-button">
-                  <CustomButton
-                    content="Hiển thị"
-                    buttonProps={{
-                      className: "width-40 height-24",
-                      type: "primary",
-                      onClick: () => {},
-                    }}
-                  />
-                </div>
-              }
-              selectProps={{
-                rootClassName: "list-student_sidebar-checkbox",
-                popupClassName: "checkbox-popup",
-              }}
-            />
-          </ColWrap>
-          <ColWrap
-            colProps={{ span: 8 }}
-            className="list-student_sidebar-colRight"
-          >
-            <FormWrap
-              className="list-student_sidebar-colRight-formSearch"
-              name="search-product"
-              layout={"inline"}
-              initialValues={{
-                select: "Dữ liệu",
-              }}
-              onFinish={() => {}}
+            <ColWrap
+              colProps={{ span: 8 }}
+              className="list-student_sidebar-colLeft"
             >
-              <FormInputSearch
-                name={"fullrecordSearch"}
-                isShowIcon={false}
-                formItemProps={{
-                  className: "list-student_sidebar-colRight-formSearch-input",
+              <CustomSelectRadio
+                options={majorOption}
+                onChange={() => {}}
+                placeholder="Chuyên ngành"
+                radioProps={{
+                  rootClassName: "radio-colLeft-select",
                 }}
-                inputProps={{
-                  placeholder: "Mã sinh viên",
-                }}
-              />
-              <FormButtonSubmit
-                content={<SvgMagnifyingGlassSubmit />}
-                formItemProps={{
-                  className: "list-student_sidebar-colRight-formSearch-button",
+                selectProps={{
+                  popupClassName: "radio-popup",
                 }}
               />
-            </FormWrap>
-          </ColWrap>
-        </RowWrap>
-      </div>
-      <div className="list-student_table">
-        <TableWrap
-          setSize={() => {}}
-          scrollValue={{ x: 1200 }}
-          isHidePagination
-          rootClassName="list-student_table-wrap"
-          isScroll
-          tableProps={{
-            columns: conlumns,
-            dataSource: data,
-            rowHoverable: false,
-            rowSelection: rowSelection,
-          }}
-        />
+              <CustomSelectCheckbox
+                options={courseOption}
+                onChange={() => {}}
+                placeholder="Khóa"
+                footerDropdown={
+                  <div className="list-student_sidebar-button">
+                    <CustomButton
+                      content="Hiển thị"
+                      buttonProps={{
+                        className: "width-40 height-24",
+                        type: "primary",
+                        onClick: () => {},
+                      }}
+                    />
+                  </div>
+                }
+                selectProps={{
+                  rootClassName: "list-student_sidebar-checkbox",
+                  popupClassName: "checkbox-popup",
+                }}
+              />
+            </ColWrap>
+            <ColWrap
+              colProps={{ span: 8 }}
+              className="list-student_sidebar-colRight"
+            >
+              <FormWrap
+                className="list-student_sidebar-colRight-formSearch"
+                name="search-product"
+                layout={"inline"}
+                initialValues={{
+                  select: "Dữ liệu",
+                }}
+                onFinish={() => {}}
+              >
+                <FormInputSearch
+                  name={"fullrecordSearch"}
+                  isShowIcon={false}
+                  formItemProps={{
+                    className: "list-student_sidebar-colRight-formSearch-input",
+                  }}
+                  inputProps={{
+                    placeholder: "Mã sinh viên",
+                  }}
+                />
+                <FormButtonSubmit
+                  content={<SvgMagnifyingGlassSubmit />}
+                  formItemProps={{
+                    className:
+                      "list-student_sidebar-colRight-formSearch-button",
+                  }}
+                />
+              </FormWrap>
+            </ColWrap>
+          </RowWrap>
+        </div>
+        <div className="list-student_table">
+          <TableWrap
+            setSize={() => {}}
+            scrollValue={{ x: 1366 }}
+            tableWidth={1800}
+            isHidePagination
+            rootClassName="list-student_table-wrap"
+            isScroll
+            tableWrapperRef={tableWrapperRef}
+            tableProps={{
+              columns: conlumns,
+              dataSource: data,
+              rowHoverable: false,
+              rowSelection: rowSelection,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
