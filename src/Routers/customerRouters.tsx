@@ -8,6 +8,7 @@ import { ForgotCodeInput } from "../Layout/ForgotPassword/ForgotCodeInput";
 import { ForgotEditPassword } from "../Layout/ForgotPassword/ForgotEditPassword";
 import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
 import { ListStudents } from "../Layout/ListStudents";
+import { StudentInformation } from "../Layout/StudentInformation";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -37,6 +38,11 @@ export const CustomerRouter = () => (
     <Route
       path={CUSTOMER_ROUTER_PATH.LIST_STUDENT}
       element={<SuspenseWrapper component={<ListStudents />} />}
+    ></Route>
+    {/* Student_Information */}
+    <Route
+      path={CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION}
+      element={<SuspenseWrapper component={<StudentInformation />} />}
     ></Route>
   </Routes>
 );

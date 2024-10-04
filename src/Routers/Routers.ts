@@ -14,6 +14,8 @@ export const CUSTOMER_ROUTE_NAME = {
   FORGOT_SUCCESS: "forgot-success",
   //List_Students
   LIST_STUDENT: "list-student",
+  //Student_information
+  STUDENT_INFORMATION: "student-infor",
 };
 export const CUSTOMER_ROUTER_PATH = {
   //Log_In
@@ -25,4 +27,6 @@ export const CUSTOMER_ROUTER_PATH = {
   FORGOT_SUCCESS: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.FORGOT_SUCCESS}`,
   //List_students
   LIST_STUDENT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.LIST_STUDENT}`,
+  //Student_information
+  STUDENT_INFORMATION: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.STUDENT_INFORMATION}`,
 };

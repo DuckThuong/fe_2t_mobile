@@ -14,9 +14,12 @@ import {
   CUSTOMER_ROUTER_PATH,
 } from "../../Routers/Routers";
 import { TAB_SIZE } from "../../ThemeSetting";
+import { CustomButton } from "../../Components/buttons/CustomButton";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 type Props = {
   name: string;
+  disAble: boolean;
 };
 
 interface MenuItem {
@@ -28,7 +31,7 @@ const listMenuItem = (): MenuItem[] => {
   return [
     {
       title: "Danh sách sinh viên",
-      link: `/${CUSTOMER_ROUTE_NAME.FORGOT_CODE_INPUT}`,
+      link: `/${CUSTOMER_ROUTE_NAME.LIST_STUDENT}`,
     },
     {
       title: "Quản lý lớp học",
@@ -76,7 +79,7 @@ const listSettingItem = (
 };
 
 export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
-  const { name } = props;
+  const { name, disAble } = props;
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -122,6 +125,22 @@ export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
           </Link>
         ))}
       </Drawer>
+      <div className="inventory-header__float">
+        {!disAble ? (
+          <CustomButton
+            content={""}
+            buttonProps={{
+              icon: <ArrowLeftOutlined />,
+              className: "inventory-header__float-button",
+              onClick: () => {
+                navigate(CUSTOMER_ROUTER_PATH.LIST_STUDENT);
+              },
+            }}
+          />
+        ) : (
+          <></>
+        )}
+      </div>
       <div className="inventory-header__container">
         <div className="inventory-header__col-left">
           {!user?.id ? (
