@@ -36,6 +36,21 @@ enum courseSelector {
   K23 = "K23",
   K24 = "K24",
 }
+interface AnyObject {
+  [key: string]: any;
+}
+interface Student extends AnyObject {
+  key: number;
+  studentMsv: string;
+  studentName: string;
+  studentClass: string;
+  studentCourse: string;
+  studentDob: string;
+  studentGender: string;
+  studentState: string;
+  studentOption: string;
+}
+
 export const ListStudents = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -55,7 +70,9 @@ export const ListStudents = () => {
       dataIndex: "stt",
       key: "stt",
       render: (text, record, index) => {
-        return <p style={{ color: "black", fontWeight: "600" }}>{index + 1}</p>;
+        return (
+          <p style={{ color: "black", fontWeight: "600" }}>{record.key}</p>
+        );
       },
     },
     {
@@ -167,7 +184,7 @@ export const ListStudents = () => {
       },
     },
   ];
-  const data = [
+  const data: Student[] = [
     {
       key: 1,
       studentMsv: "21A100100373",
@@ -285,7 +302,6 @@ export const ListStudents = () => {
         newSelectedRowKeys?.filter((item) => item !== selectedRowKeys[0])
       );
     } else {
-      console.log("vào đây");
       setSelectedRowKeys(newSelectedRowKeys);
     }
   };
@@ -446,7 +462,6 @@ export const ListStudents = () => {
             tableProps={{
               columns: conlumns,
               dataSource: data,
-              rowHoverable: false,
               rowSelection: rowSelection,
             }}
           />
