@@ -199,6 +199,12 @@
             color: #343434;
             margin-bottom: 0 !important;
           }
+          .đang-học {
+            background-color: greenyellow !important;
+            font-size: 16px;
+            font-weight: 500;
+            color: white;
+          }
         }
       }
     }
@@ -213,7 +219,7 @@
       min-width: 120px;
       height: 20px;
       padding: 25px;
-      background-color: $empty_avatar_color;
+      background-color: $empty_avatar_color !important;
       border-radius: 20px;
       display: flex;
       justify-content: center;

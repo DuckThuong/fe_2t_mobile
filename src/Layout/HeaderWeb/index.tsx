@@ -133,7 +133,7 @@ export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
               icon: <ArrowLeftOutlined />,
               className: "inventory-header__float-button",
               onClick: () => {
-                navigate(CUSTOMER_ROUTER_PATH.LIST_STUDENT);
+                navigate(-1);
               },
             }}
           />

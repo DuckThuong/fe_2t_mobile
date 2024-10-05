@@ -1,6 +1,7 @@
 import {
   AuditOutlined,
   EditOutlined,
+  FileExcelOutlined,
   PrinterOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -20,6 +21,7 @@ import {
 import TableWrap from "../../Components/TableWrap";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
 
 export const StudentInformation = () => {
   const navigate = useNavigate();
@@ -192,22 +194,54 @@ export const StudentInformation = () => {
       ph: "Room 1010",
     },
   ];
+  const handleExportExcel = () => {
+    const headers = [
+      { header: "STT", key: "stt" },
+      { header: "MÃ HỌC PHẦN", key: "mhp" },
+      { header: "TÊN HỌC PHẦN", key: "thp" },
+      { header: "SỐ TÍN CHỈ", key: "stc" },
+      { header: "TÊN LỚP TÍN CHỈ", key: "ltc" },
+      { header: "LỊCH HỌC", key: "lh" },
+      { header: "GIÁO VIÊN", key: "gv" },
+      { header: "PHÒNG HỌC", key: "ph" },
+    ];
 
+    const worksheet = XLSX.utils.json_to_sheet(data, {
+      header: headers.map((h) => h.key),
+    });
+    const workbook = XLSX.utils.book_new();
+
+    headers.forEach((h, index) => {
+      const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
+      worksheet[cellAddress].v = h.header;
+    });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "CourseList");
+    XLSX.writeFile(workbook, "DanhSachHocPhan.xlsx");
+  };
   return (
     <div>
       <HeaderWeb name="REPO_WEB" disAble={false} />
       <div className="student-information">
         <FormWrap className="student-information_form">
-          <div className="student-information_underLine">
+          <div className="student-information_underLine ">
             <h1 className="student-information_form-header">
               THÔNG TIN SINH VIÊN
-              <span>
+              <span style={{ marginLeft: "8px" }}>
                 <FontAwesomeIcon icon={faGraduationCap} />
               </span>
             </h1>
-            <p className="student-information_form-title">
-              Thông tin sinh viên được đăng kí và cập nhật mỗi ngày.
-            </p>
+            <div style={{ marginBottom: "32px" }}>
+              <span className="student-information_form-title">
+                Trang này hiển thị thông tin chi tiết của sinh viên:
+              </span>
+              <span
+                className="student-information_form-name"
+                style={{ marginLeft: "5px" }}
+              >
+                Trịnh Đức Thưởng
+              </span>
+            </div>
           </div>
           <div className="student-information_underLine">
             <p className="student-information_title">
@@ -568,6 +602,14 @@ export const StudentInformation = () => {
             className="student-information_row"
           >
             <ColWrap colProps={{ span: 12 }}>
+              <CustomButton
+                content="Xuất Excel"
+                buttonProps={{
+                  className: "list-student_button-excel",
+                  icon: <FileExcelOutlined />,
+                  onClick: handleExportExcel,
+                }}
+              />
               <CustomButton
                 content={"In thông tin"}
                 buttonProps={{

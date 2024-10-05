@@ -23,7 +23,7 @@
       text-align: left;
       color: #231f20;
     }
-    &-title {
+    &-sub {
       font-family: Open Sans;
       font-size: 12px;
       font-weight: 400;
@@ -31,11 +31,37 @@
       text-align: left;
       color: #646464;
     }
+    &-name {
+      color: black;
+      font-size: 14px;
+      font-weight: 400;
+    }
     &-edit {
       background-color: $primary_color;
       color: $white_color;
       font-weight: 600;
       font-size: 16px;
+    }
+  }
+  &_row {
+    &-label {
+      font-family: Open Sans;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+      text-align: left;
+      color: #161617;
+    }
+    .form__input {
+      .ant-row {
+        width: 100% !important;
+        .ant-col-14 {
+          max-width: 100% !important;
+          input {
+            border: 1px solid $gray_blur_color;
+          }
+        }
+      }
     }
   }
 }

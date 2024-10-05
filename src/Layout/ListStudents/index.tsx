@@ -36,18 +36,6 @@ enum courseSelector {
   K23 = "K23",
   K24 = "K24",
 }
-// interface DataType {
-//   key: number;
-//   studentMsv: string;
-//   studentName: string;
-//   studentClass: string;
-//   studentCourse: string;
-//   studentDob: string;
-//   studentGender: string;
-//   studentState: string;
-//   studentOption: string;
-// }
-
 export const ListStudents = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -147,9 +135,10 @@ export const ListStudents = () => {
       dataIndex: "studentState",
       key: "studentState",
       render: (record) => {
+        const stateClass = `list-student_data-studentState ${record.toLowerCase().replace(/\s+/g, '-')}`;
         return (
           <>
-            <p className="list-student_data-studentState">{record}</p>
+            <p className={stateClass}>{record}</p>
           </>
         );
       },
@@ -304,8 +293,26 @@ export const ListStudents = () => {
   };
   const hasSelected = selectedRowKeys?.length > 0;
   const handleExportExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
+    const headers = [
+      { header: "STT", key: "key" },
+      { header: "Mã Sinh Viên", key: "studentMsv" },
+      { header: "Họ và Tên", key: "studentName" },
+      { header: "Lớp", key: "studentClass" },
+      { header: "Khóa", key: "studentCourse" },
+      { header: "Ngày Sinh", key: "studentDob" },
+      { header: "Giới Tính", key: "studentGender" },
+      { header: "Trạng Thái", key: "studentState" },
+      { header: "Chi Tiết", key: "studentOption" },
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(data, {
+      header: headers.map((h) => h.key),
+    });
     const workbook = XLSX.utils.book_new();
+    headers.forEach((h, index) => {
+      const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
+      worksheet[cellAddress].v = h.header;
+    });
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "StudentsList");
     XLSX.writeFile(workbook, "DanhSachSinhVien.xlsx");
@@ -429,7 +436,7 @@ export const ListStudents = () => {
         </div>
         <div className="list-student_table">
           <TableWrap
-            setSize={() => {}} 
+            setSize={() => {}}
             scrollValue={{ x: 1366 }}
             tableWidth={1416}
             rootClassName="list-student_table-wrap"

@@ -31,6 +31,11 @@
       text-align: left;
       color: #646464;
     }
+    &-name {
+      color: black;
+      font-size: 14px;
+      font-weight: 400;
+    }
     &-edit {
       background-color: $primary_color;
       color: $white_color;
