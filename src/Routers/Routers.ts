@@ -15,7 +15,9 @@ export const CUSTOMER_ROUTE_NAME = {
   //List_Students
   LIST_STUDENT: "list-student",
   //Student_information
-  STUDENT_INFORMATION: "student-infor",
+  STUDENT_INFORMATION: "student-information",
+  //Subject_information
+  SUBJECT_INFORMATION: "subject-information",
 };
 export const CUSTOMER_ROUTER_PATH = {
   //Log_In
@@ -29,4 +31,6 @@ export const CUSTOMER_ROUTER_PATH = {
   LIST_STUDENT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.LIST_STUDENT}`,
   //Student_information
   STUDENT_INFORMATION: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.STUDENT_INFORMATION}`,
+  //Subject_information
+  SUBJECT_INFORMATION: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.SUBJECT_INFORMATION}`,
 };

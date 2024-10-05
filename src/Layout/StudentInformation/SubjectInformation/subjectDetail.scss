@@ -1,0 +1,41 @@
+@import "../../../styles/mixins";
+@import "../../../styles/variables.scss";
+.subject-detail {
+  display: flex;
+  justify-content: center;
+  &_form {
+    width: 960px;
+    height: fit-content;
+    padding: 32px 52px 32px 52px;
+    box-shadow: -2px 2px 20px 0px #0000001f;
+    background: #ffffff;
+    margin-top: 32px;
+    border-radius: 24px;
+    @include sm {
+      width: 100%;
+      box-shadow: none !important;
+    }
+    &-header {
+      font-family: Open Sans;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 36px;
+      text-align: left;
+      color: #231f20;
+    }
+    &-title {
+      font-family: Open Sans;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 18px;
+      text-align: left;
+      color: #646464;
+    }
+    &-edit {
+      background-color: $primary_color;
+      color: $white_color;
+      font-weight: 600;
+      font-size: 16px;
+    }
+  }
+}

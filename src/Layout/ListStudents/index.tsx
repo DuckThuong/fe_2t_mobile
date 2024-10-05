@@ -429,7 +429,7 @@ export const ListStudents = () => {
         </div>
         <div className="list-student_table">
           <TableWrap
-            setSize={() => {}}
+            setSize={() => {}} 
             scrollValue={{ x: 1366 }}
             tableWidth={1416}
             rootClassName="list-student_table-wrap"

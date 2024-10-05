@@ -80,7 +80,7 @@ export const StudentInformation = () => {
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 onClick: () => {
-                  navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
+                  navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION);
                 },
               }}
             />
@@ -92,23 +92,24 @@ export const StudentInformation = () => {
   const data = [
     {
       stt: 1,
-      mhp: "CS101",
-      thp: "Computer Science Basics",
+      mhp: "7E1023.22",
+      thp: "Lập trình Web nâng cao",
       stc: 3,
-      ltc: "CS101-A",
-      lh: "Mon-Wed-Fri 10:00-11:00",
-      gv: "Dr. John Doe",
-      ph: "Room 101",
+      ltc: "7E1023.22-1.2425.2.1_LT",
+      lh: `16/09/24-17/11/24 - Thứ 2(T9-12)
+           - Thứ 4(T9-12)`,
+      gv: "Thái Thanh Tùng",
+      ph: "FITHOU-P24FITHOU-P32Online-O.01",
     },
     {
       stt: 2,
-      mhp: "MA102",
-      thp: "Mathematics II",
+      mhp: "7E1016.22",
+      thp: "	Thiết kế trải nghiệm người dùng",
       stc: 4,
-      ltc: "MA102-B",
+      ltc: "7E1016.22-1.2425.6.6_LT",
       lh: "Tue-Thu 09:00-10:30",
-      gv: "Prof. Jane Smith",
-      ph: "Room 202",
+      gv: "Dương Chí Bằng	",
+      ph: "FITHOU-P51",
     },
     {
       stt: 3,
@@ -230,6 +231,7 @@ export const StudentInformation = () => {
                   className: "student-information_form-studentName",
                 }}
                 inputProps={{
+                  placeholder: "Trịnh Đức Thưởng",
                   disabled: true,
                 }}
               />
@@ -253,6 +255,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "2110A01",
                 }}
               />
             </ColWrap>
@@ -265,6 +268,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "21A100100373",
                 }}
               />
             </ColWrap>
@@ -287,6 +291,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "034203005852",
                 }}
               />
             </ColWrap>
@@ -299,6 +304,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "28/07/2003",
                 }}
               />
             </ColWrap>
@@ -321,6 +327,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "trinhthuong26022003@gmail.com",
                 }}
               />
             </ColWrap>
@@ -333,6 +340,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "0868472032",
                 }}
               />
             </ColWrap>
@@ -355,6 +363,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "Định Công, Hoàng Mai, Hà Nội",
                 }}
               />
             </ColWrap>
@@ -367,6 +376,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "Bách Thuận, Vũ Thư, Thái Bình",
                 }}
               />
             </ColWrap>
@@ -376,6 +386,7 @@ export const StudentInformation = () => {
               Thông tin ngành học <AuditOutlined />
             </p>
           </div>
+          {/* Hàng 6 */}
           <RowWrap
             isGutter={true}
             isWrap={true}
@@ -393,6 +404,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "Công nghệ thông tin",
                 }}
               />
             </ColWrap>
@@ -405,10 +417,12 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "Công nghệ phần mềm",
                 }}
               />
             </ColWrap>
           </RowWrap>
+          {/* Hàng 7 */}
           <RowWrap
             isGutter={true}
             isWrap={true}
@@ -428,6 +442,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "111",
                 }}
               />
             </ColWrap>
@@ -443,10 +458,12 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "45",
                 }}
               />
             </ColWrap>
           </RowWrap>
+          {/* Hàng 8 */}
           <RowWrap
             isGutter={true}
             isWrap={true}
@@ -466,6 +483,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "7,11",
                 }}
               />
             </ColWrap>
@@ -480,6 +498,45 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: true,
+                  placeholder: "2,77",
+                }}
+              />
+            </ColWrap>
+          </RowWrap>
+          {/* Hàng 9 */}
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[8, 8]}
+            className="student-information_row"
+          >
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Xếp hạng học lực</p>
+              <FormInput
+                name={"studentScoreTen"}
+                formItemProps={{
+                  className: "student-information_form-studentScoreTen",
+                }}
+                inputProps={{
+                  disabled: true,
+                  placeholder: "Khá",
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">
+                Xếp hạng học lực thang điểm 4
+              </p>
+              <FormInput
+                name={"studentScordFour"}
+                formItemProps={{
+                  className: "student-information_form-studentScordFour",
+                }}
+                inputProps={{
+                  disabled: true,
+                  placeholder: "Khá",
                 }}
               />
             </ColWrap>
