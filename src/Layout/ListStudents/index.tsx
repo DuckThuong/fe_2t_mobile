@@ -135,7 +135,9 @@ export const ListStudents = () => {
       dataIndex: "studentState",
       key: "studentState",
       render: (record) => {
-        const stateClass = `list-student_data-studentState ${record.toLowerCase().replace(/\s+/g, '-')}`;
+        const stateClass = `list-student_data-studentState ${record
+          .toLowerCase()
+          .replace(/\s+/g, "-")}`;
         return (
           <>
             <p className={stateClass}>{record}</p>
@@ -251,7 +253,7 @@ export const ListStudents = () => {
       studentCourse: "K21",
       studentDob: "03/02/2003",
       studentGender: "Nữ",
-      studentState: "Lười học",
+      studentState: "Đang học",
       studentOption: "Details",
     },
     {
@@ -262,7 +264,7 @@ export const ListStudents = () => {
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
-      studentState: "Bùng học",
+      studentState: "Đang học",
       studentOption: "Details",
     },
     {
