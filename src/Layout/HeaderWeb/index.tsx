@@ -30,7 +30,7 @@ interface MenuItem {
 const listMenuItem = (): MenuItem[] => {
   return [
     {
-      title: "Danh sách sinh viên",
+      title: "Danh sách học sinh",
       link: `/${CUSTOMER_ROUTE_NAME.LIST_STUDENT}`,
     },
     {
@@ -134,6 +134,10 @@ export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
               className: "inventory-header__float-button",
               onClick: () => {
                 navigate(-1);
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
               },
             }}
           />

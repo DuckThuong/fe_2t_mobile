@@ -42,6 +42,21 @@
       font-weight: 600;
       font-size: 16px;
     }
+    &-delete {
+      background-color: red;
+      color: white;
+      font-weight: 600;
+    }
+    &-editTable {
+      background-color: rgb(0, 217, 255);
+      color: white;
+      font-weight: 600;
+    }
+    &-add {
+      background-color: greenyellow;
+      color: white;
+      font-weight: 600;
+    }
   }
   &_title {
     color: #161617;
@@ -54,6 +69,12 @@
     border-bottom: 1px solid $gray_blur_color;
     margin-bottom: 32px;
     margin-top: 32px;
+  }
+  &_noData {
+    font-size: 14px;
+    font-weight: 400;
+    color: $primary_color;
+    text-decoration: underline !important;
   }
   &_row {
     &-label {
@@ -75,6 +96,32 @@
         }
       }
     }
+    &-modal {
+      .form__input {
+        .ant-row {
+          width: 100% !important;
+          .ant-col-14 {
+            max-width: 100% !important;
+            input {
+              border: 1px solid $gray_blur_color;
+            }
+          }
+        }
+      }
+    }
+    .form__select {
+      .ant-form-item {
+        .ant-row {
+          width: 100% !important;
+          .ant-col-14 {
+            max-width: 100% !important;
+            .ant-select-selector {
+              border: 1px solid $gray_blur_color !important;
+            }
+          }
+        }
+      }
+    }
     &:last-child {
       .ant-row {
         display: flex;
@@ -89,6 +136,36 @@
           }
         }
       }
+    }
+    .ant-row {
+      position: relative;
+      .footer {
+        position: absolute;
+        right: 10px;
+        &_row {
+          .ant-row {
+            width: 430px !important;
+            .ant-col {
+              display: flex;
+              flex-direction: row-reverse;
+              .ant-btn {
+                width: 120px;
+                margin: 0px 10px 0px 10px !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &_data {
+    &-studentAction {
+      margin-bottom: 0 !important;
+      font-weight: 600;
+      height: fit-content;
+      width: 120px;
+      padding: 7px;
+      border: 1px solid $gray_blur_color;
     }
   }
   &_table {
@@ -130,6 +207,7 @@
       .ant-table-tbody {
         .ant-table-cell {
           border-bottom: 1px solid $gray_blur_color;
+          vertical-align: middle !important;
           p {
             font-size: 14px;
             font-weight: 400;
@@ -144,6 +222,62 @@
     .custom-pagination {
       height: 36px;
       border-bottom: 1px solid $gray_blur_color;
+    }
+  }
+  &_modal {
+    &-addSubject {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+      }
+    }
+    &-add {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+      }
+    }
+    &-delete {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+      }
+    }
+    &-edit {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+      }
+    }
+  }
+}
+.ant-modal-content {
+  .ant-modal-body {
+    h1 {
+      font-weight: 600 !important;
+    }
+  }
+  .ant-modal-footer {
+    .ant-btn {
+      width: fit-content !important;
+      min-width: 140px;
+      height: 40px;
+      padding: 15px;
+      span {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      &-default {
+        border: 1px solid $gray_blur_color !important;
+      }
     }
   }
 }

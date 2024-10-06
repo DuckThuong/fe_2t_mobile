@@ -8,20 +8,23 @@ import { CustomButton } from "../../../Components/buttons/CustomButton";
 import { EditOutlined, PrinterOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 export const SubjectInformation = () => {
+  const [editState, setEditState] = useState<boolean>(true);
+
   return (
     <>
-      <HeaderWeb name="REPO_WEB" disAble={false} />
+      <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={false} />
       <div className="subject-detail">
         <FormWrap className="subject-detail_form">
           <h1 className="subject-detail_form-header">
-            Chi tiết học phần
+            CHI TIẾT MÔN HỌC
             <span style={{ marginLeft: "8px" }}>
               <FontAwesomeIcon icon={faBookOpen} />
             </span>
           </h1>
           <span className="subject-detail_form-sub">
-            Trang này hiển thị chi tiết học phần của sinh viên:
+            Trang này hiển thị chi tiết môn học của học sinh:
           </span>
           <span
             className="subject-detail_form-name"
@@ -41,15 +44,15 @@ export const SubjectInformation = () => {
             className="subject-detail_row"
           >
             <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Tên học phần</p>
+              <p className="subject-detail_row-label">Tên môn học</p>
               <FormInput
                 name={"courseName"}
                 formItemProps={{
                   className: "subject-detail_form-courseName",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "Lập trình Web nâng cao",
+                  disabled: editState,
+                  placeholder: "Tên môn học",
                 }}
               />
             </ColWrap>
@@ -64,28 +67,28 @@ export const SubjectInformation = () => {
             className="subject-detail_row"
           >
             <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Mã học phần</p>
+              <p className="subject-detail_row-label">Mã môn học</p>
               <FormInput
                 name={"courseCode"}
                 formItemProps={{
                   className: "subject-detail_form-courseCode",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "7E1023.22",
+                  disabled: editState,
+                  placeholder: "Mã môn học",
                 }}
               />
             </ColWrap>
             <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Tên lớp tín chỉ</p>
+              <p className="subject-detail_row-label">Mã lớp</p>
               <FormInput
                 name={"courseClass"}
                 formItemProps={{
                   className: "subject-detail_form-courseClass",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "7E1023.22-1.2425.2.1_LT",
+                  disabled: editState,
+                  placeholder: "Mã lớp",
                 }}
               />
             </ColWrap>
@@ -117,8 +120,8 @@ export const SubjectInformation = () => {
                       className: "subject-detail_form-dayStart",
                     }}
                     inputProps={{
-                      disabled: true,
-                      placeholder: "09",
+                      disabled: editState,
+                      placeholder: "Ngày",
                     }}
                   />
                 </ColWrap>
@@ -129,8 +132,8 @@ export const SubjectInformation = () => {
                       className: "subject-detail_form-monthStart",
                     }}
                     inputProps={{
-                      disabled: true,
-                      placeholder: "09",
+                      disabled: editState,
+                      placeholder: "Tháng",
                     }}
                   />
                 </ColWrap>
@@ -141,8 +144,8 @@ export const SubjectInformation = () => {
                       className: "subject-detail_form-yearStart",
                     }}
                     inputProps={{
-                      disabled: true,
-                      placeholder: "2024",
+                      disabled: editState,
+                      placeholder: "Năm",
                     }}
                   />
                 </ColWrap>
@@ -166,8 +169,8 @@ export const SubjectInformation = () => {
                       className: "subject-detail_form-dayEnd",
                     }}
                     inputProps={{
-                      disabled: true,
-                      placeholder: "15",
+                      disabled: editState,
+                      placeholder: "Ngày",
                     }}
                   />
                 </ColWrap>
@@ -178,8 +181,8 @@ export const SubjectInformation = () => {
                       className: "subject-detail_form-monthEnd",
                     }}
                     inputProps={{
-                      disabled: true,
-                      placeholder: "01",
+                      disabled: editState,
+                      placeholder: "Tháng",
                     }}
                   />
                 </ColWrap>
@@ -190,12 +193,48 @@ export const SubjectInformation = () => {
                       className: "subject-detail_form-yearEnd",
                     }}
                     inputProps={{
-                      disabled: true,
-                      placeholder: "2025",
+                      disabled: editState,
+                      placeholder: "Năm",
                     }}
                   />
                 </ColWrap>
               </RowWrap>
+            </ColWrap>
+          </RowWrap>
+          {/* Hàng 3.5*/}
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[12, 12]}
+            className="subject-detail_row"
+          >
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="subject-detail_row-label">Số tiết</p>
+              <FormInput
+                name={"courseTeacher"}
+                formItemProps={{
+                  className: "subject-detail_form-courseCode",
+                }}
+                inputProps={{
+                  disabled: editState,
+                  placeholder: "Số tiết",
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="subject-detail_row-label">Lịch học</p>
+              <FormInput
+                name={"courseRoom"}
+                formItemProps={{
+                  className: "subject-detail_form-courseRoom",
+                }}
+                inputProps={{
+                  disabled: editState,
+                  placeholder: "Lịch học",
+                }}
+              />
             </ColWrap>
           </RowWrap>
           {/* Hàng 4 */}
@@ -215,8 +254,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseCode",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "7E1023.22",
+                  disabled: editState,
+                  placeholder: "Giáo viên",
                 }}
               />
             </ColWrap>
@@ -228,8 +267,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseRoom",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "FITHOU-P24FITHOU-P32Online-O.01",
+                  disabled: editState,
+                  placeholder: "Phòng học",
                 }}
               />
             </ColWrap>
@@ -244,28 +283,28 @@ export const SubjectInformation = () => {
             className="subject-detail_row"
           >
             <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Kì học đăng kí</p>
+              <p className="subject-detail_row-label">Kì học </p>
               <FormInput
                 name={"coursePeriod"}
                 formItemProps={{
                   className: "subject-detail_form-coursePeriod",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "1",
+                  disabled: editState,
+                  placeholder: "Kì học ",
                 }}
               />
             </ColWrap>
             <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Năm học đăng kí</p>
+              <p className="subject-detail_row-label">Năm học </p>
               <FormInput
                 name={"courseYearRegis"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "3",
+                  disabled: editState,
+                  placeholder: "Năm học",
                 }}
               />
             </ColWrap>
@@ -287,8 +326,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseTimes",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "1",
+                  disabled: editState,
+                  placeholder: "Lần học",
                 }}
               />
             </ColWrap>
@@ -300,8 +339,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "1",
+                  disabled: editState,
+                  placeholder: "Lần thi",
                 }}
               />
             </ColWrap>
@@ -323,21 +362,21 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseTimes",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "10",
+                  disabled: editState,
+                  placeholder: "Điểm QT",
                 }}
               />
             </ColWrap>
             <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label">Điểm kiểm tra lần 1</p>
+              <p className="subject-detail_row-label">Điểm kiểm tra giữa kì</p>
               <FormInput
                 name={"courseExam"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "8,5",
+                  disabled: editState,
+                  placeholder: "Điểm kiểm tra",
                 }}
               />
             </ColWrap>
@@ -349,8 +388,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "8,5",
+                  disabled: editState,
+                  placeholder: "Điểm thi",
                 }}
               />
             </ColWrap>
@@ -362,8 +401,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "C",
+                  disabled: editState,
+                  placeholder: "Điểm chữ",
                 }}
               />
             </ColWrap>
@@ -385,8 +424,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "8",
+                  disabled: editState,
+                  placeholder: "Trung bình cộng học kì",
                 }}
               />
             </ColWrap>
@@ -398,8 +437,8 @@ export const SubjectInformation = () => {
                   className: "subject-detail_form-courseYearRegis",
                 }}
                 inputProps={{
-                  disabled: true,
-                  placeholder: "Đạt",
+                  disabled: editState,
+                  placeholder: "Kết quả",
                 }}
               />
             </ColWrap>
@@ -425,13 +464,33 @@ export const SubjectInformation = () => {
                   },
                 }}
               />
-              <CustomButton
-                content={"Chỉnh sửa"}
-                buttonProps={{
-                  icon: <EditOutlined />,
-                  className: "student-information_form-edit",
-                }}
-              />
+              {editState ? (
+                <CustomButton
+                  content={"Chỉnh sửa"}
+                  buttonProps={{
+                    icon: <EditOutlined />,
+                    className: "student-information_form-edit",
+                    onClick: () => {
+                      setEditState(false);
+                      window.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                      });
+                    },
+                  }}
+                />
+              ) : (
+                <CustomButton
+                  content={"Lưu"}
+                  buttonProps={{
+                    icon: <EditOutlined />,
+                    className: "student-information_form-edit",
+                    onClick: () => {
+                      setEditState(true);
+                    },
+                  }}
+                />
+              )}
             </ColWrap>
           </RowWrap>
         </FormWrap>

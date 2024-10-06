@@ -33,7 +33,6 @@ const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
     radioProps,
     selectProps,
   }) => {
-    console.log("options", options);
 
     const defaultKey = React.useMemo(() => {
       if (defaultVisibleField && typeof defaultVisibleField === "object") {

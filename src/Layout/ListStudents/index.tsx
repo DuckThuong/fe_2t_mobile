@@ -18,29 +18,24 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FileExcelOutlined, PrinterOutlined } from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import { TableRowSelection } from "antd/es/table/interface";
-enum majorSelector {
-  CNTT = "Công nghệ thông tin",
-  TMDT = "Thương mại điện tử",
-  TCDN = "Tài chính doanh nghiệp",
-  CNPM = "Công nghệ phần mềm",
-  CNM = "Công nghệ an ninh mạng",
+enum classSelector {
+  SIX = "Lớp 6",
+  SEVEN = "Lớp 7",
+  EIGHT = "Lớp 8",
+  NINE = "Lớp 9",
 }
-enum courseSelector {
+enum stateSelector {
   ALL = "ALL",
-  K17 = "K17",
-  K18 = "K18",
-  K19 = "K19",
-  K20 = "K20",
-  K21 = "K21",
-  K22 = "K22",
-  K23 = "K23",
-  K24 = "K24",
+  ON_STUDY = "Đang học",
+  OUT_STUDY = "Nghỉ học",
+  GRADUATE = "Tốt nghiệp",
+  RESERVED = "Bảo lưu",
 }
 interface AnyObject {
   [key: string]: any;
 }
 interface Student extends AnyObject {
-  key: number;
+  key: string;
   studentMsv: string;
   studentName: string;
   studentClass: string;
@@ -56,11 +51,11 @@ export const ListStudents = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const majorOption = Object.values(majorSelector).map((major) => ({
+  const classOption = Object.values(classSelector).map((major) => ({
     label: major,
     value: major,
   }));
-  const courseOption = Object.values(courseSelector).map((course) => ({
+  const stateOption = Object.values(stateSelector).map((course) => ({
     label: course,
     value: course,
   }));
@@ -76,7 +71,7 @@ export const ListStudents = () => {
       },
     },
     {
-      title: "MÃ SINH VIÊN",
+      title: "MÃ HỌC SINH",
       dataIndex: "studentMsv",
       key: "studentsMsv",
       render: (record) => {
@@ -186,10 +181,10 @@ export const ListStudents = () => {
   ];
   const data: Student[] = [
     {
-      key: 1,
+      key: "1",
       studentMsv: "21A100100373",
       studentName: "Trịnh Đức Thưởng",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "28/07/2003",
       studentGender: "Nam",
@@ -197,10 +192,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 2,
+      key: "2",
       studentMsv: "21A100100140",
       studentName: "Lương Thu Hoài",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "1/10/2003",
       studentGender: "Nữ",
@@ -208,10 +203,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 3,
+      key: "3",
       studentMsv: "21A100100137",
       studentName: "Nguyễn Minh Hòa",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "15/11/2003",
       studentGender: "Nữ",
@@ -219,10 +214,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 4,
+      key: "4",
       studentMsv: "21A100100331",
       studentName: "Nguyễn Minh Tuấn",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "15/01/2003",
       studentGender: "Nam",
@@ -230,10 +225,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 5,
+      key: "5",
       studentMsv: "21A100100337",
       studentName: "Trần Minh Thư",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nữ",
@@ -241,10 +236,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 6,
+      key: "6",
       studentMsv: "21A100100327",
       studentName: "Trần Minh Tuấn",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "25/5/2003",
       studentGender: "Nam",
@@ -252,21 +247,21 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 7,
+      key: "7",
       studentMsv: "21A100100344",
       studentName: "Trịnh Văn Mạnh",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
-      studentState: "Học Thạc Sĩ",
+      studentState: "Đang học",
       studentOption: "Details",
     },
     {
-      key: 8,
+      key: "8",
       studentMsv: "21A100100437",
       studentName: "Hoàng Bảo Ngọc",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "03/02/2003",
       studentGender: "Nữ",
@@ -274,10 +269,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 9,
+      key: "9",
       studentMsv: "21A100100537",
       studentName: "Trần Khánh Hùng",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -285,10 +280,10 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
-      key: 10,
+      key: "10",
       studentMsv: "21A100100347",
       studentName: "Phạm Duy Trường",
-      studentClass: "2110A01",
+      studentClass: "8",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -305,15 +300,18 @@ export const ListStudents = () => {
       setSelectedRowKeys(newSelectedRowKeys);
     }
   };
+  console.log(selectedRowKeys);
+
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
+
   const hasSelected = selectedRowKeys?.length > 0;
   const handleExportExcel = () => {
     const headers = [
       { header: "STT", key: "key" },
-      { header: "Mã Sinh Viên", key: "studentMsv" },
+      { header: "Mã học sinh", key: "studentMsv" },
       { header: "Họ và Tên", key: "studentName" },
       { header: "Lớp", key: "studentClass" },
       { header: "Khóa", key: "studentCourse" },
@@ -364,11 +362,11 @@ export const ListStudents = () => {
   }, []);
   return (
     <div className="list-student">
-      <HeaderWeb name="REPO_WEB" disAble={true} />
+      <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={true} />
       <div className="list-student_header">
-        <h1 className="list-student_header-title">Danh sách sinh viên</h1>
+        <h1 className="list-student_header-title">Danh sách học sinh</h1>
         <p className="list-student_header-sub">
-          Trang này hiển thị thông tin liên quan đến thông tin sinh viên{" "}
+          Trang này hiển thị thông tin liên quan đến thông tin học sinh{" "}
         </p>
       </div>
       <div className="list-student_content">
@@ -386,9 +384,9 @@ export const ListStudents = () => {
               className="list-student_sidebar-colLeft"
             >
               <CustomSelectRadio
-                options={majorOption}
+                options={classOption}
                 onChange={() => {}}
-                placeholder="Chuyên ngành"
+                placeholder="Lớp"
                 radioProps={{
                   rootClassName: "radio-colLeft-select",
                 }}
@@ -397,9 +395,9 @@ export const ListStudents = () => {
                 }}
               />
               <CustomSelectCheckbox
-                options={courseOption}
+                options={stateOption}
                 onChange={() => {}}
-                placeholder="Khóa"
+                placeholder="Trạng thái"
                 footerDropdown={
                   <div className="list-student_sidebar-button">
                     <CustomButton
@@ -438,7 +436,7 @@ export const ListStudents = () => {
                     className: "list-student_sidebar-colRight-formSearch-input",
                   }}
                   inputProps={{
-                    placeholder: "Mã sinh viên",
+                    placeholder: "Mã học sinh",
                   }}
                 />
                 <FormButtonSubmit

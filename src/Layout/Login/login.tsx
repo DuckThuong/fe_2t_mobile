@@ -85,6 +85,7 @@ const Login = () => {
               formItemProps={{
                 className: "login_form-input",
               }}
+              isPassword
               inputProps={{
                 onKeyPress: handleKeyPress,
               }}
