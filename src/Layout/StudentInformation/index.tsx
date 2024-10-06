@@ -38,13 +38,15 @@ export const StudentInformation = () => {
   const [form] = useForm();
   const [editState, setEditState] = useState<boolean>(true);
   const [courseEdit, setCourseEdit] = useState<boolean>(true);
-  const [editModal, setEditModal] = useState<boolean>(false);
-  const [deleteModal, setDeleteModal] = useState<boolean>(false);
-  const [addModal, setAddModal] = useState<boolean>(false);
-  const [addSubject, setAddSubject] = useState<boolean>(false);
-  const [showDeleteButton, setShowDeleteButton] = useState<boolean>(false);
-  const [showEditButton, setShowEditButton] = useState<boolean>(false);
-  const [showNewColumn, setShowNewColumn] = useState<boolean>(false);
+  const [modalStates, setModalStates] = useState({
+    editModal: false,
+    deleteModal: false,
+    addModal: false,
+    addSubject: false,
+    showDeleteButton: false,
+    showEditButton: false,
+    showNewColumn: false,
+  });
   const [year, setYear] = useState<any>();
   const [semester, setSemester] = useState<any>();
   const yearInputRef = useRef<HTMLInputElement>(null); // Tạo ref cho input year
@@ -221,6 +223,9 @@ export const StudentInformation = () => {
       ph: "Room 1010",
     },
   ];
+  console.log(modalStates.showDeleteButton);
+  console.log(modalStates.showDeleteButton);
+
   const courseColumns = [
     {
       title: "STT",
@@ -293,35 +298,39 @@ export const StudentInformation = () => {
       render: (text) => {
         return (
           <>
-            {!showEditButton ? (
+            {modalStates.showEditButton && (
               <CustomButton
                 content="Sửa"
                 buttonProps={{
                   onClick: () => {
-                    setEditModal(true);
+                    setModalStates({
+                      ...modalStates,
+                      editModal: true,
+                    });
                   },
+                  className: "edit",
                 }}
               />
-            ) : (
-              <></>
             )}
-            {!showDeleteButton ? (
+            {modalStates.showDeleteButton && (
               <CustomButton
                 content="Xóa"
                 buttonProps={{
                   onClick: () => {
-                    setDeleteModal(true);
+                    setModalStates({
+                      ...modalStates,
+                      deleteModal: true,
+                    });
                   },
+                  className: "delete",
                 }}
               />
-            ) : (
-              <></>
             )}
           </>
         );
       },
 
-      hidden: !showNewColumn,
+      hidden: !modalStates.showNewColumn,
     },
   ].filter((column) => !column.hidden);
   const courseData = [
@@ -337,13 +346,6 @@ export const StudentInformation = () => {
       ph: "FITHOU-P24FITHOU-P32Online-O.01",
     },
   ];
-  useEffect(() => {
-    if (form.getFieldValue("option") === "Thêm") {
-      console.log(form.getFieldValue("option"));
-    } else {
-      console.log("Không có dữ liệu");
-    }
-  });
   const handleExportExcel = () => {
     const headers = [
       { header: "STT", key: "stt" },
@@ -832,7 +834,12 @@ export const StudentInformation = () => {
                         className: "student-information_form-edit",
                         onClick: () => {
                           setCourseEdit(true);
-                          setShowNewColumn(false);
+                          setModalStates({
+                            ...modalStates,
+                            showNewColumn: false,
+                            showDeleteButton: false,
+                            showEditButton: false,
+                          });
                         },
                       }}
                     />
@@ -842,7 +849,12 @@ export const StudentInformation = () => {
                         icon: <DeleteOutlined />,
                         className: "student-information_form-delete",
                         onClick: () => {
-                          setShowNewColumn(true);
+                          setModalStates({
+                            ...modalStates,
+                            showNewColumn: true,
+                            showDeleteButton: true,
+                            showEditButton: false,
+                          });
                         },
                       }}
                     />
@@ -852,7 +864,12 @@ export const StudentInformation = () => {
                         icon: <EditOutlined />,
                         className: "student-information_form-editTable",
                         onClick: () => {
-                          setShowNewColumn(true);
+                          setModalStates({
+                            ...modalStates,
+                            showNewColumn: true,
+                            showEditButton: true,
+                            showDeleteButton: false,
+                          });
                         },
                       }}
                     />
@@ -862,7 +879,10 @@ export const StudentInformation = () => {
                         icon: <AppstoreAddOutlined />,
                         className: "student-information_form-add",
                         onClick: () => {
-                          setAddModal(true);
+                          setModalStates({
+                            ...modalStates,
+                            addModal: true,
+                          });
                         },
                       }}
                     />
@@ -960,13 +980,19 @@ export const StudentInformation = () => {
             {/* Modal Add */}
             <Modal
               className="student-information_modal-add"
-              open={addModal}
+              open={modalStates.addModal}
               onCancel={() => {
-                setAddModal(false);
+                setModalStates({
+                  ...modalStates,
+                  addModal: true,
+                });
               }}
               onOk={() => {
-                setAddSubject(true);
-                setAddModal(false);
+                setModalStates({
+                  ...modalStates,
+                  addModal: false,
+                  addSubject: true,
+                });
               }}
             >
               <h1 className="student-information_modal-header">
@@ -977,37 +1003,47 @@ export const StudentInformation = () => {
             {/* Modal Delete */}
             <Modal
               className="student-information_modal-delete"
-              open={deleteModal}
+              open={modalStates.deleteModal}
               onCancel={() => {
-                setDeleteModal(false);
+                setModalStates({
+                  ...modalStates,
+                  showDeleteButton: true,
+                  deleteModal: false,
+                });
               }}
               onOk={() => {}}
             >
               <h1 className="student-information_modal-header">
-                Bạn muốn xóa môn học của học sinh?
+                Bạn muốn xóa môn học này ?
               </h1>
               <div className="student-information_underLine" />
             </Modal>
             {/* Modal Edit */}
             <Modal
               className="student-information_modal-edit"
-              open={editModal}
+              open={modalStates.editModal}
               onCancel={() => {
-                setEditModal(false);
-                setShowEditButton(false);
+                setModalStates({
+                  ...modalStates,
+                  editModal: false,
+                  showEditButton: true,
+                });
               }}
               onOk={() => {}}
             >
               <h1 className="student-information_modal-header">
-                Bạn muốn sửa thông tin môn học của học sinh?
+                Bạn muốn sửa thông tin môn học này ?
               </h1>
               <div className="student-information_underLine" />
             </Modal>
             <Modal
               className="student-information_modal-addSubject"
-              open={addSubject}
+              open={modalStates.addSubject}
               onCancel={() => {
-                setAddSubject(false);
+                setModalStates({
+                  ...modalStates,
+                  addSubject: false,
+                });
               }}
             >
               <h1 className="student-information_modal-header">THÊM MÔN HỌC</h1>

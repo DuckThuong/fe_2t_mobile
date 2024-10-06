@@ -56,10 +56,10 @@ const Login = () => {
       <div className="login_form">
         <FormWrap onFinish={onFinish} form={form} className="login_form-wrap">
           <div className="login_form-header">
-            <p className="login_form-header-content">LOGIN</p>
+            <p className="login_form-header-content">ĐĂNG NHẬP</p>
           </div>
           <div className="login_form-email">
-            <p className="login_form-label">Email Address</p>
+            <p className="login_form-label">Email</p>
             <FormInput
               name={"email"}
               formItemProps={{
@@ -67,17 +67,18 @@ const Login = () => {
               }}
               inputProps={{
                 onKeyPress: handleKeyPress,
+                placeholder: "Email@gmail.com",
               }}
             />
           </div>
           <div className="login_form-password">
             <div className="login_form-password-title">
-              <span className="login_form-label">Password </span>
+              <span className="login_form-label">Mật khẩu</span>
               <span
                 onClick={handleForgotPassword}
                 className="login_form-password-title-forgot"
               >
-                Forgot password
+                Quên mật khẩu
               </span>
             </div>
             <FormInput
@@ -88,20 +89,21 @@ const Login = () => {
               isPassword
               inputProps={{
                 onKeyPress: handleKeyPress,
+                placeholder: "Mật khẩu",
               }}
             />
           </div>
 
           <div className="login_form-login">
             <CustomButton
-              content="Login"
+              content="Đăng nhập"
               buttonProps={{
                 className: "login_form-login-button",
               }}
             />
           </div>
 
-          <div className="login_form-privacy">
+          {/* <div className="login_form-privacy">
             <span>●●● of </span>
             <Link className="login_form-privacy-link" to={"/"}>
               Terms of service
@@ -112,12 +114,12 @@ const Login = () => {
             </Link>
             <span> Place where you can get it. </span>
             <span>If so, please log in.</span>
-          </div>
+          </div> */}
 
           <div className="login_form-checkbox ">
             <FormCheckbox
               name={"submit"}
-              content={"Stay logged in"}
+              content={"Lưu mật khẩu"}
               formItemProps={{
                 className: "login_form-checkbox-sumit",
               }}

@@ -23,14 +23,17 @@ export const ForgotEmailInput = () => {
   };
   return (
     <div className="forgot-password_email">
-      <FormWrap className="forgot-password_email-form">
-        <h1 className="forgot-password_title">FORGOT PASSWORD</h1>
+      <FormWrap
+        onFinish={handleNextStep}
+        className="forgot-password_email-form"
+        form={form}
+      >
+        <h1 className="forgot-password_title">QUÊN MẬT KHẨU</h1>
         <p className="forgot-password_sub">
-          Please enter the email address or mobile phone number associated with
-          your REPO WEB account
+          Vui lòng nhập tài khoản email đã đăng kí ở trang web này
         </p>
         <div className="forgot-password_email-input">
-          <p className="forgot-password_label">Email address</p>
+          <p className="forgot-password_label">Địa chỉ email</p>
           <FormInput
             name={"email"}
             formItemProps={{
@@ -43,7 +46,7 @@ export const ForgotEmailInput = () => {
         </div>
         <div className="forgot-password_email-button">
           <CustomButton
-            content={"Proceed to next"}
+            content={"Xác nhận"}
             buttonProps={{
               className: "forgot-password_email-button-submit",
               onClick: handleNextStep,
@@ -51,7 +54,7 @@ export const ForgotEmailInput = () => {
           />
         </div>
         <div className="forgot-password_email-link">
-          <Link to={"/"}>Return to login screen</Link>
+          <Link to={"/"}>Quay lại màn đăng nhập</Link>
         </div>
       </FormWrap>
     </div>

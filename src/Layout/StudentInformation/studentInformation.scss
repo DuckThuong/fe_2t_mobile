@@ -216,6 +216,18 @@
             color: #343434;
             margin-bottom: 0 !important;
           }
+          .delete {
+            min-width: 120px;
+            background-color: red;
+            color: white;
+            font-weight: 600;
+          }
+          .edit {
+            min-width: 120px;
+            background-color: greenyellow;
+            color: white;
+            font-weight: 600;
+          }
         }
       }
     }

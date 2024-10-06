@@ -12,12 +12,10 @@ export const ForgotEditPassword = () => {
   return (
     <div className="forgot-password_edit">
       <FormWrap className="forgot-password_edit-form">
-        <h1 className="forgot-password_title">Reset password</h1>
-        <p className="forgot-password_sub">
-          Send the verification code to your email address
-        </p>
+        <h1 className="forgot-password_title">THAY ĐỔI MẬT KHẨU</h1>
+        <p className="forgot-password_sub">Gửi mã code tới email của tôi.</p>
         <div className="forgot-password_edit-input">
-          <p className="forgot-password_label">Email address</p>
+          <p className="forgot-password_label">Địa chỉ email</p>
           <FormInput
             name={"email"}
             formItemProps={{
@@ -29,32 +27,32 @@ export const ForgotEditPassword = () => {
           />
         </div>
         <div className="forgot-password_edit-input">
-          <p className="forgot-password_label">Password</p>
+          <p className="forgot-password_label">Mật khẩu cũ</p>
           <FormInput
             name={"password"}
             formItemProps={{
               className: "forgot-password_edit-input-confirm",
             }}
             inputProps={{
-              placeholder: "Password",
+              placeholder: "Mật khẩu cũ",
             }}
           />
         </div>
         <div className="forgot-password_edit-input">
-          <p className="forgot-password_label">Confirm password</p>
+          <p className="forgot-password_label">Mật khẩu mới</p>
           <FormInput
             name={"confirm_password"}
             formItemProps={{
               className: "forgot-password_edit-input-confirm",
             }}
             inputProps={{
-              placeholder: "Confirm password",
+              placeholder: "Mật khẩu mới",
             }}
           />
         </div>
         <div className="forgot-password_edit-button">
           <CustomButton
-            content={"Send"}
+            content={"Xác nhận"}
             buttonProps={{
               className: "forgot-password_edit-button-submit",
               onClick: handleNextStep,

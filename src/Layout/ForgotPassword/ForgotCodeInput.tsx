@@ -21,13 +21,17 @@ export const ForgotCodeInput = () => {
   };
   return (
     <div className="forgot-password_code">
-      <FormWrap className="forgot-password_code-form">
-        <h1 className="forgot-password_title">Authentication code input</h1>
+      <FormWrap
+        onFinish={handleNextStep}
+        form={form}
+        className="forgot-password_code-form"
+      >
+        <h1 className="forgot-password_title">XÁC NHẬN MÃ OTP</h1>
         <p className="forgot-password_sub">
           <span>Email@gmail.com</span>
           <span>
-            Please enter the 6-digit number you received in half-width
-            characters (the verification number is valid for 1 minute).
+            Vui lòng nhập mã OTP được gửi về email của bạn (Mã OTP có hiệu lực
+            trong vòng 1 phút).
           </span>
         </p>
         <div className="forgot-password_code-input">
@@ -37,16 +41,16 @@ export const ForgotCodeInput = () => {
               className: "forgot-password_code-input-confirm",
             }}
             inputProps={{
-              placeholder: "Please enter the code in the email form ",
+              placeholder: "Vui lòng nhập mã OTP được gửi về email của bạn! ",
             }}
           />
         </div>
         <div className="forgot-password_code-link">
-          <Link to={"/"}>Authentication code reissued</Link>
+          <Link to={"/"}>Gửi lại mã.</Link>
         </div>
         <div className="forgot-password_code-button">
           <CustomButton
-            content={"Certification"}
+            content={"Xác nhận"}
             buttonProps={{
               className: "forgot-password_code-button-submit",
               onClick: handleNextStep,

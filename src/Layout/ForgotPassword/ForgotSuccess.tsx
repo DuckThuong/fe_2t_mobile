@@ -15,11 +15,11 @@ export const ForgotSuccess = () => {
           <SvgResetSuccess />
         </div>
         <div className="forgot-password_sucess-title">
-          Password reset has been completed.
+          Đổi mật khẩu thành công.
         </div>
         <div className="forgot-password_sucess-reset-button">
           <CustomButton
-            content={"Login"}
+            content={"Đăng nhập ngay"}
             buttonProps={{
               className: "forgot-password_sucess-button-submit",
               onClick: handleNextStep,
