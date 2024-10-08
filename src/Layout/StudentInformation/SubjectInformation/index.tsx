@@ -9,7 +9,9 @@ import { EditOutlined, PrinterOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 export const SubjectInformation = () => {
+  const location = useLocation();
   const [editState, setEditState] = useState<boolean>(true);
 
   return (
@@ -309,140 +311,153 @@ export const SubjectInformation = () => {
               />
             </ColWrap>
           </RowWrap>
-          {/* Hàng 6 */}
-          <RowWrap
-            isGutter={true}
-            isWrap={true}
-            isAutoFillRow={true}
-            styleFill={"between"}
-            gutter={[12, 12]}
-            className="subject-detail_row"
-          >
-            <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Lần học</p>
-              <FormInput
-                name={"courseTimes"}
-                formItemProps={{
-                  className: "subject-detail_form-courseTimes",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Lần học",
-                }}
-              />
-            </ColWrap>
-            <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Lần thi</p>
-              <FormInput
-                name={"courseExam"}
-                formItemProps={{
-                  className: "subject-detail_form-courseYearRegis",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Lần thi",
-                }}
-              />
-            </ColWrap>
-          </RowWrap>
-          {/* Hàng 7 */}
-          <RowWrap
-            isGutter={true}
-            isWrap={true}
-            isAutoFillRow={true}
-            styleFill={"between"}
-            gutter={[12, 12]}
-            className="subject-detail_row"
-          >
-            <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label point">Điểm quá trình</p>
-              <FormInput
-                name={"courseQT"}
-                formItemProps={{
-                  className: "subject-detail_form-courseTimes",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Điểm QT",
-                }}
-              />
-            </ColWrap>
-            <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label point">Điểm kiểm tra</p>
-              <FormInput
-                name={"courseKT"}
-                formItemProps={{
-                  className: "subject-detail_form-courseYearRegis",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Điểm kiểm tra",
-                }}
-              />
-            </ColWrap>
-            <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label point">Điểm thi</p>
-              <FormInput
-                name={"courseDT"}
-                formItemProps={{
-                  className: "subject-detail_form-courseYearRegis",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Điểm thi",
-                }}
-              />
-            </ColWrap>
-            <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label point">Điểm chữ</p>
-              <FormInput
-                name={"courseDC"}
-                formItemProps={{
-                  className: "subject-detail_form-courseYearRegis",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Điểm chữ",
-                }}
-              />
-            </ColWrap>
-          </RowWrap>
-          {/* Hàng 8 */}
-          <RowWrap
-            isGutter={true}
-            isWrap={true}
-            isAutoFillRow={true}
-            styleFill={"between"}
-            gutter={[12, 12]}
-            className="subject-detail_row"
-          >
-            <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Trung bình cộng học kì</p>
-              <FormInput
-                name={"courseTBC"}
-                formItemProps={{
-                  className: "subject-detail_form-courseYearRegis",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Trung bình cộng học kì",
-                }}
-              />
-            </ColWrap>
-            <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Kết quả</p>
-              <FormInput
-                name={"courseKQ"}
-                formItemProps={{
-                  className: "subject-detail_form-courseYearRegis",
-                }}
-                inputProps={{
-                  disabled: editState,
-                  placeholder: "Kết quả",
-                }}
-              />
-            </ColWrap>
-          </RowWrap>
+          {location?.state?.isLearn ? (
+            <>
+              {/* Hàng 6 */}
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[12, 12]}
+                className="subject-detail_row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="subject-detail_row-label">Lần học</p>
+                  <FormInput
+                    name={"courseTimes"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseTimes",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Lần học",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="subject-detail_row-label">Lần thi</p>
+                  <FormInput
+                    name={"courseExam"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseYearRegis",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Lần thi",
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              {/* Hàng 7 */}
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[12, 12]}
+                className="subject-detail_row"
+              >
+                <ColWrap colProps={{ span: 4 }}>
+                  <p className="subject-detail_row-label point">
+                    Điểm quá trình
+                  </p>
+                  <FormInput
+                    name={"courseQT"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseTimes",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Điểm QT",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 4 }}>
+                  <p className="subject-detail_row-label point">
+                    Điểm kiểm tra
+                  </p>
+                  <FormInput
+                    name={"courseKT"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseYearRegis",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Điểm kiểm tra",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 4 }}>
+                  <p className="subject-detail_row-label point">Điểm thi</p>
+                  <FormInput
+                    name={"courseDT"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseYearRegis",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Điểm thi",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 4 }}>
+                  <p className="subject-detail_row-label point">Điểm chữ</p>
+                  <FormInput
+                    name={"courseDC"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseYearRegis",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Điểm chữ",
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              {/* Hàng 8 */}
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[12, 12]}
+                className="subject-detail_row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="subject-detail_row-label">
+                    Trung bình cộng học kì
+                  </p>
+                  <FormInput
+                    name={"courseTBC"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseYearRegis",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Trung bình cộng học kì",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="subject-detail_row-label">Kết quả</p>
+                  <FormInput
+                    name={"courseKQ"}
+                    formItemProps={{
+                      className: "subject-detail_form-courseYearRegis",
+                    }}
+                    inputProps={{
+                      disabled: editState,
+                      placeholder: "Kết quả",
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+            </>
+          ) : (
+            <></>
+          )}
+
           <div className="student-information_underLine" />
           {/* Hàng 9 */}
           <RowWrap

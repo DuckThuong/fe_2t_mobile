@@ -30,8 +30,9 @@ import { useEffect, useState } from "react";
 import { FormSelect } from "../../Components/Form/FormSelect";
 import { useForm } from "antd/es/form/Form";
 
-import { useRef } from "react"; // Thêm import useRef
-import { Modal } from "antd";
+import { useRef } from "react";
+import { message, Modal } from "antd";
+import NotificationPopup from "../Notification";
 
 export const StudentInformation = () => {
   const navigate = useNavigate();
@@ -46,10 +47,20 @@ export const StudentInformation = () => {
     showDeleteButton: false,
     showEditButton: false,
     showNewColumn: false,
+    showEditSubject: false,
   });
   const [year, setYear] = useState<any>();
   const [semester, setSemester] = useState<any>();
-  const yearInputRef = useRef<HTMLInputElement>(null); // Tạo ref cho input year
+  const yearInputRef = useRef<HTMLInputElement>(null);
+  const option = [
+    { value: "Bắt buộc", label: "Bắt buộc" },
+    { value: "Không bắt buộc", label: "Không bắt buộc" },
+    { value: "Tự chọn", label: "Tự chọn" },
+  ];
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   const conlumns = [
     {
       title: "STT",
@@ -107,7 +118,11 @@ export const StudentInformation = () => {
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 onClick: () => {
-                  navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION);
+                  navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION, {
+                    state: {
+                      isLearn: true,
+                    },
+                  });
                   window.scrollTo({
                     top: 0,
                     behavior: "smooth",
@@ -223,9 +238,6 @@ export const StudentInformation = () => {
       ph: "Room 1010",
     },
   ];
-  console.log(modalStates.showDeleteButton);
-  console.log(modalStates.showDeleteButton);
-
   const courseColumns = [
     {
       title: "STT",
@@ -283,7 +295,11 @@ export const StudentInformation = () => {
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 onClick: () => {
-                  navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION);
+                  navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION, {
+                    state: {
+                      isLearn: false,
+                    },
+                  });
                 },
               }}
             />
@@ -333,7 +349,7 @@ export const StudentInformation = () => {
       hidden: !modalStates.showNewColumn,
     },
   ].filter((column) => !column.hidden);
-  const courseData = [
+  const [courseData, setCourseData] = useState<any[]>([
     {
       stt: 1,
       mhp: "7E1023.22",
@@ -345,7 +361,7 @@ export const StudentInformation = () => {
       gv: "Thái Thanh Tùng",
       ph: "FITHOU-P24FITHOU-P32Online-O.01",
     },
-  ];
+  ]);
   const handleExportExcel = () => {
     const headers = [
       { header: "STT", key: "stt" },
@@ -397,9 +413,22 @@ export const StudentInformation = () => {
     XLSX.writeFile(workbook, "DanhSachHocPhanDaDangKi.xlsx");
   };
 
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
   return (
     <div>
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={false} />
+      <NotificationPopup
+        message={notification?.message}
+        type={notification?.type}
+      />
       <div className="student-information">
         <FormWrap form={form} className="student-information_form">
           <div className="student-information_underLine ">
@@ -883,6 +912,9 @@ export const StudentInformation = () => {
                             setModalStates({
                               ...modalStates,
                               addModal: true,
+                              showNewColumn: false,
+                              showDeleteButton: false,
+                              showEditButton: false,
                             });
                           },
                         }}
@@ -1033,13 +1065,20 @@ export const StudentInformation = () => {
                   showEditButton: true,
                 });
               }}
-              onOk={() => {}}
+              onOk={() => {
+                setModalStates({
+                  ...modalStates,
+                  showEditSubject: true,
+                  editModal: false,
+                });
+              }}
             >
               <h1 className="student-information_modal-header">
                 Bạn muốn sửa thông tin môn học này ?
               </h1>
               <div className="student-information_underLine" />
             </Modal>
+            {/* Modal Add Subject */}
             <Modal
               className="student-information_modal-addSubject"
               open={modalStates.addSubject}
@@ -1048,6 +1087,47 @@ export const StudentInformation = () => {
                   ...modalStates,
                   addSubject: false,
                 });
+              }}
+              onOk={() => {
+                if (
+                  form.getFieldValue("subjectId") &&
+                  form.getFieldValue("subjectName") &&
+                  form.getFieldValue("subjectIndentify") &&
+                  form.getFieldValue("subjectClassID") &&
+                  form.getFieldValue("subjectCalendar") &&
+                  form.getFieldValue("subjectTeacher") &&
+                  form.getFieldValue("subjectRoom")
+                ) {
+                  const newCourse = {
+                    stt: courseData.length + 1,
+                    thp: form.getFieldValue("subjectId"),
+                    mhp: form.getFieldValue("subjectName"),
+                    yc: form.getFieldValue("subjectIndentify"),
+                    ltc: form.getFieldValue("subjectClassID"),
+                    lh: form.getFieldValue("subjectCalendar"),
+                    gv: form.getFieldValue("subjectTeacher"),
+                    ph: form.getFieldValue("subjectRoom"),
+                  };
+                  setCourseData([...courseData, newCourse]);
+                } else {
+                  setNotification({
+                    message: "Vui lòng điền đầy đủ dữ liệu",
+                    type: "error",
+                  });
+                }
+                setModalStates({
+                  ...modalStates,
+                  addSubject: false,
+                });
+              }}
+              afterClose={() => {
+                form.setFieldValue("subjectId", "");
+                form.setFieldValue("subjectName", "");
+                form.setFieldValue("subjectIndentify", "");
+                form.setFieldValue("subjectClassID", "");
+                form.setFieldValue("subjectCalendar", "");
+                form.setFieldValue("subjectTeacher", "");
+                form.setFieldValue("subjectRoom", "");
               }}
             >
               <h1 className="student-information_modal-header">THÊM MÔN HỌC</h1>
@@ -1065,7 +1145,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 16 }}>
                     <p className="student-information_row-label">TÊN MÔN HỌC</p>
                     <FormInput
-                      name={"studentName"}
+                      name={"subjectName"}
                       formItemProps={{
                         className: "student-information_form-studentName",
                       }}
@@ -1087,7 +1167,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">MÃ MÔN HỌC</p>
                     <FormInput
-                      name={"studentClass"}
+                      name={"subjectId"}
                       formItemProps={{
                         className: "student-information_form-studentClass",
                       }}
@@ -1099,7 +1179,149 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">YÊU CẦU</p>
                     <FormSelect
-                      name={"studentMsv"}
+                      name={"subjectIndentify"}
+                      formItemProps={{
+                        className: "student-information_form-studentMsv",
+                      }}
+                      selectProps={{
+                        options: option,
+                        placeholder: "Yêu cầu",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 3 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="student-information_row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">MÃ LỚP</p>
+                    <FormInput
+                      name={"subjectClassID"}
+                      formItemProps={{
+                        className: "student-information_form-studentID",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã lớp",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">LỊCH HỌC</p>
+                    <FormInput
+                      name={"subjectCalendar"}
+                      formItemProps={{
+                        className: "student-information_form-studentDob",
+                      }}
+                      inputProps={{
+                        placeholder: "Lịch học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 4 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="student-information_row-modal"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">GIÁO VIÊN</p>
+                    <FormInput
+                      name={"subjectTeacher"}
+                      formItemProps={{
+                        className: "student-information_form-studentEmail",
+                      }}
+                      inputProps={{
+                        placeholder: "Giáo viên",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">PHÒNG HỌC</p>
+                    <FormInput
+                      name={"subjectRoom"}
+                      formItemProps={{
+                        className: "student-information_form-studentNumber",
+                      }}
+                      inputProps={{
+                        placeholder: "Phòng học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                <div className="student-information_underLine" />
+              </div>
+            </Modal>
+            {/* Modal Edit Subject */}
+            <Modal
+              className="student-information_modal-addSubject"
+              open={modalStates.showEditSubject}
+              onCancel={() => {
+                setModalStates({
+                  ...modalStates,
+                  showEditSubject: false,
+                });
+              }}
+            >
+              <h1 className="student-information_modal-header">SỬA MÔN HỌC</h1>
+              <div className="student-information_underLine" />
+              <div className="student-information_modal-addSubject-content">
+                {/* Hàng 1 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="student-information_modal"
+                >
+                  <ColWrap colProps={{ span: 16 }}>
+                    <p className="student-information_row-label">TÊN MÔN HỌC</p>
+                    <FormInput
+                      name={"studentEditName"}
+                      formItemProps={{
+                        className: "student-information_form-studentName",
+                      }}
+                      inputProps={{
+                        placeholder: "Tên môn học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 2 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="student-information_row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">MÃ MÔN HỌC</p>
+                    <FormInput
+                      name={"studentEditClass"}
+                      formItemProps={{
+                        className: "student-information_form-studentClass",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã môn học",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">YÊU CẦU</p>
+                    <FormSelect
+                      name={"studentEditYC"}
                       formItemProps={{
                         className: "student-information_form-studentMsv",
                       }}
@@ -1121,12 +1343,11 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">MÃ LỚP</p>
                     <FormInput
-                      name={"studentID"}
+                      name={"studentEditID"}
                       formItemProps={{
                         className: "student-information_form-studentID",
                       }}
                       inputProps={{
-                        disabled: editState,
                         placeholder: "Mã lớp",
                       }}
                     />
@@ -1134,12 +1355,11 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">LỊCH HỌC</p>
                     <FormInput
-                      name={"studentDob"}
+                      name={"studentEditCalender"}
                       formItemProps={{
                         className: "student-information_form-studentDob",
                       }}
                       inputProps={{
-                        disabled: editState,
                         placeholder: "Lịch học",
                       }}
                     />
@@ -1157,7 +1377,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">GIÁO VIÊN</p>
                     <FormInput
-                      name={"studentEmail"}
+                      name={"studentEditTeacher"}
                       formItemProps={{
                         className: "student-information_form-studentEmail",
                       }}
@@ -1169,7 +1389,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">PHÒNG HỌC</p>
                     <FormInput
-                      name={"studentNumber"}
+                      name={"studentEditRoomNumber"}
                       formItemProps={{
                         className: "student-information_form-studentNumber",
                       }}
