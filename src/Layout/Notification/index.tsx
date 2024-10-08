@@ -15,15 +15,7 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [message, type]);
-  React.useEffect(() => {
-    if (message && type) {
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 3000);
+      }, 1000000);
       return () => clearTimeout(timer);
     }
   }, [message, type]);

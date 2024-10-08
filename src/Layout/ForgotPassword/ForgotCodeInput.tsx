@@ -7,6 +7,7 @@ import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useForm } from "antd/es/form/Form";
 import { getAccount } from "../../account";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
+import { ValidateLibrary } from "../../validate";
 export const ForgotCodeInput = () => {
   const navigate = useNavigate();
   const [form] = useForm();
@@ -42,6 +43,7 @@ export const ForgotCodeInput = () => {
             name={"code"}
             formItemProps={{
               className: "forgot-password_code-input-confirm",
+              rules: ValidateLibrary().number,
             }}
             inputProps={{
               placeholder: "Vui lòng nhập mã OTP được gửi về email của bạn! ",

@@ -7,17 +7,24 @@
   border-radius: 5px;
   z-index: 1000;
   transition: transform 0.5s ease, opacity 0.5s ease;
-  transform: translateX(100%); // Bắt đầu ở bên ngoài
+  transform: translateX(100%);
   opacity: 0;
+  font-weight: bold;
+  font-size: 16px;
+  height: 60px;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .notification-popup.show {
-  transform: translateX(0); // Trượt vào vị trí ban đầu
+  transform: translateX(0);
   opacity: 1;
 }
 
 .notification-popup.hide {
-  transform: translateX(100%); // Trượt ra ngoài
+  transform: translateX(100%);
   opacity: 0;
   pointer-events: none;
 }
@@ -27,5 +34,5 @@
 }
 
 .notification-popup.error {
-  background-color: #dc3545;
+  background-color: #ff0019;
 }
