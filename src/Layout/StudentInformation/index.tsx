@@ -794,16 +794,16 @@ export const StudentInformation = () => {
               }}
             />
           </div>
-          <div className="student-information_table-edit">
+          <div className="student-information_table-edit ">
             <RowWrap
               isGutter={true}
               isWrap={true}
               isAutoFillRow={true}
               styleFill={"between"}
               gutter={[8, 8]}
-              className="student-information_row"
+              className="student-information_row m-b-48"
             >
-              <ColWrap colProps={{ span: 12 }}>
+              <ColWrap colProps={{ span: 12 }} className="between_row">
                 {courseEdit ? (
                   <>
                     <CustomButton
@@ -831,7 +831,7 @@ export const StudentInformation = () => {
                       content={"Lưu"}
                       buttonProps={{
                         icon: <SaveOutlined />,
-                        className: "student-information_form-edit",
+                        className: "student-information_form-save",
                         onClick: () => {
                           setCourseEdit(true);
                           setModalStates({
@@ -984,7 +984,7 @@ export const StudentInformation = () => {
               onCancel={() => {
                 setModalStates({
                   ...modalStates,
-                  addModal: true,
+                  addModal: false,
                 });
               }}
               onOk={() => {

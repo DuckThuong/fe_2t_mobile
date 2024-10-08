@@ -57,6 +57,14 @@
       color: white;
       font-weight: 600;
     }
+    &-save {
+      background-color: $primary_color;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
+    }
   }
   &_title {
     color: #161617;
@@ -240,9 +248,14 @@
     &-addSubject {
       width: fit-content !important;
       height: fit-content !important;
+
       .ant-modal-content {
         min-width: 700px !important;
         padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
       }
     }
     &-add {
@@ -251,6 +264,10 @@
       .ant-modal-content {
         min-width: 700px !important;
         padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
       }
     }
     &-delete {
@@ -259,6 +276,10 @@
       .ant-modal-content {
         min-width: 700px !important;
         padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
       }
     }
     &-edit {
@@ -267,6 +288,10 @@
       .ant-modal-content {
         min-width: 700px !important;
         padding: 32px;
+        @include sm{
+          width: 100% !important;
+          min-width: 0px !important;
+        }
       }
     }
   }
