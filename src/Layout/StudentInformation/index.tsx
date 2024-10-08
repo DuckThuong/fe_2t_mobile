@@ -1287,7 +1287,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 16 }}>
                     <p className="student-information_row-label">TÊN MÔN HỌC</p>
                     <FormInput
-                      name={"studentEditName"}
+                      name={"subjectName"}
                       formItemProps={{
                         className: "student-information_form-studentName",
                       }}
@@ -1309,7 +1309,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">MÃ MÔN HỌC</p>
                     <FormInput
-                      name={"studentEditClass"}
+                      name={"subjectId"}
                       formItemProps={{
                         className: "student-information_form-studentClass",
                       }}
@@ -1321,7 +1321,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">YÊU CẦU</p>
                     <FormSelect
-                      name={"studentEditYC"}
+                      name={"subjectIndentify"}
                       formItemProps={{
                         className: "student-information_form-studentMsv",
                       }}
@@ -1343,7 +1343,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">MÃ LỚP</p>
                     <FormInput
-                      name={"studentEditID"}
+                      name={"subjectClassID"}
                       formItemProps={{
                         className: "student-information_form-studentID",
                       }}
@@ -1355,7 +1355,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">LỊCH HỌC</p>
                     <FormInput
-                      name={"studentEditCalender"}
+                      name={"subjectCalendar"}
                       formItemProps={{
                         className: "student-information_form-studentDob",
                       }}
@@ -1377,7 +1377,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">GIÁO VIÊN</p>
                     <FormInput
-                      name={"studentEditTeacher"}
+                      name={"subjectTeacher"}
                       formItemProps={{
                         className: "student-information_form-studentEmail",
                       }}
@@ -1389,7 +1389,7 @@ export const StudentInformation = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">PHÒNG HỌC</p>
                     <FormInput
-                      name={"studentEditRoomNumber"}
+                      name={"subjectRoom"}
                       formItemProps={{
                         className: "student-information_form-studentNumber",
                       }}
