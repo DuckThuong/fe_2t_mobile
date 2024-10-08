@@ -2,7 +2,7 @@
 export const users = [
   {
     username: "admin",
-    email: "admin",
+    email: "admin@gmail.com",
     password: "1234",
     verifyCode: "11111111"
   },

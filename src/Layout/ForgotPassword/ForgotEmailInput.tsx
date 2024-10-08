@@ -6,6 +6,8 @@ import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useForm } from "antd/es/form/Form";
 import { getAccount } from "../../account";
+import { ValidateLibrary } from "../../validate";
+import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 export const ForgotEmailInput = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
@@ -24,7 +26,9 @@ export const ForgotEmailInput = () => {
   return (
     <div className="forgot-password_email">
       <FormWrap
+        name="forgot"
         onFinish={handleNextStep}
+        layout="vertical"
         className="forgot-password_email-form"
         form={form}
       >
@@ -38,6 +42,7 @@ export const ForgotEmailInput = () => {
             name={"email"}
             formItemProps={{
               className: "forgot-password_email-input-confirm",
+              rules: ValidateLibrary().email,
             }}
             inputProps={{
               placeholder: "Email@gmail.com",
@@ -45,11 +50,12 @@ export const ForgotEmailInput = () => {
           />
         </div>
         <div className="forgot-password_email-button">
-          <CustomButton
+          <FormButtonSubmit
             content={"Xác nhận"}
             buttonProps={{
               className: "forgot-password_email-button-submit",
               onClick: handleNextStep,
+              type: "primary",
             }}
           />
         </div>

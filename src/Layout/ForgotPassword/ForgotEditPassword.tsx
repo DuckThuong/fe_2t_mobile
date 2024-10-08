@@ -4,14 +4,21 @@ import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { useForm } from "antd/es/form/Form";
+import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 export const ForgotEditPassword = () => {
   const navigate = useNavigate();
+  const [form] = useForm();
   const handleNextStep = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_SUCCESS);
   };
   return (
     <div className="forgot-password_edit">
-      <FormWrap className="forgot-password_edit-form">
+      <FormWrap
+        form={form}
+        onFinish={handleNextStep}
+        className="forgot-password_edit-form"
+      >
         <h1 className="forgot-password_title">THAY ĐỔI MẬT KHẨU</h1>
         <p className="forgot-password_sub">Gửi mã code tới email của tôi.</p>
         <div className="forgot-password_edit-input">
@@ -51,11 +58,12 @@ export const ForgotEditPassword = () => {
           />
         </div>
         <div className="forgot-password_edit-button">
-          <CustomButton
+          <FormButtonSubmit
             content={"Xác nhận"}
             buttonProps={{
               className: "forgot-password_edit-button-submit",
               onClick: handleNextStep,
+              type: "default",
             }}
           />
         </div>

@@ -1,52 +1,31 @@
-.notification {
-  &_label {
-    position: absolute;
-    right: -100%; // Start off-screen
-    top: 10px;
-    width: fit-content;
-    height: 60px;
-    display: flex;
-    padding: 20px;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    color: white;
-    font-weight: 600;
-    font-size: 16px;
-    animation: slide-in 0.5s forwards; // Add animation
-
-    &.closing {
-      animation: slide-out 0.5s forwards; // Add closing animation
-    }
-
-    &-button {
-      border: none !important;
-      padding: 5px;
-      svg {
-        width: 20px;
-        height: 20px;
-        path {
-          fill: white;
-        }
-      }
-    }
-  }
+.notification-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  transform: translateX(100%); // Bắt đầu ở bên ngoài
+  opacity: 0;
 }
 
-@keyframes slide-in {
-  from {
-    right: -100%; 
-  }
-  to {
-    right: 20px; // End position
-  }
+.notification-popup.show {
+  transform: translateX(0); // Trượt vào vị trí ban đầu
+  opacity: 1;
 }
 
-@keyframes slide-out {
-  from {
-    right: 20px; 
-  }
-  to {
-    right: -100%; 
-  }
+.notification-popup.hide {
+  transform: translateX(100%); // Trượt ra ngoài
+  opacity: 0;
+  pointer-events: none;
+}
+
+.notification-popup.success {
+  background-color: #28a745;
+}
+
+.notification-popup.error {
+  background-color: #dc3545;
 }

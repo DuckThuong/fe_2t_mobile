@@ -9,7 +9,9 @@ import { useForm } from "antd/es/form/Form";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { useEffect, useState } from "react";
-import NotificationLabel from "../Notification";
+import NotificationPopup from "../Notification";
+import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
+import { ValidateLibrary } from "../../validate";
 const Login = () => {
   const [form] = useForm();
   const admin = getAccount("admin");
@@ -31,9 +33,17 @@ const Login = () => {
         message: "Sai tài khoản hoặc mật khẩu",
         type: "error",
       });
+      form.setFieldsValue("e");
     }
   };
-
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
   const handleForgotPassword = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
   };
@@ -43,12 +53,12 @@ const Login = () => {
       onFinish();
     }
   };
-
+  console.log(notification);
   return (
     <div className="login">
-      <NotificationLabel
+      <NotificationPopup
         message={notification?.message}
-        type={notification?.type.toString()}
+        type={notification?.type}
       />
       <div>
         <LogoForm />
@@ -64,6 +74,7 @@ const Login = () => {
               name={"email"}
               formItemProps={{
                 className: "login_form-input",
+                rules: ValidateLibrary().email,
               }}
               inputProps={{
                 onKeyPress: handleKeyPress,
@@ -95,10 +106,12 @@ const Login = () => {
           </div>
 
           <div className="login_form-login">
-            <CustomButton
+            <FormButtonSubmit
               content="Đăng nhập"
               buttonProps={{
                 className: "login_form-login-button",
+                onClick: onFinish,
+                type: "default",
               }}
             />
           </div>

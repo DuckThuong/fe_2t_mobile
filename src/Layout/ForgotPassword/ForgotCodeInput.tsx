@@ -6,13 +6,14 @@ import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useForm } from "antd/es/form/Form";
 import { getAccount } from "../../account";
+import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 export const ForgotCodeInput = () => {
   const navigate = useNavigate();
   const [form] = useForm();
   const admin = getAccount("admin");
   const location = useLocation();
   const handleNextStep = () => {
-    if (location.state.email === admin?.email) {
+    if (location?.state?.email === admin?.email) {
       if (form.getFieldValue("code") === admin?.verifyCode) {
         navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
       } else {
@@ -28,10 +29,12 @@ export const ForgotCodeInput = () => {
       >
         <h1 className="forgot-password_title">XÁC NHẬN MÃ OTP</h1>
         <p className="forgot-password_sub">
-          <span>Email@gmail.com</span>
           <span>
-            Vui lòng nhập mã OTP được gửi về email của bạn (Mã OTP có hiệu lực
-            trong vòng 1 phút).
+            Vui lòng nhập mã OTP được gửi về email:
+            <span style={{ marginRight: "8px", color: "blue" }}>
+              {location?.state?.email}
+            </span>{" "}
+            Fcủa bạn (Mã OTP có hiệu lực trong vòng 1 phút).
           </span>
         </p>
         <div className="forgot-password_code-input">
@@ -49,7 +52,7 @@ export const ForgotCodeInput = () => {
           <Link to={"/"}>Gửi lại mã.</Link>
         </div>
         <div className="forgot-password_code-button">
-          <CustomButton
+          <FormButtonSubmit
             content={"Xác nhận"}
             buttonProps={{
               className: "forgot-password_code-button-submit",

@@ -16,8 +16,8 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const email = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
-        email: "Vui lòng nhập đúng định dạng",
+        required: "Không được để trống",
+        email: "Sai định dạng email",
       }),
     },
     ..._option,
@@ -26,8 +26,8 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const password = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
-        password: "Nhập mật khẩu đi",
+        required: "Không được để trống",
+        password: "Không được để trống mật khẩu",
       }),
     },
     ..._option,
@@ -36,7 +36,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const required = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
+        required: "Không được để trống",
       }),
     },
     ..._option,
@@ -45,7 +45,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     {
       validator: _validator({
         space: "Không được nhập khoảng trống",
-        required: "Nhập dữ liệu vào đi thằng lồn",
+        required: "Không được để trống",
       }),
     },
     ..._option,
@@ -54,7 +54,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     {
       validator: _validator({
         space: "Không được nhập khoảng trống",
-        required: "Nhập dữ liệu vào đi thằng lồn",
+        required: "Không được để trống",
       }),
     },
     ..._option,
@@ -63,8 +63,8 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const phone = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
-        phone: "Nhập số điện thoại vào",
+        required: "Không được để trống",
+        phone: "Số điện thoại không đúng",
       }),
     },
     ..._option,
@@ -73,7 +73,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const postCode = [
     {
       validator: _validator({
-        postCode: "Nhập đúng mã code đi",
+        postCode: "Mã code không đúng",
       }),
     },
     ..._option,
@@ -82,7 +82,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const passport = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
+        required: "Không được để trống",
         number: "Vui lòng nhập số",
       }),
     },
@@ -92,7 +92,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const number = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
+        required: "Không được để trống",
         number: "Vui lòng nhập số",
       }),
     },
@@ -102,7 +102,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
   const cardNumber = [
     {
       validator: _validator({
-        required: "Nhập dữ liệu vào đi thằng lồn",
+        required: "Không được để trống",
         number: "Vui lòng nhập số",
       }),
     },
@@ -112,7 +112,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     {
       validator: _validator(
         {
-          required: "Nhập dữ liệu vào đi thằng lồn",
+          required: "Không được để trống",
           expirationDate: "Vui lòng nhập ngày hết hạn",
         },
         data
@@ -123,7 +123,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     {
       validator: _validator(
         {
-          required: "Nhập dữ liệu vào đi thằng lồn",
+          required: "Không được để trống",
           dob: "Vui lòng nhập ngày sinh",
         },
         data

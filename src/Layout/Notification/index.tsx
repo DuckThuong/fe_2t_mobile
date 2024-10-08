@@ -1,61 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./notification.scss";
-import { SvgXIcon } from "../../Components/@svg/SvgXIcon";
-
-interface NotificationLabelProps {
-  message: any;
-  type: "success" | "error" | any;
+interface NotificationPopupProps {
+  message: string | undefined;
+  type: "success" | "error" | undefined;
 }
-
-const NotificationLabel: React.FC<NotificationLabelProps> = ({
+const NotificationPopup: React.FC<NotificationPopupProps> = ({
   message,
   type,
 }) => {
-  const [isVisible, setIsVisible] = useState(true);
-  const [isClosing, setIsClosing] = useState(false);
+  const [visible, setVisible] = React.useState(true);
 
-  useEffect(() => {
-    if (isVisible) {
+  React.useEffect(() => {
+    if (message && type) {
+      setVisible(true);
       const timer = setTimeout(() => {
-        setIsClosing(true);
-        setTimeout(() => setIsVisible(false), 500); // Match the animation duration
+        setVisible(false);
       }, 3000);
-
       return () => clearTimeout(timer);
     }
-  }, [isVisible]);
-
-  const getLabelStyle = () => {
-    switch (type) {
-      case "success":
-        return { background: "green" };
-      case "error":
-        return { background: "red" };
-      default:
-        return {};
+  }, [message, type]);
+  React.useEffect(() => {
+    if (message && type) {
+      const timer = setTimeout(() => {
+        setVisible(false);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
-  };
-
-  if (!isVisible) return null;
-
+  }, [message, type]);
   return (
-    <div
-      className={`notification_label ${isClosing ? "closing" : ""}`}
-      style={getLabelStyle()}
-    >
+    <div className={`notification-popup ${type} ${visible ? "show" : "hide"}`}>
       {message}
-      <button
-        className="notification_label-button"
-        style={getLabelStyle()}
-        onClick={() => {
-          setIsClosing(true);
-          setTimeout(() => setIsVisible(false), 500);
-        }}
-      >
-        <SvgXIcon />
-      </button>
     </div>
   );
 };
 
-export default NotificationLabel;
+export default NotificationPopup;
