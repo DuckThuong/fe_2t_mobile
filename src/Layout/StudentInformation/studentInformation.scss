@@ -37,8 +37,8 @@
       font-weight: 400;
     }
     &-edit {
-      background-color: $primary_color;
-      color: $white_color;
+      background-color: $primary_color !important;
+      color: $white_color !important;
       font-weight: 600;
       font-size: 16px;
       @include sm {
@@ -153,7 +153,7 @@
         display: flex;
         flex-direction: row-reverse;
         margin-top: 32px;
-        @include sm{
+        @include sm {
           margin-top: 0px;
         }
         .ant-col {
@@ -162,6 +162,9 @@
           .ant-btn {
             width: 120px;
             margin: 0px 10px 0px 10px;
+            @include sm {
+              width: fit-content;
+            }
           }
         }
       }
@@ -192,6 +195,15 @@
       }
     }
   }
+  &_result {
+    &-row {
+      width: 100%;
+      height: 40px;
+      .ant-row {
+        float: right;
+      }
+    }
+  }
   &_data {
     &-studentAction {
       margin-bottom: 0 !important;
@@ -206,7 +218,7 @@
     border: 1px solid $gray_blur_color;
     overflow: hidden;
     border-bottom: none !important;
-    @include sm{
+    @include sm {
       margin-bottom: 12px;
     }
     &::-webkit-scrollbar {

@@ -790,6 +790,42 @@ export const StudentInformation = () => {
                   />
                 </ColWrap>
               </RowWrap>
+              <div className="student-information_result">
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="student-information_result-row"
+                >
+                  <ColWrap colProps={{ span: 16 }} className="footer">
+                    {editState ? (
+                      <CustomButton
+                        content={"Chỉnh sửa"}
+                        buttonProps={{
+                          icon: <EditOutlined />,
+                          className: "student-information_form-edit",
+                          onClick: () => {
+                            setEditState(false);
+                          },
+                        }}
+                      />
+                    ) : (
+                      <CustomButton
+                        content={"Lưu"}
+                        buttonProps={{
+                          icon: <EditOutlined />,
+                          className: "student-information_form-edit",
+                          onClick: () => {
+                            setEditState(true);
+                          },
+                        }}
+                      />
+                    )}
+                  </ColWrap>
+                </RowWrap>
+              </div>
             </>
           ) : (
             <p
