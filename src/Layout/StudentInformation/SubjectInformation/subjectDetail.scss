@@ -52,6 +52,12 @@
       text-align: left;
       color: #161617;
     }
+    .point{
+      @include sm{
+        min-height: fit-content;
+        min-width: 100px
+      }
+    }
     .form__input {
       .ant-row {
         width: 100% !important;

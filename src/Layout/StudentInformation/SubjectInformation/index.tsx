@@ -213,7 +213,7 @@ export const SubjectInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="subject-detail_row-label">Số tiết</p>
               <FormInput
-                name={"courseTeacher"}
+                name={"courseClassNumber"}
                 formItemProps={{
                   className: "subject-detail_form-courseCode",
                 }}
@@ -226,7 +226,7 @@ export const SubjectInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="subject-detail_row-label">Lịch học</p>
               <FormInput
-                name={"courseRoom"}
+                name={"courseCalendar"}
                 formItemProps={{
                   className: "subject-detail_form-courseRoom",
                 }}
@@ -355,9 +355,9 @@ export const SubjectInformation = () => {
             className="subject-detail_row"
           >
             <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label">Điểm quá trình</p>
+              <p className="subject-detail_row-label point">Điểm quá trình</p>
               <FormInput
-                name={"courseTimes"}
+                name={"courseQT"}
                 formItemProps={{
                   className: "subject-detail_form-courseTimes",
                 }}
@@ -368,9 +368,9 @@ export const SubjectInformation = () => {
               />
             </ColWrap>
             <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label">Điểm kiểm tra giữa kì</p>
+              <p className="subject-detail_row-label point">Điểm kiểm tra</p>
               <FormInput
-                name={"courseExam"}
+                name={"courseKT"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
@@ -381,9 +381,9 @@ export const SubjectInformation = () => {
               />
             </ColWrap>
             <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label">Điểm thi</p>
+              <p className="subject-detail_row-label point">Điểm thi</p>
               <FormInput
-                name={"courseExam"}
+                name={"courseDT"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
@@ -394,9 +394,9 @@ export const SubjectInformation = () => {
               />
             </ColWrap>
             <ColWrap colProps={{ span: 4 }}>
-              <p className="subject-detail_row-label">Điểm chữ</p>
+              <p className="subject-detail_row-label point">Điểm chữ</p>
               <FormInput
-                name={"courseExam"}
+                name={"courseDC"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
@@ -419,7 +419,7 @@ export const SubjectInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="subject-detail_row-label">Trung bình cộng học kì</p>
               <FormInput
-                name={"courseExam"}
+                name={"courseTBC"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
@@ -432,7 +432,7 @@ export const SubjectInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="subject-detail_row-label">Kết quả</p>
               <FormInput
-                name={"courseExam"}
+                name={"courseKQ"}
                 formItemProps={{
                   className: "subject-detail_form-courseYearRegis",
                 }}
