@@ -41,29 +41,47 @@
       color: $white_color;
       font-weight: 600;
       font-size: 16px;
+      @include sm {
+        margin-bottom: 12px !important;
+      }
     }
     &-delete {
       background-color: red;
       color: white;
       font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
     }
     &-editTable {
       background-color: rgb(0, 217, 255);
       color: white;
       font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
     }
     &-add {
       background-color: greenyellow;
       color: white;
       font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
     }
     &-save {
       background-color: $primary_color;
       color: white;
       font-weight: 600;
       @include sm {
-        margin: 0px 5px 0px 5px !important;
+        margin: 24px 0px 0px 5px !important;
       }
+    }
+    &-print {
+      font-weight: 600;
+      color: white;
+      font-size: 16px;
+      background-color: orange;
     }
   }
   &_title {
@@ -135,6 +153,9 @@
         display: flex;
         flex-direction: row-reverse;
         margin-top: 32px;
+        @include sm{
+          margin-top: 0px;
+        }
         .ant-col {
           display: flex;
           flex-direction: row-reverse;
@@ -153,6 +174,11 @@
         &_row {
           .ant-row {
             width: 430px !important;
+            @include sm {
+              display: flex;
+              flex-direction: column-reverse;
+              align-items: flex-end;
+            }
             .ant-col {
               display: flex;
               flex-direction: row-reverse;
@@ -180,6 +206,9 @@
     border: 1px solid $gray_blur_color;
     overflow: hidden;
     border-bottom: none !important;
+    @include sm{
+      margin-bottom: 12px;
+    }
     &::-webkit-scrollbar {
       width: 0;
       height: 0;
@@ -243,6 +272,25 @@
       height: 36px;
       border-bottom: 1px solid $gray_blur_color;
     }
+    &-edit {
+      .m-b-48 {
+        .ant-row {
+          .between_row {
+            @include sm {
+              display: flex;
+              flex-direction: column-reverse;
+              width: 100% !important;
+              min-width: 300px !important;
+              align-items: flex-end;
+            }
+            .option {
+              display: flex;
+              flex-direction: row-reverse;
+            }
+          }
+        }
+      }
+    }
   }
   &_modal {
     &-addSubject {
@@ -288,7 +336,7 @@
       .ant-modal-content {
         min-width: 700px !important;
         padding: 32px;
-        @include sm{
+        @include sm {
           width: 100% !important;
           min-width: 0px !important;
         }

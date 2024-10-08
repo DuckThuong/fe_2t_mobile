@@ -843,49 +843,51 @@ export const StudentInformation = () => {
                         },
                       }}
                     />
-                    <CustomButton
-                      content={"Xóa"}
-                      buttonProps={{
-                        icon: <DeleteOutlined />,
-                        className: "student-information_form-delete",
-                        onClick: () => {
-                          setModalStates({
-                            ...modalStates,
-                            showNewColumn: true,
-                            showDeleteButton: true,
-                            showEditButton: false,
-                          });
-                        },
-                      }}
-                    />
-                    <CustomButton
-                      content={"Sửa"}
-                      buttonProps={{
-                        icon: <EditOutlined />,
-                        className: "student-information_form-editTable",
-                        onClick: () => {
-                          setModalStates({
-                            ...modalStates,
-                            showNewColumn: true,
-                            showEditButton: true,
-                            showDeleteButton: false,
-                          });
-                        },
-                      }}
-                    />
-                    <CustomButton
-                      content={"Thêm"}
-                      buttonProps={{
-                        icon: <AppstoreAddOutlined />,
-                        className: "student-information_form-add",
-                        onClick: () => {
-                          setModalStates({
-                            ...modalStates,
-                            addModal: true,
-                          });
-                        },
-                      }}
-                    />
+                    <div className="option">
+                      <CustomButton
+                        content={"Xóa"}
+                        buttonProps={{
+                          icon: <DeleteOutlined />,
+                          className: "student-information_form-delete",
+                          onClick: () => {
+                            setModalStates({
+                              ...modalStates,
+                              showNewColumn: true,
+                              showDeleteButton: true,
+                              showEditButton: false,
+                            });
+                          },
+                        }}
+                      />
+                      <CustomButton
+                        content={"Sửa"}
+                        buttonProps={{
+                          icon: <EditOutlined />,
+                          className: "student-information_form-editTable",
+                          onClick: () => {
+                            setModalStates({
+                              ...modalStates,
+                              showNewColumn: true,
+                              showEditButton: true,
+                              showDeleteButton: false,
+                            });
+                          },
+                        }}
+                      />
+                      <CustomButton
+                        content={"Thêm"}
+                        buttonProps={{
+                          icon: <AppstoreAddOutlined />,
+                          className: "student-information_form-add",
+                          onClick: () => {
+                            setModalStates({
+                              ...modalStates,
+                              addModal: true,
+                            });
+                          },
+                        }}
+                      />
+                    </div>
                   </>
                 )}
               </ColWrap>
@@ -928,24 +930,26 @@ export const StudentInformation = () => {
                     gutter={[12, 12]}
                     className="footer_row"
                   >
-                    <CustomButton
-                      content="Xuất Excel"
-                      buttonProps={{
-                        className: "list-student_button-excel",
-                        icon: <FileExcelOutlined />,
-                        onClick: handleExportExcel,
-                      }}
-                    />
-                    <CustomButton
-                      content={"In thông tin"}
-                      buttonProps={{
-                        icon: <PrinterOutlined />,
-                        className: "student-information_form-print",
-                        onClick: () => {
-                          window.print();
-                        },
-                      }}
-                    />
+                    <div className="footer_option">
+                      <CustomButton
+                        content="Xuất Excel"
+                        buttonProps={{
+                          className: "list-student_button-excel",
+                          icon: <FileExcelOutlined />,
+                          onClick: handleExportExcel,
+                        }}
+                      />
+                      <CustomButton
+                        content={"In thông tin"}
+                        buttonProps={{
+                          icon: <PrinterOutlined />,
+                          className: "student-information_form-print",
+                          onClick: () => {
+                            window.print();
+                          },
+                        }}
+                      />
+                    </div>
                     <CustomButton
                       content={"Chỉnh sửa"}
                       buttonProps={{
