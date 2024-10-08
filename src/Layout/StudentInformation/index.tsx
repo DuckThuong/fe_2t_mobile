@@ -790,7 +790,7 @@ export const StudentInformation = () => {
                   />
                 </ColWrap>
               </RowWrap>
-              <div className="student-information_result">
+              {/* <div className="student-information_result">
                 <RowWrap
                   isGutter={true}
                   isWrap={true}
@@ -825,7 +825,7 @@ export const StudentInformation = () => {
                     )}
                   </ColWrap>
                 </RowWrap>
-              </div>
+              </div> */}
             </>
           ) : (
             <p
