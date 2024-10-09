@@ -1,0 +1,97 @@
+@import "../../styles/mixins";
+@import "../../styles/variables.scss";
+.footer-web {
+  &_footer {
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+    justify-content: end;
+    @include sm {
+      flex-direction: column;
+    }
+    &-excel {
+      margin-left: 10px;
+      background-color: $success_color;
+      color: $white_color;
+      font-weight: 600;
+      font-size: 16px;
+      @include sm {
+        margin-right: 0px !important;
+      }
+    }
+    &-edit {
+      background-color: $primary_color !important;
+      color: $white_color !important;
+      font-weight: 600;
+      font-size: 16px;
+      @include sm {
+        margin-bottom: 12px !important;
+      }
+    }
+    &-delete {
+      background-color: red;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px !important;
+      }
+    }
+    &-editTable {
+      background-color: rgb(0, 217, 255);
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px !important;
+      }
+    }
+    &-add {
+      background-color: greenyellow;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px !important;
+      }
+    }
+    &-save {
+      background-color: $primary_color;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 24px 0px 0px 5px !important;
+      }
+    }
+    &-print {
+      font-weight: 600;
+      color: white;
+      font-size: 16px;
+      background-color: orange;
+    }
+    .w-100 {
+      @include sm {
+        width: 100%;
+      }
+    }
+    &-row {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      .ant-btn {
+        margin: 0px 5px;
+        @include sm {
+          width: 100px;
+          font-size: 14px;
+        }
+      }
+    }
+    .ant-btn {
+      margin: 0px 5px;
+      @include sm {
+        font-size: 14px;
+      }
+    }
+    .option {
+      display: flex;
+      justify-content: center;
+    }
+  }
+}

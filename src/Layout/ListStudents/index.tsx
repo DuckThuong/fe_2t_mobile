@@ -30,6 +30,7 @@ import { Modal } from "antd";
 import { FormSelect } from "../../Components/Form/FormSelect";
 import { useForm } from "antd/es/form/Form";
 import NotificationPopup from "../Notification";
+import StudentFooterActions from "../FooterWeb";
 enum classSelector {
   SIX = "Lớp 6",
   SEVEN = "Lớp 7",
@@ -544,114 +545,14 @@ export const ListStudents = () => {
             }}
           />
         </div>
-        <div className="list-student_footer">
-          {editState ? (
-            <>
-              <CustomButton
-                content={"Chỉnh sửa"}
-                buttonProps={{
-                  icon: <EditOutlined />,
-                  className: "list-student_footer-edit",
-                  onClick: () => {
-                    setEditState(false);
-                    window.scrollTo({
-                      top: 0,
-                      behavior: "smooth",
-                    });
-                  },
-                }}
-              />
-              <div className="option">
-                <CustomButton
-                  content={"In thông tin"}
-                  buttonProps={{
-                    icon: <PrinterOutlined />,
-                    className: "list-student_footer-print",
-                    onClick: () => {
-                      window.print();
-                    },
-                  }}
-                />
-                <CustomButton
-                  content="Xuất Excel"
-                  buttonProps={{
-                    className: "list-student_footer-excel",
-                    icon: <FileExcelOutlined />,
-                    onClick: handleExportExcel,
-                  }}
-                />
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="option">
-                <CustomButton
-                  content={"Thêm"}
-                  buttonProps={{
-                    icon: <AppstoreAddOutlined />,
-                    className: "list-student_footer-add",
-                    onClick: () => {
-                      setModalStates({
-                        ...modalStates,
-                        addModal: true,
-                        showRegistedNewColumn: false,
-                        showDeleteButton: false,
-                        showEditButton: false,
-                      });
-                    },
-                  }}
-                />
-                <CustomButton
-                  content={"Sửa"}
-                  buttonProps={{
-                    icon: <EditOutlined />,
-                    className: "list-student_footer-editTable",
-                    onClick: () => {
-                      setModalStates({
-                        ...modalStates,
-                        showRegistedNewColumn: true,
-                        showEditButton: true,
-                        showDeleteButton: false,
-                      });
-                    },
-                  }}
-                />
 
-                <CustomButton
-                  content={"Xóa"}
-                  buttonProps={{
-                    icon: <DeleteOutlined />,
-                    className: "list-student_footer-delete",
-                    onClick: () => {
-                      setModalStates({
-                        ...modalStates,
-                        showRegistedNewColumn: true,
-                        showDeleteButton: true,
-                        showEditButton: false,
-                      });
-                    },
-                  }}
-                />
-              </div>
-              <CustomButton
-                content={"Lưu"}
-                buttonProps={{
-                  icon: <SaveOutlined />,
-                  className: "list-student_footer-save",
-                  onClick: () => {
-                    setEditState(true);
-                    setModalStates({
-                      ...modalStates,
-                      showRegistedNewColumn: false,
-                      showDeleteButton: false,
-                      showEditButton: false,
-                    });
-                  },
-                }}
-              />
-            </>
-          )}
-        </div>
+        <StudentFooterActions
+          editState={editState}
+          setEditState={setEditState}
+          modalStates={modalStates}
+          setModalStates={setModalStates}
+          handleExportExcel={handleExportExcel}
+        />
         <div className="list-student_modal-popup">
           {/* Modal Add */}
           <Modal

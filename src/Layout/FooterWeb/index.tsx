@@ -8,7 +8,7 @@ import {
   SaveOutlined,
 } from "@ant-design/icons";
 import { CustomButton } from "../../Components/buttons/CustomButton";
-
+import "./footerWeb.scss";
 interface StudentFooterActionsProps {
   editState: boolean;
   setEditState: (state: boolean) => void;

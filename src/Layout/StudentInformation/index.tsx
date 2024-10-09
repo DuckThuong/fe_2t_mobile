@@ -33,6 +33,7 @@ import { useForm } from "antd/es/form/Form";
 import { useRef } from "react";
 import { message, Modal } from "antd";
 import NotificationPopup from "../Notification";
+import StudentFooterActions from "../FooterWeb";
 
 export const StudentInformation = () => {
   const navigate = useNavigate();
@@ -970,7 +971,7 @@ export const StudentInformation = () => {
           {/* Các button chỉnh sửa bảng các môn đang học */}
 
           <div className="list-student_footer">
-            {editState ? (
+            {courseEdit ? (
               <>
                 <CustomButton
                   content={"Chỉnh sửa"}
@@ -978,7 +979,7 @@ export const StudentInformation = () => {
                     icon: <EditOutlined />,
                     className: "list-student_footer-edit",
                     onClick: () => {
-                      setEditState(false);
+                      setCourseEdit(false);
                       window.scrollTo({
                         top: 0,
                         behavior: "smooth",
@@ -1009,7 +1010,7 @@ export const StudentInformation = () => {
                         setModalStates({
                           ...modalStates,
                           addModal: true,
-                          showRegistedNewColumn: false,
+                          showNewColumn: false,
                           showDeleteButton: false,
                           showEditButton: false,
                         });
@@ -1024,7 +1025,7 @@ export const StudentInformation = () => {
                       onClick: () => {
                         setModalStates({
                           ...modalStates,
-                          showRegistedNewColumn: true,
+                          showNewColumn: true,
                           showEditButton: true,
                           showDeleteButton: false,
                         });
@@ -1040,7 +1041,7 @@ export const StudentInformation = () => {
                       onClick: () => {
                         setModalStates({
                           ...modalStates,
-                          showRegistedNewColumn: true,
+                          showNewColumn: true,
                           showDeleteButton: true,
                           showEditButton: false,
                         });
@@ -1054,10 +1055,10 @@ export const StudentInformation = () => {
                     icon: <SaveOutlined />,
                     className: "list-student_footer-save",
                     onClick: () => {
-                      setEditState(true);
+                      setCourseEdit(true);
                       setModalStates({
                         ...modalStates,
-                        showRegistedNewColumn: false,
+                        showNewColumn: false,
                         showDeleteButton: false,
                         showEditButton: false,
                       });
@@ -1067,7 +1068,6 @@ export const StudentInformation = () => {
               </>
             )}
           </div>
-
           {/* Bảng các môn đã học  */}
 
           <div className="student-information_underLine">
@@ -1091,115 +1091,13 @@ export const StudentInformation = () => {
 
           {/* Các button xử lý chức năng của bảng các môn đã học */}
 
-          <div className="list-student_footer">
-            {editState ? (
-              <>
-                <CustomButton
-                  content={"Chỉnh sửa"}
-                  buttonProps={{
-                    icon: <EditOutlined />,
-                    className: "list-student_footer-edit",
-                    onClick: () => {
-                      setEditState(false);
-                      window.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                      });
-                    },
-                  }}
-                />
-                <div className="option">
-                  <CustomButton
-                    content={"In thông tin"}
-                    buttonProps={{
-                      icon: <PrinterOutlined />,
-                      className: "list-student_footer-print",
-                      onClick: () => {
-                        window.print();
-                      },
-                    }}
-                  />
-                  <CustomButton
-                    content="Xuất Excel"
-                    buttonProps={{
-                      className: "list-student_footer-excel",
-                      icon: <FileExcelOutlined />,
-                      onClick: handleExportExcel,
-                    }}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="option">
-                  <CustomButton
-                    content={"Thêm"}
-                    buttonProps={{
-                      icon: <AppstoreAddOutlined />,
-                      className: "list-student_footer-add",
-                      onClick: () => {
-                        setModalStates({
-                          ...modalStates,
-                          addModal: true,
-                          showRegistedNewColumn: false,
-                          showDeleteButton: false,
-                          showEditButton: false,
-                        });
-                      },
-                    }}
-                  />
-                  <CustomButton
-                    content={"Sửa"}
-                    buttonProps={{
-                      icon: <EditOutlined />,
-                      className: "list-student_footer-editTable",
-                      onClick: () => {
-                        setModalStates({
-                          ...modalStates,
-                          showRegistedNewColumn: true,
-                          showEditButton: true,
-                          showDeleteButton: false,
-                        });
-                      },
-                    }}
-                  />
-
-                  <CustomButton
-                    content={"Xóa"}
-                    buttonProps={{
-                      icon: <DeleteOutlined />,
-                      className: "list-student_footer-delete",
-                      onClick: () => {
-                        setModalStates({
-                          ...modalStates,
-                          showRegistedNewColumn: true,
-                          showDeleteButton: true,
-                          showEditButton: false,
-                        });
-                      },
-                    }}
-                  />
-                </div>
-                <CustomButton
-                  content={"Lưu"}
-                  buttonProps={{
-                    icon: <SaveOutlined />,
-                    className: "list-student_footer-save",
-                    onClick: () => {
-                      setEditState(true);
-                      setModalStates({
-                        ...modalStates,
-                        showRegistedNewColumn: false,
-                        showDeleteButton: false,
-                        showEditButton: false,
-                      });
-                    },
-                  }}
-                />
-              </>
-            )}
-          </div>
-
+          <StudentFooterActions
+            editState={editState}
+            setEditState={setEditState}
+            modalStates={modalStates}
+            setModalStates={setModalStates}
+            handleExportExcel={handleExportExcel}
+          />
           {/* Các modal hiện trong layout */}
 
           <div className="student-information_modal-popup">
