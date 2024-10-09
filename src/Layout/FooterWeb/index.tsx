@@ -25,14 +25,14 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
   handleExportExcel,
 }) => {
   return (
-    <div className="list-student_footer">
+    <div className="footer-web_footer">
       {editState ? (
         <>
           <CustomButton
             content={"Chỉnh sửa"}
             buttonProps={{
               icon: <EditOutlined />,
-              className: "list-student_footer-edit",
+              className: "footer-web_footer-edit",
               onClick: () => {
                 setEditState(false);
                 window.scrollTo({
@@ -47,7 +47,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
               content={"In thông tin"}
               buttonProps={{
                 icon: <PrinterOutlined />,
-                className: "list-student_footer-print",
+                className: "footer-web_footer-print",
                 onClick: () => {
                   window.print();
                 },
@@ -56,7 +56,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
             <CustomButton
               content="Xuất Excel"
               buttonProps={{
-                className: "list-student_footer-excel",
+                className: "footer-web_footer-excel",
                 icon: <FileExcelOutlined />,
                 onClick: handleExportExcel,
               }}
@@ -70,7 +70,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
               content={"Thêm"}
               buttonProps={{
                 icon: <AppstoreAddOutlined />,
-                className: "list-student_footer-add",
+                className: "footer-web_footer-add",
                 onClick: () => {
                   setModalStates({
                     ...modalStates,
@@ -86,7 +86,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
               content={"Sửa"}
               buttonProps={{
                 icon: <EditOutlined />,
-                className: "list-student_footer-editTable",
+                className: "footer-web_footer-editTable",
                 onClick: () => {
                   setModalStates({
                     ...modalStates,
@@ -101,7 +101,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
               content={"Xóa"}
               buttonProps={{
                 icon: <DeleteOutlined />,
-                className: "list-student_footer-delete",
+                className: "footer-web_footer-delete",
                 onClick: () => {
                   setModalStates({
                     ...modalStates,
@@ -117,7 +117,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
             content={"Lưu"}
             buttonProps={{
               icon: <SaveOutlined />,
-              className: "list-student_footer-save",
+              className: "footer-web_footer-save",
               onClick: () => {
                 setEditState(true);
                 setModalStates({

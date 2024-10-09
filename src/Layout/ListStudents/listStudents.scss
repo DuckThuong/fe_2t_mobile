@@ -268,6 +268,13 @@
     }
   }
   &_footer {
+    width: 100%;
+    display: flex;
+    margin-top: 20px;
+    justify-content: end;
+    @include sm {
+      flex-direction: column;
+    }
     &-excel {
       margin-left: 10px;
       background-color: $success_color;
@@ -324,15 +331,6 @@
       color: white;
       font-size: 16px;
       background-color: orange;
-    }
-  }
-  &_footer {
-    width: 100%;
-    display: flex;
-    margin-top: 20px;
-    justify-content: end;
-    @include sm {
-      flex-direction: column;
     }
     .w-100 {
       @include sm {
