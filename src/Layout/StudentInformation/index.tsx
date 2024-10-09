@@ -47,6 +47,7 @@ export const StudentInformation = () => {
     showDeleteButton: false,
     showEditButton: false,
     showNewColumn: false,
+    showRegistedNewColumn: false,
     showEditSubject: false,
   });
   const [year, setYear] = useState<any>();
@@ -56,6 +57,12 @@ export const StudentInformation = () => {
     { value: "Bắt buộc", label: "Bắt buộc" },
     { value: "Không bắt buộc", label: "Không bắt buộc" },
     { value: "Tự chọn", label: "Tự chọn" },
+  ];
+  const stateOption = [
+    { value: "Đang học", label: "Đang học" },
+    { value: "Nghỉ học", label: "Nghỉ học" },
+    { value: "Bảo lưu", label: "Bảo lưu" },
+    { value: "Tốt nghiệp", label: "Tốt nghiệp" },
   ];
   const [notification, setNotification] = useState<{
     message: string;
@@ -134,108 +141,150 @@ export const StudentInformation = () => {
         );
       },
     },
-  ];
+    {
+      title: "CHỨC NĂNG",
+      dataIndex: "cn",
+      key: "cn",
+      render: (text) => {
+        return (
+          <>
+            {modalStates.showEditButton && (
+              <CustomButton
+                content="Sửa"
+                buttonProps={{
+                  onClick: () => {
+                    setModalStates({
+                      ...modalStates,
+                      editModal: true,
+                    });
+                  },
+                  icon: <EditOutlined />,
+                  className: "edit",
+                }}
+              />
+            )}
+            {modalStates.showDeleteButton && (
+              <CustomButton
+                content="Xóa"
+                buttonProps={{
+                  icon: <DeleteOutlined />,
+                  onClick: () => {
+                    setModalStates({
+                      ...modalStates,
+                      deleteModal: true,
+                    });
+                  },
+                  className: "delete",
+                }}
+              />
+            )}
+          </>
+        );
+      },
+
+      hidden: !modalStates.showRegistedNewColumn,
+    },
+  ].filter((column) => !column.hidden);
   const data = [
     {
       stt: 1,
-      mhp: "7E1023.22",
-      thp: "Ngoại ngữ 1",
+      mhp: "THCS101",
+      thp: "Toán 7",
       yc: "Bắt buộc",
-      ltc: "7E1023.22-1.2425.2.1_LT",
-      lh: `16/09/24-17/11/24 - Thứ 2(T9-12)
-           - Thứ 4(T9-12)`,
-      gv: "Thái Thanh Tùng",
-      ph: "FITHOU-P24FITHOU-P32Online-O.01",
+      ltc: "THCS101-1.2425.1.1_LT",
+      lh: "Mon-Wed 08:00-09:30",
+      gv: "Nguyễn Thị Hương",
+      ph: "Phòng 101",
     },
     {
       stt: 2,
-      mhp: "7E1016.22",
-      thp: "	Thiết kế trải nghiệm người dùng",
+      mhp: "THCS102",
+      thp: "Ngữ Văn 7",
       yc: "Bắt buộc",
-      ltc: "7E1016.22-1.2425.6.6_LT",
-      lh: "Tue-Thu 09:00-10:30",
-      gv: "Dương Chí Bằng	",
-      ph: "FITHOU-P51",
+      ltc: "THCS102-1.2425.1.2_LT",
+      lh: "Tue-Thu 09:30-11:00",
+      gv: "Trần Văn An",
+      ph: "Phòng 102",
     },
     {
       stt: 3,
-      mhp: "PH103",
-      thp: "Physics I",
+      mhp: "THCS103",
+      thp: "Lịch Sử 7",
       yc: "Bắt buộc",
-      ltc: "PH103-C",
-      lh: "Mon-Wed 14:00-15:30",
-      gv: "Dr. Albert Newton",
-      ph: "Room 303",
+      ltc: "THCS103-1.2425.1.3_LT",
+      lh: "Fri 13:00-14:30",
+      gv: "Lê Thị Mai",
+      ph: "Phòng 103",
     },
     {
       stt: 4,
-      mhp: "CH104",
-      thp: "Chemistry Basics",
+      mhp: "THCS104",
+      thp: "Địa Lý 7",
       yc: "Bắt buộc",
-      ltc: "CH104-D",
-      lh: "Fri 10:00-12:00",
-      gv: "Dr. Marie Curie",
-      ph: "Room 404",
+      ltc: "THCS104-1.2425.1.4_LT",
+      lh: "Mon-Wed 14:30-16:00",
+      gv: "Phạm Văn Bình",
+      ph: "Phòng 104",
     },
     {
       stt: 5,
-      mhp: "BI105",
-      thp: "Biology I",
+      mhp: "THCS105",
+      thp: "Sinh Học 7",
       yc: "Bắt buộc",
-      ltc: "BI105-E",
-      lh: "Tue-Thu 11:00-12:30",
-      gv: "Dr. Charles Darwin",
-      ph: "Room 505",
+      ltc: "THCS105-1.2425.1.5_LT",
+      lh: "Tue-Thu 10:00-11:30",
+      gv: "Nguyễn Văn A",
+      ph: "Phòng 105",
     },
     {
       stt: 6,
-      mhp: "EN106",
-      thp: "English Literature",
+      mhp: "THCS106",
+      thp: "Vật Lý 7",
       yc: "Bắt buộc",
-      ltc: "EN106-F",
-      lh: "Mon-Wed 09:00-10:00",
-      gv: "Prof. William Shakespeare",
-      ph: "Room 606",
+      ltc: "THCS106-1.2425.1.6_LT",
+      lh: "Mon-Wed 09:00-10:30",
+      gv: "Trần Văn B",
+      ph: "Phòng 106",
     },
     {
       stt: 7,
-      mhp: "HI107",
-      thp: "World History",
+      mhp: "THCS107",
+      thp: "Hóa Học 7",
       yc: "Bắt buộc",
-      ltc: "HI107-G",
-      lh: "Wed-Fri 13:00-14:30",
-      gv: "Dr. Herodotus",
-      ph: "Room 707",
+      ltc: "THCS107-1.2425.1.7_LT",
+      lh: "Fri 10:00-12:00",
+      gv: "Nguyễn Thị C",
+      ph: "Phòng 107",
     },
     {
       stt: 8,
-      mhp: "EC108",
-      thp: "Economics I",
+      mhp: "THCS108",
+      thp: "Thể Dục 7",
       yc: "Bắt buộc",
-      ltc: "EC108-H",
+      ltc: "THCS108-1.2425.1.8_LT",
       lh: "Tue-Thu 15:00-16:30",
-      gv: "Prof. Adam Smith",
-      ph: "Room 808",
+      gv: "Lê Văn D",
+      ph: "Sân Thể Dục",
     },
     {
       stt: 9,
-      mhp: "PS109",
-      thp: "Psychology Basics",
+      mhp: "THCS109",
+      thp: "Tin Học 7",
       yc: "Không bắt buộc",
-      ltc: "PS109-I",
+      ltc: "THCS109-1.2425.1.9_LT",
       lh: "Mon-Wed 11:00-12:30",
-      gv: "Dr. Sigmund Freud",
-      ph: "Room 909",
+      gv: "Nguyễn Văn E",
+      ph: "Phòng 109",
     },
     {
       stt: 10,
-      mhp: "SO110",
-      thp: "Sociology I",
+      mhp: "THCS110",
+      thp: "Ngoại Ngữ 7",
       yc: "Không bắt buộc",
-      ltc: "SO110-J",
+      ltc: "THCS110-1.2425.1.10_LT",
       lh: "Fri 14:00-16:00",
-      gv: "Prof. Max Weber",
-      ph: "Room 1010",
+      gv: "Trần Thị F",
+      ph: "Phòng 110",
     },
   ];
   const courseColumns = [
@@ -324,6 +373,7 @@ export const StudentInformation = () => {
                       editModal: true,
                     });
                   },
+                  icon: <EditOutlined />,
                   className: "edit",
                 }}
               />
@@ -332,6 +382,7 @@ export const StudentInformation = () => {
               <CustomButton
                 content="Xóa"
                 buttonProps={{
+                  icon: <DeleteOutlined />,
                   onClick: () => {
                     setModalStates({
                       ...modalStates,
@@ -359,7 +410,47 @@ export const StudentInformation = () => {
       lh: `16/09/24-17/11/24 - Thứ 2(T9-12)
            - Thứ 4(T9-12)`,
       gv: "Thái Thanh Tùng",
-      ph: "FITHOU-P24FITHOU-P32Online-O.01",
+      ph: "Phòng 104",
+    },
+    {
+      stt: 2,
+      mhp: "THCS101",
+      thp: "Toán 7",
+      yc: "Bắt buộc",
+      ltc: "THCS101-1.2425.1.1_LT",
+      lh: "Mon-Wed 08:00-09:30",
+      gv: "Nguyễn Thị Hương",
+      ph: "Phòng 101",
+    },
+    {
+      stt: 3,
+      mhp: "THCS102",
+      thp: "Ngữ Văn 7",
+      yc: "Bắt buộc",
+      ltc: "THCS102-1.2425.1.2_LT",
+      lh: "Tue-Thu 09:30-11:00",
+      gv: "Trần Văn An",
+      ph: "Phòng 102",
+    },
+    {
+      stt: 4,
+      mhp: "THCS103",
+      thp: "Lịch Sử 7",
+      yc: "Bắt buộc",
+      ltc: "THCS103-1.2425.1.3_LT",
+      lh: "Fri 13:00-14:30",
+      gv: "Lê Thị Mai",
+      ph: "Phòng 103",
+    },
+    {
+      stt: 5,
+      mhp: "THCS104",
+      thp: "Địa Lý 7",
+      yc: "Bắt buộc",
+      ltc: "THCS104-1.2425.1.4_LT",
+      lh: "Mon-Wed 14:30-16:00",
+      gv: "Phạm Văn Bình",
+      ph: "Phòng 104",
     },
   ]);
   const handleExportExcel = () => {
@@ -464,7 +555,7 @@ export const StudentInformation = () => {
             gutter={[8, 8]}
             className="student-information_row"
           >
-            <ColWrap colProps={{ span: 16 }}>
+            <ColWrap colProps={{ span: 12 }}>
               <p className="student-information_row-label">Họ và tên</p>
               <FormInput
                 name={"studentName"}
@@ -474,6 +565,19 @@ export const StudentInformation = () => {
                 inputProps={{
                   placeholder: "Họ và tên",
                   disabled: editState,
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Mã học sinh</p>
+              <FormInput
+                name={"studentMhs"}
+                formItemProps={{
+                  className: "student-information_form-studentMsv",
+                }}
+                inputProps={{
+                  disabled: editState,
+                  placeholder: "Mã học sinh",
                 }}
               />
             </ColWrap>
@@ -501,15 +605,52 @@ export const StudentInformation = () => {
               />
             </ColWrap>
             <ColWrap colProps={{ span: 12 }}>
-              <p className="student-information_row-label">Mã học sinh</p>
-              <FormInput
-                name={"studentMsv"}
+              <p className="student-information_row-label">Trạng thái</p>
+              <FormSelect
+                name={"StudentState"}
                 formItemProps={{
                   className: "student-information_form-studentMsv",
                 }}
+                placeholder="Trạng thái"
+                selectProps={{
+                  disabled: editState,
+                  options: stateOption,
+                }}
+              />
+            </ColWrap>
+          </RowWrap>
+          {/* Hàng 3 */}
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[8, 8]}
+            className="student-information_row"
+          >
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Khóa</p>
+              <FormInput
+                name={"studentSemester"}
+                formItemProps={{
+                  className: "student-information_form-studentDob",
+                }}
                 inputProps={{
                   disabled: editState,
-                  placeholder: "Mã học sinh",
+                  placeholder: "Khóa",
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Giới tính</p>
+              <FormInput
+                name={"studentGender"}
+                formItemProps={{
+                  className: "student-information_form-studentID",
+                }}
+                inputProps={{
+                  disabled: editState,
+                  placeholder: "GIỚI TÍNH",
                 }}
               />
             </ColWrap>
@@ -526,7 +667,7 @@ export const StudentInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="student-information_row-label">Số CCCD</p>
               <FormInput
-                name={"studentID"}
+                name={"studentCCCD"}
                 formItemProps={{
                   className: "student-information_form-studentID",
                 }}
@@ -790,42 +931,6 @@ export const StudentInformation = () => {
                   />
                 </ColWrap>
               </RowWrap>
-              {/* <div className="student-information_result">
-                <RowWrap
-                  isGutter={true}
-                  isWrap={true}
-                  isAutoFillRow={true}
-                  styleFill={"between"}
-                  gutter={[8, 8]}
-                  className="student-information_result-row"
-                >
-                  <ColWrap colProps={{ span: 16 }} className="footer">
-                    {editState ? (
-                      <CustomButton
-                        content={"Chỉnh sửa"}
-                        buttonProps={{
-                          icon: <EditOutlined />,
-                          className: "student-information_form-edit",
-                          onClick: () => {
-                            setEditState(false);
-                          },
-                        }}
-                      />
-                    ) : (
-                      <CustomButton
-                        content={"Lưu"}
-                        buttonProps={{
-                          icon: <EditOutlined />,
-                          className: "student-information_form-edit",
-                          onClick: () => {
-                            setEditState(true);
-                          },
-                        }}
-                      />
-                    )}
-                  </ColWrap>
-                </RowWrap>
-              </div> */}
             </>
           ) : (
             <p
@@ -839,6 +944,8 @@ export const StudentInformation = () => {
           )}
           <div className="student-information_underLine " />
 
+          {/* Bảng các môn đang học  */}
+
           <div className="student-information_underLine">
             <p className="student-information_title">
               Các môn đang học trong kì hiện tại
@@ -851,7 +958,7 @@ export const StudentInformation = () => {
             <TableWrap
               setSize={() => {}}
               scrollValue={{ x: 1200 }}
-              tableWidth={1800}
+              tableWidth={1500}
               rootClassName="student-information_table-wrap"
               tableProps={{
                 dataSource: courseData,
@@ -859,6 +966,9 @@ export const StudentInformation = () => {
               }}
             />
           </div>
+
+          {/* Các button chỉnh sửa bảng các môn đang học */}
+
           <div className="student-information_table-edit ">
             <RowWrap
               isGutter={true}
@@ -961,6 +1071,9 @@ export const StudentInformation = () => {
               </ColWrap>
             </RowWrap>
           </div>
+
+          {/* Bảng các môn đã học  */}
+
           <div className="student-information_underLine">
             <p className="student-information_title">
               Các môn đã học <FontAwesomeIcon icon={faBookOpenReader} />
@@ -970,7 +1083,7 @@ export const StudentInformation = () => {
             <TableWrap
               setSize={() => {}}
               scrollValue={{ x: 1200 }}
-              tableWidth={1416}
+              tableWidth={1500}
               rootClassName="student-information_table-wrap"
               tableProps={{
                 dataSource: data,
@@ -979,6 +1092,9 @@ export const StudentInformation = () => {
             />
           </div>
           <div className="student-information_underLine" />
+
+          {/* Các button xử lý chức năng của bảng các môn đã học */}
+
           <div className="student-information_footer">
             <RowWrap
               isGutter={true}
@@ -1034,20 +1150,79 @@ export const StudentInformation = () => {
                     />
                   </RowWrap>
                 ) : (
-                  <CustomButton
-                    content={"Lưu"}
-                    buttonProps={{
-                      icon: <EditOutlined />,
-                      className: "student-information_form-edit",
-                      onClick: () => {
-                        setEditState(true);
-                      },
-                    }}
-                  />
+                  <>
+                    <CustomButton
+                      content={"Lưu"}
+                      buttonProps={{
+                        icon: <SaveOutlined />,
+                        className: "student-information_form-save",
+                        onClick: () => {
+                          setEditState(true);
+                          setModalStates({
+                            ...modalStates,
+                            showRegistedNewColumn: false,
+                            showDeleteButton: false,
+                            showEditButton: false,
+                          });
+                        },
+                      }}
+                    />
+                    <div className="option">
+                      <CustomButton
+                        content={"Thêm"}
+                        buttonProps={{
+                          icon: <AppstoreAddOutlined />,
+                          className: "student-information_form-add",
+                          onClick: () => {
+                            setModalStates({
+                              ...modalStates,
+                              addModal: true,
+                              showRegistedNewColumn: false,
+                              showDeleteButton: false,
+                              showEditButton: false,
+                            });
+                          },
+                        }}
+                      />
+                      <CustomButton
+                        content={"Sửa"}
+                        buttonProps={{
+                          icon: <EditOutlined />,
+                          className: "student-information_form-editTable",
+                          onClick: () => {
+                            setModalStates({
+                              ...modalStates,
+                              showRegistedNewColumn: true,
+                              showEditButton: true,
+                              showDeleteButton: false,
+                            });
+                          },
+                        }}
+                      />
+                      <CustomButton
+                        content={"Xóa"}
+                        buttonProps={{
+                          icon: <DeleteOutlined />,
+                          className: "student-information_form-delete",
+                          onClick: () => {
+                            setModalStates({
+                              ...modalStates,
+                              showRegistedNewColumn: true,
+                              showDeleteButton: true,
+                              showEditButton: false,
+                            });
+                          },
+                        }}
+                      />
+                    </div>
+                  </>
                 )}
               </ColWrap>
             </RowWrap>
           </div>
+
+          {/* Các modal hiện trong layout */}
+
           <div className="student-information_modal-popup">
             {/* Modal Add */}
             <Modal
@@ -1068,7 +1243,7 @@ export const StudentInformation = () => {
               }}
             >
               <h1 className="student-information_modal-header">
-                Bạn muốn thêm môn học mới cho học sinh?
+                Bạn muốn thêm một môn học?
               </h1>
               <div className="student-information_underLine" />
             </Modal>
@@ -1145,16 +1320,16 @@ export const StudentInformation = () => {
                     ph: form.getFieldValue("subjectRoom"),
                   };
                   setCourseData([...courseData, newCourse]);
+                  setModalStates({
+                    ...modalStates,
+                    addSubject: false,
+                  });
                 } else {
                   setNotification({
                     message: "Vui lòng điền đầy đủ dữ liệu",
                     type: "error",
                   });
                 }
-                setModalStates({
-                  ...modalStates,
-                  addSubject: false,
-                });
               }}
               afterClose={() => {
                 form.setFieldValue("subjectId", "");
@@ -1176,7 +1351,7 @@ export const StudentInformation = () => {
                   isAutoFillRow={true}
                   styleFill={"between"}
                   gutter={[8, 8]}
-                  className="student-information_modal"
+                  className="student-information_row"
                 >
                   <ColWrap colProps={{ span: 16 }}>
                     <p className="student-information_row-label">TÊN MÔN HỌC</p>
@@ -1219,9 +1394,9 @@ export const StudentInformation = () => {
                       formItemProps={{
                         className: "student-information_form-studentMsv",
                       }}
+                      placeholder="Yêu cầu"
                       selectProps={{
                         options: option,
-                        placeholder: "Yêu cầu",
                       }}
                     />
                   </ColWrap>
@@ -1361,7 +1536,9 @@ export const StudentInformation = () => {
                       formItemProps={{
                         className: "student-information_form-studentMsv",
                       }}
+                      placeholder="Yêu cầu"
                       selectProps={{
+                        options: option,
                         placeholder: "Yêu cầu",
                       }}
                     />

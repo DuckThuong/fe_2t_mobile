@@ -15,9 +15,21 @@ import { useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { FileExcelOutlined, PrinterOutlined } from "@ant-design/icons";
+import {
+  AppstoreAddOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  FileExcelOutlined,
+  PrinterOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import { TableRowSelection } from "antd/es/table/interface";
+import { FormInput } from "../../Components/Form/FormInput";
+import { Modal } from "antd";
+import { FormSelect } from "../../Components/Form/FormSelect";
+import { useForm } from "antd/es/form/Form";
+import NotificationPopup from "../Notification";
 enum classSelector {
   SIX = "Lớp 6",
   SEVEN = "Lớp 7",
@@ -34,21 +46,10 @@ enum stateSelector {
 interface AnyObject {
   [key: string]: any;
 }
-interface Student extends AnyObject {
-  key: string;
-  studentMsv: string;
-  studentName: string;
-  studentClass: string;
-  studentCourse: string;
-  studentDob: string;
-  studentGender: string;
-  studentState: string;
-  studentOption: string;
-}
-
 export const ListStudents = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [form] = useForm();
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const classOption = Object.values(classSelector).map((major) => ({
@@ -59,6 +60,28 @@ export const ListStudents = () => {
     label: course,
     value: course,
   }));
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
+  const [editState, setEditState] = useState<boolean>(true);
+  const [modalStates, setModalStates] = useState({
+    editModal: false,
+    deleteModal: false,
+    addModal: false,
+    addStudent: false,
+    showDeleteButton: false,
+    showEditButton: false,
+    showNewColumn: false,
+    showRegistedNewColumn: false,
+    showEditstudent: false,
+  });
+  const option = [
+    { value: "Đang học", label: "Đang học" },
+    { value: "Nghỉ học", label: "Nghỉ học" },
+    { value: "Bảo lưu", label: "Bảo lưu" },
+    { value: "Tốt nghiệp", label: "Tốt nghiệp" },
+  ];
   const conlumns = [
     {
       title: "STT",
@@ -147,12 +170,15 @@ export const ListStudents = () => {
       dataIndex: "studentState",
       key: "studentState",
       render: (record) => {
-        const stateClass = `list-student_data-studentState ${record
-          .toLowerCase()
-          .replace(/\s+/g, "-")}`;
+        const stateDisplay = stateOption.find(
+          (option) => option.value === record
+        )?.label;
+        const stateClass = `list-student_data-studentState ${
+          stateDisplay ? stateDisplay.toLowerCase().replace(/\s+/g, "-") : ""
+        }`;
         return (
           <>
-            <p className={stateClass}>{record}</p>
+            <p className={stateClass}>{stateDisplay || record}</p>
           </>
         );
       },
@@ -178,8 +204,51 @@ export const ListStudents = () => {
         );
       },
     },
+    {
+      title: "CHỨC NĂNG",
+      dataIndex: "cn",
+      key: "cn",
+      render: (text) => {
+        return (
+          <>
+            {modalStates.showEditButton && (
+              <CustomButton
+                content="Sửa"
+                buttonProps={{
+                  onClick: () => {
+                    setModalStates({
+                      ...modalStates,
+                      editModal: true,
+                    });
+                  },
+                  icon: <EditOutlined />,
+                  className: "list-student_footer-editTable",
+                }}
+              />
+            )}
+            {modalStates.showDeleteButton && (
+              <CustomButton
+                content="Xóa"
+                buttonProps={{
+                  icon: <DeleteOutlined />,
+                  onClick: () => {
+                    setModalStates({
+                      ...modalStates,
+                      deleteModal: true,
+                    });
+                  },
+                  className: "list-student_footer-delete",
+                }}
+              />
+            )}
+          </>
+        );
+      },
+
+      hidden: !modalStates.showRegistedNewColumn,
+    },
   ];
-  const data: Student[] = [
+  const [data, setNewData] = useState<any[]>([
     {
       key: "1",
       studentMsv: "21A100100373",
@@ -290,7 +359,7 @@ export const ListStudents = () => {
       studentState: "Tốt nghiệp",
       studentOption: "Details",
     },
-  ];
+  ]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     if (selectedRowKeys?.length > 0) {
       setSelectedRowKeys(
@@ -300,14 +369,20 @@ export const ListStudents = () => {
       setSelectedRowKeys(newSelectedRowKeys);
     }
   };
-  console.log(selectedRowKeys);
-
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
 
-  const hasSelected = selectedRowKeys?.length > 0;
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
   const handleExportExcel = () => {
     const headers = [
       { header: "STT", key: "key" },
@@ -360,9 +435,14 @@ export const ListStudents = () => {
       }
     };
   }, []);
+
   return (
     <div className="list-student">
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={true} />
+      <NotificationPopup
+        message={notification?.message}
+        type={notification?.type}
+      />
       <div className="list-student_header">
         <h1 className="list-student_header-title">Danh sách học sinh</h1>
         <p className="list-student_header-sub">
@@ -464,26 +544,527 @@ export const ListStudents = () => {
             }}
           />
         </div>
-        <div className="list-student_button">
-          <CustomButton
-            content="In danh sách"
-            buttonProps={{
-              className: "list-student_button-print",
-              icon: <PrinterOutlined />,
-              onClick: () => {
-                window.print();
-              },
+        <div className="list-student_footer">
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[16, 16]}
+            className="list-student_row"
+          >
+            <ColWrap colProps={{ span: 16 }} className="footer">
+              {editState ? (
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="footer_row"
+                >
+                  <CustomButton
+                    content="Xuất Excel"
+                    buttonProps={{
+                      className: "list-student_footer-excel",
+                      icon: <FileExcelOutlined />,
+                      onClick: handleExportExcel,
+                    }}
+                  />
+                  <CustomButton
+                    content={"In thông tin"}
+                    buttonProps={{
+                      icon: <PrinterOutlined />,
+                      className: "list-student_footer-print",
+                      onClick: () => {
+                        window.print();
+                      },
+                    }}
+                  />
+                  <CustomButton
+                    content={"Chỉnh sửa"}
+                    buttonProps={{
+                      icon: <EditOutlined />,
+                      className: "list-student_footer-edit",
+                      onClick: () => {
+                        setEditState(false);
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      },
+                    }}
+                  />
+                </RowWrap>
+              ) : (
+                <>
+                  <CustomButton
+                    content={"Lưu"}
+                    buttonProps={{
+                      icon: <SaveOutlined />,
+                      className: "list-student_footer-save",
+                      onClick: () => {
+                        setEditState(true);
+                        setModalStates({
+                          ...modalStates,
+                          showRegistedNewColumn: false,
+                          showDeleteButton: false,
+                          showEditButton: false,
+                        });
+                      },
+                    }}
+                  />
+                  <div className="option">
+                    <CustomButton
+                      content={"Xóa"}
+                      buttonProps={{
+                        icon: <DeleteOutlined />,
+                        className: "list-student_footer-delete",
+                        onClick: () => {
+                          setModalStates({
+                            ...modalStates,
+                            showRegistedNewColumn: true,
+                            showDeleteButton: true,
+                            showEditButton: false,
+                          });
+                        },
+                      }}
+                    />
+                    <CustomButton
+                      content={"Sửa"}
+                      buttonProps={{
+                        icon: <EditOutlined />,
+                        className: "list-student_footer-editTable",
+                        onClick: () => {
+                          setModalStates({
+                            ...modalStates,
+                            showRegistedNewColumn: true,
+                            showEditButton: true,
+                            showDeleteButton: false,
+                          });
+                        },
+                      }}
+                    />
+                    <CustomButton
+                      content={"Thêm"}
+                      buttonProps={{
+                        icon: <AppstoreAddOutlined />,
+                        className: "list-student_footer-add",
+                        onClick: () => {
+                          setModalStates({
+                            ...modalStates,
+                            addModal: true,
+                            showRegistedNewColumn: false,
+                            showDeleteButton: false,
+                            showEditButton: false,
+                          });
+                        },
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </ColWrap>
+          </RowWrap>
+        </div>
+        <div className="list-student_modal-popup">
+          {/* Modal Add */}
+          <Modal
+            className="list-student_modal-add"
+            open={modalStates.addModal}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                addModal: false,
+              });
             }}
-          />
-          <CustomButton
-            content="Xuất Excel"
-            buttonProps={{
-              className: "list-student_button-excel",
-              icon: <FileExcelOutlined />,
-              onClick: handleExportExcel,
-              disabled: !hasSelected,
+            onOk={() => {
+              setModalStates({
+                ...modalStates,
+                addModal: false,
+                addStudent: true,
+              });
             }}
-          />
+          >
+            <h1 className="list-student_modal-header">
+              Bạn muốn thêm một học sinh?
+            </h1>
+            <div className="list-student_underLine" />
+          </Modal>
+          {/* Modal Delete */}
+          <Modal
+            className="list-student_modal-delete"
+            open={modalStates.deleteModal}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                showDeleteButton: true,
+                deleteModal: false,
+              });
+            }}
+            onOk={() => {}}
+          >
+            <h1 className="list-student_modal-header">
+              Bạn muốn xóa học sinh này ?
+            </h1>
+            <div className="list-student_underLine" />
+          </Modal>
+          {/* Modal Edit */}
+          <Modal
+            className="list-student_modal-edit"
+            open={modalStates.editModal}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                editModal: false,
+                showEditButton: true,
+              });
+            }}
+            onOk={() => {
+              setModalStates({
+                ...modalStates,
+                showEditstudent: true,
+                editModal: false,
+              });
+            }}
+          >
+            <h1 className="list-student_modal-header">
+              Bạn muốn sửa thông tin học sinh này ?
+            </h1>
+            <div className="list-student_underLine" />
+          </Modal>
+          {/* Modal Add Student */}
+          <Modal
+            className="list-student_modal-addStudent"
+            open={modalStates.addStudent}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                addStudent: false,
+              });
+            }}
+            onOk={() => {
+              if (
+                form.getFieldValue("studentMsv") &&
+                form.getFieldValue("studentName") &&
+                form.getFieldValue("studentClass") &&
+                form.getFieldValue("studentCourse") &&
+                form.getFieldValue("studentDob") &&
+                form.getFieldValue("studentGender") &&
+                form.getFieldValue("studentState")
+              ) {
+                const newData = {
+                  key: data.length + 1,
+                  studentMsv: form.getFieldValue("studentMsv"),
+                  studentName: form.getFieldValue("studentName"),
+                  studentClass: form.getFieldValue("studentClass"),
+                  studentCourse: form.getFieldValue("studentCourse"),
+                  studentDob: form.getFieldValue("studentDob"),
+                  studentGender: form.getFieldValue("studentGender"),
+                  studentState: form.getFieldValue("studentState"),
+                };
+                setNewData([...data, newData]);
+                setModalStates({
+                  ...modalStates,
+                  addStudent: false,
+                });
+              } else {
+                setNotification({
+                  message: "Vui lòng điền đầy đủ dữ liệu",
+                  type: "error",
+                });
+              }
+            }}
+            afterClose={() => {
+              form.setFieldValue("studentMsv", "");
+              form.setFieldValue("studentName", "");
+              form.setFieldValue("studentClass", "");
+              form.setFieldValue("studentCourse", "");
+              form.setFieldValue("studentDob", "");
+              form.setFieldValue("studentGender", "");
+              form.setFieldValue("studentState", "");
+            }}
+          >
+            <h1 className="list-student_modal-header">THÊM HỌC SINH</h1>
+            <div className="list-student_underLine" />
+            <div className="list-student_modal-addStudent-content">
+              <FormWrap form={form} className="list-student_form">
+                {/* Hàng 1 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 16 }}>
+                    <p className="list-student_row-label">HỌ VÀ TÊN</p>
+                    <FormInput
+                      name={"studentName"}
+                      formItemProps={{
+                        className: "list-student_form-studentName",
+                      }}
+                      inputProps={{
+                        placeholder: "HỌ VÀ TÊN",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 2 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ HỌC SINH</p>
+                    <FormInput
+                      name={"studentMsv"}
+                      formItemProps={{
+                        className: "list-student_form-studentClass",
+                      }}
+                      inputProps={{
+                        placeholder: "MÃ HỌC SINH",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">TRẠNG THÁI</p>
+                    <FormSelect
+                      name={"studentState"}
+                      formItemProps={{
+                        className: "list-student_form-studentMsv",
+                      }}
+                      placeholder="TRẠNG THÁI"
+                      selectProps={{
+                        options: option,
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 3 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">LỚP</p>
+                    <FormInput
+                      name={"studentClass"}
+                      formItemProps={{
+                        className: "list-student_form-studentID",
+                      }}
+                      inputProps={{
+                        placeholder: "LỚP",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">KHÓA</p>
+                    <FormInput
+                      name={"studentCourse"}
+                      formItemProps={{
+                        className: "list-student_form-studentDob",
+                      }}
+                      inputProps={{
+                        placeholder: "Lịch học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 4 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_row-modal"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">NGÀY SINH</p>
+                    <FormInput
+                      name={"studentDob"}
+                      formItemProps={{
+                        className: "list-student_form-studentEmail",
+                      }}
+                      inputProps={{
+                        placeholder: "NGÀY SINH",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">GIỚI TÍNH</p>
+                    <FormInput
+                      name={"studentGender"}
+                      formItemProps={{
+                        className: "list-student_form-studentNumber",
+                      }}
+                      inputProps={{
+                        placeholder: "Phòng học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+              </FormWrap>
+
+              <div className="list-student_underLine" />
+            </div>
+          </Modal>
+          {/* Modal Edit student */}
+          <Modal
+            className="list-student_modal-editStudent"
+            open={modalStates.showEditstudent}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                showEditstudent: false,
+              });
+            }}
+          >
+            <h1 className="list-student_modal-header">
+              SỬA THÔNG TIN HỌC SINH
+            </h1>
+            <div className="list-student_underLine" />
+            <div className="list-student_modal-addStudent-content">
+              <FormWrap form={form} className="list-student_form">
+                {/* Hàng 1 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 16 }}>
+                    <p className="list-student_row-label">HỌ VÀ TÊN</p>
+                    <FormInput
+                      name={"studentName"}
+                      formItemProps={{
+                        className: "list-student_form-studentName",
+                      }}
+                      inputProps={{
+                        placeholder: "HỌ VÀ TÊN",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 2 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ HỌC SINH</p>
+                    <FormInput
+                      name={"studentMsv"}
+                      formItemProps={{
+                        className: "list-student_form-studentClass",
+                      }}
+                      inputProps={{
+                        placeholder: "MÃ HỌC SINH",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">TRẠNG THÁI</p>
+                    <FormSelect
+                      name={"studentState"}
+                      formItemProps={{
+                        className: "list-student_form-studentMsv",
+                      }}
+                      placeholder="TRẠNG THÁI"
+                      selectProps={{
+                        options: option,
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 3 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">LỚP</p>
+                    <FormInput
+                      name={"studentClass"}
+                      formItemProps={{
+                        className: "list-student_form-studentID",
+                      }}
+                      inputProps={{
+                        placeholder: "LỚP",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">KHÓA</p>
+                    <FormInput
+                      name={"studentCourse"}
+                      formItemProps={{
+                        className: "list-student_form-studentDob",
+                      }}
+                      inputProps={{
+                        placeholder: "Lịch học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 4 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_row-modal"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">NGÀY SINH</p>
+                    <FormInput
+                      name={"studentDob"}
+                      formItemProps={{
+                        className: "list-student_form-studentEmail",
+                      }}
+                      inputProps={{
+                        placeholder: "NGÀY SINH",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">GIỚI TÍNH</p>
+                    <FormInput
+                      name={"studentGender"}
+                      formItemProps={{
+                        className: "list-student_form-studentNumber",
+                      }}
+                      inputProps={{
+                        placeholder: "Phòng học",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+              </FormWrap>
+              <div className="list-student_underLine" />
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

@@ -30,6 +30,11 @@
   &_content {
     padding: 10px;
   }
+  &_underLine {
+    border-bottom: 1px solid $gray_blur_color;
+    margin-bottom: 32px;
+    margin-top: 32px;
+  }
   &_sidebar {
     display: inline-block;
     width: 100%;
@@ -212,19 +217,19 @@
             color: white;
           }
           .bảo-lưu {
-            background-color: rgb(97, 18, 18)!important;
+            background-color: rgb(97, 18, 18) !important;
             font-size: 16px;
             font-weight: 500;
             color: white;
           }
           .nghỉ-học {
-            background-color: rgb(255, 0, 0)!important;
+            background-color: rgb(255, 0, 0) !important;
             font-size: 16px;
             font-weight: 500;
             color: white;
           }
           .học-thạc-sĩ {
-            background-color: rgb(55, 209, 114)!important;
+            background-color: rgb(55, 209, 114) !important;
             font-size: 16px;
             font-weight: 500;
             color: white;
@@ -262,22 +267,163 @@
       align-items: center;
     }
   }
-  &_button {
-    display: flex;
-    justify-content: end;
-    padding: 15px 20px;
-    &-print {
-      background-color: #3b82f6;
-      color: $white_color;
-      font-weight: 600;
-      font-style: 24px;
-    }
+  &_footer {
     &-excel {
       margin-left: 10px;
       background-color: $success_color;
       color: $white_color;
       font-weight: 600;
       font-style: 24px;
+    }
+    &-edit {
+      background-color: $primary_color !important;
+      color: $white_color !important;
+      font-weight: 600;
+      font-size: 16px;
+      @include sm {
+        margin-bottom: 12px !important;
+      }
+    }
+    &-delete {
+      background-color: red;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
+    }
+    &-editTable {
+      background-color: rgb(0, 217, 255);
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
+    }
+    &-add {
+      background-color: greenyellow;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 0px 5px 0px 5px !important;
+      }
+    }
+    &-save {
+      background-color: $primary_color;
+      color: white;
+      font-weight: 600;
+      @include sm {
+        margin: 24px 0px 0px 5px !important;
+      }
+    }
+    &-print {
+      font-weight: 600;
+      color: white;
+      font-size: 16px;
+      background-color: orange;
+    }
+  }
+  &_row {
+    display: flex;
+    justify-content: end;
+    padding: 15px 20px;
+    flex-direction: column !important;
+    float: right;
+    &-label {
+      font-family: Open Sans;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+      text-align: left;
+      color: #161617;
+    }
+    .ant-row {
+      display: flex;
+      float: right;
+      flex-direction: row-reverse;
+      flex-wrap: nowrap;
+      .ant-col {
+        display: flex;
+        flex-direction: row-reverse;
+        @include sm {
+          display: flex;
+          flex-direction: column-reverse;
+          width: 100% !important;
+          min-width: 300px !important;
+          align-items: flex-end;
+        }
+        .option {
+          display: flex;
+          flex-direction: row-reverse;
+        }
+        .ant-btn {
+          margin: 0px 10px 0px 10px;
+        }
+      }
+    }
+  }
+  &_modal {
+    &-addStudent {
+      width: fit-content !important;
+      height: fit-content !important;
+
+      .ant-modal-content {
+        min-width: 900px !important;
+        padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
+      }
+    }
+    &-editStudent {
+      width: fit-content !important;
+      height: fit-content !important;
+
+      .ant-modal-content {
+        min-width: 900px !important;
+        padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
+      }
+    }
+    &-add {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
+      }
+    }
+    &-delete {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
+      }
+    }
+    &-edit {
+      width: fit-content !important;
+      height: fit-content !important;
+      .ant-modal-content {
+        min-width: 700px !important;
+        padding: 32px;
+        @include sm {
+          width: 100% !important;
+          min-width: 0px !important;
+        }
+      }
     }
   }
 }
@@ -318,5 +464,27 @@
   .select-checkbox__option {
     padding: 8px !important;
     box-shadow: -2px 2px 8px -2px gray;
+  }
+}
+.ant-modal-content {
+  .ant-modal-body {
+    h1 {
+      font-weight: 600 !important;
+    }
+  }
+  .ant-modal-footer {
+    .ant-btn {
+      width: fit-content !important;
+      min-width: 140px;
+      height: 40px;
+      padding: 15px;
+      span {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      &-default {
+        border: 1px solid $gray_blur_color !important;
+      }
+    }
   }
 }
