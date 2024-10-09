@@ -274,6 +274,9 @@
       color: $white_color;
       font-weight: 600;
       font-style: 24px;
+      @include sm {
+        margin-right: 0px !important;
+      }
     }
     &-edit {
       background-color: $primary_color !important;
@@ -323,45 +326,43 @@
       background-color: orange;
     }
   }
-  &_row {
+  &_footer {
+    width: 100%;
     display: flex;
+    margin-top: 20px;
     justify-content: end;
-    padding: 15px 20px;
-    flex-direction: column !important;
-    float: right;
-    &-label {
-      font-family: Open Sans;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 22px;
-      text-align: left;
-      color: #161617;
+    @include sm {
+      flex-direction: column;
     }
-    .ant-row {
+    .w-100 {
+      @include sm {
+        width: 100%;
+      }
+    }
+    &-row {
+      width: 100%;
       display: flex;
-      float: right;
-      flex-direction: row-reverse;
-      flex-wrap: nowrap;
-      .ant-col {
-        display: flex;
-        flex-direction: row-reverse;
+      justify-content: end;
+      .ant-btn {
+        margin: 0px 5px;
         @include sm {
-          display: flex;
-          flex-direction: column-reverse;
-          width: 100% !important;
-          min-width: 300px !important;
-          align-items: flex-end;
-        }
-        .option {
-          display: flex;
-          flex-direction: row-reverse;
-        }
-        .ant-btn {
-          margin: 0px 10px 0px 10px;
+          width: 100px;
+          font-size: 14px;
         }
       }
     }
+    .ant-btn {
+      margin: 0px 5px;
+      @include sm {
+        font-size: 14px;
+      }
+    }
+    .option {
+      display: flex;
+      justify-content: center;
+    }
   }
+
   &_modal {
     &-addStudent {
       width: fit-content !important;

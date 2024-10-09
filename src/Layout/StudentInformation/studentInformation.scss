@@ -169,32 +169,7 @@
         }
       }
     }
-    .ant-row {
-      position: relative;
-      .footer {
-        position: absolute;
-        right: 10px;
-        padding-bottom: 80px !important;
-        &_row {
-          .ant-row {
-            width: 430px !important;
-            @include sm {
-              display: flex;
-              flex-direction: column-reverse;
-              align-items: flex-end;
-            }
-            .ant-col {
-              display: flex;
-              flex-direction: row-reverse;
-              .ant-btn {
-                width: 120px;
-                margin: 0px 10px 0px 10px !important;
-              }
-            }
-          }
-        }
-      }
-    }
+
   }
   &_result {
     &-row {
