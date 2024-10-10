@@ -980,10 +980,6 @@ export const StudentInformation = () => {
                     className: "list-student_footer-edit",
                     onClick: () => {
                       setCourseEdit(false);
-                      window.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                      });
                     },
                   }}
                 />
@@ -1068,6 +1064,7 @@ export const StudentInformation = () => {
               </>
             )}
           </div>
+          
           {/* Bảng các môn đã học  */}
 
           <div className="student-information_underLine">
@@ -1097,6 +1094,8 @@ export const StudentInformation = () => {
             modalStates={modalStates}
             setModalStates={setModalStates}
             handleExportExcel={handleExportExcel}
+            shouldScroll={true}
+            isPrint={true}
           />
           {/* Các modal hiện trong layout */}
 

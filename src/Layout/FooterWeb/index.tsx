@@ -13,8 +13,12 @@ interface StudentFooterActionsProps {
   editState: boolean;
   setEditState: (state: boolean) => void;
   modalStates: any;
+  disAble?: boolean;
   setModalStates: (states: any) => void;
   handleExportExcel: () => void;
+  scrollOptions?: ScrollToOptions;
+  shouldScroll?: boolean;
+  isPrint?: boolean;
 }
 
 const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
@@ -23,6 +27,10 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
   modalStates,
   setModalStates,
   handleExportExcel,
+  disAble,
+  scrollOptions,
+  shouldScroll,
+  isPrint,
 }) => {
   return (
     <div className="footer-web_footer">
@@ -35,30 +43,38 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
               className: "footer-web_footer-edit",
               onClick: () => {
                 setEditState(false);
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
+                if (shouldScroll) {
+                  window.scrollTo({
+                    top: scrollOptions?.top || 0,
+                    behavior: scrollOptions?.behavior || "smooth",
+                  });
+                }
               },
             }}
           />
           <div className="option">
-            <CustomButton
-              content={"In thông tin"}
-              buttonProps={{
-                icon: <PrinterOutlined />,
-                className: "footer-web_footer-print",
-                onClick: () => {
-                  window.print();
-                },
-              }}
-            />
+            {isPrint ? (
+              <CustomButton
+                content={"In thông tin"}
+                buttonProps={{
+                  icon: <PrinterOutlined />,
+                  className: "footer-web_footer-print",
+                  onClick: () => {
+                    window.print();
+                  },
+                }}
+              />
+            ) : (
+              <></>
+            )}
+
             <CustomButton
               content="Xuất Excel"
               buttonProps={{
                 className: "footer-web_footer-excel",
                 icon: <FileExcelOutlined />,
                 onClick: handleExportExcel,
+                disabled: disAble,
               }}
             />
           </div>

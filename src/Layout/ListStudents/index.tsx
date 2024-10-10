@@ -44,9 +44,7 @@ enum stateSelector {
   GRADUATE = "Tốt nghiệp",
   RESERVED = "Bảo lưu",
 }
-interface AnyObject {
-  [key: string]: any;
-}
+
 export const ListStudents = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -251,6 +249,7 @@ export const ListStudents = () => {
   ];
   const [data, setNewData] = useState<any[]>([
     {
+      id: "1",
       key: "1",
       studentMsv: "21A100100373",
       studentName: "Trịnh Đức Thưởng",
@@ -262,6 +261,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "2",
       key: "2",
       studentMsv: "21A100100140",
       studentName: "Lương Thu Hoài",
@@ -273,6 +273,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "3",
       key: "3",
       studentMsv: "21A100100137",
       studentName: "Nguyễn Minh Hòa",
@@ -284,6 +285,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "4",
       key: "4",
       studentMsv: "21A100100331",
       studentName: "Nguyễn Minh Tuấn",
@@ -295,6 +297,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "5",
       key: "5",
       studentMsv: "21A100100337",
       studentName: "Trần Minh Thư",
@@ -306,6 +309,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "6",
       key: "6",
       studentMsv: "21A100100327",
       studentName: "Trần Minh Tuấn",
@@ -317,6 +321,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "7",
       key: "7",
       studentMsv: "21A100100344",
       studentName: "Trịnh Văn Mạnh",
@@ -328,6 +333,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "8",
       key: "8",
       studentMsv: "21A100100437",
       studentName: "Hoàng Bảo Ngọc",
@@ -339,6 +345,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "9",
       key: "9",
       studentMsv: "21A100100537",
       studentName: "Trần Khánh Hùng",
@@ -350,6 +357,7 @@ export const ListStudents = () => {
       studentOption: "Details",
     },
     {
+      id: "10",
       key: "10",
       studentMsv: "21A100100347",
       studentName: "Phạm Duy Trường",
@@ -362,19 +370,13 @@ export const ListStudents = () => {
     },
   ]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    if (selectedRowKeys?.length > 0) {
-      setSelectedRowKeys(
-        newSelectedRowKeys?.filter((item) => item !== selectedRowKeys[0])
-      );
-    } else {
-      setSelectedRowKeys(newSelectedRowKeys);
-    }
+    setSelectedRowKeys(newSelectedRowKeys);
   };
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
+  const hasSelected = selectedRowKeys.length > 0;
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -385,6 +387,10 @@ export const ListStudents = () => {
   }, [notification]);
 
   const handleExportExcel = () => {
+    const selectedData = data.filter((_, index) =>
+      selectedRowKeys.includes(data[index].id)
+    );
+
     const headers = [
       { header: "STT", key: "key" },
       { header: "Mã học sinh", key: "studentMsv" },
@@ -397,7 +403,7 @@ export const ListStudents = () => {
       { header: "Chi Tiết", key: "studentOption" },
     ];
 
-    const worksheet = XLSX.utils.json_to_sheet(data, {
+    const worksheet = XLSX.utils.json_to_sheet(selectedData, {
       header: headers.map((h) => h.key),
     });
     const workbook = XLSX.utils.book_new();
@@ -552,7 +558,11 @@ export const ListStudents = () => {
           modalStates={modalStates}
           setModalStates={setModalStates}
           handleExportExcel={handleExportExcel}
+          disAble={!hasSelected}
+          shouldScroll={false}
+          isPrint={true}
         />
+
         <div className="list-student_modal-popup">
           {/* Modal Add */}
           <Modal
