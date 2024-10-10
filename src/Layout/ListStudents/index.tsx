@@ -16,12 +16,8 @@ import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import {
-  AppstoreAddOutlined,
   DeleteOutlined,
   EditOutlined,
-  FileExcelOutlined,
-  PrinterOutlined,
-  SaveOutlined,
 } from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import { TableRowSelection } from "antd/es/table/interface";
@@ -434,10 +430,12 @@ export const ListStudents = () => {
     }
     return () => {
       if (tableWrapperRef.current && scrollRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         tableWrapperRef.current.removeEventListener(
           "scroll",
           handleTableScroll
         );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         scrollRef.current.removeEventListener("scroll", handleDivScroll);
       }
     };
