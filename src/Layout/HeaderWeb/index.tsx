@@ -35,7 +35,7 @@ const listMenuItem = (): MenuItem[] => {
     },
     {
       title: "Quản lý lớp học",
-      link: `/${CUSTOMER_ROUTE_NAME.FORGOT_CODE_INPUT}`,
+      link: `/${CUSTOMER_ROUTE_NAME.LIST_CLASS}`,
     },
     {
       title: "Quản lý giảng viên",

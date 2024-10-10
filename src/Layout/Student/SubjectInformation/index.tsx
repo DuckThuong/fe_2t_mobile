@@ -10,10 +10,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { FormSelect } from "../../../Components/Form/FormSelect";
 export const SubjectInformation = () => {
   const location = useLocation();
   const [editState, setEditState] = useState<boolean>(true);
-
+  const option = [
+    { value: "Đã thi", label: "Đã thi" },
+    { value: "Đang học", label: "Đang học" },
+  ];
   return (
     <>
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={false} />
@@ -55,6 +59,20 @@ export const SubjectInformation = () => {
                 inputProps={{
                   disabled: editState,
                   placeholder: "Tên môn học",
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="subject-detail_row-label">Trạng Thái</p>
+              <FormSelect
+                name={"courseState"}
+                formItemProps={{
+                  className: "subject-detail_form-courseCode",
+                }}
+                placeholder={"Trạng thái"}
+                selectProps={{
+                  options: option,
+                  disabled: editState,
                 }}
               />
             </ColWrap>

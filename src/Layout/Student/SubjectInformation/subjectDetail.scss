@@ -51,10 +51,10 @@
       text-align: left;
       color: #161617;
     }
-    .point{
-      @include sm{
+    .point {
+      @include sm {
         min-height: fit-content;
-        min-width: 100px
+        min-width: 100px;
       }
     }
     .form__input {
@@ -68,13 +68,26 @@
         }
       }
     }
+    .form__select {
+      .ant-form-item {
+        .ant-row {
+          width: 100% !important;
+          .ant-col-14 {
+            max-width: 100% !important;
+            .ant-select-selector {
+              border: 1px solid $gray_blur_color !important;
+            }
+          }
+        }
+      }
+    }
   }
 }
 @media print {
   * {
-    color: black !important; 
-    background: none !important; 
-    -webkit-print-color-adjust: exact; 
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
   }
 
   .your-class-name {
