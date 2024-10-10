@@ -651,7 +651,7 @@ export const StudentInformation = () => {
                 }}
                 inputProps={{
                   disabled: editState,
-                  placeholder: "GIỚI TÍNH",
+                  placeholder: "Giới tính",
                 }}
               />
             </ColWrap>
