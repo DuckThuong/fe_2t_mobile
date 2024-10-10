@@ -5,7 +5,6 @@ import {
   EditOutlined,
   ExclamationOutlined,
   FileExcelOutlined,
-  PrinterOutlined,
   SaveOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -31,7 +30,7 @@ import { FormSelect } from "../../Components/Form/FormSelect";
 import { useForm } from "antd/es/form/Form";
 
 import { useRef } from "react";
-import { message, Modal } from "antd";
+import { Modal } from "antd";
 import NotificationPopup from "../Notification";
 import StudentFooterActions from "../FooterWeb";
 
@@ -477,7 +476,7 @@ export const StudentInformation = () => {
     });
 
     XLSX.utils.book_append_sheet(workbook, worksheet, "CourseList");
-    XLSX.writeFile(workbook, "DanhSachHocPhan.xlsx");
+    XLSX.writeFile(workbook, "DanhSachHocPhanDangHoc.xlsx");
   };
   const handleExportCourse = () => {
     const headers = [
@@ -989,7 +988,7 @@ export const StudentInformation = () => {
                     buttonProps={{
                       className: "list-student_footer-excel w-100",
                       icon: <FileExcelOutlined />,
-                      onClick: handleExportExcel,
+                      onClick: handleExportCourse,
                     }}
                   />
                 </div>
@@ -1064,7 +1063,7 @@ export const StudentInformation = () => {
               </>
             )}
           </div>
-          
+
           {/* Bảng các môn đã học  */}
 
           <div className="student-information_underLine">
