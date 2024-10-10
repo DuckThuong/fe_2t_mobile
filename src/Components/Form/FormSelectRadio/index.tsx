@@ -33,7 +33,6 @@ const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
     radioProps,
     selectProps,
   }) => {
-
     const defaultKey = React.useMemo(() => {
       if (defaultVisibleField && typeof defaultVisibleField === "object") {
         return (
@@ -74,7 +73,7 @@ const CustomSelectRadio: React.FC<CustomSelectRadioProps> = React.memo(
         }
         onDropdownVisibleChange={handleDropdownVisibleChange}
         placeholder={
-          placeholder || (
+          (placeholder && checkedValue) || (
             <div className="select-radio__placeholder">
               <div className="select-radio__placeholder-setting">
                 Không có dữ liệu để hiển thị:

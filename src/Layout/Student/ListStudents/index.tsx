@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./listStudents.scss";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import { TableRowSelection } from "antd/es/table/interface";
@@ -13,8 +13,6 @@ import NotificationPopup from "../../Notification";
 import StudentFooterActions from "../../FooterWeb";
 import RowWrap from "../../../Components/RowWrap";
 import ColWrap from "../../../Components/ColWrap";
-import CustomSelectRadio from "../../../Components/Form/FormSelectRadio";
-import CustomSelectCheckbox from "../../../Components/Form/FormSelectCheckbox";
 import { CustomButton } from "../../../Components/buttons/CustomButton";
 import FormWrap from "../../../Components/Form/FormWrap";
 import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
@@ -25,13 +23,22 @@ import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { FormInput } from "../../../Components/Form/FormInput";
 import { FormSelect } from "../../../Components/Form/FormSelect";
 enum classSelector {
-  SIX = "Lớp 6",
-  SEVEN = "Lớp 7",
-  EIGHT = "Lớp 8",
-  NINE = "Lớp 9",
+  SIX = "6",
+  SEVEN = "7",
+  EIGHT = "8",
+  NINE = "9",
+}
+enum genderType {
+  NAM = "Nam",
+  NỮ = "Nữ",
+}
+enum courseSelect {
+  Year_2024_2025 = "K21",
+  Year_2025_2026 = "K22",
+  Year_2026_2027 = "K23",
+  Year_2027_2028 = "K24",
 }
 enum stateSelector {
-  ALL = "ALL",
   ON_STUDY = "Đang học",
   OUT_STUDY = "Nghỉ học",
   GRADUATE = "Tốt nghiệp",
@@ -45,6 +52,14 @@ export const ListStudents = () => {
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const classOption = Object.values(classSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const courseOption = Object.values(courseSelect).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const genderOption = Object.values(genderType).map((major) => ({
     label: major,
     value: major,
   }));
@@ -120,6 +135,9 @@ export const ListStudents = () => {
           </>
         );
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classOption,
+      onFilter: (value, record) => record.studentClass.includes(value),
     },
     {
       title: "KHÓA",
@@ -132,6 +150,9 @@ export const ListStudents = () => {
           </>
         );
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: courseOption,
+      onFilter: (value, record) => record.studentCourse.includes(value),
     },
     {
       title: "NGÀY SINH",
@@ -156,6 +177,9 @@ export const ListStudents = () => {
           </>
         );
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: genderOption,
+      onFilter: (value, record) => record.studentGender.includes(value),
     },
     {
       title: "TRẠNG THÁI",
@@ -174,6 +198,9 @@ export const ListStudents = () => {
           </>
         );
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: stateOption,
+      onFilter: (value, record) => record.studentState.includes(value),
     },
     {
       title: "CHI TIẾT",
@@ -258,7 +285,7 @@ export const ListStudents = () => {
       key: "2",
       studentMsv: "21A100100140",
       studentName: "Lương Thu Hoài",
-      studentClass: "8",
+      studentClass: "6",
       studentCourse: "K21",
       studentDob: "1/10/2003",
       studentGender: "Nữ",
@@ -270,7 +297,7 @@ export const ListStudents = () => {
       key: "3",
       studentMsv: "21A100100137",
       studentName: "Nguyễn Minh Hòa",
-      studentClass: "8",
+      studentClass: "7",
       studentCourse: "K21",
       studentDob: "15/11/2003",
       studentGender: "Nữ",
@@ -282,7 +309,7 @@ export const ListStudents = () => {
       key: "4",
       studentMsv: "21A100100331",
       studentName: "Nguyễn Minh Tuấn",
-      studentClass: "8",
+      studentClass: "9",
       studentCourse: "K21",
       studentDob: "15/01/2003",
       studentGender: "Nam",
@@ -306,7 +333,7 @@ export const ListStudents = () => {
       key: "6",
       studentMsv: "21A100100327",
       studentName: "Trần Minh Tuấn",
-      studentClass: "8",
+      studentClass: "6",
       studentCourse: "K21",
       studentDob: "25/5/2003",
       studentGender: "Nam",
@@ -318,7 +345,7 @@ export const ListStudents = () => {
       key: "7",
       studentMsv: "21A100100344",
       studentName: "Trịnh Văn Mạnh",
-      studentClass: "8",
+      studentClass: "9",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -342,7 +369,7 @@ export const ListStudents = () => {
       key: "9",
       studentMsv: "21A100100537",
       studentName: "Trần Khánh Hùng",
-      studentClass: "8",
+      studentClass: "7",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -354,7 +381,7 @@ export const ListStudents = () => {
       key: "10",
       studentMsv: "21A100100347",
       studentName: "Phạm Duy Trường",
-      studentClass: "8",
+      studentClass: "7",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -453,84 +480,32 @@ export const ListStudents = () => {
       </div>
       <div className="list-student_content">
         <div className="list-student_sidebar" ref={scrollRef}>
-          <RowWrap
-            isGutter={true}
-            isWrap={true}
-            isAutoFillRow={true}
-            styleFill={"between"}
-            gutter={[16, 16]}
-            className="list-student_sidebar-scroll"
+          <FormWrap
+            className="list-student_sidebar-colRight-formSearch"
+            name="search-product"
+            layout={"inline"}
+            initialValues={{
+              select: "Dữ liệu",
+            }}
+            onFinish={() => {}}
           >
-            <ColWrap
-              colProps={{ span: 8 }}
-              className="list-student_sidebar-colLeft"
-            >
-              <CustomSelectRadio
-                options={classOption}
-                onChange={() => {}}
-                placeholder="Lớp"
-                radioProps={{
-                  rootClassName: "radio-colLeft-select",
-                }}
-                selectProps={{
-                  popupClassName: "radio-popup",
-                }}
-              />
-              <CustomSelectCheckbox
-                options={stateOption}
-                onChange={() => {}}
-                placeholder="Trạng thái"
-                footerDropdown={
-                  <div className="list-student_sidebar-button">
-                    <CustomButton
-                      content="Hiển thị"
-                      buttonProps={{
-                        className: "width-40 height-24",
-                        type: "primary",
-                        onClick: () => {},
-                      }}
-                    />
-                  </div>
-                }
-                selectProps={{
-                  rootClassName: "list-student_sidebar-checkbox",
-                  popupClassName: "checkbox-popup",
-                }}
-              />
-            </ColWrap>
-            <ColWrap
-              colProps={{ span: 8 }}
-              className="list-student_sidebar-colRight"
-            >
-              <FormWrap
-                className="list-student_sidebar-colRight-formSearch"
-                name="search-product"
-                layout={"inline"}
-                initialValues={{
-                  select: "Dữ liệu",
-                }}
-                onFinish={() => {}}
-              >
-                <FormInputSearch
-                  name={"fullrecordSearch"}
-                  isShowIcon={false}
-                  formItemProps={{
-                    className: "list-student_sidebar-colRight-formSearch-input",
-                  }}
-                  inputProps={{
-                    placeholder: "Mã học sinh",
-                  }}
-                />
-                <FormButtonSubmit
-                  content={<SvgMagnifyingGlassSubmit />}
-                  formItemProps={{
-                    className:
-                      "list-student_sidebar-colRight-formSearch-button",
-                  }}
-                />
-              </FormWrap>
-            </ColWrap>
-          </RowWrap>
+            <FormInputSearch
+              name={"fullrecordSearch"}
+              isShowIcon={false}
+              formItemProps={{
+                className: "list-student_sidebar-colRight-formSearch-input",
+              }}
+              inputProps={{
+                placeholder: "Mã học sinh",
+              }}
+            />
+            <FormButtonSubmit
+              content={<SvgMagnifyingGlassSubmit />}
+              formItemProps={{
+                className: "list-student_sidebar-colRight-formSearch-button",
+              }}
+            />
+          </FormWrap>
         </div>
         <div className="list-student_table">
           <TableWrap
@@ -540,7 +515,13 @@ export const ListStudents = () => {
             rootClassName="list-student_table-wrap"
             tableWrapperRef={tableWrapperRef}
             tableProps={{
-              columns: conlumns,
+              columns: conlumns.map((column) => ({
+                ...column,
+                filters: column.filters?.map((filter) => ({
+                  ...filter,
+                  text: filter.label,
+                })),
+              })),
               dataSource: data,
               rowSelection: rowSelection,
             }}

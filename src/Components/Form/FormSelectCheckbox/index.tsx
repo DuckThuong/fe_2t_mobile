@@ -77,15 +77,10 @@ const CustomSelectCheckbox: React.FC<CustomSelectCheckboxProps> = React.memo(
         }
         onDropdownVisibleChange={handleDropdownVisibleChange}
         placeholder={
-          placeholder || (
-            <div className="select-checkbox__placeholder">
-              <div className="select-checkbox__placeholder-setting">
-                Không có dữ liệu để hiển thị
-              </div>
-              <div className="select-checkbox__placeholder-hide">
-                Vui lòng chọn một mục
-              </div>
-            </div>
+          placeholder && checkedValues.length > 0 ? (
+            `${checkedValues.join(", ")}`
+          ) : (
+            <div className="select-checkbox__placeholder">{placeholder}</div>
           )
         }
         dropdownRender={(menu) => (
