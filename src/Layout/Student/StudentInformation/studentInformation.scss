@@ -1,5 +1,5 @@
-@import "../../styles/variables.scss";
-@import "../../styles/mixins";
+@import "../../../styles/variables.scss";
+@import "../../../styles/mixins";
 .student-information {
   display: flex;
   justify-content: center;
@@ -169,7 +169,6 @@
         }
       }
     }
-
   }
   &_result {
     &-row {
@@ -343,9 +342,9 @@
 }
 @media print {
   * {
-    color: black !important; 
-    background: none !important; 
-    -webkit-print-color-adjust: exact; 
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
   }
 
   .your-class-name {

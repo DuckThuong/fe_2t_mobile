@@ -8,12 +8,6 @@ import {
   SaveOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { CustomButton } from "../../Components/buttons/CustomButton";
-import ColWrap from "../../Components/ColWrap";
-import { FormInput } from "../../Components/Form/FormInput";
-import FormWrap from "../../Components/Form/FormWrap";
-import RowWrap from "../../Components/RowWrap";
-import { HeaderWeb } from "../HeaderWeb";
 import "./studentInformation.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,18 +15,24 @@ import {
   faCircleInfo,
   faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
-import TableWrap from "../../Components/TableWrap";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { useEffect, useState } from "react";
-import { FormSelect } from "../../Components/Form/FormSelect";
 import { useForm } from "antd/es/form/Form";
 
 import { useRef } from "react";
 import { Modal } from "antd";
-import NotificationPopup from "../Notification";
-import StudentFooterActions from "../FooterWeb";
+import { CustomButton } from "../../../Components/buttons/CustomButton";
+import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
+import { HeaderWeb } from "../../HeaderWeb";
+import NotificationPopup from "../../Notification";
+import FormWrap from "../../../Components/Form/FormWrap";
+import RowWrap from "../../../Components/RowWrap";
+import ColWrap from "../../../Components/ColWrap";
+import { FormInput } from "../../../Components/Form/FormInput";
+import { FormSelect } from "../../../Components/Form/FormSelect";
+import StudentFooterActions from "../../FooterWeb";
+import TableWrap from "../../../Components/TableWrap";
 
 export const StudentInformation = () => {
   const navigate = useNavigate();

@@ -7,9 +7,9 @@ import { ForgotEmailInput } from "../Layout/ForgotPassword/ForgotEmailInput";
 import { ForgotCodeInput } from "../Layout/ForgotPassword/ForgotCodeInput";
 import { ForgotEditPassword } from "../Layout/ForgotPassword/ForgotEditPassword";
 import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
-import { ListStudents } from "../Layout/ListStudents";
-import { StudentInformation } from "../Layout/StudentInformation";
-import { SubjectInformation } from "../Layout/StudentInformation/SubjectInformation";
+import { ListStudents } from "../Layout/Student/ListStudents";
+import { StudentInformation } from "../Layout/Student/StudentInformation";
+import { SubjectInformation } from "../Layout/Student/SubjectInformation";
 
 export const CustomerRouter = () => (
   <Routes>
