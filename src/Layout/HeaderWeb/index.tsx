@@ -109,7 +109,7 @@ export const HeaderWeb: React.FC<Props> = ({ ...props }) => {
   return (
     <>
       <Drawer
-        title="Menu"
+        title="MENU"
         placement="left"
         onClose={onClose}
         open={open}

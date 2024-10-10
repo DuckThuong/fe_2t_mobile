@@ -58,16 +58,20 @@
       .ant-drawer-content-wrapper {
         width: 214px !important;
         z-index: 9999;
-        .ant-drawer-header-title {
-          .ant-drawer-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: $text_header_modal_color;
-          }
+        .ant-drawer-header {
+          border-bottom: 1px solid #0000001f !important;
+          box-shadow: -2px 2px 20px 0px #0000001f;
+          &-title {
+            .ant-drawer-title {
+              font-size: 16px;
+              font-weight: 600;
+              color: $text_header_modal_color;
+            }
 
-          .ant-drawer-close {
-            svg {
-              color: $text_checkbox_color;
+            .ant-drawer-close {
+              svg {
+                color: $text_header_modal_color;
+              }
             }
           }
         }
@@ -170,5 +174,20 @@
 
     &-right {
     }
+  }
+}
+@media print {
+  * {
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .your-class-name {
+    background-color: transparent !important;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }

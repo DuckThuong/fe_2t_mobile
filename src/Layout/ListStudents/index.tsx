@@ -15,10 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import {
-  DeleteOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import * as XLSX from "xlsx";
 import { TableRowSelection } from "antd/es/table/interface";
 import { FormInput } from "../../Components/Form/FormInput";
@@ -559,6 +556,8 @@ export const ListStudents = () => {
           disAble={!hasSelected}
           shouldScroll={false}
           isPrint={true}
+          isShowOption={true}
+          isExport={true}
         />
 
         <div className="list-student_modal-popup">

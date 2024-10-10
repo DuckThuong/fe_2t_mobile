@@ -19,6 +19,8 @@ interface StudentFooterActionsProps {
   scrollOptions?: ScrollToOptions;
   shouldScroll?: boolean;
   isPrint?: boolean;
+  isExport?: boolean;
+  isShowOption?: boolean;
 }
 
 const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
@@ -31,6 +33,8 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
   scrollOptions,
   shouldScroll,
   isPrint,
+  isExport,
+  isShowOption,
 }) => {
   return (
     <div className="footer-web_footer">
@@ -67,68 +71,79 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
             ) : (
               <></>
             )}
-
-            <CustomButton
-              content="Xuất Excel"
-              buttonProps={{
-                className: "footer-web_footer-excel",
-                icon: <FileExcelOutlined />,
-                onClick: handleExportExcel,
-                disabled: disAble,
-              }}
-            />
+            {isExport ? (
+              <CustomButton
+                content="Xuất Excel"
+                buttonProps={{
+                  className: "footer-web_footer-excel",
+                  icon: <FileExcelOutlined />,
+                  onClick: handleExportExcel,
+                  disabled: disAble,
+                }}
+              />
+            ) : (
+              <></>
+            )}
           </div>
         </>
       ) : (
         <>
-          <div className="option">
-            <CustomButton
-              content={"Thêm"}
-              buttonProps={{
-                icon: <AppstoreAddOutlined />,
-                className: "footer-web_footer-add",
-                onClick: () => {
-                  setModalStates({
-                    ...modalStates,
-                    addModal: true,
-                    showRegistedNewColumn: false,
-                    showDeleteButton: false,
-                    showEditButton: false,
-                  });
-                },
-              }}
-            />
-            <CustomButton
-              content={"Sửa"}
-              buttonProps={{
-                icon: <EditOutlined />,
-                className: "footer-web_footer-editTable",
-                onClick: () => {
-                  setModalStates({
-                    ...modalStates,
-                    showRegistedNewColumn: true,
-                    showEditButton: true,
-                    showDeleteButton: false,
-                  });
-                },
-              }}
-            />
-            <CustomButton
-              content={"Xóa"}
-              buttonProps={{
-                icon: <DeleteOutlined />,
-                className: "footer-web_footer-delete",
-                onClick: () => {
-                  setModalStates({
-                    ...modalStates,
-                    showRegistedNewColumn: true,
-                    showDeleteButton: true,
-                    showEditButton: false,
-                  });
-                },
-              }}
-            />
-          </div>
+          {isShowOption ? (
+            <>
+              {" "}
+              <div className="option">
+                <CustomButton
+                  content={"Thêm"}
+                  buttonProps={{
+                    icon: <AppstoreAddOutlined />,
+                    className: "footer-web_footer-add",
+                    onClick: () => {
+                      setModalStates({
+                        ...modalStates,
+                        addModal: true,
+                        showRegistedNewColumn: false,
+                        showDeleteButton: false,
+                        showEditButton: false,
+                      });
+                    },
+                  }}
+                />
+                <CustomButton
+                  content={"Sửa"}
+                  buttonProps={{
+                    icon: <EditOutlined />,
+                    className: "footer-web_footer-editTable",
+                    onClick: () => {
+                      setModalStates({
+                        ...modalStates,
+                        showRegistedNewColumn: true,
+                        showEditButton: true,
+                        showDeleteButton: false,
+                      });
+                    },
+                  }}
+                />
+                <CustomButton
+                  content={"Xóa"}
+                  buttonProps={{
+                    icon: <DeleteOutlined />,
+                    className: "footer-web_footer-delete",
+                    onClick: () => {
+                      setModalStates({
+                        ...modalStates,
+                        showRegistedNewColumn: true,
+                        showDeleteButton: true,
+                        showEditButton: false,
+                      });
+                    },
+                  }}
+                />
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
+
           <CustomButton
             content={"Lưu"}
             buttonProps={{

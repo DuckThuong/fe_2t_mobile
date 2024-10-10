@@ -487,3 +487,18 @@
     }
   }
 }
+@media print {
+  * {
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .your-class-name {
+    background-color: transparent !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

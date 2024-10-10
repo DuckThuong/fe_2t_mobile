@@ -38,6 +38,7 @@ export const StudentInformation = () => {
   const navigate = useNavigate();
   const [form] = useForm();
   const [editState, setEditState] = useState<boolean>(true);
+  const [resultState, setResultState] = useState<boolean>(true);
   const [courseEdit, setCourseEdit] = useState<boolean>(true);
   const [modalStates, setModalStates] = useState({
     editModal: false,
@@ -831,7 +832,7 @@ export const StudentInformation = () => {
                         "student-information_form-studentNumberRegistered",
                     }}
                     inputProps={{
-                      disabled: editState,
+                      disabled: resultState && editState,
                       placeholder: "Các môn đã học",
                     }}
                   />
@@ -847,7 +848,7 @@ export const StudentInformation = () => {
                         "student-information_form-studentRemainingRegistered",
                     }}
                     inputProps={{
-                      disabled: editState,
+                      disabled: resultState && editState,
                       placeholder: "Các môn còn lại",
                     }}
                   />
@@ -872,7 +873,7 @@ export const StudentInformation = () => {
                       className: "student-information_form-studentScoreTen",
                     }}
                     inputProps={{
-                      disabled: editState,
+                      disabled: resultState && editState,
                       placeholder: "Điểm số tích lũy (/10)",
                     }}
                   />
@@ -887,7 +888,7 @@ export const StudentInformation = () => {
                       className: "student-information_form-studentScordFour",
                     }}
                     inputProps={{
-                      disabled: editState,
+                      disabled: resultState && editState,
                       placeholder: "Trường hợp đặc biệt",
                     }}
                   />
@@ -912,7 +913,7 @@ export const StudentInformation = () => {
                       className: "student-information_form-studentScoreTen",
                     }}
                     inputProps={{
-                      disabled: editState,
+                      disabled: resultState && editState,
                       placeholder: " Xếp hạng học lực",
                     }}
                   />
@@ -925,12 +926,23 @@ export const StudentInformation = () => {
                       className: "student-information_form-studentScordFour",
                     }}
                     inputProps={{
-                      disabled: editState,
+                      disabled: resultState && editState,
                       placeholder: "Hạnh kiểm",
                     }}
                   />
                 </ColWrap>
               </RowWrap>
+              <StudentFooterActions
+                editState={resultState}
+                setEditState={setResultState}
+                modalStates={modalStates}
+                setModalStates={setModalStates}
+                handleExportExcel={handleExportExcel}
+                shouldScroll={false}
+                isPrint={false}
+                isExport={false}
+                isShowOption={false}
+              />
             </>
           ) : (
             <p
@@ -1095,6 +1107,8 @@ export const StudentInformation = () => {
             handleExportExcel={handleExportExcel}
             shouldScroll={true}
             isPrint={true}
+            isExport={true}
+            isShowOption={true}
           />
           {/* Các modal hiện trong layout */}
 
