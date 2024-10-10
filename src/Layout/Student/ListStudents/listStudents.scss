@@ -172,6 +172,7 @@
           text-align: left;
           color: #3b82f6;
           background-color: $empty_avatar_color !important;
+
           &::after {
             display: inline-flex;
             float: right;
@@ -196,6 +197,7 @@
       .ant-table-tbody {
         .ant-table-cell {
           border-bottom: 1px solid $gray_blur_color;
+          vertical-align: middle !important;
           p {
             font-size: 14px;
             font-weight: 400;
