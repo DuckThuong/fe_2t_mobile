@@ -94,11 +94,6 @@ export const StudentInformation = () => {
       key: "yc",
     },
     {
-      title: "MÃ LỚP",
-      dataIndex: "ltc",
-      key: "ltc",
-    },
-    {
       title: "LỊCH HỌC",
       dataIndex: "lh",
       key: "lh",
@@ -192,7 +187,6 @@ export const StudentInformation = () => {
       mhp: "THCS101",
       thp: "Toán 7",
       yc: "Bắt buộc",
-      ltc: "THCS101-1.2425.1.1_LT",
       lh: "Mon-Wed 08:00-09:30",
       gv: "Nguyễn Thị Hương",
       ph: "Phòng 101",
@@ -202,7 +196,6 @@ export const StudentInformation = () => {
       mhp: "THCS102",
       thp: "Ngữ Văn 7",
       yc: "Bắt buộc",
-      ltc: "THCS102-1.2425.1.2_LT",
       lh: "Tue-Thu 09:30-11:00",
       gv: "Trần Văn An",
       ph: "Phòng 102",
@@ -212,7 +205,6 @@ export const StudentInformation = () => {
       mhp: "THCS103",
       thp: "Lịch Sử 7",
       yc: "Bắt buộc",
-      ltc: "THCS103-1.2425.1.3_LT",
       lh: "Fri 13:00-14:30",
       gv: "Lê Thị Mai",
       ph: "Phòng 103",
@@ -222,7 +214,6 @@ export const StudentInformation = () => {
       mhp: "THCS104",
       thp: "Địa Lý 7",
       yc: "Bắt buộc",
-      ltc: "THCS104-1.2425.1.4_LT",
       lh: "Mon-Wed 14:30-16:00",
       gv: "Phạm Văn Bình",
       ph: "Phòng 104",
@@ -232,7 +223,6 @@ export const StudentInformation = () => {
       mhp: "THCS105",
       thp: "Sinh Học 7",
       yc: "Bắt buộc",
-      ltc: "THCS105-1.2425.1.5_LT",
       lh: "Tue-Thu 10:00-11:30",
       gv: "Nguyễn Văn A",
       ph: "Phòng 105",
@@ -242,7 +232,6 @@ export const StudentInformation = () => {
       mhp: "THCS106",
       thp: "Vật Lý 7",
       yc: "Bắt buộc",
-      ltc: "THCS106-1.2425.1.6_LT",
       lh: "Mon-Wed 09:00-10:30",
       gv: "Trần Văn B",
       ph: "Phòng 106",
@@ -252,7 +241,6 @@ export const StudentInformation = () => {
       mhp: "THCS107",
       thp: "Hóa Học 7",
       yc: "Bắt buộc",
-      ltc: "THCS107-1.2425.1.7_LT",
       lh: "Fri 10:00-12:00",
       gv: "Nguyễn Thị C",
       ph: "Phòng 107",
@@ -262,7 +250,6 @@ export const StudentInformation = () => {
       mhp: "THCS108",
       thp: "Thể Dục 7",
       yc: "Bắt buộc",
-      ltc: "THCS108-1.2425.1.8_LT",
       lh: "Tue-Thu 15:00-16:30",
       gv: "Lê Văn D",
       ph: "Sân Thể Dục",
@@ -272,7 +259,6 @@ export const StudentInformation = () => {
       mhp: "THCS109",
       thp: "Tin Học 7",
       yc: "Không bắt buộc",
-      ltc: "THCS109-1.2425.1.9_LT",
       lh: "Mon-Wed 11:00-12:30",
       gv: "Nguyễn Văn E",
       ph: "Phòng 109",
@@ -282,7 +268,6 @@ export const StudentInformation = () => {
       mhp: "THCS110",
       thp: "Ngoại Ngữ 7",
       yc: "Không bắt buộc",
-      ltc: "THCS110-1.2425.1.10_LT",
       lh: "Fri 14:00-16:00",
       gv: "Trần Thị F",
       ph: "Phòng 110",
@@ -311,11 +296,6 @@ export const StudentInformation = () => {
       title: "YÊU CẦU",
       dataIndex: "yc",
       key: "yc",
-    },
-    {
-      title: "MÃ LỚP",
-      dataIndex: "ltc",
-      key: "ltc",
     },
     {
       title: "LỊCH HỌC",
@@ -407,7 +387,6 @@ export const StudentInformation = () => {
       mhp: "7E1023.22",
       thp: "Ngoại ngữ 1",
       yc: "Bắt buộc",
-      ltc: "7E1023.22-1.2425.2.1_LT",
       lh: `16/09/24-17/11/24 - Thứ 2(T9-12)
            - Thứ 4(T9-12)`,
       gv: "Thái Thanh Tùng",
@@ -418,7 +397,6 @@ export const StudentInformation = () => {
       mhp: "THCS101",
       thp: "Toán 7",
       yc: "Bắt buộc",
-      ltc: "THCS101-1.2425.1.1_LT",
       lh: "Mon-Wed 08:00-09:30",
       gv: "Nguyễn Thị Hương",
       ph: "Phòng 101",
@@ -428,7 +406,6 @@ export const StudentInformation = () => {
       mhp: "THCS102",
       thp: "Ngữ Văn 7",
       yc: "Bắt buộc",
-      ltc: "THCS102-1.2425.1.2_LT",
       lh: "Tue-Thu 09:30-11:00",
       gv: "Trần Văn An",
       ph: "Phòng 102",
@@ -438,7 +415,6 @@ export const StudentInformation = () => {
       mhp: "THCS103",
       thp: "Lịch Sử 7",
       yc: "Bắt buộc",
-      ltc: "THCS103-1.2425.1.3_LT",
       lh: "Fri 13:00-14:30",
       gv: "Lê Thị Mai",
       ph: "Phòng 103",
@@ -448,7 +424,6 @@ export const StudentInformation = () => {
       mhp: "THCS104",
       thp: "Địa Lý 7",
       yc: "Bắt buộc",
-      ltc: "THCS104-1.2425.1.4_LT",
       lh: "Mon-Wed 14:30-16:00",
       gv: "Phạm Văn Bình",
       ph: "Phòng 104",
@@ -569,16 +544,39 @@ export const StudentInformation = () => {
                 }}
               />
             </ColWrap>
+          </RowWrap>
+          {/* Hàng 1.5 */}
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[8, 8]}
+            className="student-information_row"
+          >
             <ColWrap colProps={{ span: 12 }}>
-              <p className="student-information_row-label">Mã học sinh</p>
+              <p className="student-information_row-label">Lớp</p>
               <FormInput
-                name={"studentMhs"}
+                name={"studentClass"}
+                formItemProps={{
+                  className: "student-information_form-studentName",
+                }}
+                inputProps={{
+                  placeholder: "Lớp",
+                  disabled: editState,
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Mã Lớp</p>
+              <FormInput
+                name={"studentClassCode"}
                 formItemProps={{
                   className: "student-information_form-studentMsv",
                 }}
                 inputProps={{
                   disabled: editState,
-                  placeholder: "Mã học sinh",
+                  placeholder: "Mã lớp",
                 }}
               />
             </ColWrap>
@@ -593,15 +591,15 @@ export const StudentInformation = () => {
             className="student-information_row"
           >
             <ColWrap colProps={{ span: 12 }}>
-              <p className="student-information_row-label">Lớp</p>
+              <p className="student-information_row-label">Mã học sinh</p>
               <FormInput
-                name={"studentClass"}
+                name={"studentMhs"}
                 formItemProps={{
                   className: "student-information_form-studentClass",
                 }}
                 inputProps={{
                   disabled: editState,
-                  placeholder: "Lớp",
+                  placeholder: "Mã học sinh",
                 }}
               />
             </ColWrap>

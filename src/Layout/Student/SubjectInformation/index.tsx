@@ -62,20 +62,6 @@ export const SubjectInformation = () => {
                 }}
               />
             </ColWrap>
-            <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Trạng Thái</p>
-              <FormSelect
-                name={"courseState"}
-                formItemProps={{
-                  className: "subject-detail_form-courseCode",
-                }}
-                placeholder={"Trạng thái"}
-                selectProps={{
-                  options: option,
-                  disabled: editState,
-                }}
-              />
-            </ColWrap>
           </RowWrap>
           {/* Hàng 2 */}
           <RowWrap
@@ -100,15 +86,16 @@ export const SubjectInformation = () => {
               />
             </ColWrap>
             <ColWrap colProps={{ span: 12 }}>
-              <p className="subject-detail_row-label">Mã lớp</p>
-              <FormInput
-                name={"courseClass"}
+              <p className="subject-detail_row-label">Trạng Thái</p>
+              <FormSelect
+                name={"courseState"}
                 formItemProps={{
-                  className: "subject-detail_form-courseClass",
+                  className: "subject-detail_form-courseCode",
                 }}
-                inputProps={{
+                placeholder={"Trạng thái"}
+                selectProps={{
+                  options: option,
                   disabled: editState,
-                  placeholder: "Mã lớp",
                 }}
               />
             </ColWrap>
