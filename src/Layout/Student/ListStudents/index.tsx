@@ -28,6 +28,12 @@ enum classSelector {
   EIGHT = "8",
   NINE = "9",
 }
+enum classCodeSelector {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+}
 enum genderType {
   NAM = "Nam",
   NỮ = "Nữ",
@@ -52,6 +58,10 @@ export const ListStudents = () => {
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const classOption = Object.values(classSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const classCodeOption = Object.values(classCodeSelector).map((major) => ({
     label: major,
     value: major,
   }));
@@ -83,12 +93,7 @@ export const ListStudents = () => {
     showRegistedNewColumn: false,
     showEditstudent: false,
   });
-  const option = [
-    { value: "Đang học", label: "Đang học" },
-    { value: "Nghỉ học", label: "Nghỉ học" },
-    { value: "Bảo lưu", label: "Bảo lưu" },
-    { value: "Tốt nghiệp", label: "Tốt nghiệp" },
-  ];
+
   const conlumns = [
     {
       title: "STT",
@@ -138,6 +143,21 @@ export const ListStudents = () => {
       filterIcon: <FontAwesomeIcon icon={faSort} />,
       filters: classOption,
       onFilter: (value, record) => record.studentClass.includes(value),
+    },
+    {
+      title: "MÃ LỚP",
+      dataIndex: "studentClassCode",
+      key: "studentClassCode",
+      render: (record) => {
+        return (
+          <>
+            <p className="list-student_data-studentClass">{record}</p>
+          </>
+        );
+      },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classCodeOption,
+      onFilter: (value, record) => record.studentClassCode.includes(value),
     },
     {
       title: "KHÓA",
@@ -274,6 +294,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100373",
       studentName: "Trịnh Đức Thưởng",
       studentClass: "8",
+      studentClassCode: "A",
       studentCourse: "K21",
       studentDob: "28/07/2003",
       studentGender: "Nam",
@@ -286,6 +307,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100140",
       studentName: "Lương Thu Hoài",
       studentClass: "6",
+      studentClassCode: "B",
       studentCourse: "K21",
       studentDob: "1/10/2003",
       studentGender: "Nữ",
@@ -298,6 +320,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100137",
       studentName: "Nguyễn Minh Hòa",
       studentClass: "7",
+      studentClassCode: "C",
       studentCourse: "K21",
       studentDob: "15/11/2003",
       studentGender: "Nữ",
@@ -310,6 +333,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100331",
       studentName: "Nguyễn Minh Tuấn",
       studentClass: "9",
+      studentClassCode: "D",
       studentCourse: "K21",
       studentDob: "15/01/2003",
       studentGender: "Nam",
@@ -322,6 +346,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100337",
       studentName: "Trần Minh Thư",
       studentClass: "8",
+      studentClassCode: "A",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nữ",
@@ -334,6 +359,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100327",
       studentName: "Trần Minh Tuấn",
       studentClass: "6",
+      studentClassCode: "D",
       studentCourse: "K21",
       studentDob: "25/5/2003",
       studentGender: "Nam",
@@ -346,6 +372,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100344",
       studentName: "Trịnh Văn Mạnh",
       studentClass: "9",
+      studentClassCode: "C",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -358,6 +385,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100437",
       studentName: "Hoàng Bảo Ngọc",
       studentClass: "8",
+      studentClassCode: "A",
       studentCourse: "K21",
       studentDob: "03/02/2003",
       studentGender: "Nữ",
@@ -370,6 +398,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100537",
       studentName: "Trần Khánh Hùng",
       studentClass: "7",
+      studentClassCode: "B",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -382,6 +411,7 @@ export const ListStudents = () => {
       studentMsv: "21A100100347",
       studentName: "Phạm Duy Trường",
       studentClass: "7",
+      studentClassCode: "A",
       studentCourse: "K21",
       studentDob: "25/11/2003",
       studentGender: "Nam",
@@ -715,7 +745,7 @@ export const ListStudents = () => {
                       }}
                       placeholder="TRẠNG THÁI"
                       selectProps={{
-                        options: option,
+                        options: stateOption,
                       }}
                     />
                   </ColWrap>
@@ -731,13 +761,14 @@ export const ListStudents = () => {
                 >
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">LỚP</p>
-                    <FormInput
+                    <FormSelect
                       name={"studentClass"}
                       formItemProps={{
                         className: "list-student_form-studentID",
                       }}
-                      inputProps={{
-                        placeholder: "LỚP",
+                      placeholder="LỚP"
+                      selectProps={{
+                        options: classOption,
                       }}
                     />
                   </ColWrap>
@@ -761,7 +792,7 @@ export const ListStudents = () => {
                   isAutoFillRow={true}
                   styleFill={"between"}
                   gutter={[12, 12]}
-                  className="list-student_row-modal"
+                  className="list-student_modal-row"
                 >
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">NGÀY SINH</p>
@@ -862,7 +893,7 @@ export const ListStudents = () => {
                       }}
                       placeholder="TRẠNG THÁI"
                       selectProps={{
-                        options: option,
+                        options: stateOption,
                       }}
                     />
                   </ColWrap>
@@ -878,13 +909,14 @@ export const ListStudents = () => {
                 >
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">LỚP</p>
-                    <FormInput
+                    <FormSelect
                       name={"studentClass"}
                       formItemProps={{
                         className: "list-student_form-studentID",
                       }}
-                      inputProps={{
-                        placeholder: "LỚP",
+                      placeholder="LỚP"
+                      selectProps={{
+                        options: classOption,
                       }}
                     />
                   </ColWrap>
