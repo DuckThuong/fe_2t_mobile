@@ -73,7 +73,7 @@
         &-input {
           margin-right: 0 !important;
           width: 210px;
-          height: 32px;
+          height: 100% !important ;
           .ant-form-item-control-input-content {
             height: 100% !important ;
             .ant-input {
@@ -253,7 +253,6 @@
       text-align: left;
       color: #161617;
     }
-    
   }
   &_footer {
     width: 100%;

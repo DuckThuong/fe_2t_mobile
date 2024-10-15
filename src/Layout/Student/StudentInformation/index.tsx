@@ -54,6 +54,7 @@ export const StudentInformation = () => {
   const [year, setYear] = useState<any>();
   const [semester, setSemester] = useState<any>();
   const yearInputRef = useRef<HTMLInputElement>(null);
+  const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const option = [
     { value: "Bắt buộc", label: "Bắt buộc" },
     { value: "Không bắt buộc", label: "Không bắt buộc" },
@@ -141,7 +142,7 @@ export const StudentInformation = () => {
       title: "CHỨC NĂNG",
       dataIndex: "cn",
       key: "cn",
-      render: (text) => {
+      render: (text, record) => {
         return (
           <>
             {modalStates.showEditButton && (
@@ -149,6 +150,7 @@ export const StudentInformation = () => {
                 content="Sửa"
                 buttonProps={{
                   onClick: () => {
+                    setSelectedRecord(record);
                     setModalStates({
                       ...modalStates,
                       editModal: true,
@@ -341,7 +343,7 @@ export const StudentInformation = () => {
       title: "CHỨC NĂNG",
       dataIndex: "cn",
       key: "cn",
-      render: (text) => {
+      render: (text, record) => {
         return (
           <>
             {modalStates.showEditButton && (
@@ -349,6 +351,7 @@ export const StudentInformation = () => {
                 content="Sửa"
                 buttonProps={{
                   onClick: () => {
+                    setSelectedRecord(record);
                     setModalStates({
                       ...modalStates,
                       editModal: true,
@@ -479,7 +482,18 @@ export const StudentInformation = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "CourseList");
     XLSX.writeFile(workbook, "DanhSachHocPhanDaDangKi.xlsx");
   };
-
+  useEffect(() => {
+    if (selectedRecord) {
+      form.setFieldsValue({
+        subjectId: selectedRecord.mhp,
+        subjectName: selectedRecord.thp,
+        subjectIndentify: selectedRecord.yc,
+        subjectCalendar: selectedRecord.lh,
+        subjectTeacher: selectedRecord.gv,
+        subjectRoom: selectedRecord.ph,
+      });
+    }
+  }, [selectedRecord, form]);
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -872,7 +886,7 @@ export const StudentInformation = () => {
                     }}
                     inputProps={{
                       disabled: resultState && editState,
-                      placeholder: "Điểm số tích lũy (/10)",
+                      placeholder: "Điểm số",
                     }}
                   />
                 </ColWrap>
@@ -1344,6 +1358,48 @@ export const StudentInformation = () => {
                   showEditSubject: false,
                 });
               }}
+              onOk={() => {
+                if (
+                  form.getFieldValue("subjectId") &&
+                  form.getFieldValue("subjectName") &&
+                  form.getFieldValue("subjectIndentify") &&
+                  form.getFieldValue("subjectCalendar") &&
+                  form.getFieldValue("subjectTeacher") &&
+                  form.getFieldValue("subjectRoom")
+                ) {
+                  const newCourse = {
+                    ...selectedRecord,
+                    thp: form.getFieldValue("subjectId"),
+                    mhp: form.getFieldValue("subjectName"),
+                    yc: form.getFieldValue("subjectIndentify"),
+                    lh: form.getFieldValue("subjectCalendar"),
+                    gv: form.getFieldValue("subjectTeacher"),
+                    ph: form.getFieldValue("subjectRoom"),
+                  };
+                  setCourseData(
+                    courseData.map((course) =>
+                      course.stt === selectedRecord.stt ? newCourse : course
+                    )
+                  );
+                  setModalStates({
+                    ...modalStates,
+                    showEditSubject: false,
+                  });
+                } else {
+                  setNotification({
+                    message: "Vui lòng điền đầy đủ dữ liệu",
+                    type: "error",
+                  });
+                }
+              }}
+              afterClose={() => {
+                form.setFieldValue("subjectId", "");
+                form.setFieldValue("subjectName", "");
+                form.setFieldValue("subjectIndentify", "");
+                form.setFieldValue("subjectCalendar", "");
+                form.setFieldValue("subjectTeacher", "");
+                form.setFieldValue("subjectRoom", "");
+              }}
             >
               <h1 className="student-information_modal-header">SỬA MÔN HỌC</h1>
               <div className="student-information_underLine" />
@@ -1355,9 +1411,9 @@ export const StudentInformation = () => {
                   isAutoFillRow={true}
                   styleFill={"between"}
                   gutter={[8, 8]}
-                  className="student-information_modal"
+                  className="student-information_row"
                 >
-                  <ColWrap colProps={{ span: 16 }}>
+                  <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">TÊN MÔN HỌC</p>
                     <FormInput
                       name={"subjectName"}
@@ -1366,6 +1422,18 @@ export const StudentInformation = () => {
                       }}
                       inputProps={{
                         placeholder: "Tên môn học",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">MÃ MÔN HỌC</p>
+                    <FormInput
+                      name={"subjectId"}
+                      formItemProps={{
+                        className: "student-information_form-studentClass",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã môn học",
                       }}
                     />
                   </ColWrap>
@@ -1380,18 +1448,6 @@ export const StudentInformation = () => {
                   className="student-information_row"
                 >
                   <ColWrap colProps={{ span: 12 }}>
-                    <p className="student-information_row-label">MÃ MÔN HỌC</p>
-                    <FormInput
-                      name={"subjectId"}
-                      formItemProps={{
-                        className: "student-information_form-studentClass",
-                      }}
-                      inputProps={{
-                        placeholder: "Mã môn học",
-                      }}
-                    />
-                  </ColWrap>
-                  <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">YÊU CẦU</p>
                     <FormSelect
                       name={"subjectIndentify"}
@@ -1401,29 +1457,6 @@ export const StudentInformation = () => {
                       placeholder="Yêu cầu"
                       selectProps={{
                         options: option,
-                        placeholder: "Yêu cầu",
-                      }}
-                    />
-                  </ColWrap>
-                </RowWrap>
-                {/* Hàng 3 */}
-                <RowWrap
-                  isGutter={true}
-                  isWrap={true}
-                  isAutoFillRow={true}
-                  styleFill={"between"}
-                  gutter={[8, 8]}
-                  className="student-information_row"
-                >
-                  <ColWrap colProps={{ span: 12 }}>
-                    <p className="student-information_row-label">MÃ LỚP</p>
-                    <FormInput
-                      name={"subjectClassID"}
-                      formItemProps={{
-                        className: "student-information_form-studentID",
-                      }}
-                      inputProps={{
-                        placeholder: "Mã lớp",
                       }}
                     />
                   </ColWrap>
