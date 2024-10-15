@@ -253,6 +253,7 @@
       text-align: left;
       color: #161617;
     }
+    
   }
   &_footer {
     width: 100%;
@@ -360,8 +361,16 @@
         }
       }
       .form__select {
-        .ant-select-selector {
-          border: 1px solid $gray_blur_color !important;
+        .ant-form-item {
+          .ant-row {
+            width: 100% !important;
+            .ant-col-14 {
+              max-width: 100% !important;
+              .ant-select-selector {
+                border: 1px solid $gray_blur_color !important;
+              }
+            }
+          }
         }
       }
     }

@@ -1191,7 +1191,6 @@ export const StudentInformation = () => {
                   form.getFieldValue("subjectId") &&
                   form.getFieldValue("subjectName") &&
                   form.getFieldValue("subjectIndentify") &&
-                  form.getFieldValue("subjectClassID") &&
                   form.getFieldValue("subjectCalendar") &&
                   form.getFieldValue("subjectTeacher") &&
                   form.getFieldValue("subjectRoom")
@@ -1201,7 +1200,6 @@ export const StudentInformation = () => {
                     thp: form.getFieldValue("subjectId"),
                     mhp: form.getFieldValue("subjectName"),
                     yc: form.getFieldValue("subjectIndentify"),
-                    ltc: form.getFieldValue("subjectClassID"),
                     lh: form.getFieldValue("subjectCalendar"),
                     gv: form.getFieldValue("subjectTeacher"),
                     ph: form.getFieldValue("subjectRoom"),
@@ -1222,7 +1220,6 @@ export const StudentInformation = () => {
                 form.setFieldValue("subjectId", "");
                 form.setFieldValue("subjectName", "");
                 form.setFieldValue("subjectIndentify", "");
-                form.setFieldValue("subjectClassID", "");
                 form.setFieldValue("subjectCalendar", "");
                 form.setFieldValue("subjectTeacher", "");
                 form.setFieldValue("subjectRoom", "");
@@ -1240,7 +1237,7 @@ export const StudentInformation = () => {
                   gutter={[8, 8]}
                   className="student-information_row"
                 >
-                  <ColWrap colProps={{ span: 16 }}>
+                  <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">TÊN MÔN HỌC</p>
                     <FormInput
                       name={"subjectName"}
@@ -1249,6 +1246,18 @@ export const StudentInformation = () => {
                       }}
                       inputProps={{
                         placeholder: "Tên môn học",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="student-information_row-label">MÃ MÔN HỌC</p>
+                    <FormInput
+                      name={"subjectId"}
+                      formItemProps={{
+                        className: "student-information_form-studentClass",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã môn học",
                       }}
                     />
                   </ColWrap>
@@ -1263,18 +1272,6 @@ export const StudentInformation = () => {
                   className="student-information_row"
                 >
                   <ColWrap colProps={{ span: 12 }}>
-                    <p className="student-information_row-label">MÃ MÔN HỌC</p>
-                    <FormInput
-                      name={"subjectId"}
-                      formItemProps={{
-                        className: "student-information_form-studentClass",
-                      }}
-                      inputProps={{
-                        placeholder: "Mã môn học",
-                      }}
-                    />
-                  </ColWrap>
-                  <ColWrap colProps={{ span: 12 }}>
                     <p className="student-information_row-label">YÊU CẦU</p>
                     <FormSelect
                       name={"subjectIndentify"}
@@ -1284,28 +1281,6 @@ export const StudentInformation = () => {
                       placeholder="Yêu cầu"
                       selectProps={{
                         options: option,
-                      }}
-                    />
-                  </ColWrap>
-                </RowWrap>
-                {/* Hàng 3 */}
-                <RowWrap
-                  isGutter={true}
-                  isWrap={true}
-                  isAutoFillRow={true}
-                  styleFill={"between"}
-                  gutter={[8, 8]}
-                  className="student-information_row"
-                >
-                  <ColWrap colProps={{ span: 12 }}>
-                    <p className="student-information_row-label">MÃ LỚP</p>
-                    <FormInput
-                      name={"subjectClassID"}
-                      formItemProps={{
-                        className: "student-information_form-studentID",
-                      }}
-                      inputProps={{
-                        placeholder: "Mã lớp",
                       }}
                     />
                   </ColWrap>
@@ -1322,7 +1297,7 @@ export const StudentInformation = () => {
                     />
                   </ColWrap>
                 </RowWrap>
-                {/* Hàng 4 */}
+                {/* Hàng 3 */}
                 <RowWrap
                   isGutter={true}
                   isWrap={true}

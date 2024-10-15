@@ -652,6 +652,7 @@ export const ListStudents = () => {
                 form.getFieldValue("studentMsv") &&
                 form.getFieldValue("studentName") &&
                 form.getFieldValue("studentClass") &&
+                form.getFieldValue("studentClassCode") &&
                 form.getFieldValue("studentCourse") &&
                 form.getFieldValue("studentDob") &&
                 form.getFieldValue("studentGender") &&
@@ -662,6 +663,7 @@ export const ListStudents = () => {
                   studentMsv: form.getFieldValue("studentMsv"),
                   studentName: form.getFieldValue("studentName"),
                   studentClass: form.getFieldValue("studentClass"),
+                  studentClassCode: form.getFieldValue("studentClassCode"),
                   studentCourse: form.getFieldValue("studentCourse"),
                   studentDob: form.getFieldValue("studentDob"),
                   studentGender: form.getFieldValue("studentGender"),
@@ -683,6 +685,7 @@ export const ListStudents = () => {
               form.setFieldValue("studentMsv", "");
               form.setFieldValue("studentName", "");
               form.setFieldValue("studentClass", "");
+              form.setFieldValue("studentClassCode", "");
               form.setFieldValue("studentCourse", "");
               form.setFieldValue("studentDob", "");
               form.setFieldValue("studentGender", "");
@@ -702,7 +705,7 @@ export const ListStudents = () => {
                   gutter={[8, 8]}
                   className="list-student_modal-row"
                 >
-                  <ColWrap colProps={{ span: 16 }}>
+                  <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">HỌ VÀ TÊN</p>
                     <FormInput
                       name={"studentName"}
@@ -711,6 +714,19 @@ export const ListStudents = () => {
                       }}
                       inputProps={{
                         placeholder: "HỌ VÀ TÊN",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">TRẠNG THÁI</p>
+                    <FormSelect
+                      name={"studentState"}
+                      formItemProps={{
+                        className: "list-student_form-studentMsv",
+                      }}
+                      placeholder="TRẠNG THÁI"
+                      selectProps={{
+                        options: stateOption,
                       }}
                     />
                   </ColWrap>
@@ -737,15 +753,14 @@ export const ListStudents = () => {
                     />
                   </ColWrap>
                   <ColWrap colProps={{ span: 12 }}>
-                    <p className="list-student_row-label">TRẠNG THÁI</p>
-                    <FormSelect
-                      name={"studentState"}
+                    <p className="list-student_row-label">KHÓA</p>
+                    <FormInput
+                      name={"studentCourse"}
                       formItemProps={{
-                        className: "list-student_form-studentMsv",
+                        className: "list-student_form-studentDob",
                       }}
-                      placeholder="TRẠNG THÁI"
-                      selectProps={{
-                        options: stateOption,
+                      inputProps={{
+                        placeholder: "Lịch học",
                       }}
                     />
                   </ColWrap>
@@ -773,14 +788,15 @@ export const ListStudents = () => {
                     />
                   </ColWrap>
                   <ColWrap colProps={{ span: 12 }}>
-                    <p className="list-student_row-label">KHÓA</p>
-                    <FormInput
-                      name={"studentCourse"}
+                    <p className="list-student_row-label">MÃ LỚP</p>
+                    <FormSelect
+                      name={"studentClassCode"}
                       formItemProps={{
-                        className: "list-student_form-studentDob",
+                        className: "list-student_form-studentID",
                       }}
-                      inputProps={{
-                        placeholder: "Lịch học",
+                      placeholder="MÃ LỚP"
+                      selectProps={{
+                        options: classCodeOption,
                       }}
                     />
                   </ColWrap>
@@ -808,13 +824,14 @@ export const ListStudents = () => {
                   </ColWrap>
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">GIỚI TÍNH</p>
-                    <FormInput
+                    <FormSelect
                       name={"studentGender"}
                       formItemProps={{
-                        className: "list-student_form-studentNumber",
+                        className: "list-student_form-studentID",
                       }}
-                      inputProps={{
-                        placeholder: "Phòng học",
+                      placeholder="Giới tính"
+                      selectProps={{
+                        options: genderOption,
                       }}
                     />
                   </ColWrap>
