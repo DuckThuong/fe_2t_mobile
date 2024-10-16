@@ -57,6 +57,7 @@ export const ListStudents = () => {
   const [form] = useForm();
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const classOption = Object.values(classSelector).map((major) => ({
     label: major,
     value: major,
@@ -247,7 +248,7 @@ export const ListStudents = () => {
       title: "CHỨC NĂNG",
       dataIndex: "cn",
       key: "cn",
-      render: (text) => {
+      render: (text, record) => {
         return (
           <>
             {modalStates.showEditButton && (
@@ -255,6 +256,7 @@ export const ListStudents = () => {
                 content="Sửa"
                 buttonProps={{
                   onClick: () => {
+                    setSelectedRecord(record);
                     setModalStates({
                       ...modalStates,
                       editModal: true,
@@ -427,14 +429,6 @@ export const ListStudents = () => {
     onChange: onSelectChange,
   };
   const hasSelected = selectedRowKeys.length > 0;
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
 
   const handleExportExcel = () => {
     const selectedData = data.filter((_, index) =>
@@ -466,6 +460,29 @@ export const ListStudents = () => {
     XLSX.writeFile(workbook, "DanhSachSinhVien.xlsx");
   };
   useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
+  useEffect(() => {
+    if (selectedRecord) {
+      form.setFieldsValue({
+        studentMsv: selectedRecord.studentMsv,
+        studentName: selectedRecord.studentName,
+        studentState: selectedRecord.studentState,
+        studentClass: selectedRecord.studentClass,
+        studentClassCode: selectedRecord.studentClassCode,
+        studentCourse: selectedRecord.studentCourse,
+        studentDob: selectedRecord.studentDob,
+        studentGender: selectedRecord.studentGender,
+      });
+    }
+  }, [selectedRecord, form]);
+  useEffect(() => {
     const handleTableScroll = () => {
       if (tableWrapperRef.current && scrollRef.current) {
         scrollRef.current.scrollLeft = tableWrapperRef.current.scrollLeft;
@@ -494,6 +511,7 @@ export const ListStudents = () => {
       }
     };
   }, []);
+  console.log(selectedRecord);
 
   return (
     <div className="list-student">
@@ -851,6 +869,52 @@ export const ListStudents = () => {
                 showEditstudent: false,
               });
             }}
+            onOk={() => {
+              if (
+                form.getFieldValue("studentMsv") &&
+                form.getFieldValue("studentName") &&
+                form.getFieldValue("studentState") &&
+                form.getFieldValue("studentClass") &&
+                form.getFieldValue("studentCourse") &&
+                form.getFieldValue("studentDob") &&
+                form.getFieldValue("studentGender")
+              ) {
+                const newCourse = {
+                  ...selectedRecord,
+                  studentName: form.getFieldValue("studentName"),
+                  studentMsv: form.getFieldValue("studentMsv"),
+                  studentClassCode: form.getFieldValue("studentState"),
+                  studentClass: form.getFieldValue("studentClass"),
+                  studentCourse: form.getFieldValue("studentCourse"),
+                  studentDob: form.getFieldValue("studentDob"),
+                  studentGender: form.getFieldValue("studentGender"),
+                };
+
+                setNewData(
+                  data.map((course) =>
+                    course.key === selectedRecord.key ? newCourse : course
+                  )
+                );
+                setModalStates({
+                  ...modalStates,
+                  showEditstudent: false,
+                });
+              } else {
+                setNotification({
+                  message: "Vui lòng điền đầy đủ dữ liệu",
+                  type: "error",
+                });
+              }
+            }}
+            afterClose={() => {
+              form.setFieldValue("studentMsv", "");
+              form.setFieldValue("studentName", "");
+              form.setFieldValue("studentState", "");
+              form.setFieldValue("studentClass", "");
+              form.setFieldValue("studentCourse", "");
+              form.setFieldValue("studentDob", "");
+              form.setFieldValue("studentGender", "");
+            }}
           >
             <h1 className="list-student_modal-header">
               SỬA THÔNG TIN HỌC SINH
@@ -867,7 +931,7 @@ export const ListStudents = () => {
                   gutter={[8, 8]}
                   className="list-student_modal-row"
                 >
-                  <ColWrap colProps={{ span: 16 }}>
+                  <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">HỌ VÀ TÊN</p>
                     <FormInput
                       name={"studentName"}
@@ -876,6 +940,18 @@ export const ListStudents = () => {
                       }}
                       inputProps={{
                         placeholder: "HỌ VÀ TÊN",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ HỌC SINH</p>
+                    <FormInput
+                      name={"studentMsv"}
+                      formItemProps={{
+                        className: "list-student_form-studentClass",
+                      }}
+                      inputProps={{
+                        placeholder: "MÃ HỌC SINH",
                       }}
                     />
                   </ColWrap>
@@ -890,18 +966,6 @@ export const ListStudents = () => {
                   className="list-student_modal-row"
                 >
                   <ColWrap colProps={{ span: 12 }}>
-                    <p className="list-student_row-label">MÃ HỌC SINH</p>
-                    <FormInput
-                      name={"studentMsv"}
-                      formItemProps={{
-                        className: "list-student_form-studentClass",
-                      }}
-                      inputProps={{
-                        placeholder: "MÃ HỌC SINH",
-                      }}
-                    />
-                  </ColWrap>
-                  <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">TRẠNG THÁI</p>
                     <FormSelect
                       name={"studentState"}
@@ -911,6 +975,18 @@ export const ListStudents = () => {
                       placeholder="TRẠNG THÁI"
                       selectProps={{
                         options: stateOption,
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">KHÓA</p>
+                    <FormInput
+                      name={"studentCourse"}
+                      formItemProps={{
+                        className: "list-student_form-studentDob",
+                      }}
+                      inputProps={{
+                        placeholder: "Lịch học",
                       }}
                     />
                   </ColWrap>
@@ -938,14 +1014,14 @@ export const ListStudents = () => {
                     />
                   </ColWrap>
                   <ColWrap colProps={{ span: 12 }}>
-                    <p className="list-student_row-label">KHÓA</p>
-                    <FormInput
-                      name={"studentCourse"}
+                    <p className="list-student_row-label">MÃ LỚP</p>
+                    <FormSelect
+                      name={"studentClassCode"}
                       formItemProps={{
                         className: "list-student_form-studentDob",
                       }}
-                      inputProps={{
-                        placeholder: "Lịch học",
+                      selectProps={{
+                        options: classCodeOption,
                       }}
                     />
                   </ColWrap>
@@ -957,7 +1033,7 @@ export const ListStudents = () => {
                   isAutoFillRow={true}
                   styleFill={"between"}
                   gutter={[12, 12]}
-                  className="list-student_row-modal"
+                  className="list-student_modal-row"
                 >
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">NGÀY SINH</p>

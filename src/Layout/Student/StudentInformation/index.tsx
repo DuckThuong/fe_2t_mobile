@@ -56,9 +56,8 @@ export const StudentInformation = () => {
   const yearInputRef = useRef<HTMLInputElement>(null);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const option = [
-    { value: "Bắt buộc", label: "Bắt buộc" },
-    { value: "Không bắt buộc", label: "Không bắt buộc" },
-    { value: "Tự chọn", label: "Tự chọn" },
+    { value: "Đang học", label: "Đang học" },
+    { value: "Đã học", label: "Đã học" },
   ];
   const stateOption = [
     { value: "Đang học", label: "Đang học" },
@@ -90,9 +89,9 @@ export const StudentInformation = () => {
       key: "thp",
     },
     {
-      title: "YÊU CẦU",
-      dataIndex: "yc",
-      key: "yc",
+      title: "TRẠNG THÁI",
+      dataIndex: "tt",
+      key: "tt",
     },
     {
       title: "LỊCH HỌC",
@@ -183,12 +182,12 @@ export const StudentInformation = () => {
       hidden: !modalStates.showRegistedNewColumn,
     },
   ].filter((column) => !column.hidden);
-  const data = [
+  const [data, setNewData] = useState<any[]>([
     {
       stt: 1,
       mhp: "THCS101",
       thp: "Toán 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Mon-Wed 08:00-09:30",
       gv: "Nguyễn Thị Hương",
       ph: "Phòng 101",
@@ -197,7 +196,7 @@ export const StudentInformation = () => {
       stt: 2,
       mhp: "THCS102",
       thp: "Ngữ Văn 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Tue-Thu 09:30-11:00",
       gv: "Trần Văn An",
       ph: "Phòng 102",
@@ -206,7 +205,7 @@ export const StudentInformation = () => {
       stt: 3,
       mhp: "THCS103",
       thp: "Lịch Sử 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Fri 13:00-14:30",
       gv: "Lê Thị Mai",
       ph: "Phòng 103",
@@ -215,7 +214,7 @@ export const StudentInformation = () => {
       stt: 4,
       mhp: "THCS104",
       thp: "Địa Lý 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Mon-Wed 14:30-16:00",
       gv: "Phạm Văn Bình",
       ph: "Phòng 104",
@@ -224,7 +223,7 @@ export const StudentInformation = () => {
       stt: 5,
       mhp: "THCS105",
       thp: "Sinh Học 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Tue-Thu 10:00-11:30",
       gv: "Nguyễn Văn A",
       ph: "Phòng 105",
@@ -233,7 +232,7 @@ export const StudentInformation = () => {
       stt: 6,
       mhp: "THCS106",
       thp: "Vật Lý 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Mon-Wed 09:00-10:30",
       gv: "Trần Văn B",
       ph: "Phòng 106",
@@ -242,7 +241,7 @@ export const StudentInformation = () => {
       stt: 7,
       mhp: "THCS107",
       thp: "Hóa Học 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Fri 10:00-12:00",
       gv: "Nguyễn Thị C",
       ph: "Phòng 107",
@@ -251,7 +250,7 @@ export const StudentInformation = () => {
       stt: 8,
       mhp: "THCS108",
       thp: "Thể Dục 7",
-      yc: "Bắt buộc",
+      tt: "Đã học",
       lh: "Tue-Thu 15:00-16:30",
       gv: "Lê Văn D",
       ph: "Sân Thể Dục",
@@ -260,7 +259,7 @@ export const StudentInformation = () => {
       stt: 9,
       mhp: "THCS109",
       thp: "Tin Học 7",
-      yc: "Không bắt buộc",
+      tt: "Không bắt buộc",
       lh: "Mon-Wed 11:00-12:30",
       gv: "Nguyễn Văn E",
       ph: "Phòng 109",
@@ -269,12 +268,12 @@ export const StudentInformation = () => {
       stt: 10,
       mhp: "THCS110",
       thp: "Ngoại Ngữ 7",
-      yc: "Không bắt buộc",
+      tt: "Đã học",
       lh: "Fri 14:00-16:00",
       gv: "Trần Thị F",
       ph: "Phòng 110",
     },
-  ];
+  ]);
   const courseColumns = [
     {
       title: "STT",
@@ -295,9 +294,9 @@ export const StudentInformation = () => {
       key: "thp",
     },
     {
-      title: "YÊU CẦU",
-      dataIndex: "yc",
-      key: "yc",
+      title: "TRẠNG THÁI",
+      dataIndex: "tt",
+      key: "tt",
     },
     {
       title: "LỊCH HỌC",
@@ -389,7 +388,7 @@ export const StudentInformation = () => {
       stt: 1,
       mhp: "7E1023.22",
       thp: "Ngoại ngữ 1",
-      yc: "Bắt buộc",
+      tt: "Đang học",
       lh: `16/09/24-17/11/24 - Thứ 2(T9-12)
            - Thứ 4(T9-12)`,
       gv: "Thái Thanh Tùng",
@@ -399,7 +398,7 @@ export const StudentInformation = () => {
       stt: 2,
       mhp: "THCS101",
       thp: "Toán 7",
-      yc: "Bắt buộc",
+      tt: "Đang học",
       lh: "Mon-Wed 08:00-09:30",
       gv: "Nguyễn Thị Hương",
       ph: "Phòng 101",
@@ -408,7 +407,7 @@ export const StudentInformation = () => {
       stt: 3,
       mhp: "THCS102",
       thp: "Ngữ Văn 7",
-      yc: "Bắt buộc",
+      tt: "Đang học",
       lh: "Tue-Thu 09:30-11:00",
       gv: "Trần Văn An",
       ph: "Phòng 102",
@@ -417,7 +416,7 @@ export const StudentInformation = () => {
       stt: 4,
       mhp: "THCS103",
       thp: "Lịch Sử 7",
-      yc: "Bắt buộc",
+      tt: "Đang học",
       lh: "Fri 13:00-14:30",
       gv: "Lê Thị Mai",
       ph: "Phòng 103",
@@ -426,7 +425,7 @@ export const StudentInformation = () => {
       stt: 5,
       mhp: "THCS104",
       thp: "Địa Lý 7",
-      yc: "Bắt buộc",
+      tt: "Đang học",
       lh: "Mon-Wed 14:30-16:00",
       gv: "Phạm Văn Bình",
       ph: "Phòng 104",
@@ -437,7 +436,7 @@ export const StudentInformation = () => {
       { header: "STT", key: "stt" },
       { header: "MÃ MÔN HỌC", key: "mhp" },
       { header: "TÊN MÔN HỌC", key: "thp" },
-      { header: "YÊU CẦU", key: "yc" },
+      { header: "YÊU CẦU", key: "tt" },
       { header: "MÃ LỚP", key: "ltc" },
       { header: "LỊCH HỌC", key: "lh" },
       { header: "GIÁO VIÊN", key: "gv" },
@@ -462,7 +461,7 @@ export const StudentInformation = () => {
       { header: "STT", key: "stt" },
       { header: "MÃ MÔN HỌC", key: "mhp" },
       { header: "TÊN MÔN HỌC", key: "thp" },
-      { header: "YÊU CẦU", key: "yc" },
+      { header: "YÊU CẦU", key: "tt" },
       { header: "MÃ LỚP", key: "ltc" },
       { header: "LỊCH HỌC", key: "lh" },
       { header: "GIÁO VIÊN", key: "gv" },
@@ -487,7 +486,7 @@ export const StudentInformation = () => {
       form.setFieldsValue({
         subjectId: selectedRecord.mhp,
         subjectName: selectedRecord.thp,
-        subjectIndentify: selectedRecord.yc,
+        subjectIndentify: selectedRecord.tt,
         subjectCalendar: selectedRecord.lh,
         subjectTeacher: selectedRecord.gv,
         subjectRoom: selectedRecord.ph,
@@ -1213,7 +1212,7 @@ export const StudentInformation = () => {
                     stt: courseData.length + 1,
                     thp: form.getFieldValue("subjectId"),
                     mhp: form.getFieldValue("subjectName"),
-                    yc: form.getFieldValue("subjectIndentify"),
+                    tt: form.getFieldValue("subjectIndentify"),
                     lh: form.getFieldValue("subjectCalendar"),
                     gv: form.getFieldValue("subjectTeacher"),
                     ph: form.getFieldValue("subjectRoom"),
@@ -1369,18 +1368,26 @@ export const StudentInformation = () => {
                 ) {
                   const newCourse = {
                     ...selectedRecord,
-                    thp: form.getFieldValue("subjectId"),
-                    mhp: form.getFieldValue("subjectName"),
-                    yc: form.getFieldValue("subjectIndentify"),
+                    thp: form.getFieldValue("subjectName"),
+                    mhp: form.getFieldValue("subjectId"),
+                    tt: form.getFieldValue("subjectIndentify"),
                     lh: form.getFieldValue("subjectCalendar"),
                     gv: form.getFieldValue("subjectTeacher"),
                     ph: form.getFieldValue("subjectRoom"),
                   };
-                  setCourseData(
-                    courseData.map((course) =>
-                      course.stt === selectedRecord.stt ? newCourse : course
-                    )
-                  );
+                  if (selectedRecord.tt === "Đang học") {
+                    setCourseData(
+                      courseData.map((course) =>
+                        course.stt === selectedRecord.stt ? newCourse : course
+                      )
+                    );
+                  } else {
+                    setNewData(
+                      data.map((course) =>
+                        course.stt === selectedRecord.stt ? newCourse : course
+                      )
+                    );
+                  }
                   setModalStates({
                     ...modalStates,
                     showEditSubject: false,
