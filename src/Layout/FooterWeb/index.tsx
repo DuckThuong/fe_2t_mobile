@@ -15,7 +15,7 @@ interface StudentFooterActionsProps {
   modalStates: any;
   disAble?: boolean;
   setModalStates: (states: any) => void;
-  handleExportExcel: () => void;
+  handleExportExcel?: () => void;
   scrollOptions?: ScrollToOptions;
   shouldScroll?: boolean;
   isPrint?: boolean;

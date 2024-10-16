@@ -34,8 +34,8 @@ const listMenuItem = (): MenuItem[] => {
       link: `/${CUSTOMER_ROUTE_NAME.LIST_STUDENT}`,
     },
     {
-      title: "Quản lý lớp học",
-      link: `/${CUSTOMER_ROUTE_NAME.LIST_CLASS}`,
+      title: "Quản lý học phí",
+      link: `/${CUSTOMER_ROUTE_NAME.LIST_TUITION}`,
     },
     {
       title: "Quản lý giảng viên",

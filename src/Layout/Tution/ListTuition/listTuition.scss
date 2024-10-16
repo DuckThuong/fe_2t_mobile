@@ -1,0 +1,246 @@
+@import "../../../styles/variables.scss";
+@import "../../../styles/mixins";
+
+.list-tuition {
+  &_header {
+    width: 100%;
+    height: fit-content;
+    padding: 15px;
+    &-title {
+      width: 100%;
+      height: fit-content;
+      padding: 8px;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 22px;
+      color: $black_color;
+      margin-bottom: 0 !important;
+    }
+    &-sub {
+      width: 100%;
+      height: fit-content;
+      padding: 5px;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 22px;
+      color: $gray_blur_color;
+      margin-bottom: 0 !important;
+    }
+  }
+  &_content {
+    &-sidebar {
+      height: fit-content;
+      border: 1px solid $gray_blur_color;
+      padding: 12px 24px 12px 24px;
+    }
+    &-table {
+      border: 1px solid $gray_blur_color;
+      border-top: none;
+      overflow: hidden;
+      border-bottom: none !important;
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+      @include sm {
+        max-width: 1800px !important;
+      }
+      .ant-table-content {
+        border: none !important;
+        .ant-table-thead {
+          .ant-table-cell {
+            border-bottom: 1px solid $gray_blur_color;
+            font-family: Open Sans;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 22px;
+            text-align: left;
+            color: #3b82f6;
+            background-color: $empty_avatar_color !important;
+            .ant-table-filter-column {
+              .ant-table-filter-trigger {
+                svg {
+                  width: 16px;
+                  height: 16px;
+                  color: $primary_color;
+                }
+              }
+            }
+
+            &:first-child {
+              .ant-table-selection {
+                padding-left: 3px;
+              }
+              &::after {
+                display: none !important;
+              }
+            }
+            &:last-child::after {
+              display: none !important;
+            }
+          }
+        }
+        .ant-table-tbody {
+          .ant-table-cell {
+            border-bottom: 1px solid $gray_blur_color;
+            vertical-align: middle !important;
+            p {
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 22px;
+              text-align: left;
+              color: #343434;
+              margin-bottom: 0 !important;
+            }
+            .đang-học {
+              background-color: greenyellow !important;
+              font-size: 16px;
+              font-weight: 500;
+              color: white;
+            }
+            .tốt-nghiệp {
+              background-color: $primary_color !important;
+              font-size: 16px;
+              font-weight: 500;
+              color: white;
+            }
+            .bảo-lưu {
+              background-color: rgb(97, 18, 18) !important;
+              font-size: 16px;
+              font-weight: 500;
+              color: white;
+            }
+            .nghỉ-học {
+              background-color: rgb(255, 0, 0) !important;
+              font-size: 16px;
+              font-weight: 500;
+              color: white;
+            }
+            .học-thạc-sĩ {
+              background-color: rgb(55, 209, 114) !important;
+              font-size: 16px;
+              font-weight: 500;
+              color: white;
+            }
+          }
+        }
+      }
+      .custom-pagination {
+        height: 36px;
+        border-bottom: 1px solid $gray_blur_color;
+      }
+    }
+  }
+  &_sidebar {
+    display: inline-block;
+    width: 100%;
+    border: 1px solid $gray_blur_color;
+    padding: 12px 24px 12px 24px;
+    overflow: auto hidden;
+    vertical-align: middle !important;
+    background-color: $white_color;
+    display: inline-block;
+    box-shadow: none;
+    &-scroll {
+      position: relative;
+      @include sm {
+        width: 1200px;
+        max-width: 1400px !important;
+      }
+      @include lg {
+        width: 1200px;
+        max-width: 1400px !important;
+      }
+    }
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    &-colRight {
+      display: inline;
+      height: fit-content;
+      width: fit-content;
+      &-formSearch {
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        &-input {
+          margin-right: 0 !important;
+          width: 210px;
+          height: 100% !important ;
+          .ant-form-item-control-input-content {
+            height: 100% !important ;
+            .ant-input {
+              width: 100%;
+              height: 100% !important;
+              border: 1px solid $gray_blur_color;
+              border-radius: 0 !important;
+              &::placeholder {
+                font-size: 16px;
+                font-weight: 400;
+                color: $gray_blur_color;
+              }
+            }
+          }
+        }
+        &-button {
+          .ant-btn {
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 0 !important;
+            background-color: $gray_blur_color !important;
+            border: 1px solid $gray_blur_color;
+            span {
+              svg {
+                path {
+                  stroke: $white_color;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    &-button {
+      display: flex;
+      float: right;
+      margin: 10px;
+      .ant-btn {
+        width: fit-content;
+        height: 30px;
+        border-radius: 0 !important;
+        -webkit-border-radius: 0 !important;
+        -moz-border-radius: 0 !important;
+        -ms-border-radius: 0 !important;
+        -o-border-radius: 0 !important;
+      }
+    }
+  }
+  &_data {
+    &-studentState {
+      width: fit-content;
+      min-width: 120px;
+      height: 20px;
+      padding: 15px;
+      background-color: $empty_avatar_color !important;
+      border-radius: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 400;
+      font-style: 16px;
+    }
+    &-studentOption {
+      width: 120px;
+      height: 40px;
+      color: white;
+      background-color: #3b82f6;
+      font-weight: 600;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+    }
+  }
+}

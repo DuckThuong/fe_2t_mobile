@@ -511,7 +511,6 @@ export const ListStudents = () => {
       }
     };
   }, []);
-  console.log(selectedRecord);
 
   return (
     <div className="list-student">

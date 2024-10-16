@@ -11,6 +11,7 @@ import { ListStudents } from "../Layout/Student/ListStudents";
 import { StudentInformation } from "../Layout/Student/StudentInformation";
 import { SubjectInformation } from "../Layout/Student/SubjectInformation";
 import { ClassList } from "../Layout/Subject/SubjectList/ClassList";
+import { ListTuition } from "../Layout/Tution/ListTuition/ListTuition";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -53,8 +54,8 @@ export const CustomerRouter = () => (
     ></Route>
     {/* List Subject */}
     <Route
-      path={CUSTOMER_ROUTER_PATH.LIST_CLASS}
-      element={<SuspenseWrapper component={<ClassList />} />}
+      path={CUSTOMER_ROUTER_PATH.LIST_TUITION}
+      element={<SuspenseWrapper component={<ListTuition />} />}
     ></Route>
   </Routes>
 );
