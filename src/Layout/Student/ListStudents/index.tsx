@@ -877,16 +877,18 @@ export const ListStudents = () => {
                 form.getFieldValue("studentClass") &&
                 form.getFieldValue("studentCourse") &&
                 form.getFieldValue("studentDob") &&
+                form.getFieldValue("studentState") &&
                 form.getFieldValue("studentGender")
               ) {
                 const newCourse = {
                   ...selectedRecord,
                   studentName: form.getFieldValue("studentName"),
                   studentMsv: form.getFieldValue("studentMsv"),
-                  studentClassCode: form.getFieldValue("studentState"),
+                  studentClassCode: form.getFieldValue("studentClassCode"),
                   studentClass: form.getFieldValue("studentClass"),
                   studentCourse: form.getFieldValue("studentCourse"),
                   studentDob: form.getFieldValue("studentDob"),
+                  studentState: form.getFieldValue("studentState"),
                   studentGender: form.getFieldValue("studentGender"),
                 };
 
@@ -913,6 +915,7 @@ export const ListStudents = () => {
               form.setFieldValue("studentClass", "");
               form.setFieldValue("studentCourse", "");
               form.setFieldValue("studentDob", "");
+              form.setFieldValue("studentState", "");
               form.setFieldValue("studentGender", "");
             }}
           >
@@ -1049,13 +1052,13 @@ export const ListStudents = () => {
                   </ColWrap>
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">GIỚI TÍNH</p>
-                    <FormInput
+                    <FormSelect
                       name={"studentGender"}
                       formItemProps={{
                         className: "list-student_form-studentNumber",
                       }}
-                      inputProps={{
-                        placeholder: "Phòng học",
+                      selectProps={{
+                        options: genderOption,
                       }}
                     />
                   </ColWrap>
