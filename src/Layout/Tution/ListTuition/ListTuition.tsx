@@ -8,7 +8,7 @@ import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
 import TableWrap from "../../../Components/TableWrap";
 import { CustomButton } from "../../../Components/buttons/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import "./listTuition.scss";
@@ -21,6 +21,20 @@ import { FormInput } from "../../../Components/Form/FormInput";
 import * as XLSX from "xlsx";
 import StudentFooterActions from "./../../FooterWeb/index";
 import { TableRowSelection } from "antd/es/table/interface";
+import { FormSelect } from "../../../Components/Form/FormSelect";
+enum classSelector {
+  SIX = "6",
+  SEVEN = "7",
+  EIGHT = "8",
+  NINE = "9",
+}
+enum classCodeSelector {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+}
+
 export const ListTuition = () => {
   const [editState, setEditState] = useState<boolean>(true);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -48,6 +62,14 @@ export const ListTuition = () => {
     showRegistedNewColumn: false,
     showEdittuition: false,
   });
+  const classOption = Object.values(classSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const classCodeOption = Object.values(classCodeSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
   const column = [
     {
       title: "STT",
@@ -90,6 +112,9 @@ export const ListTuition = () => {
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.lop}</p>;
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classOption,
+      onFilter: (value, record) => record.lop.includes(value), // Updated to use 'lop'
     },
     {
       title: "MÃ LỚP",
@@ -98,6 +123,9 @@ export const ListTuition = () => {
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.malop}</p>;
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classCodeOption,
+      onFilter: (value, record) => record.malop.includes(value), // Updated to use 'malop'
     },
     {
       title: "HỌC KÌ",
@@ -226,8 +254,8 @@ export const ListTuition = () => {
       msv: "SV001",
       htv: "Nguyen Van A",
       khoa: "2020",
-      lop: "10A1",
-      malop: "L001",
+      lop: classSelector.SIX,
+      malop: classCodeSelector.A,
       hocki: "1",
       smh: "5",
       tpn: "5000000",
@@ -243,8 +271,8 @@ export const ListTuition = () => {
       msv: "SV002",
       htv: "Tran Thi B",
       khoa: "2020",
-      lop: "10A2",
-      malop: "L002",
+      lop: classSelector.SIX, // Updated to use enum
+      malop: classCodeSelector.B, // Updated to use enum
       hocki: "1",
       smh: "6",
       tpn: "6000000",
@@ -260,8 +288,8 @@ export const ListTuition = () => {
       msv: "SV003",
       htv: "Le Van C",
       khoa: "2021",
-      lop: "11B1",
-      malop: "L003",
+      lop: classSelector.SEVEN, // Updated to use enum
+      malop: classCodeSelector.C, // Updated to use enum
       hocki: "2",
       smh: "4",
       tpn: "4000000",
@@ -277,8 +305,8 @@ export const ListTuition = () => {
       msv: "SV004",
       htv: "Pham Thi D",
       khoa: "2021",
-      lop: "11B2",
-      malop: "L004",
+      lop: classSelector.SEVEN, // Updated to use enum
+      malop: classCodeSelector.D, // Updated to use enum
       hocki: "2",
       smh: "5",
       tpn: "5000000",
@@ -294,8 +322,8 @@ export const ListTuition = () => {
       msv: "SV005",
       htv: "Hoang Van E",
       khoa: "2022",
-      lop: "12C1",
-      malop: "L005",
+      lop: classSelector.EIGHT, // Updated to use enum
+      malop: classCodeSelector.A, // Updated to use enum
       hocki: "1",
       smh: "3",
       tpn: "3000000",
@@ -311,8 +339,8 @@ export const ListTuition = () => {
       msv: "SV006",
       htv: "Vu Thi F",
       khoa: "2022",
-      lop: "12C2",
-      malop: "L006",
+      lop: classSelector.EIGHT, // Updated to use enum
+      malop: classCodeSelector.B, // Updated to use enum
       hocki: "1",
       smh: "6",
       tpn: "6000000",
@@ -328,8 +356,8 @@ export const ListTuition = () => {
       msv: "SV007",
       htv: "Nguyen Van G",
       khoa: "2023",
-      lop: "13D1",
-      malop: "L007",
+      lop: classSelector.NINE, // Updated to use enum
+      malop: classCodeSelector.C, // Updated to use enum
       hocki: "2",
       smh: "5",
       tpn: "5000000",
@@ -345,8 +373,8 @@ export const ListTuition = () => {
       msv: "SV008",
       htv: "Tran Thi H",
       khoa: "2023",
-      lop: "13D2",
-      malop: "L008",
+      lop: classSelector.NINE, // Updated to use enum
+      malop: classCodeSelector.D, // Updated to use enum
       hocki: "2",
       smh: "4",
       tpn: "4000000",
@@ -362,8 +390,8 @@ export const ListTuition = () => {
       msv: "SV009",
       htv: "Le Van I",
       khoa: "2024",
-      lop: "14E1",
-      malop: "L009",
+      lop: classSelector.SIX, // Updated to use enum
+      malop: classCodeSelector.A, // Updated to use enum
       hocki: "1",
       smh: "7",
       tpn: "7000000",
@@ -379,8 +407,8 @@ export const ListTuition = () => {
       msv: "SV010",
       htv: "Pham Thi J",
       khoa: "2024",
-      lop: "14E2",
-      malop: "L010",
+      lop: classSelector.SIX, // Updated to use enum
+      malop: classCodeSelector.B, // Updated to use enum
       hocki: "1",
       smh: "5",
       tpn: "5000000",
@@ -479,7 +507,6 @@ export const ListTuition = () => {
     selectedRowKeys,
     onChange: onSelectChange,
   };
-
   const handleExportExcel = () => {
     const selectedData = data.filter((_, index) =>
       selectedRowKeys.includes(data[index].id)
@@ -639,7 +666,13 @@ export const ListTuition = () => {
             isScroll
             tableProps={{
               rowSelection: rowSelection,
-              columns: column,
+              columns: column.map((column) => ({
+                ...column,
+                filters: column.filters?.map((filter) => ({
+                  ...filter,
+                  text: filter.label,
+                })),
+              })),
               dataSource: data,
             }}
           />
@@ -762,27 +795,27 @@ export const ListTuition = () => {
               >
                 <ColWrap colProps={{ span: 12 }}>
                   <p className="list-tuition_row-label">LỚP</p>
-                  <FormInput
+                  <FormSelect
                     name={"lop"}
                     formItemProps={{
                       className: "list-tuition_form-tuitionName",
                     }}
-                    inputProps={{
-                      placeholder: "Lớp",
-                      onChange: (e) => setStudentClass(e.target.value),
+                    selectProps={{
+                      options: classOption,
+                      onChange: (value) => setStudentClass(value), // Updated to use 'value' directly
                     }}
                   />
                 </ColWrap>
                 <ColWrap colProps={{ span: 12 }}>
                   <p className="list-tuition_row-label">MÃ LỚP</p>
-                  <FormInput
+                  <FormSelect
                     name={"malop"}
                     formItemProps={{
                       className: "list-tuition_form-tuitionMsv",
                     }}
-                    inputProps={{
-                      placeholder: "Mã lớp",
-                      onChange: (e) => setCourse(e.target.value),
+                    selectProps={{
+                      options: classCodeOption,
+                      onChange: (value) => setCourse(value), // Updated to use 'value' directly
                     }}
                   />
                 </ColWrap>
@@ -929,10 +962,66 @@ export const ListTuition = () => {
             });
           }}
           onOk={() => {
-            setModalStates({
-              ...modalStates,
-              editModal: false,
-            });
+            if (
+              form.getFieldValue("msv") &&
+              form.getFieldValue("htv") &&
+              form.getFieldValue("khoa") &&
+              form.getFieldValue("lop") &&
+              form.getFieldValue("malop") &&
+              form.getFieldValue("hocki") &&
+              form.getFieldValue("smh") &&
+              form.getFieldValue("tdn") &&
+              form.getFieldValue("tht") &&
+              form.getFieldValue("tienthieu") &&
+              form.getFieldValue("tongcong") &&
+              form.getFieldValue("tpn")
+            ) {
+              const newCourse = {
+                ...selectedRecord,
+                msv: form.getFieldValue("msv"),
+                htv: form.getFieldValue("htv"),
+                khoa: form.getFieldValue("khoa"),
+                lop: form.getFieldValue("lop"),
+                malop: form.getFieldValue("malop"),
+                hocki: form.getFieldValue("hocki"),
+                smh: form.getFieldValue("smh"),
+                tdn: form.getFieldValue("tdn"),
+                tht: form.getFieldValue("tht"),
+                tienthieu: form.getFieldValue("tienthieu"),
+                tongcong: form.getFieldValue("tongcong"),
+                tpn: form.getFieldValue("tpn"),
+              };
+
+              setNewData(
+                data.map(
+                  (course) =>
+                    course.id === selectedRecord.id ? newCourse : course // Use 'id' for comparison
+                )
+              );
+              setModalStates({
+                ...modalStates,
+                editModal: false,
+              });
+            } else {
+              setNotification({
+                message: "Vui lòng điền đầy đủ dữ liệu",
+                type: "error",
+              });
+            }
+          }}
+          afterClose={() => {
+            form.setFieldValue("msv", "");
+            form.setFieldValue("htv", "");
+            form.setFieldValue("khoa", "");
+            form.setFieldValue("lop", "");
+            form.setFieldValue("malop", "");
+            form.setFieldValue("hocki", "");
+            form.setFieldValue("smh", "");
+            form.setFieldValue("tpn", "");
+            form.setFieldValue("tdn", "");
+            form.setFieldValue("tht", "");
+            form.setFieldValue("tienthieu", "");
+            form.setFieldValue("tongcong", "");
           }}
         >
           <div className="list-tuition_modal-edit-header">
@@ -1021,27 +1110,27 @@ export const ListTuition = () => {
               >
                 <ColWrap colProps={{ span: 12 }}>
                   <p className="list-tuition_row-label">LỚP</p>
-                  <FormInput
+                  <FormSelect
                     name={"lop"}
                     formItemProps={{
                       className: "list-tuition_form-tuitionName",
                     }}
-                    inputProps={{
-                      placeholder: "Lớp",
-                      onChange: (e) => setStudentClass(e.target.value),
+                    selectProps={{
+                      options: classOption,
+                      onChange: (value) => setStudentClass(value),
                     }}
                   />
                 </ColWrap>
                 <ColWrap colProps={{ span: 12 }}>
                   <p className="list-tuition_row-label">MÃ LỚP</p>
-                  <FormInput
+                  <FormSelect
                     name={"malop"}
                     formItemProps={{
                       className: "list-tuition_form-tuitionMsv",
                     }}
-                    inputProps={{
-                      placeholder: "Mã lớp",
-                      onChange: (e) => setCourse(e.target.value),
+                    selectProps={{
+                      options: classCodeOption,
+                      onChange: (value) => setCourse(value),
                     }}
                   />
                 </ColWrap>
