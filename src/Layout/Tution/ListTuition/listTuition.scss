@@ -6,6 +6,10 @@
     width: 100%;
     height: fit-content;
     padding: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     &-title {
       width: 100%;
       height: fit-content;
@@ -26,13 +30,19 @@
       color: $gray_blur_color;
       margin-bottom: 0 !important;
     }
+    &-button {
+      &-addTuition {
+        width: 150px;
+        border-radius: 0px !important;
+        background-color: #3b82f6 !important;
+        span {
+          font-weight: 600;
+          color: white !important;
+        }
+      }
+    }
   }
   &_content {
-    &-sidebar {
-      height: fit-content;
-      border: 1px solid $gray_blur_color;
-      padding: 12px 24px 12px 24px;
-    }
     &-table {
       border: 1px solid $gray_blur_color;
       border-top: none;
@@ -92,36 +102,6 @@
               color: #343434;
               margin-bottom: 0 !important;
             }
-            .đang-học {
-              background-color: greenyellow !important;
-              font-size: 16px;
-              font-weight: 500;
-              color: white;
-            }
-            .tốt-nghiệp {
-              background-color: $primary_color !important;
-              font-size: 16px;
-              font-weight: 500;
-              color: white;
-            }
-            .bảo-lưu {
-              background-color: rgb(97, 18, 18) !important;
-              font-size: 16px;
-              font-weight: 500;
-              color: white;
-            }
-            .nghỉ-học {
-              background-color: rgb(255, 0, 0) !important;
-              font-size: 16px;
-              font-weight: 500;
-              color: white;
-            }
-            .học-thạc-sĩ {
-              background-color: rgb(55, 209, 114) !important;
-              font-size: 16px;
-              font-weight: 500;
-              color: white;
-            }
           }
         }
       }
@@ -134,7 +114,7 @@
   &_sidebar {
     display: inline-block;
     width: 100%;
-    border: 1px solid $gray_blur_color;
+    border: 1px solid $gray_blur_color !important;
     padding: 12px 24px 12px 24px;
     overflow: auto hidden;
     vertical-align: middle !important;
@@ -143,6 +123,8 @@
     box-shadow: none;
     &-scroll {
       position: relative;
+      display: flex;
+      justify-content: flex-end;
       @include sm {
         width: 1200px;
         max-width: 1400px !important;
@@ -219,6 +201,9 @@
     }
   }
   &_data {
+    &-sum {
+      font-weight: 600 !important;
+    }
     &-studentState {
       width: fit-content;
       min-width: 120px;

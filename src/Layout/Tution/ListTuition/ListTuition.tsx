@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HeaderWeb } from "../../HeaderWeb";
 import NotificationPopup from "../../Notification";
 import { SvgMagnifyingGlassSubmit } from "../../../Components/@svg/SvgMagnifyingGlassSubmit";
@@ -13,13 +13,20 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import "./listTuition.scss";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { useForm } from "antd/es/form/Form";
+import RowWrap from "../../../Components/RowWrap";
 export const ListTuition = () => {
   const [editState, setEditState] = useState<boolean>(true);
   const navigate = useNavigate();
+  const [form] = useForm();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const tableWrapperRef = useRef<HTMLDivElement>(null);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const [modalStates, setModalStates] = useState({
     editModal: false,
     deleteModal: false,
@@ -135,7 +142,7 @@ export const ListTuition = () => {
       dataIndex: "tongcong",
       key: "tongcong",
       render: (text, record, index) => {
-        return <p className="list-tuition_table-data">{record.tongcong}</p>;
+        return <p className="list-tuition_data-sum">{record.tongcong}</p>;
       },
     },
     {
@@ -156,6 +163,50 @@ export const ListTuition = () => {
           />
         );
       },
+    },
+    {
+      title: "CHỨC NĂNG",
+      dataIndex: "cn",
+      key: "cn",
+      render: (text, record) => {
+        return (
+          <>
+            {modalStates.showEditButton && (
+              <CustomButton
+                content="Sửa"
+                buttonProps={{
+                  onClick: () => {
+                    setSelectedRecord(record);
+                    setModalStates({
+                      ...modalStates,
+                      editModal: true,
+                    });
+                  },
+                  icon: <EditOutlined />,
+                  className: "list-student_footer-editTable",
+                }}
+              />
+            )}
+            {modalStates.showDeleteButton && (
+              <CustomButton
+                content="Xóa"
+                buttonProps={{
+                  icon: <DeleteOutlined />,
+                  onClick: () => {
+                    setModalStates({
+                      ...modalStates,
+                      deleteModal: true,
+                    });
+                  },
+                  className: "list-student_footer-delete",
+                }}
+              />
+            )}
+          </>
+        );
+      },
+
+      hidden: !modalStates.showRegistedNewColumn,
     },
   ];
   const [data, setNewData] = useState<any[]>([
@@ -330,6 +381,35 @@ export const ListTuition = () => {
       studentOption: "Details",
     },
   ]);
+  useEffect(() => {
+    const handleTableScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        scrollRef.current.scrollLeft = tableWrapperRef.current.scrollLeft;
+      }
+    };
+
+    const handleDivScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        tableWrapperRef.current.scrollLeft = scrollRef.current.scrollLeft;
+      }
+    };
+
+    if (tableWrapperRef.current && scrollRef.current) {
+      tableWrapperRef.current.addEventListener("scroll", handleTableScroll);
+      scrollRef.current.addEventListener("scroll", handleDivScroll);
+    }
+    return () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        tableWrapperRef.current.removeEventListener(
+          "scroll",
+          handleTableScroll
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        scrollRef.current.removeEventListener("scroll", handleDivScroll);
+      }
+    };
+  }, []);
   return (
     <div className="list-tuition">
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={true} />
@@ -338,39 +418,58 @@ export const ListTuition = () => {
         type={notification?.type}
       />
       <div className="list-tuition_header">
-        <h1 className="list-tuition_header-title">Danh sách học phí</h1>
-        <p className="list-tuition_header-sub">
-          Trang này hiển thị danh sách liên quan đến học phí của học sinh
-        </p>
+        <div>
+          <h1 className="list-tuition_header-title">Danh sách học phí</h1>
+          <p className="list-tuition_header-sub">
+            Trang này hiển thị danh sách liên quan đến học phí của học sinh
+          </p>
+        </div>
+        <div className="list-tuition_header-button">
+          <CustomButton
+            content="Lập hóa đơn"
+            buttonProps={{
+              className: "list-tuition_header-button-addTuition",
+            }}
+          />
+        </div>
       </div>
       <div className="list-tuition_content">
-        <div className="list-tuition_content-sidebar">
-          <FormWrap
-            className="list-tuition_sidebar-colRight-formSearch"
-            name="search-product"
-            layout={"inline"}
-            initialValues={{
-              select: "Dữ liệu",
-            }}
-            onFinish={() => {}}
+        <div className="list-tuition_sidebar" ref={scrollRef}>
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[16, 16]}
+            className="list-tuition_sidebar-scroll"
           >
-            <FormInputSearch
-              name={"fullrecordSearch"}
-              isShowIcon={false}
-              formItemProps={{
-                className: "list-tuition_sidebar-colRight-formSearch-input",
+            <FormWrap
+              className="list-tuition_sidebar-colRight-formSearch"
+              name="search-product"
+              layout={"inline"}
+              initialValues={{
+                select: "Dữ liệu",
               }}
-              inputProps={{
-                placeholder: "Mã học sinh",
-              }}
-            />
-            <FormButtonSubmit
-              content={<SvgMagnifyingGlassSubmit />}
-              formItemProps={{
-                className: "list-tuition_sidebar-colRight-formSearch-button",
-              }}
-            />
-          </FormWrap>
+              onFinish={() => {}}
+            >
+              <FormInputSearch
+                name={"fullrecordSearch"}
+                isShowIcon={false}
+                formItemProps={{
+                  className: "list-tuition_sidebar-colRight-formSearch-input",
+                }}
+                inputProps={{
+                  placeholder: "Mã học sinh",
+                }}
+              />
+              <FormButtonSubmit
+                content={<SvgMagnifyingGlassSubmit />}
+                formItemProps={{
+                  className: "list-tuition_sidebar-colRight-formSearch-button",
+                }}
+              />
+            </FormWrap>
+          </RowWrap>
         </div>
         <div className="list-tuition_content-table">
           <TableWrap
@@ -378,6 +477,8 @@ export const ListTuition = () => {
             scrollValue={{ x: 1366 }}
             tableWidth={1416}
             rootClassName="list-tuition_table-wrap"
+            tableWrapperRef={tableWrapperRef}
+            isScroll
             tableProps={{
               columns: column,
               dataSource: data,

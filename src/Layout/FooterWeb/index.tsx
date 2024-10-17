@@ -21,6 +21,7 @@ interface StudentFooterActionsProps {
   isPrint?: boolean;
   isExport?: boolean;
   isShowOption?: boolean;
+  add?: boolean;
 }
 
 const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
@@ -35,6 +36,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
   isPrint,
   isExport,
   isShowOption,
+  add,
 }) => {
   return (
     <div className="footer-web_footer">
@@ -92,22 +94,26 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
             <>
               {" "}
               <div className="option">
-                <CustomButton
-                  content={"Thêm"}
-                  buttonProps={{
-                    icon: <AppstoreAddOutlined />,
-                    className: "footer-web_footer-add",
-                    onClick: () => {
-                      setModalStates({
-                        ...modalStates,
-                        addModal: true,
-                        showRegistedNewColumn: false,
-                        showDeleteButton: false,
-                        showEditButton: false,
-                      });
-                    },
-                  }}
-                />
+                {add ? (
+                  <CustomButton
+                    content={"Thêm"}
+                    buttonProps={{
+                      icon: <AppstoreAddOutlined />,
+                      className: "footer-web_footer-add",
+                      onClick: () => {
+                        setModalStates({
+                          ...modalStates,
+                          addModal: true,
+                          showRegistedNewColumn: false,
+                          showDeleteButton: false,
+                          showEditButton: false,
+                        });
+                      },
+                    }}
+                  />
+                ) : (
+                  <></>
+                )}
                 <CustomButton
                   content={"Sửa"}
                   buttonProps={{

@@ -53,8 +53,8 @@ enum stateSelector {
 
 export const ListStudents = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [form] = useForm();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
@@ -527,32 +527,41 @@ export const ListStudents = () => {
       </div>
       <div className="list-student_content">
         <div className="list-student_sidebar" ref={scrollRef}>
-          <FormWrap
-            className="list-student_sidebar-colRight-formSearch"
-            name="search-product"
-            layout={"inline"}
-            initialValues={{
-              select: "Dữ liệu",
-            }}
-            onFinish={() => {}}
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[16, 16]}
+            className="list-student_sidebar-scroll"
           >
-            <FormInputSearch
-              name={"fullrecordSearch"}
-              isShowIcon={false}
-              formItemProps={{
-                className: "list-student_sidebar-colRight-formSearch-input",
+            <FormWrap
+              className="list-student_sidebar-colRight-formSearch"
+              name="search-product"
+              layout={"inline"}
+              initialValues={{
+                select: "Dữ liệu",
               }}
-              inputProps={{
-                placeholder: "Mã học sinh",
-              }}
-            />
-            <FormButtonSubmit
-              content={<SvgMagnifyingGlassSubmit />}
-              formItemProps={{
-                className: "list-student_sidebar-colRight-formSearch-button",
-              }}
-            />
-          </FormWrap>
+              onFinish={() => {}}
+            >
+              <FormInputSearch
+                name={"fullrecordSearch"}
+                isShowIcon={false}
+                formItemProps={{
+                  className: "list-student_sidebar-colRight-formSearch-input",
+                }}
+                inputProps={{
+                  placeholder: "Mã học sinh",
+                }}
+              />
+              <FormButtonSubmit
+                content={<SvgMagnifyingGlassSubmit />}
+                formItemProps={{
+                  className: "list-student_sidebar-colRight-formSearch-button",
+                }}
+              />
+            </FormWrap>
+          </RowWrap>
         </div>
         <div className="list-student_table">
           <TableWrap
@@ -586,6 +595,7 @@ export const ListStudents = () => {
           isPrint={true}
           isShowOption={true}
           isExport={true}
+          add={true}
         />
 
         <div className="list-student_modal-popup">

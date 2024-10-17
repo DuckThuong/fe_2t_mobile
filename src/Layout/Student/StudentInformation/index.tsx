@@ -953,6 +953,7 @@ export const StudentInformation = () => {
                 isPrint={false}
                 isExport={false}
                 isShowOption={false}
+                add={true}
               />
             </>
           ) : (
@@ -1120,6 +1121,7 @@ export const StudentInformation = () => {
             isPrint={true}
             isExport={true}
             isShowOption={true}
+            add={true}
           />
           {/* Các modal hiện trong layout */}
 

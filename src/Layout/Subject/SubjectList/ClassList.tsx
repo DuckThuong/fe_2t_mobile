@@ -320,6 +320,7 @@ export const ClassList = () => {
           isPrint={true}
           isShowOption={true}
           isExport={true}
+          add={true}
         />
         <div className="class-list_modal-popup">
           {/* Modal Add */}
@@ -581,9 +582,7 @@ export const ClassList = () => {
               });
             }}
           >
-            <h1 className="class-list_modal-header">
-              SỬA THÔNG TIN HỌC SINH
-            </h1>
+            <h1 className="class-list_modal-header">SỬA THÔNG TIN HỌC SINH</h1>
             <div className="class-list_underLine" />
             <div className="class-list_modal-addStudent-content">
               <FormWrap form={form} className="class-list_form">
