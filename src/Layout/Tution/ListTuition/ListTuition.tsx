@@ -18,10 +18,14 @@ import RowWrap from "../../../Components/RowWrap";
 import { Modal } from "antd";
 import ColWrap from "../../../Components/ColWrap";
 import { FormInput } from "../../../Components/Form/FormInput";
+import * as XLSX from "xlsx";
 import StudentFooterActions from "./../../FooterWeb/index";
+import { TableRowSelection } from "antd/es/table/interface";
 export const ListTuition = () => {
   const [editState, setEditState] = useState<boolean>(true);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const navigate = useNavigate();
+  const [form] = useForm();
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const [name, setName] = useState<any>();
@@ -48,7 +52,7 @@ export const ListTuition = () => {
     {
       title: "STT",
       dataIndex: "stt",
-      key: "stt",
+      id: "stt",
       render: (text, record, index) => {
         return (
           <p style={{ color: "black", fontWeight: "600" }}>{record.stt}</p>
@@ -58,7 +62,7 @@ export const ListTuition = () => {
     {
       title: "MÃ HỌC SINH",
       dataIndex: "msv",
-      key: "msv",
+      id: "msv",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.msv}</p>;
       },
@@ -66,7 +70,7 @@ export const ListTuition = () => {
     {
       title: "HỌ VÀ TÊN",
       dataIndex: "htv",
-      key: "htv",
+      id: "htv",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.htv}</p>;
       },
@@ -74,7 +78,7 @@ export const ListTuition = () => {
     {
       title: "KHÓA",
       dataIndex: "khoa",
-      key: "khoa",
+      id: "khoa",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.khoa}</p>;
       },
@@ -82,7 +86,7 @@ export const ListTuition = () => {
     {
       title: "LỚP",
       dataIndex: "lop",
-      key: "lop",
+      id: "lop",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.lop}</p>;
       },
@@ -90,7 +94,7 @@ export const ListTuition = () => {
     {
       title: "MÃ LỚP",
       dataIndex: "malop",
-      key: "malop",
+      id: "malop",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.malop}</p>;
       },
@@ -98,7 +102,7 @@ export const ListTuition = () => {
     {
       title: "HỌC KÌ",
       dataIndex: "hocki",
-      key: "hocki",
+      id: "hocki",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.hocki}</p>;
       },
@@ -106,7 +110,7 @@ export const ListTuition = () => {
     {
       title: "SỐ MÔN HỌC",
       dataIndex: "smh",
-      key: "smh",
+      id: "smh",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.smh}</p>;
       },
@@ -114,7 +118,7 @@ export const ListTuition = () => {
     {
       title: "SỐ TIỀN PHẢI NỘP",
       dataIndex: "tpn",
-      key: "tpn",
+      id: "tpn",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.tpn}</p>;
       },
@@ -122,7 +126,7 @@ export const ListTuition = () => {
     {
       title: "SỐ TIỀN ĐÃ NỘP",
       dataIndex: "tdn",
-      key: "tdn",
+      id: "tdn",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.tdn}</p>;
       },
@@ -130,7 +134,7 @@ export const ListTuition = () => {
     {
       title: "SỐ TIỀN HOÀN TRẢ",
       dataIndex: "tht",
-      key: "tht",
+      id: "tht",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.tht}</p>;
       },
@@ -138,7 +142,7 @@ export const ListTuition = () => {
     {
       title: "SỐ TIỀN THIẾU/THỪA",
       dataIndex: "tienthieu",
-      key: "tienthieu",
+      id: "tienthieu",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.tienthieu}</p>;
       },
@@ -146,7 +150,7 @@ export const ListTuition = () => {
     {
       title: "TỔNG CỘNG",
       dataIndex: "tongcong",
-      key: "tongcong",
+      id: "tongcong",
       render: (text, record, index) => {
         return <p className="list-tuition_data-sum">{record.tongcong}</p>;
       },
@@ -154,7 +158,7 @@ export const ListTuition = () => {
     {
       title: "CHI TIẾT",
       dataIndex: "tuitionOption",
-      key: "tuitionOption",
+      id: "tuitionOption",
       render: () => {
         return (
           <CustomButton
@@ -173,7 +177,7 @@ export const ListTuition = () => {
     {
       title: "CHỨC NĂNG",
       dataIndex: "cn",
-      key: "cn",
+      id: "cn",
       render: (text, record) => {
         return (
           <>
@@ -217,7 +221,7 @@ export const ListTuition = () => {
   ];
   const [data, setNewData] = useState<any[]>([
     {
-      key: "1",
+      id: "1",
       stt: "1",
       msv: "SV001",
       htv: "Nguyen Van A",
@@ -234,7 +238,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "2",
+      id: "2",
       stt: "2",
       msv: "SV002",
       htv: "Tran Thi B",
@@ -251,7 +255,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "3",
+      id: "3",
       stt: "3",
       msv: "SV003",
       htv: "Le Van C",
@@ -268,7 +272,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "4",
+      id: "4",
       stt: "4",
       msv: "SV004",
       htv: "Pham Thi D",
@@ -285,7 +289,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "5",
+      id: "5",
       stt: "5",
       msv: "SV005",
       htv: "Hoang Van E",
@@ -302,7 +306,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "6",
+      id: "6",
       stt: "6",
       msv: "SV006",
       htv: "Vu Thi F",
@@ -319,7 +323,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "7",
+      id: "7",
       stt: "7",
       msv: "SV007",
       htv: "Nguyen Van G",
@@ -336,7 +340,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "8",
+      id: "8",
       stt: "8",
       msv: "SV008",
       htv: "Tran Thi H",
@@ -353,7 +357,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "9",
+      id: "9",
       stt: "9",
       msv: "SV009",
       htv: "Le Van I",
@@ -370,7 +374,7 @@ export const ListTuition = () => {
       tuitionOption: "Details",
     },
     {
-      key: "10",
+      id: "10",
       stt: "10",
       msv: "SV010",
       htv: "Pham Thi J",
@@ -391,7 +395,7 @@ export const ListTuition = () => {
     {
       title: "STT",
       dataIndex: "stt",
-      key: "stt",
+      id: "stt",
       render: (text, record, index) => {
         return (
           <p style={{ color: "black", fontWeight: "600" }}>{record.stt}</p>
@@ -401,7 +405,7 @@ export const ListTuition = () => {
     {
       title: "MÔN HỌC",
       dataIndex: "monhoc",
-      key: "monhoc",
+      id: "monhoc",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.monhoc}</p>;
       },
@@ -409,7 +413,7 @@ export const ListTuition = () => {
     {
       title: "THỜI GIAN HỌC",
       dataIndex: "tgh",
-      key: "tgh",
+      id: "tgh",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.tgh}</p>;
       },
@@ -417,7 +421,7 @@ export const ListTuition = () => {
     {
       title: "HỌC PHÍ",
       dataIndex: "hocphi",
-      key: "hocphi",
+      id: "hocphi",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.hocphi}</p>;
       },
@@ -425,7 +429,7 @@ export const ListTuition = () => {
     {
       title: "PHỤ THU",
       dataIndex: "phuthu",
-      key: "phuthu",
+      id: "phuthu",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.phuthu}</p>;
       },
@@ -433,7 +437,7 @@ export const ListTuition = () => {
     {
       title: "THÀNH TIỀN",
       dataIndex: "thanhtien",
-      key: "thanhtien",
+      id: "thanhtien",
       render: (text, record, index) => {
         return <p className="list-tuition_table-data">{record.thanhtien}</p>;
       },
@@ -441,7 +445,7 @@ export const ListTuition = () => {
   ];
   const tuitionData = [
     {
-      key: "1",
+      id: "1",
       stt: "1",
       monhoc: "Toán học",
       tgh: "Thứ 2-Thứ 4 10:00-11:30",
@@ -450,7 +454,7 @@ export const ListTuition = () => {
       thanhtien: "2050000",
     },
     {
-      key: "2",
+      id: "2",
       stt: "2",
       monhoc: "Vật lý",
       tgh: "Thứ 3-Thứ 5 14:00-15:30",
@@ -459,7 +463,7 @@ export const ListTuition = () => {
       thanhtien: "1830000",
     },
     {
-      key: "3",
+      id: "3",
       stt: "3",
       monhoc: "Hóa học",
       tgh: "Thứ 6 09:00-11:00",
@@ -468,7 +472,65 @@ export const ListTuition = () => {
       thanhtien: "1520000",
     },
   ];
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    setSelectedRowKeys(newSelectedRowKeys);
+  };
+  const rowSelection: TableRowSelection<any> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
+  const handleExportExcel = () => {
+    const selectedData = data.filter((_, index) =>
+      selectedRowKeys.includes(data[index].id)
+    );
+
+    const headers = [
+      { header: "STT", id: "stt" },
+      { header: "Mã học sinh", id: "msv" },
+      { header: "Họ và Tên", id: "htv" },
+      { header: "Lớp", id: "lop" },
+      { header: "Mã lớp", id: "malop" },
+      { header: "Khóa", id: "khoa" },
+      { header: "Học Kì", id: "hocki" },
+      { header: "Số Môn Học", id: "smh" },
+      { header: "Số Tiền Phải Nộp", id: "tpn" },
+      { header: "Số Tiền Đã Nộp", id: "tdn" },
+      { header: "Số Tiền Hoàn Trả", id: "tht" },
+      { header: "Số Tiền Thiếu/Thừa", id: "tienthieu" },
+      { header: "Tổng Cộng", id: "tongcong" },
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(selectedData, {
+      header: headers.map((h) => h.id),
+    });
+    const workbook = XLSX.utils.book_new();
+    headers.forEach((h, index) => {
+      const cellAddress = XLSX.utils.encode_cell({ c: index, r: 0 });
+      worksheet[cellAddress].v = h.header;
+    });
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, "StudentsList");
+    XLSX.writeFile(workbook, "DanhSachSinhVien.xlsx");
+  };
+  useEffect(() => {
+    if (selectedRecord) {
+      form.setFieldsValue({
+        htv: selectedRecord.htv,
+        msv: selectedRecord.msv,
+        khoa: selectedRecord.khoa,
+        hocki: selectedRecord.hocki,
+        lop: selectedRecord.lop,
+        malop: selectedRecord.malop,
+        smh: selectedRecord.smh,
+        tpn: selectedRecord.tpn,
+        tdn: selectedRecord.tdn,
+        tht: selectedRecord.tht,
+        tienthieu: selectedRecord.tienthieu,
+        tongcong: selectedRecord.tongcong,
+      });
+    }
+  }, [selectedRecord, form]);
   useEffect(() => {
     const handleTableScroll = () => {
       if (tableWrapperRef.current && scrollRef.current) {
@@ -576,6 +638,7 @@ export const ListTuition = () => {
             tableWrapperRef={tableWrapperRef}
             isScroll
             tableProps={{
+              rowSelection: rowSelection,
               columns: column,
               dataSource: data,
             }}
@@ -587,6 +650,7 @@ export const ListTuition = () => {
             setEditState={setEditState}
             modalStates={modalStates}
             setModalStates={setModalStates}
+            handleExportExcel={handleExportExcel}
             shouldScroll={false}
             isPrint={true}
             isShowOption={true}
@@ -595,6 +659,7 @@ export const ListTuition = () => {
         </div>
       </div>
       <div className="list-tuition_modal">
+        {/* Modal Add */}
         <Modal
           className="list-tuition_modal-add"
           open={modalStates.addModal}
@@ -616,237 +681,473 @@ export const ListTuition = () => {
             <div className="list-tuition_underLine" />
           </div>
           <div className="list-tuition_modal-add-content">
-            <RowWrap
-              isGutter={true}
-              isWrap={true}
-              isAutoFillRow={true}
-              styleFill={"between"}
-              gutter={[8, 8]}
-              className="list-tuition_modal-row"
-            >
-              <ColWrap colProps={{ span: 12 }}>
-                <p className="list-tuition_row-label">HỌ VÀ TÊN</p>
-                <FormInput
-                  name={"tuitionName"}
-                  formItemProps={{
-                    className: "list-tuition_form-tuitionName",
-                  }}
-                  inputProps={{
-                    placeholder: "Họ và tên",
-                    onChange: (e) => setName(e.target.value),
-                  }}
-                />
-              </ColWrap>
-              <ColWrap colProps={{ span: 12 }}>
-                <p className="list-tuition_row-label">MÃ HỌC SINH</p>
-                <FormInput
-                  name={"tuitionState"}
-                  formItemProps={{
-                    className: "list-tuition_form-tuitionMsv",
-                  }}
-                  inputProps={{
-                    placeholder: "Mã học sinh",
-                    onChange: (e) => setStudentCode(e.target.value),
-                  }}
-                />
-              </ColWrap>
-            </RowWrap>
-            <RowWrap
-              isGutter={true}
-              isWrap={true}
-              isAutoFillRow={true}
-              styleFill={"between"}
-              gutter={[8, 8]}
-              className="list-tuition_modal-row"
-            >
-              <ColWrap colProps={{ span: 12 }}>
-                <p className="list-tuition_row-label">KHÓA</p>
-                <FormInput
-                  name={"tuitionName"}
-                  formItemProps={{
-                    className: "list-tuition_form-tuitionName",
-                  }}
-                  inputProps={{
-                    placeholder: "Khóa",
-                    onChange: (e) => setStudentClass(e.target.value),
-                  }}
-                />
-              </ColWrap>
-              <ColWrap colProps={{ span: 12 }}>
-                <p className="list-tuition_row-label">HỌC KÌ</p>
-                <FormInput
-                  name={"tuitionState"}
-                  formItemProps={{
-                    className: "list-tuition_form-tuitionMsv",
-                  }}
-                  inputProps={{
-                    placeholder: "Mã học sinh",
-                    onChange: (e) => setStudentCode(e.target.value),
-                  }}
-                />
-              </ColWrap>
-            </RowWrap>
-            <RowWrap
-              isGutter={true}
-              isWrap={true}
-              isAutoFillRow={true}
-              styleFill={"between"}
-              gutter={[8, 8]}
-              className="list-tuition_modal-row"
-            >
-              <ColWrap colProps={{ span: 12 }}>
-                <p className="list-tuition_row-label">LỚP</p>
-                <FormInput
-                  name={"tuitionName"}
-                  formItemProps={{
-                    className: "list-tuition_form-tuitionName",
-                  }}
-                  inputProps={{
-                    placeholder: "Lớp",
-                    onChange: (e) => setStudentClass(e.target.value),
-                  }}
-                />
-              </ColWrap>
-              <ColWrap colProps={{ span: 12 }}>
-                <p className="list-tuition_row-label">MÃ LỚP</p>
-                <FormInput
-                  name={"tuitionState"}
-                  formItemProps={{
-                    className: "list-tuition_form-tuitionMsv",
-                  }}
-                  inputProps={{
-                    placeholder: "Mã lớp",
-                    onChange: (e) => setCourse(e.target.value),
-                  }}
-                />
-              </ColWrap>
-            </RowWrap>
-            {name && studentCode && studentClass && course ? (
-              <>
-                <div className="list-tuition_modal-add-table">
-                  <TableWrap
-                    setSize={() => {}}
-                    scrollValue={{ x: 1366 }}
-                    tableWidth={1416}
-                    isScroll
-                    tableProps={{
-                      columns: tuitionColumn,
-                      dataSource: tuitionData,
+            <FormWrap form={form}>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">HỌ VÀ TÊN</p>
+                  <FormInput
+                    name={"htv"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Họ và tên",
+                      onChange: (e) => setName(e.target.value),
                     }}
                   />
-                </div>
-                <div className="list-tuition_modal-add-content-footer">
-                  <RowWrap
-                    isGutter={true}
-                    isWrap={true}
-                    isAutoFillRow={true}
-                    styleFill={"between"}
-                    gutter={[8, 8]}
-                    className="list-tuition_modal-row"
-                  >
-                    <ColWrap colProps={{ span: 12 }}>
-                      <p className="list-tuition_row-label">TỔNG MÔN HỌC</p>
-                      <FormInput
-                        name={"tuitionName"}
-                        formItemProps={{
-                          className: "list-tuition_form-tuitionName",
-                        }}
-                        inputProps={{
-                          placeholder: "Tổng số môn học",
-                        }}
-                      />
-                    </ColWrap>
-                    <ColWrap colProps={{ span: 12 }}>
-                      <p className="list-tuition_row-label">
-                        TỔNG SỐ TIỀN PHẢI NỘP
-                      </p>
-                      <FormInput
-                        name={"tuitionName"}
-                        formItemProps={{
-                          className: "list-tuition_form-tuitionName",
-                        }}
-                        inputProps={{
-                          placeholder: "Tổng số tiền phải nộp",
-                        }}
-                      />
-                    </ColWrap>
-                  </RowWrap>
-                  <RowWrap
-                    isGutter={true}
-                    isWrap={true}
-                    isAutoFillRow={true}
-                    styleFill={"between"}
-                    gutter={[8, 8]}
-                    className="list-tuition_modal-row"
-                  >
-                    <ColWrap colProps={{ span: 12 }}>
-                      <p className="list-tuition_row-label">
-                        SỐ TIỀN THỪA/THIẾU
-                      </p>
-                      <FormInput
-                        name={"tuitionState"}
-                        formItemProps={{
-                          className: "list-tuition_form-tuitionMsv",
-                        }}
-                        inputProps={{
-                          placeholder: "Số tiền thừa/thiếu",
-                        }}
-                      />
-                    </ColWrap>
-                    <ColWrap colProps={{ span: 12 }}>
-                      <p className="list-tuition_row-label">SỐ TIỀN HOÀN TRẢ</p>
-                      <FormInput
-                        name={"tuitionName"}
-                        formItemProps={{
-                          className: "list-tuition_form-tuitionName",
-                        }}
-                        inputProps={{
-                          placeholder: "Số tiền hoàn trả",
-                        }}
-                      />
-                    </ColWrap>
-                  </RowWrap>
-                  <RowWrap
-                    isGutter={true}
-                    isWrap={true}
-                    isAutoFillRow={true}
-                    styleFill={"between"}
-                    gutter={[8, 8]}
-                    className="list-tuition_modal-row"
-                  >
-                    <ColWrap colProps={{ span: 12 }}>
-                      <p className="list-tuition_row-label">SỐ TIỀN ĐÃ NỘP</p>
-                      <FormInput
-                        name={"tuitionState"}
-                        formItemProps={{
-                          className: "list-tuition_form-tuitionMsv",
-                        }}
-                        inputProps={{
-                          placeholder: "Số tiền đã nộp",
-                        }}
-                      />
-                    </ColWrap>
-                    <ColWrap colProps={{ span: 12 }}>
-                      <p className="list-tuition_row-label">TỔNG CỘNG</p>
-                      <FormInput
-                        name={"tuitionState"}
-                        formItemProps={{
-                          className: "list-tuition_form-tuitionMsv",
-                        }}
-                        inputProps={{
-                          placeholder: "Tổng cộng",
-                        }}
-                      />
-                    </ColWrap>
-                  </RowWrap>
-                </div>
-              </>
-            ) : (
-              <>
-                <p>Nhập đầy đủ thông tin !</p>
-              </>
-            )}
-
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">MÃ HỌC SINH</p>
+                  <FormInput
+                    name={"msv"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Mã học sinh",
+                      onChange: (e) => setStudentCode(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">KHÓA</p>
+                  <FormInput
+                    name={"khoa"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Khóa",
+                      onChange: (e) => setStudentClass(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">HỌC KÌ</p>
+                  <FormInput
+                    name={"hocki"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Mã học sinh",
+                      onChange: (e) => setStudentCode(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">LỚP</p>
+                  <FormInput
+                    name={"lop"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Lớp",
+                      onChange: (e) => setStudentClass(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">MÃ LỚP</p>
+                  <FormInput
+                    name={"malop"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Mã lớp",
+                      onChange: (e) => setCourse(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              {name && studentCode && studentClass && course ? (
+                <>
+                  <div className="list-tuition_modal-add-table">
+                    <TableWrap
+                      setSize={() => {}}
+                      scrollValue={{ x: 1366 }}
+                      tableWidth={1416}
+                      isScroll
+                      tableProps={{
+                        columns: tuitionColumn,
+                        dataSource: tuitionData,
+                      }}
+                    />
+                  </div>
+                  <div className="list-tuition_modal-add-content-footer">
+                    <RowWrap
+                      isGutter={true}
+                      isWrap={true}
+                      isAutoFillRow={true}
+                      styleFill={"between"}
+                      gutter={[8, 8]}
+                      className="list-tuition_modal-row"
+                    >
+                      <ColWrap colProps={{ span: 12 }}>
+                        <p className="list-tuition_row-label">TỔNG MÔN HỌC</p>
+                        <FormInput
+                          name={"smh"}
+                          formItemProps={{
+                            className: "list-tuition_form-tuitionName",
+                          }}
+                          inputProps={{
+                            placeholder: "Tổng số môn học",
+                          }}
+                        />
+                      </ColWrap>
+                      <ColWrap colProps={{ span: 12 }}>
+                        <p className="list-tuition_row-label">
+                          TỔNG SỐ TIỀN PHẢI NỘP
+                        </p>
+                        <FormInput
+                          name={"tpn"}
+                          formItemProps={{
+                            className: "list-tuition_form-tuitionName",
+                          }}
+                          inputProps={{
+                            placeholder: "Tổng số tiền phải nộp",
+                          }}
+                        />
+                      </ColWrap>
+                    </RowWrap>
+                    <RowWrap
+                      isGutter={true}
+                      isWrap={true}
+                      isAutoFillRow={true}
+                      styleFill={"between"}
+                      gutter={[8, 8]}
+                      className="list-tuition_modal-row"
+                    >
+                      <ColWrap colProps={{ span: 12 }}>
+                        <p className="list-tuition_row-label">
+                          SỐ TIỀN THỪA/THIẾU
+                        </p>
+                        <FormInput
+                          name={"tienthieu"}
+                          formItemProps={{
+                            className: "list-tuition_form-tuitionMsv",
+                          }}
+                          inputProps={{
+                            placeholder: "Số tiền thừa/thiếu",
+                          }}
+                        />
+                      </ColWrap>
+                      <ColWrap colProps={{ span: 12 }}>
+                        <p className="list-tuition_row-label">
+                          SỐ TIỀN HOÀN TRẢ
+                        </p>
+                        <FormInput
+                          name={"tht"}
+                          formItemProps={{
+                            className: "list-tuition_form-tuitionName",
+                          }}
+                          inputProps={{
+                            placeholder: "Số tiền hoàn trả",
+                          }}
+                        />
+                      </ColWrap>
+                    </RowWrap>
+                    <RowWrap
+                      isGutter={true}
+                      isWrap={true}
+                      isAutoFillRow={true}
+                      styleFill={"between"}
+                      gutter={[8, 8]}
+                      className="list-tuition_modal-row"
+                    >
+                      <ColWrap colProps={{ span: 12 }}>
+                        <p className="list-tuition_row-label">SỐ TIỀN ĐÃ NỘP</p>
+                        <FormInput
+                          name={"tdn"}
+                          formItemProps={{
+                            className: "list-tuition_form-tuitionMsv",
+                          }}
+                          inputProps={{
+                            placeholder: "Số tiền đã nộp",
+                          }}
+                        />
+                      </ColWrap>
+                      <ColWrap colProps={{ span: 12 }}>
+                        <p className="list-tuition_row-label">TỔNG CỘNG</p>
+                        <FormInput
+                          name={"tongcong"}
+                          formItemProps={{
+                            className: "list-tuition_form-tuitionMsv",
+                          }}
+                          inputProps={{
+                            placeholder: "Tổng cộng",
+                          }}
+                        />
+                      </ColWrap>
+                    </RowWrap>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p>Nhập đầy đủ thông tin !</p>
+                </>
+              )}
+              <div className="list-tuition_underLine" />
+            </FormWrap>
+          </div>
+        </Modal>
+        {/* Modal Edit */}
+        <Modal
+          className="list-tuition_modal-edit"
+          open={modalStates.editModal}
+          onCancel={() => {
+            setModalStates({
+              ...modalStates,
+              editModal: false,
+            });
+          }}
+          onOk={() => {
+            setModalStates({
+              ...modalStates,
+              editModal: false,
+            });
+          }}
+        >
+          <div className="list-tuition_modal-edit-header">
+            <h1>Sửa hóa đơn học phí cho học sinh</h1>
+            <div className="list-tuition_underLine" />
+          </div>
+          <div className="list-tuition_modal-edit-content">
+            <FormWrap form={form}>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">HỌ VÀ TÊN</p>
+                  <FormInput
+                    name={"htv"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Họ và tên",
+                      onChange: (e) => setName(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">MÃ HỌC SINH</p>
+                  <FormInput
+                    name={"msv"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Mã học sinh",
+                      onChange: (e) => setStudentCode(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">KHÓA</p>
+                  <FormInput
+                    name={"khoa"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Khóa",
+                      onChange: (e) => setStudentClass(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">HỌC KÌ</p>
+                  <FormInput
+                    name={"hocki"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Học kì",
+                      onChange: (e) => setStudentCode(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">LỚP</p>
+                  <FormInput
+                    name={"lop"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Lớp",
+                      onChange: (e) => setStudentClass(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">MÃ LỚP</p>
+                  <FormInput
+                    name={"malop"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Mã lớp",
+                      onChange: (e) => setCourse(e.target.value),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">TỔNG MÔN HỌC</p>
+                  <FormInput
+                    name={"smh"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Tổng số môn học",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">
+                    TỔNG SỐ TIỀN PHẢI NỘP
+                  </p>
+                  <FormInput
+                    name={"tpn"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Tổng số tiền phải nộp",
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">SỐ TIỀN THỪA/THIẾU</p>
+                  <FormInput
+                    name={"tienthieu"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Số tiền thừa/thiếu",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">SỐ TIỀN HOÀN TRẢ</p>
+                  <FormInput
+                    name={"tht"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Số tiền hoàn trả",
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">SỐ TIỀN ĐÃ NỘP</p>
+                  <FormInput
+                    name={"tdn"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Số tiền đã nộp",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">TỔNG CỘNG</p>
+                  <FormInput
+                    name={"tongcong"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Tổng cộng",
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+            </FormWrap>
             <div className="list-tuition_underLine" />
           </div>
         </Modal>
