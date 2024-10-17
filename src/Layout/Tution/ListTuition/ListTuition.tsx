@@ -42,10 +42,14 @@ export const ListTuition = () => {
   const [form] = useForm();
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
-  const [name, setName] = useState<any>();
-  const [studentCode, setStudentCode] = useState<any>();
-  const [studentClass, setStudentClass] = useState<any>();
-  const [course, setCourse] = useState<any>();
+  const [studentInfo, setStudentInfo] = useState<{
+    name?: string;
+    studentCode?: string;
+    studentClass?: string;
+    course?: string;
+    studentClassCode?: string;
+    year?: string;
+  }>({});
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -587,6 +591,15 @@ export const ListTuition = () => {
       }
     };
   }, []);
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
   return (
     <div className="list-tuition">
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={true} />
@@ -703,10 +716,50 @@ export const ListTuition = () => {
             });
           }}
           onOk={() => {
-            setModalStates({
-              ...modalStates,
-              addModal: false,
-            });
+            if (
+              form.getFieldValue("msv") &&
+              form.getFieldValue("htv") &&
+              form.getFieldValue("khoa") &&
+              form.getFieldValue("lop") &&
+              form.getFieldValue("malop") &&
+              form.getFieldValue("hocki") &&
+              form.getFieldValue("smh") &&
+              form.getFieldValue("tdn") &&
+              form.getFieldValue("tht") &&
+              form.getFieldValue("tienthieu") &&
+              form.getFieldValue("tongcong") &&
+              form.getFieldValue("tpn")
+            ) {
+              const newData = {
+                key: data.length + 1,
+                msv: form.getFieldValue("msv"),
+                htv: form.getFieldValue("htv"),
+                khoa: form.getFieldValue("khoa"),
+                lop: form.getFieldValue("lop"),
+                malop: form.getFieldValue("malop"),
+                hocki: form.getFieldValue("hocki"),
+                smh: form.getFieldValue("smh"),
+                tdn: form.getFieldValue("tdn"),
+                tht: form.getFieldValue("tht"),
+                tienthieu: form.getFieldValue("tienthieu"),
+                tongcong: form.getFieldValue("tongcong"),
+                tpn: form.getFieldValue("tpn"),
+              };
+              setNewData([...data, newData]);
+              setModalStates({
+                ...modalStates,
+                addModal: false,
+              });
+            } else {
+              setNotification({
+                message: "Vui lòng điền đầy đủ dữ liệu",
+                type: "error",
+              });
+            }
+          }}
+          afterClose={() => {
+            form.resetFields();
+            setStudentInfo({});
           }}
         >
           <div className="list-tuition_modal-add-header">
@@ -732,7 +785,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Họ và tên",
-                      onChange: (e) => setName(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -745,7 +802,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Mã học sinh",
-                      onChange: (e) => setStudentCode(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentCode: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -767,7 +828,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Khóa",
-                      onChange: (e) => setStudentClass(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          course: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -780,7 +845,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Mã học sinh",
-                      onChange: (e) => setStudentCode(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          year: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -802,7 +871,11 @@ export const ListTuition = () => {
                     }}
                     selectProps={{
                       options: classOption,
-                      onChange: (value) => setStudentClass(value), // Updated to use 'value' directly
+                      onChange: (value) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentClass: value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -815,12 +888,21 @@ export const ListTuition = () => {
                     }}
                     selectProps={{
                       options: classCodeOption,
-                      onChange: (value) => setCourse(value), // Updated to use 'value' directly
+                      onChange: (value) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentClassCode: value,
+                        })),
                     }}
                   />
                 </ColWrap>
               </RowWrap>
-              {name && studentCode && studentClass && course ? (
+              {studentInfo.name?.trim() &&
+              studentInfo.studentCode?.trim() &&
+              studentInfo.studentClass?.trim() &&
+              studentInfo.year?.trim() &&
+              studentInfo.studentClassCode?.trim() &&
+              studentInfo.course?.trim() ? (
                 <>
                   <div className="list-tuition_modal-add-table">
                     <TableWrap
@@ -1047,7 +1129,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Họ và tên",
-                      onChange: (e) => setName(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -1060,7 +1146,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Mã học sinh",
-                      onChange: (e) => setStudentCode(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentCode: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -1082,7 +1172,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Khóa",
-                      onChange: (e) => setStudentClass(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentClass: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -1095,7 +1189,11 @@ export const ListTuition = () => {
                     }}
                     inputProps={{
                       placeholder: "Học kì",
-                      onChange: (e) => setStudentCode(e.target.value),
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentCode: e.target.value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -1117,7 +1215,11 @@ export const ListTuition = () => {
                     }}
                     selectProps={{
                       options: classOption,
-                      onChange: (value) => setStudentClass(value),
+                      onChange: (value) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          studentClass: value,
+                        })),
                     }}
                   />
                 </ColWrap>
@@ -1130,7 +1232,8 @@ export const ListTuition = () => {
                     }}
                     selectProps={{
                       options: classCodeOption,
-                      onChange: (value) => setCourse(value),
+                      onChange: (value) =>
+                        setStudentInfo((prev) => ({ ...prev, course: value })),
                     }}
                   />
                 </ColWrap>

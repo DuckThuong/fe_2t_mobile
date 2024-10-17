@@ -709,14 +709,7 @@ export const ListStudents = () => {
               }
             }}
             afterClose={() => {
-              form.setFieldValue("studentMsv", "");
-              form.setFieldValue("studentName", "");
-              form.setFieldValue("studentClass", "");
-              form.setFieldValue("studentClassCode", "");
-              form.setFieldValue("studentCourse", "");
-              form.setFieldValue("studentDob", "");
-              form.setFieldValue("studentGender", "");
-              form.setFieldValue("studentState", "");
+              form.resetFields();
             }}
           >
             <h1 className="list-student_modal-header">THÊM HỌC SINH</h1>
@@ -918,14 +911,7 @@ export const ListStudents = () => {
               }
             }}
             afterClose={() => {
-              form.setFieldValue("studentMsv", "");
-              form.setFieldValue("studentName", "");
-              form.setFieldValue("studentState", "");
-              form.setFieldValue("studentClass", "");
-              form.setFieldValue("studentCourse", "");
-              form.setFieldValue("studentDob", "");
-              form.setFieldValue("studentState", "");
-              form.setFieldValue("studentGender", "");
+              form.resetFields();
             }}
           >
             <h1 className="list-student_modal-header">

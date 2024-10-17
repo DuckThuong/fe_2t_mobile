@@ -1232,12 +1232,7 @@ export const StudentInformation = () => {
                 }
               }}
               afterClose={() => {
-                form.setFieldValue("subjectId", "");
-                form.setFieldValue("subjectName", "");
-                form.setFieldValue("subjectIndentify", "");
-                form.setFieldValue("subjectCalendar", "");
-                form.setFieldValue("subjectTeacher", "");
-                form.setFieldValue("subjectRoom", "");
+                form.resetFields();
               }}
             >
               <h1 className="student-information_modal-header">THÊM MÔN HỌC</h1>
@@ -1402,12 +1397,7 @@ export const StudentInformation = () => {
                 }
               }}
               afterClose={() => {
-                form.setFieldValue("subjectId", "");
-                form.setFieldValue("subjectName", "");
-                form.setFieldValue("subjectIndentify", "");
-                form.setFieldValue("subjectCalendar", "");
-                form.setFieldValue("subjectTeacher", "");
-                form.setFieldValue("subjectRoom", "");
+                form.resetFields();
               }}
             >
               <h1 className="student-information_modal-header">SỬA MÔN HỌC</h1>
