@@ -22,6 +22,8 @@ interface StudentFooterActionsProps {
   isExport?: boolean;
   isShowOption?: boolean;
   add?: boolean;
+  edit?: boolean;
+  delete?: boolean;
 }
 
 const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
@@ -37,6 +39,7 @@ const StudentFooterActions: React.FC<StudentFooterActionsProps> = ({
   isExport,
   isShowOption,
   add,
+  edit,
 }) => {
   return (
     <div className="footer-web_footer">

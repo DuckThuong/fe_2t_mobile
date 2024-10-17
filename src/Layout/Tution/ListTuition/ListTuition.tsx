@@ -8,7 +8,11 @@ import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
 import TableWrap from "../../../Components/TableWrap";
 import { CustomButton } from "../../../Components/buttons/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleInfo,
+  faSort,
+  faTriangleExclamation,
+} from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import "./listTuition.scss";
@@ -42,6 +46,7 @@ export const ListTuition = () => {
   const [form] = useForm();
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
   const [studentInfo, setStudentInfo] = useState<{
     name?: string;
     studentCode?: string;
@@ -199,7 +204,7 @@ export const ListTuition = () => {
               className: "list-tuition_data-tuitionOption",
               icon: <FontAwesomeIcon icon={faCircleInfo} />,
               onClick: () => {
-                navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
+                navigate(CUSTOMER_ROUTER_PATH.TUITION_INFORMATION);
               },
             }}
           />
@@ -784,6 +789,7 @@ export const ListTuition = () => {
                       className: "list-tuition_form-tuitionName",
                     }}
                     inputProps={{
+                      ref: nameInputRef,
                       placeholder: "Họ và tên",
                       onChange: (e) =>
                         setStudentInfo((prev) => ({
@@ -869,6 +875,7 @@ export const ListTuition = () => {
                     formItemProps={{
                       className: "list-tuition_form-tuitionName",
                     }}
+                    placeholder="Lớp"
                     selectProps={{
                       options: classOption,
                       onChange: (value) =>
@@ -886,6 +893,7 @@ export const ListTuition = () => {
                     formItemProps={{
                       className: "list-tuition_form-tuitionMsv",
                     }}
+                    placeholder="Mã lớp"
                     selectProps={{
                       options: classCodeOption,
                       onChange: (value) =>
@@ -1026,7 +1034,15 @@ export const ListTuition = () => {
                 </>
               ) : (
                 <>
-                  <p>Nhập đầy đủ thông tin !</p>
+                  <p
+                    className="list-tuition_noti"
+                    onClick={() => nameInputRef.current?.focus()}
+                  >
+                    <span style={{ marginRight: "8px", color: "red" }}>
+                      <FontAwesomeIcon icon={faTriangleExclamation} />
+                    </span>
+                    Nhập đầy đủ thông tin.
+                  </p>
                 </>
               )}
               <div className="list-tuition_underLine" />
@@ -1213,6 +1229,7 @@ export const ListTuition = () => {
                     formItemProps={{
                       className: "list-tuition_form-tuitionName",
                     }}
+                    placeholder="Lớp"
                     selectProps={{
                       options: classOption,
                       onChange: (value) =>
@@ -1230,6 +1247,7 @@ export const ListTuition = () => {
                     formItemProps={{
                       className: "list-tuition_form-tuitionMsv",
                     }}
+                    placeholder="Mã lớp"
                     selectProps={{
                       options: classCodeOption,
                       onChange: (value) =>

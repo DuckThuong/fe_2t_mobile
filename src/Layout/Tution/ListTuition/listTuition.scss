@@ -51,6 +51,12 @@
     margin-bottom: 32px;
     margin-top: 32px;
   }
+  &_noti {
+    color: red;
+    text-decoration: underline;
+    font-size: 14px;
+    cursor: pointer;
+  }
   &_content {
     &-table {
       border: 1px solid $gray_blur_color;

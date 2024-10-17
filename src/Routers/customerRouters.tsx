@@ -10,8 +10,8 @@ import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
 import { ListStudents } from "../Layout/Student/ListStudents";
 import { StudentInformation } from "../Layout/Student/StudentInformation";
 import { SubjectInformation } from "../Layout/Student/SubjectInformation";
-import { ClassList } from "../Layout/Subject/SubjectList/ClassList";
 import { ListTuition } from "../Layout/Tution/ListTuition/ListTuition";
+import { TuitionInformation } from "../Layout/Tution/TuitionInformation/TuitionInformation";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -52,10 +52,15 @@ export const CustomerRouter = () => (
       path={CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION}
       element={<SuspenseWrapper component={<SubjectInformation />} />}
     ></Route>
-    {/* List Subject */}
+    {/* List Tuition */}
     <Route
       path={CUSTOMER_ROUTER_PATH.LIST_TUITION}
       element={<SuspenseWrapper component={<ListTuition />} />}
+    ></Route>
+    {/* Tuition Information */}
+    <Route
+      path={CUSTOMER_ROUTER_PATH.TUITION_INFORMATION}
+      element={<SuspenseWrapper component={<TuitionInformation />} />}
     ></Route>
   </Routes>
 );
