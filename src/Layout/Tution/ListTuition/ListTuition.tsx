@@ -6,7 +6,6 @@ import { FormButtonSubmit } from "../../../Components/Form/FormButtonSubmit";
 import FormWrap from "../../../Components/Form/FormWrap";
 import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
 import TableWrap from "../../../Components/TableWrap";
-import StudentFooterActions from "./../../FooterWeb/index";
 import { CustomButton } from "../../../Components/buttons/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
@@ -16,12 +15,19 @@ import "./listTuition.scss";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import RowWrap from "../../../Components/RowWrap";
+import { Modal } from "antd";
+import ColWrap from "../../../Components/ColWrap";
+import { FormInput } from "../../../Components/Form/FormInput";
+import StudentFooterActions from "./../../FooterWeb/index";
 export const ListTuition = () => {
   const [editState, setEditState] = useState<boolean>(true);
   const navigate = useNavigate();
-  const [form] = useForm();
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
+  const [name, setName] = useState<any>();
+  const [studentCode, setStudentCode] = useState<any>();
+  const [studentClass, setStudentClass] = useState<any>();
+  const [course, setCourse] = useState<any>();
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -31,12 +37,12 @@ export const ListTuition = () => {
     editModal: false,
     deleteModal: false,
     addModal: false,
-    addStudent: false,
+    addtuition: false,
     showDeleteButton: false,
     showEditButton: false,
     showNewColumn: false,
     showRegistedNewColumn: false,
-    showEditstudent: false,
+    showEdittuition: false,
   });
   const column = [
     {
@@ -50,7 +56,7 @@ export const ListTuition = () => {
       },
     },
     {
-      title: "MÃ SINH VIÊN",
+      title: "MÃ HỌC SINH",
       dataIndex: "msv",
       key: "msv",
       render: (text, record, index) => {
@@ -147,14 +153,14 @@ export const ListTuition = () => {
     },
     {
       title: "CHI TIẾT",
-      dataIndex: "studentOption",
-      key: "studentOption",
+      dataIndex: "tuitionOption",
+      key: "tuitionOption",
       render: () => {
         return (
           <CustomButton
             content="Chi tiết"
             buttonProps={{
-              className: "list-tuition_data-studentOption",
+              className: "list-tuition_data-tuitionOption",
               icon: <FontAwesomeIcon icon={faCircleInfo} />,
               onClick: () => {
                 navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
@@ -183,7 +189,7 @@ export const ListTuition = () => {
                     });
                   },
                   icon: <EditOutlined />,
-                  className: "list-student_footer-editTable",
+                  className: "list-tuition_footer-editTable",
                 }}
               />
             )}
@@ -198,7 +204,7 @@ export const ListTuition = () => {
                       deleteModal: true,
                     });
                   },
-                  className: "list-student_footer-delete",
+                  className: "list-tuition_footer-delete",
                 }}
               />
             )}
@@ -225,7 +231,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "2000000",
       tongcong: "5000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "2",
@@ -242,7 +248,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "0",
       tongcong: "6000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "3",
@@ -259,7 +265,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "0",
       tongcong: "4000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "4",
@@ -276,7 +282,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "2500000",
       tongcong: "5000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "5",
@@ -293,7 +299,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "0",
       tongcong: "3000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "6",
@@ -310,7 +316,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "0",
       tongcong: "6000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "7",
@@ -327,7 +333,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "0",
       tongcong: "5000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "8",
@@ -344,7 +350,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "2000000",
       tongcong: "4000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "9",
@@ -361,7 +367,7 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "0",
       tongcong: "7000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
     {
       key: "10",
@@ -378,9 +384,91 @@ export const ListTuition = () => {
       tht: "0",
       tienthieu: "2500000",
       tongcong: "5000000",
-      studentOption: "Details",
+      tuitionOption: "Details",
     },
   ]);
+  const tuitionColumn = [
+    {
+      title: "STT",
+      dataIndex: "stt",
+      key: "stt",
+      render: (text, record, index) => {
+        return (
+          <p style={{ color: "black", fontWeight: "600" }}>{record.stt}</p>
+        );
+      },
+    },
+    {
+      title: "MÔN HỌC",
+      dataIndex: "monhoc",
+      key: "monhoc",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.monhoc}</p>;
+      },
+    },
+    {
+      title: "THỜI GIAN HỌC",
+      dataIndex: "tgh",
+      key: "tgh",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.tgh}</p>;
+      },
+    },
+    {
+      title: "HỌC PHÍ",
+      dataIndex: "hocphi",
+      key: "hocphi",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.hocphi}</p>;
+      },
+    },
+    {
+      title: "PHỤ THU",
+      dataIndex: "phuthu",
+      key: "phuthu",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.phuthu}</p>;
+      },
+    },
+    {
+      title: "THÀNH TIỀN",
+      dataIndex: "thanhtien",
+      key: "thanhtien",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.thanhtien}</p>;
+      },
+    },
+  ];
+  const tuitionData = [
+    {
+      key: "1",
+      stt: "1",
+      monhoc: "Toán học",
+      tgh: "Thứ 2-Thứ 4 10:00-11:30",
+      hocphi: "2000000",
+      phuthu: "50000",
+      thanhtien: "2050000",
+    },
+    {
+      key: "2",
+      stt: "2",
+      monhoc: "Vật lý",
+      tgh: "Thứ 3-Thứ 5 14:00-15:30",
+      hocphi: "1800000",
+      phuthu: "30000",
+      thanhtien: "1830000",
+    },
+    {
+      key: "3",
+      stt: "3",
+      monhoc: "Hóa học",
+      tgh: "Thứ 6 09:00-11:00",
+      hocphi: "1500000",
+      phuthu: "20000",
+      thanhtien: "1520000",
+    },
+  ];
+
   useEffect(() => {
     const handleTableScroll = () => {
       if (tableWrapperRef.current && scrollRef.current) {
@@ -419,7 +507,9 @@ export const ListTuition = () => {
       />
       <div className="list-tuition_header">
         <div>
-          <h1 className="list-tuition_header-title">Danh sách học phí</h1>
+          <h1 className="list-tuition_header-title">
+            Danh sách hóa đơn học phí
+          </h1>
           <p className="list-tuition_header-sub">
             Trang này hiển thị danh sách liên quan đến học phí của học sinh
           </p>
@@ -429,6 +519,12 @@ export const ListTuition = () => {
             content="Lập hóa đơn"
             buttonProps={{
               className: "list-tuition_header-button-addTuition",
+              onClick: () => {
+                setModalStates({
+                  ...modalStates,
+                  addModal: true,
+                });
+              },
             }}
           />
         </div>
@@ -497,6 +593,263 @@ export const ListTuition = () => {
             isExport={true}
           />
         </div>
+      </div>
+      <div className="list-tuition_modal">
+        <Modal
+          className="list-tuition_modal-add"
+          open={modalStates.addModal}
+          onCancel={() => {
+            setModalStates({
+              ...modalStates,
+              addModal: false,
+            });
+          }}
+          onOk={() => {
+            setModalStates({
+              ...modalStates,
+              addModal: false,
+            });
+          }}
+        >
+          <div className="list-tuition_modal-add-header">
+            <h1>Lập hóa đơn học phí cho học sinh</h1>
+            <div className="list-tuition_underLine" />
+          </div>
+          <div className="list-tuition_modal-add-content">
+            <RowWrap
+              isGutter={true}
+              isWrap={true}
+              isAutoFillRow={true}
+              styleFill={"between"}
+              gutter={[8, 8]}
+              className="list-tuition_modal-row"
+            >
+              <ColWrap colProps={{ span: 12 }}>
+                <p className="list-tuition_row-label">HỌ VÀ TÊN</p>
+                <FormInput
+                  name={"tuitionName"}
+                  formItemProps={{
+                    className: "list-tuition_form-tuitionName",
+                  }}
+                  inputProps={{
+                    placeholder: "Họ và tên",
+                    onChange: (e) => setName(e.target.value),
+                  }}
+                />
+              </ColWrap>
+              <ColWrap colProps={{ span: 12 }}>
+                <p className="list-tuition_row-label">MÃ HỌC SINH</p>
+                <FormInput
+                  name={"tuitionState"}
+                  formItemProps={{
+                    className: "list-tuition_form-tuitionMsv",
+                  }}
+                  inputProps={{
+                    placeholder: "Mã học sinh",
+                    onChange: (e) => setStudentCode(e.target.value),
+                  }}
+                />
+              </ColWrap>
+            </RowWrap>
+            <RowWrap
+              isGutter={true}
+              isWrap={true}
+              isAutoFillRow={true}
+              styleFill={"between"}
+              gutter={[8, 8]}
+              className="list-tuition_modal-row"
+            >
+              <ColWrap colProps={{ span: 12 }}>
+                <p className="list-tuition_row-label">KHÓA</p>
+                <FormInput
+                  name={"tuitionName"}
+                  formItemProps={{
+                    className: "list-tuition_form-tuitionName",
+                  }}
+                  inputProps={{
+                    placeholder: "Khóa",
+                    onChange: (e) => setStudentClass(e.target.value),
+                  }}
+                />
+              </ColWrap>
+              <ColWrap colProps={{ span: 12 }}>
+                <p className="list-tuition_row-label">HỌC KÌ</p>
+                <FormInput
+                  name={"tuitionState"}
+                  formItemProps={{
+                    className: "list-tuition_form-tuitionMsv",
+                  }}
+                  inputProps={{
+                    placeholder: "Mã học sinh",
+                    onChange: (e) => setStudentCode(e.target.value),
+                  }}
+                />
+              </ColWrap>
+            </RowWrap>
+            <RowWrap
+              isGutter={true}
+              isWrap={true}
+              isAutoFillRow={true}
+              styleFill={"between"}
+              gutter={[8, 8]}
+              className="list-tuition_modal-row"
+            >
+              <ColWrap colProps={{ span: 12 }}>
+                <p className="list-tuition_row-label">LỚP</p>
+                <FormInput
+                  name={"tuitionName"}
+                  formItemProps={{
+                    className: "list-tuition_form-tuitionName",
+                  }}
+                  inputProps={{
+                    placeholder: "Lớp",
+                    onChange: (e) => setStudentClass(e.target.value),
+                  }}
+                />
+              </ColWrap>
+              <ColWrap colProps={{ span: 12 }}>
+                <p className="list-tuition_row-label">MÃ LỚP</p>
+                <FormInput
+                  name={"tuitionState"}
+                  formItemProps={{
+                    className: "list-tuition_form-tuitionMsv",
+                  }}
+                  inputProps={{
+                    placeholder: "Mã lớp",
+                    onChange: (e) => setCourse(e.target.value),
+                  }}
+                />
+              </ColWrap>
+            </RowWrap>
+            {name && studentCode && studentClass && course ? (
+              <>
+                <div className="list-tuition_modal-add-table">
+                  <TableWrap
+                    setSize={() => {}}
+                    scrollValue={{ x: 1366 }}
+                    tableWidth={1416}
+                    isScroll
+                    tableProps={{
+                      columns: tuitionColumn,
+                      dataSource: tuitionData,
+                    }}
+                  />
+                </div>
+                <div className="list-tuition_modal-add-content-footer">
+                  <RowWrap
+                    isGutter={true}
+                    isWrap={true}
+                    isAutoFillRow={true}
+                    styleFill={"between"}
+                    gutter={[8, 8]}
+                    className="list-tuition_modal-row"
+                  >
+                    <ColWrap colProps={{ span: 12 }}>
+                      <p className="list-tuition_row-label">TỔNG MÔN HỌC</p>
+                      <FormInput
+                        name={"tuitionName"}
+                        formItemProps={{
+                          className: "list-tuition_form-tuitionName",
+                        }}
+                        inputProps={{
+                          placeholder: "Tổng số môn học",
+                        }}
+                      />
+                    </ColWrap>
+                    <ColWrap colProps={{ span: 12 }}>
+                      <p className="list-tuition_row-label">
+                        TỔNG SỐ TIỀN PHẢI NỘP
+                      </p>
+                      <FormInput
+                        name={"tuitionName"}
+                        formItemProps={{
+                          className: "list-tuition_form-tuitionName",
+                        }}
+                        inputProps={{
+                          placeholder: "Tổng số tiền phải nộp",
+                        }}
+                      />
+                    </ColWrap>
+                  </RowWrap>
+                  <RowWrap
+                    isGutter={true}
+                    isWrap={true}
+                    isAutoFillRow={true}
+                    styleFill={"between"}
+                    gutter={[8, 8]}
+                    className="list-tuition_modal-row"
+                  >
+                    <ColWrap colProps={{ span: 12 }}>
+                      <p className="list-tuition_row-label">
+                        SỐ TIỀN THỪA/THIẾU
+                      </p>
+                      <FormInput
+                        name={"tuitionState"}
+                        formItemProps={{
+                          className: "list-tuition_form-tuitionMsv",
+                        }}
+                        inputProps={{
+                          placeholder: "Số tiền thừa/thiếu",
+                        }}
+                      />
+                    </ColWrap>
+                    <ColWrap colProps={{ span: 12 }}>
+                      <p className="list-tuition_row-label">SỐ TIỀN HOÀN TRẢ</p>
+                      <FormInput
+                        name={"tuitionName"}
+                        formItemProps={{
+                          className: "list-tuition_form-tuitionName",
+                        }}
+                        inputProps={{
+                          placeholder: "Số tiền hoàn trả",
+                        }}
+                      />
+                    </ColWrap>
+                  </RowWrap>
+                  <RowWrap
+                    isGutter={true}
+                    isWrap={true}
+                    isAutoFillRow={true}
+                    styleFill={"between"}
+                    gutter={[8, 8]}
+                    className="list-tuition_modal-row"
+                  >
+                    <ColWrap colProps={{ span: 12 }}>
+                      <p className="list-tuition_row-label">SỐ TIỀN ĐÃ NỘP</p>
+                      <FormInput
+                        name={"tuitionState"}
+                        formItemProps={{
+                          className: "list-tuition_form-tuitionMsv",
+                        }}
+                        inputProps={{
+                          placeholder: "Số tiền đã nộp",
+                        }}
+                      />
+                    </ColWrap>
+                    <ColWrap colProps={{ span: 12 }}>
+                      <p className="list-tuition_row-label">TỔNG CỘNG</p>
+                      <FormInput
+                        name={"tuitionState"}
+                        formItemProps={{
+                          className: "list-tuition_form-tuitionMsv",
+                        }}
+                        inputProps={{
+                          placeholder: "Tổng cộng",
+                        }}
+                      />
+                    </ColWrap>
+                  </RowWrap>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>Nhập đầy đủ thông tin !</p>
+              </>
+            )}
+
+            <div className="list-tuition_underLine" />
+          </div>
+        </Modal>
       </div>
     </div>
   );

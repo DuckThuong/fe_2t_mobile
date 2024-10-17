@@ -10,6 +10,10 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    @include sm {
+      flex-direction: column;
+      align-items: flex-end;
+    }
     &-title {
       width: 100%;
       height: fit-content;
@@ -42,6 +46,11 @@
       }
     }
   }
+  &_underLine {
+    border-bottom: 1px solid $gray_blur_color;
+    margin-bottom: 32px;
+    margin-top: 32px;
+  }
   &_content {
     &-table {
       border: 1px solid $gray_blur_color;
@@ -54,6 +63,7 @@
       }
       @include sm {
         max-width: 1800px !important;
+        border: 1px solid $gray_blur_color;
       }
       .ant-table-content {
         border: none !important;
@@ -204,7 +214,7 @@
     &-sum {
       font-weight: 600 !important;
     }
-    &-studentState {
+    &-tuitionState {
       width: fit-content;
       min-width: 120px;
       height: 20px;
@@ -217,7 +227,7 @@
       font-weight: 400;
       font-style: 16px;
     }
-    &-studentOption {
+    &-tuitionOption {
       width: 120px;
       height: 40px;
       color: white;
@@ -226,6 +236,117 @@
       display: flex;
       flex-direction: row-reverse;
       align-items: center;
+    }
+  }
+  &_row {
+    &-label {
+      font-family: Open Sans;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 22px;
+      text-align: left;
+      color: #161617;
+    }
+  }
+  &_modal {
+    &-add {
+      width: 1200px !important;
+      height: fit-content;
+      .ant-modal-content {
+        input {
+          border: 1px solid $gray_blur_color !important;
+        }
+      }
+      &-table {
+        border: 1px solid $gray_blur_color;
+        overflow: hidden;
+        border-bottom: none !important;
+        margin-bottom: 24px;
+        &::-webkit-scrollbar {
+          width: 0;
+          height: 0;
+        }
+        @include sm {
+          max-width: 1800px !important;
+        }
+        .ant-table-content {
+          border: none !important;
+          .ant-table-thead {
+            .ant-table-cell {
+              border-bottom: 1px solid $gray_blur_color;
+              font-family: Open Sans;
+              font-size: 14px;
+              font-weight: 600;
+              line-height: 22px;
+              text-align: left;
+              color: #3b82f6;
+              background-color: $empty_avatar_color !important;
+              .ant-table-filter-column {
+                .ant-table-filter-trigger {
+                  svg {
+                    width: 16px;
+                    height: 16px;
+                    color: $primary_color;
+                  }
+                }
+              }
+
+              &:first-child {
+                .ant-table-selection {
+                  padding-left: 3px;
+                }
+                &::after {
+                  display: none !important;
+                }
+              }
+              &:last-child::after {
+                display: none !important;
+              }
+            }
+          }
+          .ant-table-tbody {
+            .ant-table-cell {
+              border-bottom: 1px solid $gray_blur_color;
+              vertical-align: middle !important;
+              p {
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 22px;
+                text-align: left;
+                color: #343434;
+                margin-bottom: 0 !important;
+              }
+            }
+          }
+        }
+        .custom-pagination {
+          height: 36px;
+          border-bottom: 1px solid $gray_blur_color;
+        }
+      }
+    }
+  }
+}
+
+.ant-modal-content {
+  .ant-modal-body {
+    h1 {
+      font-weight: 600 !important;
+    }
+  }
+  .ant-modal-footer {
+    .ant-btn {
+      width: fit-content !important;
+      min-width: 140px;
+      height: 40px;
+      padding: 15px;
+      span {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      &-default {
+        border: 1px solid $gray_blur_color !important;
+      }
     }
   }
 }
