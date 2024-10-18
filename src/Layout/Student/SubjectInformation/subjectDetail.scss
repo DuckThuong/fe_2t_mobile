@@ -90,11 +90,25 @@
     -webkit-print-color-adjust: exact;
   }
 
-  .your-class-name {
-    background-color: transparent !important;
-  }
-
   .no-print {
     display: none !important;
+  }
+
+  .subject-detail_form {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  .subject-detail_form-header,
+  .subject-detail_form-sub,
+  .subject-detail_form-name,
+  .subject-detail_form-edit,
+  .subject-detail_row-label {
+    color: black !important;
+  }
+
+  .form__input input,
+  .form__select .ant-select-selector {
+    border-color: black !important;
   }
 }

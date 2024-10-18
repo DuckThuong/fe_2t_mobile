@@ -117,3 +117,57 @@
     }
   }
 }
+@media print {
+  * {
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .tuition-information {
+    &_row {
+      &-label {
+        color: black !important;
+      }
+      .ant-row {
+        .ant-col-14 {
+          background-color: white !important;
+        }
+      }
+      .form__select {
+        .ant-form-item {
+          .ant-row {
+            .ant-col-14 {
+              .ant-select-selector {
+                background-color: white !important;
+              }
+            }
+          }
+        }
+      }
+    }
+    &_content {
+      &-form {
+        .ant-table-container {
+          .ant-table-content {
+            .ant-table-thead {
+              .ant-table-cell {
+                color: black !important;
+                background-color: white !important;
+              }
+            }
+            .ant-table-tbody {
+              .ant-table-cell {
+                color: black !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

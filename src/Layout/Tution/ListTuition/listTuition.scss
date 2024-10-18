@@ -487,3 +487,36 @@
     }
   }
 }
+
+@media print {
+  * {
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .list-tuition {
+    &_header,
+    &_content,
+    &_sidebar,
+    &_data,
+    &_row,
+    &_modal,
+    &_footer {
+      color: black !important;
+      background-color: white !important;
+    }
+  }
+
+  .ant-modal-content {
+    .ant-modal-body,
+    .ant-modal-footer {
+      color: black !important;
+      background-color: white !important;
+    }
+  }
+}

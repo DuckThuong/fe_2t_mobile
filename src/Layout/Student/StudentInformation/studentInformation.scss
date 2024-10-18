@@ -347,12 +347,35 @@
     -webkit-print-color-adjust: exact;
   }
 
-  .your-class-name {
-    background-color: transparent !important;
-  }
-
   .no-print {
     display: none !important;
+  }
+
+  // Thêm quy tắc cho các element có màu sắc
+  .student-information {
+    &_form {
+      background: white !important; // Đặt nền thành trắng
+      &-header,
+      &-title,
+      &-name,
+      &-edit,
+      &-delete,
+      &-editTable,
+      &-add,
+      &-save,
+      &-print {
+        color: black !important; // Đặt màu chữ thành đen
+      }
+    }
+    &_title,
+    &_underLine,
+    &_noData,
+    &_row-label,
+    &_result-row,
+    &_data-studentAction,
+    &_table {
+      color: black !important; // Đặt màu chữ thành đen
+    }
   }
 }
 .ant-modal-content {
@@ -375,5 +398,16 @@
         border: 1px solid $gray_blur_color !important;
       }
     }
+  }
+}
+@media print {
+  * {
+    color: black !important;
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
   }
 }

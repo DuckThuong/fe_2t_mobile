@@ -186,15 +186,16 @@
 @media print {
   * {
     color: black !important;
-    background: none !important;
+    background: white !important; 
     -webkit-print-color-adjust: exact;
   }
-
-  .your-class-name {
-    background-color: transparent !important;
-  }
-
   .no-print {
     display: none !important;
+  }
+  .inventory-header__container,
+  .inventory-header__setting-container,
+  .inventory-header__menu-container,
+  .inventory-header__fullName {
+    background: white !important; 
   }
 }

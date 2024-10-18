@@ -479,18 +479,39 @@
     }
   }
 }
+
 @media print {
   * {
     color: black !important;
     background: none !important;
     -webkit-print-color-adjust: exact;
   }
-
-  .your-class-name {
-    background-color: transparent !important;
-  }
-
   .no-print {
     display: none !important;
+  }
+  .list-student {
+    &_header,
+    &_content,
+    &_underLine,
+    &_sidebar,
+    &_table,
+    &_data,
+    &_row,
+    &_footer,
+    &_modal {
+      color: black !important;
+      background-color: white !important;
+      border-color: black !important;
+    }
+  }
+  .ant-dropdown,
+  .ant-modal-content {
+    border-color: black !important;
+    .ant-table-filter-dropdown,
+    .ant-modal-body,
+    .ant-modal-footer {
+      background-color: white !important;
+      color: black !important;
+    }
   }
 }
