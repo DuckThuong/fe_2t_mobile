@@ -120,6 +120,7 @@ export const StudentInformation = () => {
               buttonProps={{
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
+                disabled: !editState,
                 onClick: () => {
                   navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION, {
                     state: {
@@ -325,6 +326,7 @@ export const StudentInformation = () => {
               buttonProps={{
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
+                disabled: !courseEdit,
                 onClick: () => {
                   navigate(CUSTOMER_ROUTER_PATH.SUBJECT_INFORMATION, {
                     state: {

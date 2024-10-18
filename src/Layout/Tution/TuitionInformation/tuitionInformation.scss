@@ -31,6 +31,10 @@
         }
       }
     }
+    &-qr{
+      display: flex;
+      justify-content: center;
+    }
   }
 
   &_underLine {

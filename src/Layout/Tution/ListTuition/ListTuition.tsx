@@ -203,6 +203,7 @@ export const ListTuition = () => {
             buttonProps={{
               className: "list-tuition_data-tuitionOption",
               icon: <FontAwesomeIcon icon={faCircleInfo} />,
+              disabled: !editState,
               onClick: () => {
                 navigate(CUSTOMER_ROUTER_PATH.TUITION_INFORMATION);
               },

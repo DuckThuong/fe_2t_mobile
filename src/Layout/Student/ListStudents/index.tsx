@@ -22,6 +22,7 @@ import TableWrap from "../../../Components/TableWrap";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { FormInput } from "../../../Components/Form/FormInput";
 import { FormSelect } from "../../../Components/Form/FormSelect";
+import QRCodeGenerator from "../../../Components/QrCode";
 enum classSelector {
   SIX = "6",
   SEVEN = "7",
@@ -235,6 +236,7 @@ export const ListStudents = () => {
               buttonProps={{
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
+                disabled: !editState,
                 onClick: () => {
                   navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
                 },
@@ -597,7 +599,6 @@ export const ListStudents = () => {
           isExport={true}
           add={true}
         />
-
         <div className="list-student_modal-popup">
           {/* Modal Add */}
           <Modal
@@ -733,7 +734,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentName",
                       }}
                       inputProps={{
-                        placeholder: "HỌ VÀ TÊN",
+                        placeholder: "Họ và tên",
                       }}
                     />
                   </ColWrap>
@@ -744,7 +745,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentMsv",
                       }}
-                      placeholder="TRẠNG THÁI"
+                      placeholder="Trạng thái"
                       selectProps={{
                         options: stateOption,
                       }}
@@ -768,7 +769,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentClass",
                       }}
                       inputProps={{
-                        placeholder: "MÃ HỌC SINH",
+                        placeholder: "Mã học sinh",
                       }}
                     />
                   </ColWrap>
@@ -780,7 +781,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentDob",
                       }}
                       inputProps={{
-                        placeholder: "Lịch học",
+                        placeholder: "Khóa",
                       }}
                     />
                   </ColWrap>
@@ -801,7 +802,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentID",
                       }}
-                      placeholder="LỚP"
+                      placeholder="Lớp"
                       selectProps={{
                         options: classOption,
                       }}
@@ -814,7 +815,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentID",
                       }}
-                      placeholder="MÃ LỚP"
+                      placeholder="Mã lớp"
                       selectProps={{
                         options: classCodeOption,
                       }}
@@ -838,7 +839,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentEmail",
                       }}
                       inputProps={{
-                        placeholder: "NGÀY SINH",
+                        placeholder: "Ngày sinh",
                       }}
                     />
                   </ColWrap>
@@ -937,7 +938,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentName",
                       }}
                       inputProps={{
-                        placeholder: "HỌ VÀ TÊN",
+                        placeholder: "Họ và tên",
                       }}
                     />
                   </ColWrap>
@@ -949,7 +950,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentClass",
                       }}
                       inputProps={{
-                        placeholder: "MÃ HỌC SINH",
+                        placeholder: "Mã học sinh",
                       }}
                     />
                   </ColWrap>
@@ -970,7 +971,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentMsv",
                       }}
-                      placeholder="TRẠNG THÁI"
+                      placeholder="Trạng thái"
                       selectProps={{
                         options: stateOption,
                       }}
@@ -984,7 +985,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentDob",
                       }}
                       inputProps={{
-                        placeholder: "Lịch học",
+                        placeholder: "Khóa",
                       }}
                     />
                   </ColWrap>
@@ -1005,7 +1006,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentID",
                       }}
-                      placeholder="LỚP"
+                      placeholder="Lớp"
                       selectProps={{
                         options: classOption,
                       }}
@@ -1018,6 +1019,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentDob",
                       }}
+                      placeholder="Mã lớp"
                       selectProps={{
                         options: classCodeOption,
                       }}
@@ -1041,7 +1043,7 @@ export const ListStudents = () => {
                         className: "list-student_form-studentEmail",
                       }}
                       inputProps={{
-                        placeholder: "NGÀY SINH",
+                        placeholder: "Ngày sinh",
                       }}
                     />
                   </ColWrap>
@@ -1052,6 +1054,7 @@ export const ListStudents = () => {
                       formItemProps={{
                         className: "list-student_form-studentNumber",
                       }}
+                      placeholder="Giới tính"
                       selectProps={{
                         options: genderOption,
                       }}

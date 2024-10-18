@@ -11,7 +11,8 @@ import { useState } from "react";
 import "./tuitionInformation.scss";
 import StudentFooterActions from "../../FooterWeb";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen } from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen, faWallet } from "@fortawesome/free-solid-svg-icons";
+import QRCodeGenerator from "../../../Components/QrCode";
 enum classSelector {
   SIX = "6",
   SEVEN = "7",
@@ -27,6 +28,7 @@ enum classCodeSelector {
 export const TuitionInformation = () => {
   const [form] = useForm();
   const [editState, setEditState] = useState<boolean>(true);
+  const [sum, setSum] = useState<any>();
   const [modalStates, setModalStates] = useState({
     editModal: false,
     deleteModal: false,
@@ -149,9 +151,9 @@ export const TuitionInformation = () => {
       <div className="tuition-information_content">
         <FormWrap form={form} className="tuition-information_content-form">
           <h1 className="subject-detail_form-header">
-            CHI TIẾT MÔN HỌC
+            CHI TIẾT HÓA ĐƠN HỌC PHÍ
             <span style={{ marginLeft: "8px" }}>
-              <FontAwesomeIcon icon={faBookOpen} />
+              <FontAwesomeIcon icon={faWallet} />
             </span>
           </h1>
           <span className="subject-detail_form-sub">
@@ -265,16 +267,22 @@ export const TuitionInformation = () => {
               />
             </ColWrap>
           </RowWrap>
-          <TableWrap
-            setSize={() => {}}
-            scrollValue={{ x: 1366 }}
-            tableWidth={1416}
-            isScroll
-            tableProps={{
-              columns: tuitionColumn,
-              dataSource: tuitionData,
-            }}
-          />
+
+          <div className="tuition-information_table">
+            <p className="tuition-information_row-label">
+              Danh sách các môn học có trong hóa đơn học phí.
+            </p>
+            <TableWrap
+              setSize={() => {}}
+              scrollValue={{ x: 1366 }}
+              tableWidth={1416}
+              isScroll
+              tableProps={{
+                columns: tuitionColumn,
+                dataSource: tuitionData,
+              }}
+            />
+          </div>
           <RowWrap
             isGutter={true}
             isWrap={true}
@@ -374,10 +382,36 @@ export const TuitionInformation = () => {
                 }}
                 inputProps={{
                   placeholder: "Tổng cộng",
+                  onChange: (e) => {
+                    setSum(e.target.value);
+                  },
                 }}
               />
             </ColWrap>
           </RowWrap>
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"end"}
+            gutter={[8, 8]}
+            className="tuition-information_row"
+          >
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="tuition-information_row-label">
+                QR THANH TOÁN HỌC PHÍ
+              </p>
+              <p>Mã QR được tạo tự động.</p>
+              <QRCodeGenerator
+                accountNumber="1023912793"
+                bankCode="VCB"
+                size={250}
+                amount={sum}
+                className="tuition-information_row-qr"
+              />
+            </ColWrap>
+          </RowWrap>
+
           <div className="tuition-information_underLine" />
           <StudentFooterActions
             editState={editState}
