@@ -43,7 +43,7 @@ const listMenuItem = (): MenuItem[] => {
     },
     {
       title: "Khen thưởng và kỉ luật",
-      link: `/${CUSTOMER_ROUTE_NAME.FORGOT_CODE_INPUT}`,
+      link: `/${CUSTOMER_ROUTE_NAME.DISCIPLINE_AND_REWARD}`,
     },
   ];
 };

@@ -22,7 +22,6 @@ import TableWrap from "../../../Components/TableWrap";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { FormInput } from "../../../Components/Form/FormInput";
 import { FormSelect } from "../../../Components/Form/FormSelect";
-import QRCodeGenerator from "../../../Components/QrCode";
 enum classSelector {
   SIX = "6",
   SEVEN = "7",

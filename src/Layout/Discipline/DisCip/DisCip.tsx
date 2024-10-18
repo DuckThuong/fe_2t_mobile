@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import StudentFooterActions from "../../FooterWeb";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import "./reward.scss";
-export const Reward = () => {
+import "./DisCip.scss";
+export const DisCip = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
@@ -48,15 +48,15 @@ export const Reward = () => {
 
     const headers = [
       { header: "STT", key: "id" },
-      { header: "MÃ GIẢI THƯỞNG", key: "magiaithuong" },
-      { header: "TÊN GIẢI THƯỞNG", key: "tengiaithuong" },
-      { header: "HỌC SINH ĐẠT GIẢI", key: "hocsinhdatgiai" },
+      { header: "MÃ HÌNH PHẠT", key: "mahinhphat" },
+      { header: "TÊN HÌNH PHẠT", key: "tenhinhphat" },
+      { header: "HỌC SINH VI PHẠM", key: "hocsinhdatgiai" },
       { header: "MÃ HỌC SINH", key: "mahocsinh" },
       { header: "LỚP", key: "lop" },
       { header: "MÃ LỚP", key: "malop" },
-      { header: "GIÁ TRỊ GIẢI THƯỞNG", key: "giatrigiaithuong" },
-      { header: "THỜI GIAN TRAO GIẢI", key: "thoigian" },
-      { header: "LÝ DO TRAO GIẢI", key: "lydo" },
+      { header: "MỨC ĐỘ XỬ PHẠT", key: "giatrihinhphat" },
+      { header: "THỜI GIAN XỬ PHẠT", key: "thoigian" },
+      { header: "LÝ DO XỬ PHẠT", key: "lydo" },
     ];
     const worksheet = XLSX.utils.json_to_sheet(selectedData, {
       header: headers.map((h) => h.key),
@@ -74,40 +74,38 @@ export const Reward = () => {
   const conlumns = [
     {
       title: "STT",
-      dataIndex: "stt",
-      key: "stt",
+      dataIndex: "id",
+      key: "id",
       render: (text, record, index) => {
-        return (
-          <p style={{ color: "black", fontWeight: "600" }}>{record.key}</p>
-        );
+        return <p style={{ color: "black", fontWeight: "600" }}>{record.id}</p>;
       },
     },
     {
-      title: "MÃ GIẢI THƯỞNG",
-      dataIndex: "magiaithuong",
-      key: "magiaithuong",
+      title: "MÃ XỬ PHẠT",
+      dataIndex: "mahinhphat",
+      key: "mahinhphat",
       render: (record) => {
         return (
           <>
-            <p className="reward_data-magiaithuong">{record}</p>
+            <p className="reward_data-mahinhphat">{record}</p>
           </>
         );
       },
     },
     {
-      title: "TÊN GIẢI THƯỞNG",
-      dataIndex: "tengiaithuong",
-      key: "tengiaithuong",
+      title: "TÊN HÌNH PHẠT",
+      dataIndex: "tenhinhphat",
+      key: "tenhinhphat",
       render: (record) => {
         return (
           <>
-            <p className="reward_data-tengiaithuong">{record}</p>
+            <p className="reward_data-tenhinhphat">{record}</p>
           </>
         );
       },
     },
     {
-      title: "HỌC SINH ĐẠT GIẢI",
+      title: "HỌC SINH VI PHẠM",
       dataIndex: "hocsinhdatgiai",
       key: "hocsinhdatgiai",
       render: (record) => {
@@ -155,9 +153,9 @@ export const Reward = () => {
       },
     },
     {
-      title: "GIÁ TRỊ GIẢI THƯỞNG",
-      dataIndex: "giatrigiaithuong",
-      key: "giatrigiaithuong",
+      title: "MỨC ĐỘ XỬ PHẠT",
+      dataIndex: "giatrihinhphat",
+      key: "giatrihinhphat",
       render: (record) => {
         return (
           <>
@@ -167,7 +165,7 @@ export const Reward = () => {
       },
     },
     {
-      title: "THỜI GIAN TRAO GIẢI",
+      title: "THỜI GIAN XỬ PHẠT",
       dataIndex: "thoigian",
       key: "thoigian",
       render: (record) => {
@@ -179,7 +177,7 @@ export const Reward = () => {
       },
     },
     {
-      title: "LÝ DO TRAO GIẢI",
+      title: "LÝ DO XỬ PHẠT",
       dataIndex: "lydo",
       key: "lydo",
       render: (record) => {
@@ -258,97 +256,36 @@ export const Reward = () => {
   ];
   const data = [
     {
-      id: "1",
-      magiaithuong: "GT001",
-      tengiaithuong: "Giải Nhất",
+      id: 1,
+      mahinhphat: "MP001",
+      tenhinhphat: "Hình phạt 1",
       hocsinhdatgiai: "Nguyễn Văn A",
       mahocsinh: "HS001",
       lop: "10A1",
       malop: "L001",
-      giatrigiaithuong: "1000000",
+      giatrihinhphat: "Cảnh cáo",
       thoigian: "2023-10-01",
-      lydo: "Thành tích học tập xuất sắc",
+      lydo: "Đi học muộn",
     },
     {
-      id: "2",
-      magiaithuong: "GT002",
-      tengiaithuong: "Giải Nhì",
+      id: 2,
+      mahinhphat: "MP002",
+      tenhinhphat: "Hình phạt 2",
       hocsinhdatgiai: "Trần Thị B",
       mahocsinh: "HS002",
       lop: "10A2",
       malop: "L002",
-      giatrigiaithuong: "500000",
+      giatrihinhphat: "Khiển trách",
       thoigian: "2023-10-02",
-      lydo: "Thành tích thể thao",
-    },
-    {
-      id: "3",
-      magiaithuong: "GT003",
-      tengiaithuong: "Giải Ba",
-      hocsinhdatgiai: "Lê Văn C",
-      mahocsinh: "HS003",
-      lop: "10A3",
-      malop: "L003",
-      giatrigiaithuong: "300000",
-      thoigian: "2023-10-03",
-      lydo: "Thành tích văn nghệ",
-    },
-    {
-      id: "4",
-      magiaithuong: "GT004",
-      tengiaithuong: "Giải Khuyến Khích",
-      hocsinhdatgiai: "Phạm Thị D",
-      mahocsinh: "HS004",
-      lop: "10A4",
-      malop: "L004",
-      giatrigiaithuong: "200000",
-      thoigian: "2023-10-04",
-      lydo: "Thành tích nghiên cứu khoa học",
-    },
-    {
-      id: "5",
-      magiaithuong: "GT005",
-      tengiaithuong: "Giải Sáng Tạo",
-      hocsinhdatgiai: "Ngô Văn E",
-      mahocsinh: "HS005",
-      lop: "10A5",
-      malop: "L005",
-      giatrigiaithuong: "150000",
-      thoigian: "2023-10-05",
-      lydo: "Thành tích sáng tạo",
-    },
-    {
-      id: "6",
-      magiaithuong: "GT006",
-      tengiaithuong: "Giải Cống Hiến",
-      hocsinhdatgiai: "Đỗ Thị F",
-      mahocsinh: "HS006",
-      lop: "10A6",
-      malop: "L006",
-      giatrigiaithuong: "250000",
-      thoigian: "2023-10-06",
-      lydo: "Thành tích cống hiến",
-    },
-    {
-      id: "7",
-      magiaithuong: "GT007",
-      tengiaithuong: "Giải Đặc Biệt",
-      hocsinhdatgiai: "Vũ Văn G",
-      mahocsinh: "HS007",
-      lop: "10A7",
-      malop: "L007",
-      giatrigiaithuong: "2000000",
-      thoigian: "2023-10-07",
-      lydo: "Thành tích đặc biệt",
+      lydo: "Không làm bài tập",
     },
   ];
-
   return (
     <div className="reward">
       <div className="reward_content">
         <div className="reward_sidebar" ref={scrollRef}>
           <h1 className="reward_content-header">
-            Danh sách học sinh được khen thưởng
+            Danh sách học sinh bị kỷ luật
           </h1>
           <RowWrap
             isGutter={true}

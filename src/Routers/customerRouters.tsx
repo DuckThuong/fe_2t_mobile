@@ -12,6 +12,7 @@ import { StudentInformation } from "../Layout/Student/StudentInformation";
 import { SubjectInformation } from "../Layout/Student/SubjectInformation";
 import { ListTuition } from "../Layout/Tution/ListTuition/ListTuition";
 import { TuitionInformation } from "../Layout/Tution/TuitionInformation/TuitionInformation";
+import { DisciplineAndReward } from "../Layout/Discipline";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -61,6 +62,10 @@ export const CustomerRouter = () => (
     <Route
       path={CUSTOMER_ROUTER_PATH.TUITION_INFORMATION}
       element={<SuspenseWrapper component={<TuitionInformation />} />}
+    ></Route>
+    <Route
+      path={CUSTOMER_ROUTER_PATH.DISCIPLINE_AND_REWARD}
+      element={<SuspenseWrapper component={<DisciplineAndReward />} />}
     ></Route>
   </Routes>
 );
