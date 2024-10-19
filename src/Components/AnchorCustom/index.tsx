@@ -6,7 +6,7 @@ interface AnchorProps {
 }
 
 const AnchorCustom: React.FC<AnchorProps> = ({ items }) => {
-  const [activeKey, setActiveKey] = useState<string | null>(null);
+  const [activeKey, setActiveKey] = useState<string | null>(items?.[0]?.key || null); // Initialize with the first item's key
 
   const handleClick = (e: React.MouseEvent<HTMLElement>, link: { title: ReactNode; href: string }) => {
     const item = items?.find(item => item.href === link.href);

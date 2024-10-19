@@ -4,6 +4,8 @@ import { FormItemProps, UploadProps } from 'antd/lib';
 import React, { ReactNode } from 'react';
 import './formUpload.scss';
 import { NamePath } from 'antd/es/form/interface';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 type Props = {
   name: NamePath;
   uploadProps?: UploadProps;
@@ -23,7 +25,7 @@ export const FormUpload: React.FC<Props> = ({ ...props }) => {
         listType={listType}
         {...uploadProps}
         showUploadList={{
-          removeIcon: <></>,
+          removeIcon: <FontAwesomeIcon icon={faTrash} />,
           previewIcon: <></>,
         }}
         className={`upload__form-styled ${uploadProps?.className ?? ''}`}

@@ -87,7 +87,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahinhphat">{record}</p>
+            <p className="discip_data-mahinhphat">{record}</p>
           </>
         );
       },
@@ -99,7 +99,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-tenhinhphat">{record}</p>
+            <p className="discip_data-tenhinhphat">{record}</p>
           </>
         );
       },
@@ -111,7 +111,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-hocsinhdatgiai">{record}</p>
+            <p className="discip_data-hocsinhdatgiai">{record}</p>
           </>
         );
       },
@@ -123,7 +123,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahocsinh">{record}</p>
+            <p className="discip_data-mahocsinh">{record}</p>
           </>
         );
       },
@@ -135,7 +135,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahocsinh">{record}</p>
+            <p className="discip_data-mahocsinh">{record}</p>
           </>
         );
       },
@@ -147,7 +147,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahocsinh">{record}</p>
+            <p className="discip_data-mahocsinh">{record}</p>
           </>
         );
       },
@@ -159,7 +159,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahocsinh">{record}</p>
+            <p className="discip_data-mahocsinh">{record}</p>
           </>
         );
       },
@@ -171,7 +171,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahocsinh">{record}</p>
+            <p className="discip_data-mahocsinh">{record}</p>
           </>
         );
       },
@@ -183,7 +183,7 @@ export const DisCip = () => {
       render: (record) => {
         return (
           <>
-            <p className="reward_data-mahocsinh">{record}</p>
+            <p className="discip_data-mahocsinh">{record}</p>
           </>
         );
       },
@@ -201,7 +201,7 @@ export const DisCip = () => {
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 onClick: () => {
-                  navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
+                  navigate(CUSTOMER_ROUTER_PATH.DISCIP_INFORMATION);
                 },
               }}
             />
@@ -281,10 +281,10 @@ export const DisCip = () => {
     },
   ];
   return (
-    <div className="reward">
-      <div className="reward_content">
-        <div className="reward_sidebar" ref={scrollRef}>
-          <h1 className="reward_content-header">
+    <div className="discip">
+      <div className="discip_content">
+        <div className="discip_sidebar" ref={scrollRef}>
+          <h1 className="discip_content-header">
             Danh sách học sinh bị kỷ luật
           </h1>
           <RowWrap
@@ -293,10 +293,10 @@ export const DisCip = () => {
             isAutoFillRow={true}
             styleFill={"between"}
             gutter={[16, 16]}
-            className="reward_sidebar-scroll"
+            className="discip_sidebar-scroll"
           >
             <FormWrap
-              className="reward_sidebar-colRight-formSearch"
+              className="discip_sidebar-colRight-formSearch"
               name="search-product"
               layout={"inline"}
               initialValues={{
@@ -308,7 +308,7 @@ export const DisCip = () => {
                 name={"fullrecordSearch"}
                 isShowIcon={false}
                 formItemProps={{
-                  className: "reward_sidebar-colRight-formSearch-input",
+                  className: "discip_sidebar-colRight-formSearch-input",
                 }}
                 inputProps={{
                   placeholder: "Mã học sinh",
@@ -317,13 +317,13 @@ export const DisCip = () => {
               <FormButtonSubmit
                 content={<SvgMagnifyingGlassSubmit />}
                 formItemProps={{
-                  className: "reward_sidebar-colRight-formSearch-button",
+                  className: "discip_sidebar-colRight-formSearch-button",
                 }}
               />
             </FormWrap>
           </RowWrap>
         </div>
-        <div className="reward_table">
+        <div className="discip_table">
           <TableWrap
             setSize={() => {}}
             scrollValue={{ x: 1366 }}
@@ -343,7 +343,7 @@ export const DisCip = () => {
             }}
           />
         </div>
-        <div className="reward_footer">
+        <div className="discip_footer">
           <StudentFooterActions
             editState={editState}
             setEditState={setEditState}

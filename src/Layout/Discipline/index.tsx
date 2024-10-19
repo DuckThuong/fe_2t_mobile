@@ -1,5 +1,4 @@
 import AnchorCustom from "../../Components/AnchorCustom";
-import StudentFooterActions from "../FooterWeb";
 import { HeaderWeb } from "../HeaderWeb";
 import { DisCip } from "./DisCip/DisCip";
 import { Reward } from "./Reward/Reward";

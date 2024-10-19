@@ -203,7 +203,7 @@ export const Reward = () => {
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 onClick: () => {
-                  navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
+                  navigate(CUSTOMER_ROUTER_PATH.REWARD_INFORMATION);
                 },
               }}
             />
