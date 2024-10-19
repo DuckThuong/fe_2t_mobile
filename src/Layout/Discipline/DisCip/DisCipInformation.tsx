@@ -7,6 +7,7 @@ import RowWrap from "../../../Components/RowWrap";
 import { HeaderWeb } from "../../HeaderWeb";
 import StudentFooterActions from "./../../FooterWeb/index";
 import "./DisCip.scss";
+import { FormTextArea } from "../../../Components/Form/FormTextArea";
 export const DisCipInformation = () => {
   const [editState, setEditState] = useState<boolean>(true);
   const [modalStates, setModalStates] = useState({
@@ -26,7 +27,7 @@ export const DisCipInformation = () => {
       <div className="discip_information">
         <div className="discip_information-header">
           <h1 className="discip_information-header-title">
-            Thông tin XỬ PHẠT của sinh viên:
+            Thông tin xử phạt của sinh viên:
           </h1>
           <span className="discip_information-header-sub">
             Trịnh Đức Thưởng
@@ -47,7 +48,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"tenkyluat"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionName",
+                  className: "discip_information-form-tenkyluat",
                 }}
                 inputProps={{
                   placeholder: "Tên hình phạt",
@@ -60,7 +61,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"makyluat"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionMsv",
+                  className: "discip_information-form-makyluat",
                 }}
                 inputProps={{
                   placeholder: "Mã hình phạt",
@@ -84,7 +85,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"hocsinhbikyluat"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionName",
+                  className: "discip_information-form-hocsinhbikyluat",
                 }}
                 inputProps={{
                   placeholder: "Học Sinh Bị Xử Phạt",
@@ -97,7 +98,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"mahocsinh"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionMsv",
+                  className: "discip_information-form-mahocsinh",
                 }}
                 inputProps={{
                   placeholder: "Mã Học Sinh",
@@ -119,7 +120,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"lop"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionName",
+                  className: "discip_information-form-lop",
                 }}
                 inputProps={{
                   placeholder: "Lớp",
@@ -132,7 +133,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"malop"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionMsv",
+                  className: "discip_information-form-malop",
                 }}
                 inputProps={{
                   placeholder: "Mã Lớp",
@@ -154,7 +155,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"lydokyluat"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionName",
+                  className: "discip_information-form-lydokyluat",
                 }}
                 inputProps={{
                   placeholder: "Lý Do Xử Phạt",
@@ -167,7 +168,7 @@ export const DisCipInformation = () => {
               <FormInput
                 name={"thoigiankyluat"}
                 formItemProps={{
-                  className: "discip_information-form-tuitionMsv",
+                  className: "discip_information-form-thoigiankyluat",
                 }}
                 inputProps={{
                   placeholder: "Thời Gian Xử Phạt",
@@ -182,6 +183,27 @@ export const DisCipInformation = () => {
             isAutoFillRow={true}
             styleFill={"between"}
             gutter={[8, 8]}
+            className="reward_information-row"
+          >
+            <p className="reward_information-row-label">CHI TIẾT XỬ PHẠT</p>
+            <FormTextArea
+              name={"lydotraogiai"}
+              formItemProps={{
+                className: "reward_information-form-lydotraogiai",
+              }}
+              textAreaProps={{
+                placeholder: "Chi Tiết Xủ Phạt",
+                disabled: editState,
+                rootClassName: "regions",
+              }}
+            />
+          </RowWrap>
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[8, 8]}
             className="discip_information-row"
           >
             <p className="discip_information-row-label">HÌNH ẢNH MINH CHỨNG</p>
@@ -189,7 +211,7 @@ export const DisCipInformation = () => {
               name={"image"}
               listType="picture-card"
               formItemProps={{
-                className: "form-upload",
+                className: "form-upload-image",
               }}
               uploadProps={{
                 disabled: editState,

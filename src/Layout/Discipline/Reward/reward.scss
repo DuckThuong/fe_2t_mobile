@@ -216,20 +216,45 @@
           }
         }
       }
-      .ant-upload {
-        margin-left: 32px;
-      }
-      .ant-upload-list-item-actions {
-        border: 1px solid black !important;
-      }
-      .ant-upload-select {
-        border: none !important;
+      .upload__form-container {
         .ant-upload {
-          .ant-btn {
-            border: 1px solid $gray_blur_color;
-            span {
-              font-weight: 600;
-              font-style: 14px;
+          margin-left: 32px;
+        }
+        .ant-upload-list {
+          display: flex;
+          align-items: end;
+          .ant-upload-list-item {
+            width: fit-content;
+            height: fit-content !important;
+            border: 1px solid $primary_color !important;
+            &-container {
+              height: fit-content !important;
+              width: fit-content !important;
+            }
+            .ant-upload-list-item-thumbnail {
+              .ant-upload-list-item-image {
+                width: 220px !important;
+                height: 220px !important;
+              }
+            }
+            &-actions {
+              .ant-btn {
+                svg {
+                  color: white !important;
+                }
+              }
+            }
+          }
+        }
+        .ant-upload-select {
+          border: none !important;
+          .ant-upload {
+            .ant-btn {
+              border: 1px solid $gray_blur_color;
+              span {
+                font-weight: 600;
+                font-style: 14px;
+              }
             }
           }
         }

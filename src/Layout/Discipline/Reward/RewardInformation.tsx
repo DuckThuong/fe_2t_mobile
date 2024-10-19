@@ -7,6 +7,7 @@ import RowWrap from "../../../Components/RowWrap";
 import { HeaderWeb } from "../../HeaderWeb";
 import StudentFooterActions from "./../../FooterWeb/index";
 import "./reward.scss";
+import { FormTextArea } from "../../../Components/Form/FormTextArea";
 export const RewardInformation = () => {
   const [editState, setEditState] = useState<boolean>(true);
   const [modalStates, setModalStates] = useState({
@@ -47,7 +48,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"tengiathuong"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionName",
+                  className: "reward_information-form-tengiathuong",
                 }}
                 inputProps={{
                   placeholder: "Tên Giải Thưởng",
@@ -60,7 +61,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"magiathuong"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionMsv",
+                  className: "reward_information-form-magiathuong",
                 }}
                 inputProps={{
                   placeholder: "Mã Giải Thưởng",
@@ -82,7 +83,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"hocsinhdatgiai"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionName",
+                  className: "reward_information-form-hocsinhdatgiai",
                 }}
                 inputProps={{
                   placeholder: "Học Sinh Đạt Giải",
@@ -95,7 +96,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"mahocsinh"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionMsv",
+                  className: "reward_information-form-mahocsinh",
                 }}
                 inputProps={{
                   placeholder: "Mã Học Sinh",
@@ -117,7 +118,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"lop"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionName",
+                  className: "reward_information-form-lop",
                 }}
                 inputProps={{
                   placeholder: "Lớp",
@@ -130,7 +131,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"malop"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionMsv",
+                  className: "reward_information-form-malop",
                 }}
                 inputProps={{
                   placeholder: "Mã Lớp",
@@ -154,7 +155,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"giatrigiathuong"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionName",
+                  className: "reward_information-form-giatrigiathuong",
                 }}
                 inputProps={{
                   placeholder: "Giá Trị Giải Thưởng",
@@ -169,7 +170,7 @@ export const RewardInformation = () => {
               <FormInput
                 name={"thoigiantraogiai"}
                 formItemProps={{
-                  className: "reward_information-form-tuitionMsv",
+                  className: "reward_information-form-thoigiantraogiai",
                 }}
                 inputProps={{
                   placeholder: "Thời Gian Trao Giải",
@@ -187,14 +188,15 @@ export const RewardInformation = () => {
             className="reward_information-row"
           >
             <p className="reward_information-row-label">LÝ DO TRAO GIẢI</p>
-            <FormInput
+            <FormTextArea
               name={"lydotraogiai"}
               formItemProps={{
-                className: "reward_information-form-tuitionName",
+                className: "reward_information-form-lydotraogiai",
               }}
-              inputProps={{
-                placeholder: "Lý Do Trao Giải",
+              textAreaProps={{
+                placeholder: "Lý do trao giải",
                 disabled: editState,
+                rootClassName: "regions",
               }}
             />
           </RowWrap>
@@ -211,7 +213,7 @@ export const RewardInformation = () => {
               name={"iamge"}
               listType="picture-card"
               formItemProps={{
-                className: "form-upload",
+                className: "reward_information-form-iamge",
               }}
               uploadProps={{
                 disabled: editState,
