@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SvgMagnifyingGlassSubmit } from "../../../Components/@svg/SvgMagnifyingGlassSubmit";
 import { FormButtonSubmit } from "../../../Components/Form/FormButtonSubmit";
 import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
@@ -15,11 +15,17 @@ import * as XLSX from "xlsx";
 import StudentFooterActions from "../../FooterWeb";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import "./reward.scss";
+import { Modal } from "antd";
+import ColWrap from "../../../Components/ColWrap";
+import { FormInput } from "../../../Components/Form/FormInput";
+import { useForm } from "antd/es/form/Form";
+import NotificationPopup from "../../Notification";
 export const Reward = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const navigate = useNavigate();
+  const [form] = useForm();
   const [editState, setEditState] = useState<boolean>(true);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [modalStates, setModalStates] = useState({
@@ -70,7 +76,10 @@ export const Reward = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "StudentsList");
     XLSX.writeFile(workbook, "DanhSachSinhVien.xlsx");
   };
-
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
   const conlumns = [
     {
       title: "STT",
@@ -202,6 +211,7 @@ export const Reward = () => {
               buttonProps={{
                 className: "list-student_data-studentOption",
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
+                disabled: !editState,
                 onClick: () => {
                   navigate(CUSTOMER_ROUTER_PATH.REWARD_INFORMATION);
                 },
@@ -256,7 +266,7 @@ export const Reward = () => {
       hidden: !modalStates.showRegistedNewColumn,
     },
   ];
-  const data = [
+  const [data, setNewData] = useState<any[]>([
     {
       id: "1",
       magiaithuong: "GT001",
@@ -341,10 +351,98 @@ export const Reward = () => {
       thoigian: "2023-10-07",
       lydo: "Thành tích đặc biệt",
     },
-  ];
+    {
+      id: "8",
+      magiaithuong: "GT008",
+      tengiaithuong: "Giải Khuyến Học",
+      hocsinhdatgiai: "Lý Thị H",
+      mahocsinh: "HS008",
+      lop: "10A8",
+      malop: "L008",
+      giatrigiaithuong: "100000",
+      thoigian: "2023-10-08",
+      lydo: "Thành tích học tập tiến bộ",
+    },
+    {
+      id: "9",
+      magiaithuong: "GT009",
+      tengiaithuong: "Giải Tinh Thần",
+      hocsinhdatgiai: "Trương Văn I",
+      mahocsinh: "HS009",
+      lop: "10A9",
+      malop: "L009",
+      giatrigiaithuong: "750000",
+      thoigian: "2023-10-09",
+      lydo: "Tinh thần học tập tốt",
+    },
+    {
+      id: "10",
+      magiaithuong: "GT010",
+      tengiaithuong: "Giải Đoàn Kết",
+      hocsinhdatgiai: "Phan Thị J",
+      mahocsinh: "HS010",
+      lop: "10A10",
+      malop: "L010",
+      giatrigiaithuong: "500000",
+      thoigian: "2023-10-10",
+      lydo: "Tinh thần đoàn kết",
+    },
+  ]);
+  useEffect(() => {
+    const handleTableScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        scrollRef.current.scrollLeft = tableWrapperRef.current.scrollLeft;
+      }
+    };
+
+    const handleDivScroll = () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        tableWrapperRef.current.scrollLeft = scrollRef.current.scrollLeft;
+      }
+    };
+
+    if (tableWrapperRef.current && scrollRef.current) {
+      tableWrapperRef.current.addEventListener("scroll", handleTableScroll);
+      scrollRef.current.addEventListener("scroll", handleDivScroll);
+    }
+    return () => {
+      if (tableWrapperRef.current && scrollRef.current) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        tableWrapperRef.current.removeEventListener(
+          "scroll",
+          handleTableScroll
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        scrollRef.current.removeEventListener("scroll", handleDivScroll);
+      }
+    };
+  }, []);
+  useEffect(() => {
+    if (selectedRecord) {
+      const fields = conlumns.reduce((acc, column) => {
+        if (column.dataIndex) {
+          acc[column.dataIndex] = selectedRecord[column.dataIndex];
+        }
+        return acc;
+      }, {});
+      form.setFieldsValue(fields);
+    }
+  }, [selectedRecord, form, conlumns]);
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   return (
     <div className="reward">
+      <NotificationPopup
+        message={notification?.message}
+        type={notification?.type}
+      />
       <div className="reward_content">
         <div className="reward_sidebar" ref={scrollRef}>
           <h1 className="reward_content-header">
@@ -420,6 +518,450 @@ export const Reward = () => {
             isExport={true}
             add={true}
           />
+        </div>
+        <div className="reward_modal">
+          {/* Modal Add Student */}
+          <Modal
+            className="list-student_modal-addStudent"
+            open={modalStates.addModal}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                addModal: false,
+              });
+            }}
+            onOk={() => {
+              if (
+                form.getFieldValue("magiaithuong") &&
+                form.getFieldValue("tengiaithuong") &&
+                form.getFieldValue("hocsinhdatgiai") &&
+                form.getFieldValue("mahocsinh") &&
+                form.getFieldValue("lop") &&
+                form.getFieldValue("malop") &&
+                form.getFieldValue("giatrigiaithuong") &&
+                form.getFieldValue("thoigian") &&
+                form.getFieldValue("lydo")
+              ) {
+                const newData = {
+                  id: data.length + 1,
+                  magiaithuong: form.getFieldValue("magiaithuong"),
+                  tengiaithuong: form.getFieldValue("tengiaithuong"),
+                  hocsinhdatgiai: form.getFieldValue("hocsinhdatgiai"),
+                  mahocsinh: form.getFieldValue("mahocsinh"),
+                  lop: form.getFieldValue("lop"),
+                  malop: form.getFieldValue("malop"),
+                  giatrigiaithuong: form.getFieldValue("giatrigiaithuong"),
+                  thoigian: form.getFieldValue("thoigian"),
+                  lydo: form.getFieldValue("lydo"),
+                };
+                setNewData([...data, newData]);
+                setModalStates({
+                  ...modalStates,
+                  addModal: false,
+                });
+              } else {
+                setNotification({
+                  message: "Vui lòng điền đầy đủ dữ liệu",
+                  type: "error",
+                });
+              }
+            }}
+            afterClose={() => {
+              form.resetFields();
+            }}
+          >
+            <h1 className="list-student_modal-header">THÊM GIẢI THƯỞNG</h1>
+            <div className="list-student_underLine" />
+            <div className="list-student_modal-addStudent-content">
+              <FormWrap form={form} className="list-student_form">
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ GIẢI THƯỞNG</p>
+                    <FormInput
+                      name={"magiaithuong"}
+                      formItemProps={{
+                        className: "list-student_form-magiaithuong",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã giải thưởng",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">TÊN GIẢI THƯỞNG</p>
+                    <FormInput
+                      name={"tengiaithuong"}
+                      formItemProps={{
+                        className: "list-student_form-tengiaithuong",
+                      }}
+                      inputProps={{
+                        placeholder: "Tên giải thưởng",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">HỌC SINH ĐẠT GIẢI</p>
+                    <FormInput
+                      name={"hocsinhdatgiai"}
+                      formItemProps={{
+                        className: "list-student_form-hocsinhdatgiai",
+                      }}
+                      inputProps={{
+                        placeholder: "Học sinh đạt giải",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ HỌC SINH</p>
+                    <FormInput
+                      name={"mahocsinh"}
+                      formItemProps={{
+                        className: "list-student_form-mahocsinh",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã học sinh",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">LỚP</p>
+                    <FormInput
+                      name={"lop"}
+                      formItemProps={{
+                        className: "list-student_form-lop",
+                      }}
+                      inputProps={{
+                        placeholder: "Lớp",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ LỚP</p>
+                    <FormInput
+                      name={"malop"}
+                      formItemProps={{
+                        className: "list-student_form-malop",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã lớp",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">
+                      GIÁ TRỊ GIẢI THƯỞNG
+                    </p>
+                    <FormInput
+                      name={"giatrigiaithuong"}
+                      formItemProps={{
+                        className: "list-student_form-giatrigiaithuong",
+                      }}
+                      inputProps={{
+                        placeholder: "Giá trị giải thưởng",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">
+                      THỜI GIAN TRAO GIẢI
+                    </p>
+                    <FormInput
+                      name={"thoigian"}
+                      formItemProps={{
+                        className: "list-student_form-thoigian",
+                      }}
+                      inputProps={{
+                        placeholder: "Thời gian trao giải",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 24 }}>
+                    <p className="list-student_row-label">LÝ DO TRAO GIẢI</p>
+                    <FormInput
+                      name={"lydo"}
+                      formItemProps={{
+                        className: "list-student_form-thoigian",
+                      }}
+                      inputProps={{
+                        placeholder: "Thời gian trao giải",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+              </FormWrap>
+              <div className="list-student_underLine" />
+            </div>
+          </Modal>
+          {/* Modal Edit student */}
+          <Modal
+            className="list-student_modal-editStudent"
+            open={modalStates.editModal}
+            onCancel={() => {
+              setModalStates({
+                ...modalStates,
+                editModal: false,
+              });
+            }}
+            onOk={() => {
+              if (
+                form.getFieldValue("magiaithuong") &&
+                form.getFieldValue("tengiaithuong") &&
+                form.getFieldValue("hocsinhdatgiai") &&
+                form.getFieldValue("mahocsinh") &&
+                form.getFieldValue("lop") &&
+                form.getFieldValue("malop") &&
+                form.getFieldValue("giatrigiaithuong") &&
+                form.getFieldValue("thoigian") &&
+                form.getFieldValue("lydo")
+              ) {
+                const newCourse = {
+                  ...selectedRecord,
+                  magiaithuong: form.getFieldValue("magiaithuong"),
+                  tengiaithuong: form.getFieldValue("tengiaithuong"),
+                  hocsinhdatgiai: form.getFieldValue("hocsinhdatgiai"),
+                  mahocsinh: form.getFieldValue("mahocsinh"),
+                  lop: form.getFieldValue("lop"),
+                  malop: form.getFieldValue("malop"),
+                  giatrigiaithuong: form.getFieldValue("giatrigiaithuong"),
+                  thoigian: form.getFieldValue("thoigian"),
+                  lydo: form.getFieldValue("lydo"),
+                };
+
+                setNewData(
+                  data.map((course) =>
+                    course.id === selectedRecord.id ? newCourse : course
+                  )
+                );
+                setModalStates({
+                  ...modalStates,
+                  editModal: false,
+                });
+              } else {
+                setNotification({
+                  message: "Vui lòng điền đầy đủ dữ liệu",
+                  type: "error",
+                });
+              }
+            }}
+            afterClose={() => {
+              form.resetFields();
+            }}
+          >
+            <h1 className="list-student_modal-header">
+              SỬA THÔNG TIN GIẢI THƯỞNG
+            </h1>
+            <div className="list-student_underLine" />
+            <div className="list-student_modal-addStudent-content">
+              <FormWrap form={form} className="list-student_form">
+                {/* Hàng 1 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[8, 8]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ GIẢI THƯỞNG</p>
+                    <FormInput
+                      name={"magiaithuong"}
+                      formItemProps={{
+                        className: "list-student_form-magiaithuong",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã giải thưởng",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">TÊN GIẢI THƯỞNG</p>
+                    <FormInput
+                      name={"tengiaithuong"}
+                      formItemProps={{
+                        className: "list-student_form-tengiaithuong",
+                      }}
+                      inputProps={{
+                        placeholder: "Tên giải thưởng",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 2 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">HỌC SINH ĐẠT GIẢI</p>
+                    <FormInput
+                      name={"hocsinhdatgiai"}
+                      formItemProps={{
+                        className: "list-student_form-hocsinhdatgiai",
+                      }}
+                      inputProps={{
+                        placeholder: "Học sinh đạt giải",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ HỌC SINH</p>
+                    <FormInput
+                      name={"mahocsinh"}
+                      formItemProps={{
+                        className: "list-student_form-mahocsinh",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã học sinh",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 3 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">LỚP</p>
+                    <FormInput
+                      name={"lop"}
+                      formItemProps={{
+                        className: "list-student_form-lop",
+                      }}
+                      inputProps={{
+                        placeholder: "Lớp",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">MÃ LỚP</p>
+                    <FormInput
+                      name={"malop"}
+                      formItemProps={{
+                        className: "list-student_form-malop",
+                      }}
+                      inputProps={{
+                        placeholder: "Mã lớp",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 4 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">
+                      GIÁ TRỊ GIẢI THƯỞNG
+                    </p>
+                    <FormInput
+                      name={"giatrigiaithuong"}
+                      formItemProps={{
+                        className: "list-student_form-giatrigiaithuong",
+                      }}
+                      inputProps={{
+                        placeholder: "Giá trị giải thưởng",
+                      }}
+                    />
+                  </ColWrap>
+                  <ColWrap colProps={{ span: 12 }}>
+                    <p className="list-student_row-label">
+                      THỜI GIAN TRAO GIẢI
+                    </p>
+                    <FormInput
+                      name={"thoigian"}
+                      formItemProps={{
+                        className: "list-student_form-thoigian",
+                      }}
+                      inputProps={{
+                        placeholder: "Thời gian trao giải",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+                {/* Hàng 5 */}
+                <RowWrap
+                  isGutter={true}
+                  isWrap={true}
+                  isAutoFillRow={true}
+                  styleFill={"between"}
+                  gutter={[12, 12]}
+                  className="list-student_modal-row"
+                >
+                  <ColWrap colProps={{ span: 24 }}>
+                    <p className="list-student_row-label">LÝ DO TRAO GIẢI</p>
+                    <FormInput
+                      name={"lydo"}
+                      formItemProps={{
+                        className: "list-student_form-thoigian",
+                      }}
+                      inputProps={{
+                        placeholder: "Thời gian trao giải",
+                      }}
+                    />
+                  </ColWrap>
+                </RowWrap>
+              </FormWrap>
+              <div className="list-student_underLine" />
+            </div>
+          </Modal>
         </div>
       </div>
     </div>

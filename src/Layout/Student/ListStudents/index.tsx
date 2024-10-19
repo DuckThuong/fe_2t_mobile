@@ -471,18 +471,15 @@ export const ListStudents = () => {
 
   useEffect(() => {
     if (selectedRecord) {
-      form.setFieldsValue({
-        studentMsv: selectedRecord.studentMsv,
-        studentName: selectedRecord.studentName,
-        studentState: selectedRecord.studentState,
-        studentClass: selectedRecord.studentClass,
-        studentClassCode: selectedRecord.studentClassCode,
-        studentCourse: selectedRecord.studentCourse,
-        studentDob: selectedRecord.studentDob,
-        studentGender: selectedRecord.studentGender,
-      });
+      const fields = conlumns.reduce((acc, column) => {
+        if (column.dataIndex) {
+          acc[column.dataIndex] = selectedRecord[column.dataIndex];
+        }
+        return acc;
+      }, {});
+      form.setFieldsValue(fields);
     }
-  }, [selectedRecord, form]);
+  }, [selectedRecord, form, conlumns]);
   useEffect(() => {
     const handleTableScroll = () => {
       if (tableWrapperRef.current && scrollRef.current) {

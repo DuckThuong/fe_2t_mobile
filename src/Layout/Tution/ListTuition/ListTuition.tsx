@@ -552,22 +552,15 @@ export const ListTuition = () => {
   };
   useEffect(() => {
     if (selectedRecord) {
-      form.setFieldsValue({
-        htv: selectedRecord.htv,
-        msv: selectedRecord.msv,
-        khoa: selectedRecord.khoa,
-        hocki: selectedRecord.hocki,
-        lop: selectedRecord.lop,
-        malop: selectedRecord.malop,
-        smh: selectedRecord.smh,
-        tpn: selectedRecord.tpn,
-        tdn: selectedRecord.tdn,
-        tht: selectedRecord.tht,
-        tienthieu: selectedRecord.tienthieu,
-        tongcong: selectedRecord.tongcong,
-      });
+      const fields = column.reduce((acc, column) => {
+        if (column.dataIndex) {
+          acc[column.dataIndex] = selectedRecord[column.dataIndex];
+        }
+        return acc;
+      }, {});
+      form.setFieldsValue(fields);
     }
-  }, [selectedRecord, form]);
+  }, [selectedRecord, form, column]);
   useEffect(() => {
     const handleTableScroll = () => {
       if (tableWrapperRef.current && scrollRef.current) {

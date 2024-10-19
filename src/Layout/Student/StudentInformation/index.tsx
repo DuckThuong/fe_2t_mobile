@@ -485,16 +485,15 @@ export const StudentInformation = () => {
   };
   useEffect(() => {
     if (selectedRecord) {
-      form.setFieldsValue({
-        subjectId: selectedRecord.mhp,
-        subjectName: selectedRecord.thp,
-        subjectIndentify: selectedRecord.tt,
-        subjectCalendar: selectedRecord.lh,
-        subjectTeacher: selectedRecord.gv,
-        subjectRoom: selectedRecord.ph,
-      });
+      const fields = conlumns.reduce((acc, column) => {
+        if (column.dataIndex) {
+          acc[column.dataIndex] = selectedRecord[column.dataIndex];
+        }
+        return acc;
+      }, {});
+      form.setFieldsValue(fields);
     }
-  }, [selectedRecord, form]);
+  }, [selectedRecord, form, conlumns]);
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
