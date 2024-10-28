@@ -678,6 +678,42 @@ export const StudentInformation = () => {
             className="student-information_row"
           >
             <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Dân tộc</p>
+              <FormInput
+                name={"studentDantoc"}
+                formItemProps={{
+                  className: "student-information_form-studentDob",
+                }}
+                inputProps={{
+                  disabled: editState,
+                  placeholder: "Dân tộc",
+                }}
+              />
+            </ColWrap>
+            <ColWrap colProps={{ span: 12 }}>
+              <p className="student-information_row-label">Nơi sinh</p>
+              <FormInput
+                name={"studentNs"}
+                formItemProps={{
+                  className: "student-information_form-studentID",
+                }}
+                inputProps={{
+                  disabled: editState,
+                  placeholder: "Nơi sinh",
+                }}
+              />
+            </ColWrap>
+          </RowWrap>
+          {/* Hàng 3 */}
+          <RowWrap
+            isGutter={true}
+            isWrap={true}
+            isAutoFillRow={true}
+            styleFill={"between"}
+            gutter={[8, 8]}
+            className="student-information_row"
+          >
+            <ColWrap colProps={{ span: 12 }}>
               <p className="student-information_row-label">Số CCCD</p>
               <FormInput
                 name={"studentCCCD"}
@@ -851,17 +887,16 @@ export const StudentInformation = () => {
                 </ColWrap>
                 <ColWrap colProps={{ span: 12 }}>
                   <p className="student-information_row-label">
-                    Các môn còn lại
+                    Điểm số tích lũy (/10)
                   </p>
                   <FormInput
-                    name={"studentRemainingRegistered"}
+                    name={"studentScoreTen"}
                     formItemProps={{
-                      className:
-                        "student-information_form-studentRemainingRegistered",
+                      className: "student-information_form-studentScoreTen",
                     }}
                     inputProps={{
                       disabled: resultState && editState,
-                      placeholder: "Các môn còn lại",
+                      placeholder: "Điểm số",
                     }}
                   />
                 </ColWrap>
@@ -877,35 +912,36 @@ export const StudentInformation = () => {
               >
                 <ColWrap colProps={{ span: 12 }}>
                   <p className="student-information_row-label">
-                    Điểm số tích lũy (/10)
+                    Số lần nghỉ học có phép
                   </p>
                   <FormInput
-                    name={"studentScoreTen"}
-                    formItemProps={{
-                      className: "student-information_form-studentScoreTen",
-                    }}
-                    inputProps={{
-                      disabled: resultState && editState,
-                      placeholder: "Điểm số",
-                    }}
-                  />
-                </ColWrap>
-                <ColWrap colProps={{ span: 12 }}>
-                  <p className="student-information_row-label">
-                    Trường hợp đặc biệt
-                  </p>
-                  <FormInput
-                    name={"studentScordFour"}
+                    name={"studentCoPhep"}
                     formItemProps={{
                       className: "student-information_form-studentScordFour",
                     }}
                     inputProps={{
                       disabled: resultState && editState,
-                      placeholder: "Trường hợp đặc biệt",
+                      placeholder: "Số lần nghỉ học có phép",
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="student-information_row-label">
+                    Số lần nghỉ học không phép
+                  </p>
+                  <FormInput
+                    name={"studentKPhep"}
+                    formItemProps={{
+                      className: "student-information_form-studentScordFour",
+                    }}
+                    inputProps={{
+                      disabled: resultState && editState,
+                      placeholder: "Số lần nghỉ học không phép",
                     }}
                   />
                 </ColWrap>
               </RowWrap>
+
               {/* Hàng 9 */}
               <RowWrap
                 isGutter={true}

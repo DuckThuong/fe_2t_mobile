@@ -811,49 +811,7 @@ export const ListTuition = () => {
                   />
                 </ColWrap>
               </RowWrap>
-              <RowWrap
-                isGutter={true}
-                isWrap={true}
-                isAutoFillRow={true}
-                styleFill={"between"}
-                gutter={[8, 8]}
-                className="list-tuition_modal-row"
-              >
-                <ColWrap colProps={{ span: 12 }}>
-                  <p className="list-tuition_row-label">KHÓA</p>
-                  <FormInput
-                    name={"khoa"}
-                    formItemProps={{
-                      className: "list-tuition_form-tuitionName",
-                    }}
-                    inputProps={{
-                      placeholder: "Khóa",
-                      onChange: (e) =>
-                        setStudentInfo((prev) => ({
-                          ...prev,
-                          course: e.target.value,
-                        })),
-                    }}
-                  />
-                </ColWrap>
-                <ColWrap colProps={{ span: 12 }}>
-                  <p className="list-tuition_row-label">HỌC KÌ</p>
-                  <FormInput
-                    name={"hocki"}
-                    formItemProps={{
-                      className: "list-tuition_form-tuitionMsv",
-                    }}
-                    inputProps={{
-                      placeholder: "Mã học sinh",
-                      onChange: (e) =>
-                        setStudentInfo((prev) => ({
-                          ...prev,
-                          year: e.target.value,
-                        })),
-                    }}
-                  />
-                </ColWrap>
-              </RowWrap>
+
               <RowWrap
                 isGutter={true}
                 isWrap={true}
@@ -894,6 +852,49 @@ export const ListTuition = () => {
                         setStudentInfo((prev) => ({
                           ...prev,
                           studentClassCode: value,
+                        })),
+                    }}
+                  />
+                </ColWrap>
+              </RowWrap>
+              <RowWrap
+                isGutter={true}
+                isWrap={true}
+                isAutoFillRow={true}
+                styleFill={"between"}
+                gutter={[8, 8]}
+                className="list-tuition_modal-row"
+              >
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">NĂM HỌC</p>
+                  <FormInput
+                    name={"namhoc"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionName",
+                    }}
+                    inputProps={{
+                      placeholder: "Năm học",
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          course: e.target.value,
+                        })),
+                    }}
+                  />
+                </ColWrap>
+                <ColWrap colProps={{ span: 12 }}>
+                  <p className="list-tuition_row-label">HỌC KÌ</p>
+                  <FormInput
+                    name={"hocki"}
+                    formItemProps={{
+                      className: "list-tuition_form-tuitionMsv",
+                    }}
+                    inputProps={{
+                      placeholder: "Mã học sinh",
+                      onChange: (e) =>
+                        setStudentInfo((prev) => ({
+                          ...prev,
+                          year: e.target.value,
                         })),
                     }}
                   />

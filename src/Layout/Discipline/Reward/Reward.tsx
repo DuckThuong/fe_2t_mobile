@@ -8,7 +8,7 @@ import TableWrap from "../../../Components/TableWrap";
 import { TableRowSelection } from "antd/es/table/interface";
 import { CustomButton } from "../../../Components/buttons/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -20,6 +20,46 @@ import ColWrap from "../../../Components/ColWrap";
 import { FormInput } from "../../../Components/Form/FormInput";
 import { useForm } from "antd/es/form/Form";
 import NotificationPopup from "../../Notification";
+enum RewardChoosen {
+  FIRST_PLACE = "Giải Nhất",
+  SECOND_PLACE = "Giải Nhì",
+  THIRD_PLACE = "Giải Ba",
+  HONORABLE_MENTION = "Giải Khuyến Khích",
+  CREATIVITY = "Giải Sáng Tạo",
+  CONTRIBUTION = "Giải Cống Hiến",
+  SPECIAL = "Giải Đặc Biệt",
+  STUDY_ENCOURAGEMENT = "Giải Khuyến Học",
+  SPIRIT = "Giải Tinh Thần",
+  UNITY = "Giải Đoàn Kết",
+}
+enum classSelector {
+  SIX = "6",
+  SEVEN = "7",
+  EIGHT = "8",
+  NINE = "9",
+}
+enum classCodeSelector {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+}
+enum AwardReason {
+  EXCELLENT_ACADEMIC_PERFORMANCE = "Thành tích học tập xuất sắc",
+  SPORTS_ACHIEVEMENT = "Thành tích thể thao",
+  ARTISTIC_ACHIEVEMENT = "Thành tích văn nghệ",
+  SCIENTIFIC_RESEARCH = "Thành tích nghiên cứu khoa học",
+  CREATIVITY = "Thành tích sáng tạo",
+  CONTRIBUTION = "Thành tích cống hiến",
+  SPECIAL_ACHIEVEMENT = "Thành tích đặc biệt",
+  ACADEMIC_IMPROVEMENT = "Thành tích học tập tiến bộ",
+  GOOD_SPIRIT = "Tinh thần học tập tốt",
+  UNITY_SPIRIT = "Tinh thần đoàn kết",
+}
+enum AwardValueSortOrder {
+  ASCENDING = "Tăng dần",
+  DESCENDING = "Giảm dần",
+}
 export const Reward = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
@@ -80,15 +120,48 @@ export const Reward = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const rewardOptions = Object.values(RewardChoosen).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const classOption = Object.values(classSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const classCodeOption = Object.values(classCodeSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const AwardReasonOption = Object.values(AwardReason).map((reason) => ({
+    label: reason,
+    value: reason,
+  }));
+  const awardValueSortOptions = [
+    {
+      label: AwardValueSortOrder.ASCENDING,
+      value: AwardValueSortOrder.ASCENDING,
+    },
+    {
+      label: AwardValueSortOrder.DESCENDING,
+      value: AwardValueSortOrder.DESCENDING,
+    },
+  ];
+  // Define a sorting function
+  const sortAwardValue = (a, b, order) => {
+    if (order === AwardValueSortOrder.ASCENDING) {
+      return a.giatrigiaithuong - b.giatrigiaithuong;
+    } else if (order === AwardValueSortOrder.DESCENDING) {
+      return b.giatrigiaithuong - a.giatrigiaithuong;
+    }
+    return 0;
+  };
   const conlumns = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      render: (text, record, index) => {
-        return (
-          <p style={{ color: "black", fontWeight: "600" }}>{record.key}</p>
-        );
+      render: (text, record) => {
+        return <p style={{ color: "black", fontWeight: "600" }}>{record.id}</p>;
       },
     },
     {
@@ -107,13 +180,14 @@ export const Reward = () => {
       title: "TÊN GIẢI THƯỞNG",
       dataIndex: "tengiaithuong",
       key: "tengiaithuong",
-      render: (record) => {
+      render: (text, record, _index) => {
         return (
-          <>
-            <p className="reward_data-tengiaithuong">{record}</p>
-          </>
+          <p className="list-tuition_table-data">{record.tengiaithuong}</p>
         );
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: rewardOptions,
+      onFilter: (value, record) => record.tengiaithuong.includes(value),
     },
     {
       title: "HỌC SINH ĐẠT GIẢI",
@@ -142,26 +216,24 @@ export const Reward = () => {
     {
       title: "LỚP",
       dataIndex: "lop",
-      key: "lop",
-      render: (record) => {
-        return (
-          <>
-            <p className="reward_data-mahocsinh">{record}</p>
-          </>
-        );
+      id: "lop",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.lop}</p>;
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classOption,
+      onFilter: (value, record) => record.lop.includes(value), // Updated to use 'lop'
     },
     {
       title: "MÃ LỚP",
       dataIndex: "malop",
-      key: "malop",
-      render: (record) => {
-        return (
-          <>
-            <p className="reward_data-mahocsinh">{record}</p>
-          </>
-        );
+      id: "malop",
+      render: (_text, record, index) => {
+        return <p className="list-tuition_table-data">{record.malop}</p>;
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classCodeOption,
+      onFilter: (value, record) => record.malop.includes(value),
     },
     {
       title: "GIÁ TRỊ GIẢI THƯỞNG",
@@ -198,6 +270,9 @@ export const Reward = () => {
           </>
         );
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: AwardReasonOption,
+      onFilter: (value, record) => record.lydo.includes(value),
     },
     {
       title: "CHÚ THÍCH",
@@ -273,8 +348,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Nhất",
       hocsinhdatgiai: "Nguyễn Văn A",
       mahocsinh: "HS001",
-      lop: "10A1",
-      malop: "L001",
+      lop: "6",
+      malop: "A",
       giatrigiaithuong: "1000000",
       thoigian: "2023-10-01",
       lydo: "Thành tích học tập xuất sắc",
@@ -285,8 +360,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Nhì",
       hocsinhdatgiai: "Trần Thị B",
       mahocsinh: "HS002",
-      lop: "10A2",
-      malop: "L002",
+      lop: "7",
+      malop: "B",
       giatrigiaithuong: "500000",
       thoigian: "2023-10-02",
       lydo: "Thành tích thể thao",
@@ -297,8 +372,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Ba",
       hocsinhdatgiai: "Lê Văn C",
       mahocsinh: "HS003",
-      lop: "10A3",
-      malop: "L003",
+      lop: "8",
+      malop: "C",
       giatrigiaithuong: "300000",
       thoigian: "2023-10-03",
       lydo: "Thành tích văn nghệ",
@@ -309,8 +384,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Khuyến Khích",
       hocsinhdatgiai: "Phạm Thị D",
       mahocsinh: "HS004",
-      lop: "10A4",
-      malop: "L004",
+      lop: "9",
+      malop: "D",
       giatrigiaithuong: "200000",
       thoigian: "2023-10-04",
       lydo: "Thành tích nghiên cứu khoa học",
@@ -321,8 +396,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Sáng Tạo",
       hocsinhdatgiai: "Ngô Văn E",
       mahocsinh: "HS005",
-      lop: "10A5",
-      malop: "L005",
+      lop: "6",
+      malop: "A",
       giatrigiaithuong: "150000",
       thoigian: "2023-10-05",
       lydo: "Thành tích sáng tạo",
@@ -333,8 +408,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Cống Hiến",
       hocsinhdatgiai: "Đỗ Thị F",
       mahocsinh: "HS006",
-      lop: "10A6",
-      malop: "L006",
+      lop: "7",
+      malop: "B",
       giatrigiaithuong: "250000",
       thoigian: "2023-10-06",
       lydo: "Thành tích cống hiến",
@@ -345,8 +420,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Đặc Biệt",
       hocsinhdatgiai: "Vũ Văn G",
       mahocsinh: "HS007",
-      lop: "10A7",
-      malop: "L007",
+      lop: "8",
+      malop: "C",
       giatrigiaithuong: "2000000",
       thoigian: "2023-10-07",
       lydo: "Thành tích đặc biệt",
@@ -357,8 +432,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Khuyến Học",
       hocsinhdatgiai: "Lý Thị H",
       mahocsinh: "HS008",
-      lop: "10A8",
-      malop: "L008",
+      lop: "9",
+      malop: "D",
       giatrigiaithuong: "100000",
       thoigian: "2023-10-08",
       lydo: "Thành tích học tập tiến bộ",
@@ -369,8 +444,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Tinh Thần",
       hocsinhdatgiai: "Trương Văn I",
       mahocsinh: "HS009",
-      lop: "10A9",
-      malop: "L009",
+      lop: "6",
+      malop: "A",
       giatrigiaithuong: "750000",
       thoigian: "2023-10-09",
       lydo: "Tinh thần học tập tốt",
@@ -381,8 +456,8 @@ export const Reward = () => {
       tengiaithuong: "Giải Đoàn Kết",
       hocsinhdatgiai: "Phan Thị J",
       mahocsinh: "HS010",
-      lop: "10A10",
-      malop: "L010",
+      lop: "7",
+      malop: "B",
       giatrigiaithuong: "500000",
       thoigian: "2023-10-10",
       lydo: "Tinh thần đoàn kết",
@@ -494,10 +569,10 @@ export const Reward = () => {
             tableProps={{
               columns: conlumns.map((column) => ({
                 ...column,
-                // filters: column.filters?.map((filter) => ({
-                //   ...filter,
-                //   text: filter.label,
-                // })),
+                filters: column.filters?.map((filter) => ({
+                  ...filter,
+                  text: filter.label,
+                })),
               })),
               dataSource: data,
               rowSelection: rowSelection,

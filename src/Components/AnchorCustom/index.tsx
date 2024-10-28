@@ -17,10 +17,10 @@ const AnchorCustom: React.FC<AnchorProps> = ({ items }) => {
 
   return (
     <>
-      <div style={{ padding: "20px" }}>
+      <div style={{ padding: "20px", position: "sticky", top: 0, zIndex: 1000 }}>
         <Anchor
           direction="horizontal"
-          affix={false}
+          // affix={true} // Tắt affix
           items={items}
           onClick={handleClick}
         />

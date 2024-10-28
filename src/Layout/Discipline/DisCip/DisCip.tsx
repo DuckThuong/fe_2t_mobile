@@ -8,7 +8,7 @@ import TableWrap from "../../../Components/TableWrap";
 import { TableRowSelection } from "antd/es/table/interface";
 import { CustomButton } from "../../../Components/buttons/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
@@ -20,6 +20,35 @@ import ColWrap from "../../../Components/ColWrap";
 import { FormInput } from "../../../Components/Form/FormInput";
 import { Modal } from "antd";
 import NotificationPopup from "../../Notification";
+
+enum DisCipChoosen {
+  MP001 = "Cảnh cáo",
+  MP002 = "Khiển trách",
+  MP003 = "Phạt tiền",
+  MP004 = "Tạm đình chỉ học",
+  MP005 = "Đuổi học",
+  MP006 = "Cảnh cáo trước toàn trường",
+  MP007 = "Phạt lao động công ích",
+  MP008 = "Phạt viết bản kiểm điểm",
+}
+enum DisCipLevel {
+  MILD = "Nhẹ",
+  MODERATE = "Trung bình",
+  SEVERE = "Nặng",
+  VERY_SEVERE = "Rất nặng",
+}
+enum classSelector {
+  SIX = "6",
+  SEVEN = "7",
+  EIGHT = "8",
+  NINE = "9",
+}
+enum classCodeSelector {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D",
+}
 export const DisCip = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
@@ -54,7 +83,7 @@ export const DisCip = () => {
 
     const headers = [
       { header: "STT", key: "id" },
-      { header: "MÃ HÌNH PHẠT", key: "mahinhphat" },
+      { header: "MÃ HÌNH PHẠT", key: "hinhthucxuphat" },
       { header: "TÊN HÌNH PHẠT", key: "tenhinhphat" },
       { header: "HỌC SINH VI PHẠM", key: "hocsinhvipham" },
       { header: "MÃ HỌC SINH", key: "mahocsinh" },
@@ -80,6 +109,18 @@ export const DisCip = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const DisCipOption = Object.values(DisCipChoosen).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const classOption = Object.values(classSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
+  const classCodeOption = Object.values(classCodeSelector).map((major) => ({
+    label: major,
+    value: major,
+  }));
   const conlumns = [
     {
       title: "STT",
@@ -87,18 +128,6 @@ export const DisCip = () => {
       key: "id",
       render: (text, record, index) => {
         return <p style={{ color: "black", fontWeight: "600" }}>{record.id}</p>;
-      },
-    },
-    {
-      title: "MÃ XỬ PHẠT",
-      dataIndex: "mahinhphat",
-      key: "mahinhphat",
-      render: (record) => {
-        return (
-          <>
-            <p className="discip_data-mahinhphat">{record}</p>
-          </>
-        );
       },
     },
     {
@@ -112,6 +141,33 @@ export const DisCip = () => {
           </>
         );
       },
+    },
+    {
+      title: "MỨC ĐỘ XỬ PHẠT",
+      dataIndex: "giatrihinhphat",
+      key: "giatrihinhphat",
+      render: (record) => {
+        return (
+          <>
+            <p className="discip_data-mahocsinh">{record}</p>
+          </>
+        );
+      },
+    },
+    {
+      title: "HÌNH THỨC XỬ PHẠT",
+      dataIndex: "hinhthucxuphat",
+      key: "hinhthucxuphat",
+      render: (record) => {
+        return (
+          <>
+            <p className="discip_data-hinhthucxuphat">{record}</p>
+          </>
+        );
+      },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: DisCipOption,
+      onFilter: (value, record) => record.hinhthucxuphat.includes(value),
     },
     {
       title: "HỌC SINH VI PHẠM",
@@ -140,39 +196,26 @@ export const DisCip = () => {
     {
       title: "LỚP",
       dataIndex: "lop",
-      key: "lop",
-      render: (record) => {
-        return (
-          <>
-            <p className="discip_data-mahocsinh">{record}</p>
-          </>
-        );
+      id: "lop",
+      render: (text, record, index) => {
+        return <p className="list-tuition_table-data">{record.lop}</p>;
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classOption,
+      onFilter: (value, record) => record.lop.includes(value), // Updated to use 'lop'
     },
     {
       title: "MÃ LỚP",
       dataIndex: "malop",
-      key: "malop",
-      render: (record) => {
-        return (
-          <>
-            <p className="discip_data-mahocsinh">{record}</p>
-          </>
-        );
+      id: "malop",
+      render: (_text, record, index) => {
+        return <p className="list-tuition_table-data">{record.malop}</p>;
       },
+      filterIcon: <FontAwesomeIcon icon={faSort} />,
+      filters: classCodeOption,
+      onFilter: (value, record) => record.malop.includes(value),
     },
-    {
-      title: "MỨC ĐỘ XỬ PHẠT",
-      dataIndex: "giatrihinhphat",
-      key: "giatrihinhphat",
-      render: (record) => {
-        return (
-          <>
-            <p className="discip_data-mahocsinh">{record}</p>
-          </>
-        );
-      },
-    },
+
     {
       title: "THỜI GIAN XỬ PHẠT",
       dataIndex: "thoigian",
@@ -267,7 +310,7 @@ export const DisCip = () => {
   const [data, setNewData] = useState<any[]>([
     {
       id: 1,
-      mahinhphat: "MP001",
+      hinhthucxuphat: "MP001",
       tenhinhphat: "Hình phạt 1",
       hocsinhvipham: "Nguyễn Văn A",
       mahocsinh: "HS001",
@@ -279,7 +322,7 @@ export const DisCip = () => {
     },
     {
       id: 2,
-      mahinhphat: "MP002",
+      hinhthucxuphat: "MP002",
       tenhinhphat: "Hình phạt 2",
       hocsinhvipham: "Trần Thị B",
       mahocsinh: "HS002",
@@ -287,6 +330,234 @@ export const DisCip = () => {
       malop: "L002",
       giatrihinhphat: "Khiển trách",
       thoigian: "2023-10-02",
+      lydo: "Không làm bài tập",
+    },
+    {
+      id: 3,
+      hinhthucxuphat: "MP003",
+      tenhinhphat: "Hình phạt 3",
+      hocsinhvipham: "Lê Văn C",
+      mahocsinh: "HS003",
+      lop: "10A3",
+      malop: "L003",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-03",
+      lydo: "Nói chuyện riêng",
+    },
+    {
+      id: 4,
+      hinhthucxuphat: "MP004",
+      tenhinhphat: "Hình phạt 4",
+      hocsinhvipham: "Phạm Thị D",
+      mahocsinh: "HS004",
+      lop: "10A4",
+      malop: "L004",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-04",
+      lydo: "Không mặc đồng phục",
+    },
+    {
+      id: 5,
+      hinhthucxuphat: "MP005",
+      tenhinhphat: "Hình phạt 5",
+      hocsinhvipham: "Trần Văn E",
+      mahocsinh: "HS005",
+      lop: "10A5",
+      malop: "L005",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-05",
+      lydo: "Không làm bài tập",
+    },
+    {
+      id: 6,
+      hinhthucxuphat: "MP006",
+      tenhinhphat: "Hình phạt 6",
+      hocsinhvipham: "Nguyễn Thị F",
+      mahocsinh: "HS006",
+      lop: "10A6",
+      malop: "L006",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-06",
+      lydo: "Đi học muộn",
+    },
+    {
+      id: 7,
+      hinhthucxuphat: "MP007",
+      tenhinhphat: "Hình phạt 7",
+      hocsinhvipham: "Lê Văn G",
+      mahocsinh: "HS007",
+      lop: "10A7",
+      malop: "L007",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-07",
+      lydo: "Nói chuyện riêng",
+    },
+    {
+      id: 8,
+      hinhthucxuphat: "MP008",
+      tenhinhphat: "Hình phạt 8",
+      hocsinhvipham: "Phạm Thị H",
+      mahocsinh: "HS008",
+      lop: "10A8",
+      malop: "L008",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-08",
+      lydo: "Không mặc đồng phục",
+    },
+    {
+      id: 9,
+      hinhthucxuphat: "MP009",
+      tenhinhphat: "Hình phạt 9",
+      hocsinhvipham: "Trần Văn I",
+      mahocsinh: "HS009",
+      lop: "10A9",
+      malop: "L009",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-09",
+      lydo: "Không làm bài tập",
+    },
+    {
+      id: 10,
+      hinhthucxuphat: "MP010",
+      tenhinhphat: "Hình phạt 10",
+      hocsinhvipham: "Nguy���n Thị J",
+      mahocsinh: "HS010",
+      lop: "10A10",
+      malop: "L010",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-10",
+      lydo: "Đi học muộn",
+    },
+    {
+      id: 11,
+      hinhthucxuphat: "MP011",
+      tenhinhphat: "Hình phạt 11",
+      hocsinhvipham: "Lê Văn K",
+      mahocsinh: "HS011",
+      lop: "10A11",
+      malop: "L011",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-11",
+      lydo: "Nói chuyện riêng",
+    },
+    {
+      id: 12,
+      hinhthucxuphat: "MP012",
+      tenhinhphat: "Hình phạt 12",
+      hocsinhvipham: "Phạm Thị L",
+      mahocsinh: "HS012",
+      lop: "10A12",
+      malop: "L012",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-12",
+      lydo: "Không mặc đồng phục",
+    },
+    {
+      id: 13,
+      hinhthucxuphat: "MP013",
+      tenhinhphat: "Hình phạt 13",
+      hocsinhvipham: "Trần Văn M",
+      mahocsinh: "HS013",
+      lop: "10A13",
+      malop: "L013",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-13",
+      lydo: "Không làm bài tập",
+    },
+    {
+      id: 14,
+      hinhthucxuphat: "MP014",
+      tenhinhphat: "Hình phạt 14",
+      hocsinhvipham: "Nguyễn Thị N",
+      mahocsinh: "HS014",
+      lop: "10A14",
+      malop: "L014",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-14",
+      lydo: "Đi học muộn",
+    },
+    {
+      id: 15,
+      hinhthucxuphat: "MP015",
+      tenhinhphat: "Hình phạt 15",
+      hocsinhvipham: "Lê Văn O",
+      mahocsinh: "HS015",
+      lop: "10A15",
+      malop: "L015",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-15",
+      lydo: "Nói chuyện riêng",
+    },
+    {
+      id: 16,
+      hinhthucxuphat: "MP016",
+      tenhinhphat: "Hình phạt 16",
+      hocsinhvipham: "Phạm Thị P",
+      mahocsinh: "HS016",
+      lop: "10A16",
+      malop: "L016",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-16",
+      lydo: "Không mặc đồng phục",
+    },
+    {
+      id: 17,
+      hinhthucxuphat: "MP017",
+      tenhinhphat: "Hình phạt 17",
+      hocsinhvipham: "Trần Văn Q",
+      mahocsinh: "HS017",
+      lop: "10A17",
+      malop: "L017",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-17",
+      lydo: "Không làm bài tập",
+    },
+    {
+      id: 18,
+      hinhthucxuphat: "MP018",
+      tenhinhphat: "Hình phạt 18",
+      hocsinhvipham: "Nguyễn Thị R",
+      mahocsinh: "HS018",
+      lop: "10A18",
+      malop: "L018",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-18",
+      lydo: "Đi học muộn",
+    },
+    {
+      id: 19,
+      hinhthucxuphat: "MP019",
+      tenhinhphat: "Hình phạt 19",
+      hocsinhvipham: "Lê Văn S",
+      mahocsinh: "HS019",
+      lop: "10A19",
+      malop: "L019",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-19",
+      lydo: "Nói chuyện riêng",
+    },
+    {
+      id: 20,
+      hinhthucxuphat: "MP020",
+      tenhinhphat: "Hình phạt 20",
+      hocsinhvipham: "Phạm Thị T",
+      mahocsinh: "HS020",
+      lop: "10A20",
+      malop: "L020",
+      giatrihinhphat: "Khiển trách",
+      thoigian: "2023-10-20",
+      lydo: "Không mặc đồng phục",
+    },
+    {
+      id: 21,
+      hinhthucxuphat: "MP021",
+      tenhinhphat: "Hình phạt 21",
+      hocsinhvipham: "Trần Văn U",
+      mahocsinh: "HS021",
+      lop: "10A21",
+      malop: "L021",
+      giatrihinhphat: "Cảnh cáo",
+      thoigian: "2023-10-21",
       lydo: "Không làm bài tập",
     },
   ]);
@@ -396,10 +667,10 @@ export const DisCip = () => {
             tableProps={{
               columns: conlumns.map((column) => ({
                 ...column,
-                // filters: column.filters?.map((filter) => ({
-                //   ...filter,
-                //   text: filter.label,
-                // })),
+                filters: column.filters?.map((filter) => ({
+                  ...filter,
+                  text: filter.label,
+                })),
               })),
               dataSource: data,
               rowSelection: rowSelection,
@@ -434,7 +705,7 @@ export const DisCip = () => {
             }}
             onOk={() => {
               if (
-                form.getFieldValue("mahinhphat") &&
+                form.getFieldValue("hinhthucxuphat") &&
                 form.getFieldValue("tenhinhphat") &&
                 form.getFieldValue("hocsinhvipham") &&
                 form.getFieldValue("mahocsinh") &&
@@ -446,7 +717,7 @@ export const DisCip = () => {
               ) {
                 const newData = {
                   id: data.length + 1,
-                  mahinhphat: form.getFieldValue("mahinhphat"),
+                  hinhthucxuphat: form.getFieldValue("hinhthucxuphat"),
                   tenhinhphat: form.getFieldValue("tenhinhphat"),
                   hocsinhvipham: form.getFieldValue("hocsinhvipham"),
                   mahocsinh: form.getFieldValue("mahocsinh"),
@@ -487,9 +758,9 @@ export const DisCip = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">MÃ HÌNH PHẠT</p>
                     <FormInput
-                      name={"mahinhphat"}
+                      name={"hinhthucxuphat"}
                       formItemProps={{
-                        className: "list-student_form-mahinhphat",
+                        className: "list-student_form-hinhthucxuphat",
                       }}
                       inputProps={{
                         placeholder: "Mã hình phạt",
@@ -645,7 +916,7 @@ export const DisCip = () => {
             }}
             onOk={() => {
               if (
-                form.getFieldValue("mahinhphat") &&
+                form.getFieldValue("hinhthucxuphat") &&
                 form.getFieldValue("tenhinhphat") &&
                 form.getFieldValue("hocsinhvipham") &&
                 form.getFieldValue("mahocsinh") &&
@@ -657,7 +928,7 @@ export const DisCip = () => {
               ) {
                 const updatedRecord = {
                   ...selectedRecord,
-                  mahinhphat: form.getFieldValue("mahinhphat"),
+                  hinhthucxuphat: form.getFieldValue("hinhthucxuphat"),
                   tenhinhphat: form.getFieldValue("tenhinhphat"),
                   hocsinhvipham: form.getFieldValue("hocsinhvipham"),
                   mahocsinh: form.getFieldValue("mahocsinh"),
@@ -705,9 +976,9 @@ export const DisCip = () => {
                   <ColWrap colProps={{ span: 12 }}>
                     <p className="list-student_row-label">MÃ HÌNH PHẠT</p>
                     <FormInput
-                      name={"mahinhphat"}
+                      name={"hinhthucxuphat"}
                       formItemProps={{
-                        className: "list-student_form-mahinhphat",
+                        className: "list-student_form-hinhthucxuphat",
                       }}
                       inputProps={{
                         placeholder: "Mã hình phạt",

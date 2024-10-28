@@ -1,0 +1,42 @@
+.custom_widget {
+  background: transparent;
+  border-radius: 0;
+
+  &.ant-card {
+    box-shadow: none;
+    padding-bottom: 66px;
+  }
+
+  &-breadcrumb {
+    & ol {
+      align-items: center;
+    }
+
+    &-title {
+      color: #231f20;
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    & .ant-breadcrumb-link {
+      display: flex;
+      align-items: center;
+
+      &:first-child {
+        gap: 4px;
+      }
+    }
+
+    & .ant-breadcrumb-separator {
+      color: #231f20;
+      margin-inline: 4px;
+      font-size: 12px;
+      font-weight: 400;
+    }
+  }
+
+  &-title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+}

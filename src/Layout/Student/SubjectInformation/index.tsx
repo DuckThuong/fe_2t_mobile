@@ -430,9 +430,7 @@ export const SubjectInformation = () => {
                 className="subject-detail_row"
               >
                 <ColWrap colProps={{ span: 12 }}>
-                  <p className="subject-detail_row-label">
-                    Trung bình cộng học kì
-                  </p>
+                  <p className="subject-detail_row-label">Điểm tổng kết</p>
                   <FormInput
                     name={"courseTBC"}
                     formItemProps={{
@@ -440,7 +438,7 @@ export const SubjectInformation = () => {
                     }}
                     inputProps={{
                       disabled: editState,
-                      placeholder: "Trung bình cộng học kì",
+                      placeholder: "Điểm tổng kết",
                     }}
                   />
                 </ColWrap>
