@@ -22,6 +22,7 @@ import TableWrap from "../../../Components/TableWrap";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { FormInput } from "../../../Components/Form/FormInput";
 import { FormSelect } from "../../../Components/Form/FormSelect";
+import { studentInfor } from "../../../account";
 enum classSelector {
   SIX = "6",
   SEVEN = "7",
@@ -94,6 +95,14 @@ export const ListStudents = () => {
     showRegistedNewColumn: false,
     showEditstudent: false,
   });
+  useEffect(() => {
+    const updatedData = studentInfor.map((student, index) => ({
+      id: index + 1,
+      ...student,
+    }));
+    setNewData(updatedData);
+  }, []);
+  const [data, setNewData] = useState<any[]>([]);
 
   const conlumns = [
     {
@@ -101,9 +110,7 @@ export const ListStudents = () => {
       dataIndex: "stt",
       key: "stt",
       render: (text, record, index) => {
-        return (
-          <p style={{ color: "black", fontWeight: "600" }}>{record.key}</p>
-        );
+        return <p style={{ color: "black", fontWeight: "600" }}>{index + 1}</p>;
       },
     },
     {
@@ -162,8 +169,8 @@ export const ListStudents = () => {
     },
     {
       title: "KHÓA",
-      dataIndex: "studentCourse",
-      key: "studentCourse",
+      dataIndex: "studentSemester",
+      key: "studentSemester",
       render: (record) => {
         return (
           <>
@@ -290,138 +297,6 @@ export const ListStudents = () => {
       hidden: !modalStates.showRegistedNewColumn,
     },
   ];
-  const [data, setNewData] = useState<any[]>([
-    {
-      id: "1",
-      key: "1",
-      studentMsv: "21A100100373",
-      studentName: "Trịnh Đức Thưởng",
-      studentClass: "8",
-      studentClassCode: "A",
-      studentCourse: "K21",
-      studentDob: "28/07/2003",
-      studentGender: "Nam",
-      studentState: "Đang học",
-      studentOption: "Details",
-    },
-    {
-      id: "2",
-      key: "2",
-      studentMsv: "21A100100140",
-      studentName: "Lương Thu Hoài",
-      studentClass: "6",
-      studentClassCode: "B",
-      studentCourse: "K21",
-      studentDob: "1/10/2003",
-      studentGender: "Nữ",
-      studentState: "Đang học",
-      studentOption: "Details",
-    },
-    {
-      id: "3",
-      key: "3",
-      studentMsv: "21A100100137",
-      studentName: "Nguyễn Minh Hòa",
-      studentClass: "7",
-      studentClassCode: "C",
-      studentCourse: "K21",
-      studentDob: "15/11/2003",
-      studentGender: "Nữ",
-      studentState: "Tốt nghiệp",
-      studentOption: "Details",
-    },
-    {
-      id: "4",
-      key: "4",
-      studentMsv: "21A100100331",
-      studentName: "Nguyễn Minh Tuấn",
-      studentClass: "9",
-      studentClassCode: "D",
-      studentCourse: "K21",
-      studentDob: "15/01/2003",
-      studentGender: "Nam",
-      studentState: "Bảo lưu",
-      studentOption: "Details",
-    },
-    {
-      id: "5",
-      key: "5",
-      studentMsv: "21A100100337",
-      studentName: "Trần Minh Thư",
-      studentClass: "8",
-      studentClassCode: "A",
-      studentCourse: "K21",
-      studentDob: "25/11/2003",
-      studentGender: "Nữ",
-      studentState: "Nghỉ học",
-      studentOption: "Details",
-    },
-    {
-      id: "6",
-      key: "6",
-      studentMsv: "21A100100327",
-      studentName: "Trần Minh Tuấn",
-      studentClass: "6",
-      studentClassCode: "D",
-      studentCourse: "K21",
-      studentDob: "25/5/2003",
-      studentGender: "Nam",
-      studentState: "Nghỉ học",
-      studentOption: "Details",
-    },
-    {
-      id: "7",
-      key: "7",
-      studentMsv: "21A100100344",
-      studentName: "Trịnh Văn Mạnh",
-      studentClass: "9",
-      studentClassCode: "C",
-      studentCourse: "K21",
-      studentDob: "25/11/2003",
-      studentGender: "Nam",
-      studentState: "Đang học",
-      studentOption: "Details",
-    },
-    {
-      id: "8",
-      key: "8",
-      studentMsv: "21A100100437",
-      studentName: "Hoàng Bảo Ngọc",
-      studentClass: "8",
-      studentClassCode: "A",
-      studentCourse: "K21",
-      studentDob: "03/02/2003",
-      studentGender: "Nữ",
-      studentState: "Đang học",
-      studentOption: "Details",
-    },
-    {
-      id: "9",
-      key: "9",
-      studentMsv: "21A100100537",
-      studentName: "Trần Khánh Hùng",
-      studentClass: "7",
-      studentClassCode: "B",
-      studentCourse: "K21",
-      studentDob: "25/11/2003",
-      studentGender: "Nam",
-      studentState: "Đang học",
-      studentOption: "Details",
-    },
-    {
-      id: "10",
-      key: "10",
-      studentMsv: "21A100100347",
-      studentName: "Phạm Duy Trường",
-      studentClass: "7",
-      studentClassCode: "A",
-      studentCourse: "K21",
-      studentDob: "25/11/2003",
-      studentGender: "Nam",
-      studentState: "Tốt nghiệp",
-      studentOption: "Details",
-    },
-  ]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };

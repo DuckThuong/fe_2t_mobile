@@ -33,6 +33,7 @@ import { FormInput } from "../../../Components/Form/FormInput";
 import { FormSelect } from "../../../Components/Form/FormSelect";
 import StudentFooterActions from "../../FooterWeb";
 import TableWrap from "../../../Components/TableWrap";
+import { studentInfor } from "../../../account";
 
 export const StudentInformation = () => {
   const navigate = useNavigate();
@@ -442,7 +443,7 @@ export const StudentInformation = () => {
       { header: "MÃ LỚP", key: "ltc" },
       { header: "LỊCH HỌC", key: "lh" },
       { header: "GIÁO VIÊN", key: "gv" },
-      { header: "PHÒNG HỌC", key: "ph" },
+      { header: "PHÒNG H��C", key: "ph" },
     ];
 
     const worksheet = XLSX.utils.json_to_sheet(data, {
@@ -502,7 +503,13 @@ export const StudentInformation = () => {
       return () => clearTimeout(timer);
     }
   }, [notification]);
-
+  useEffect(() => {
+    studentInfor.forEach((student) => {
+      if (student.studentMsv === "MSV_001") {
+        form.setFieldsValue(student);
+      }
+    });
+  }, [form]);
   return (
     <div>
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={false} />
@@ -620,7 +627,7 @@ export const StudentInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="student-information_row-label">Trạng thái</p>
               <FormSelect
-                name={"StudentState"}
+                name={"studentState"}
                 formItemProps={{
                   className: "student-information_form-studentMsv",
                 }}
@@ -847,7 +854,7 @@ export const StudentInformation = () => {
             <ColWrap colProps={{ span: 12 }}>
               <p className="student-information_row-label">Học kì</p>
               <FormInput
-                name={"studentSemester"}
+                name={"studentHocKi"}
                 formItemProps={{
                   className: "student-information_form-studentSemester",
                 }}
