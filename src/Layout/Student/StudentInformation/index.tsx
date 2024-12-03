@@ -55,6 +55,7 @@ export const StudentInformation = () => {
   const [year, setYear] = useState<any>();
   const [semester, setSemester] = useState<any>();
   const yearInputRef = useRef<HTMLInputElement>(null);
+  const [studentData, setStudentData] = useState();
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const option = [
     { value: "Đang học", label: "Đang học" },
@@ -70,6 +71,24 @@ export const StudentInformation = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/student/getAllStudent"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setStudentData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const conlumns = [
     {
       title: "STT",

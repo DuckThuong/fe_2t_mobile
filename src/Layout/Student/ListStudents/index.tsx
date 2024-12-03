@@ -1,28 +1,36 @@
-import { useEffect, useRef, useState } from "react";
-import "./listStudents.scss";
-import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import * as XLSX from "xlsx";
-import { TableRowSelection } from "antd/es/table/interface";
+import { faCircleInfo, faSort } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from "antd";
 import { useForm } from "antd/es/form/Form";
+import { TableRowSelection } from "antd/es/table/interface";
+import {
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { useNavigate } from "react-router-dom";
+import * as XLSX from "xlsx";
+import { SvgMagnifyingGlassSubmit } from "../../../Components/@svg/SvgMagnifyingGlassSubmit";
+import ColWrap from "../../../Components/ColWrap";
+import { FormButtonSubmit } from "../../../Components/Form/FormButtonSubmit";
+import { FormInput } from "../../../Components/Form/FormInput";
+import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
+import { FormSelect } from "../../../Components/Form/FormSelect";
+import FormWrap from "../../../Components/Form/FormWrap";
+import RowWrap from "../../../Components/RowWrap";
+import TableWrap from "../../../Components/TableWrap";
+import { CustomButton } from "../../../Components/buttons/CustomButton";
+import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
+import { studentInfor } from "../../../account";
+import StudentFooterActions from "../../FooterWeb";
 import { HeaderWeb } from "../../HeaderWeb";
 import NotificationPopup from "../../Notification";
-import StudentFooterActions from "../../FooterWeb";
-import RowWrap from "../../../Components/RowWrap";
-import ColWrap from "../../../Components/ColWrap";
-import { CustomButton } from "../../../Components/buttons/CustomButton";
-import FormWrap from "../../../Components/Form/FormWrap";
-import { FormInputSearch } from "../../../Components/Form/FormInputSearch";
-import { FormButtonSubmit } from "../../../Components/Form/FormButtonSubmit";
-import { SvgMagnifyingGlassSubmit } from "../../../Components/@svg/SvgMagnifyingGlassSubmit";
-import TableWrap from "../../../Components/TableWrap";
-import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
-import { FormInput } from "../../../Components/Form/FormInput";
-import { FormSelect } from "../../../Components/Form/FormSelect";
-import { studentInfor } from "../../../account";
+import "./listStudents.scss";
 enum classSelector {
   SIX = "6",
   SEVEN = "7",
@@ -58,6 +66,7 @@ export const ListStudents = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const tableWrapperRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [studentData, setStudentData] = useState();
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const classOption = Object.values(classSelector).map((major) => ({
     label: major,
@@ -96,6 +105,24 @@ export const ListStudents = () => {
     showEditstudent: false,
   });
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/student/getAllStudent"
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setStudentData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+  console.log(studentData);
+  useEffect(() => {
     const updatedData = studentInfor.map((student, index) => ({
       id: index + 1,
       ...student,
@@ -103,13 +130,17 @@ export const ListStudents = () => {
     setNewData(updatedData);
   }, []);
   const [data, setNewData] = useState<any[]>([]);
-
+  const onClick = (detail) => {
+    navigate(
+      CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION + `/${detail.studentMsv}`
+    );
+  };
   const conlumns = [
     {
       title: "STT",
       dataIndex: "stt",
       key: "stt",
-      render: (text, record, index) => {
+      render: (_text, record, index) => {
         return <p style={{ color: "black", fontWeight: "600" }}>{index + 1}</p>;
       },
     },
@@ -141,7 +172,17 @@ export const ListStudents = () => {
       title: "LỚP",
       dataIndex: "studentClass",
       key: "studentClass",
-      render: (record) => {
+      render: (
+        record:
+          | string
+          | number
+          | boolean
+          | ReactElement<any, string | JSXElementConstructor<any>>
+          | Iterable<ReactNode>
+          | ReactPortal
+          | null
+          | undefined
+      ) => {
         return (
           <>
             <p className="list-student_data-studentClass">{record}</p>
@@ -234,7 +275,7 @@ export const ListStudents = () => {
       title: "CHI TIẾT",
       dataIndex: "studentOption",
       key: "studentOption",
-      render: () => {
+      render: (value, record) => {
         return (
           <>
             <CustomButton
@@ -244,7 +285,7 @@ export const ListStudents = () => {
                 icon: <FontAwesomeIcon icon={faCircleInfo} />,
                 disabled: !editState,
                 onClick: () => {
-                  navigate(CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION);
+                  onClick(record);
                 },
               }}
             />
@@ -256,7 +297,7 @@ export const ListStudents = () => {
       title: "CHỨC NĂNG",
       dataIndex: "cn",
       key: "cn",
-      render: (text, record) => {
+      render: (_text, record) => {
         return (
           <>
             {modalStates.showEditButton && (
@@ -293,7 +334,6 @@ export const ListStudents = () => {
           </>
         );
       },
-
       hidden: !modalStates.showRegistedNewColumn,
     },
   ];
@@ -451,7 +491,7 @@ export const ListStudents = () => {
                   text: filter.label,
                 })),
               })),
-              dataSource: data,
+              dataSource: studentData,
               rowSelection: rowSelection,
             }}
           />

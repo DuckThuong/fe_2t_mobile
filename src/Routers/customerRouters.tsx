@@ -47,7 +47,7 @@ export const CustomerRouter = () => (
     ></Route>
     {/* Student_Information */}
     <Route
-      path={CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION}
+      path={CUSTOMER_ROUTER_PATH.STUDENT_INFORMATION + "/:studentMsv"}
       element={<SuspenseWrapper component={<StudentInformation />} />}
     ></Route>
     {/* Subject_Information */}

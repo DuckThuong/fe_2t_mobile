@@ -20,12 +20,32 @@ const Login = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+  const [userData, setUserData] = useState<any[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/getAllUser");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   const onFinish = () => {
-    if (
-      form.getFieldValue("email") === admin?.email &&
-      form.getFieldValue("password") === admin?.password
-    ) {
+    const email = form.getFieldValue("email");
+    const password = form.getFieldValue("password");
+
+    const userExists = userData.some(
+      (user) => user.email === email && user.password === password
+    );
+
+    if (userExists) {
       navigate(CUSTOMER_ROUTER_PATH.LIST_STUDENT);
       setNotification({ message: "Thành Công", type: "success" });
     } else {

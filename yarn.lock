@@ -7189,6 +7189,7 @@ multicast-dns@^7.2.5:
   version "0.1.0"
   dependencies:
     "@ant-design/icons" "^5.5.1"
+    "@fortawesome/fontawesome-svg-core" "^6.6.0"
     "@fortawesome/free-solid-svg-icons" "^6.6.0"
     "@fortawesome/react-fontawesome" "^0.2.2"
     "@reduxjs/toolkit" "^2.2.7"
@@ -7202,7 +7203,7 @@ multicast-dns@^7.2.5:
     dayjs "^1.11.13"
     isemail "^3.2.0"
     lodash "^4.17.21"
-    my-app "file:../../AppData/Local/Yarn/Cache/v6/npm-my-app-0.1.0-9bbb1694-0a89-40d3-9ee3-a8178731f738-1729248228096/node_modules/my-app"
+    my-app "file:../../../AppData/Local/Yarn/Cache/v6/npm-my-app-0.1.0-9e0754a8-9ba1-4fb4-93c5-cd03c0c85284-1733219299830/node_modules/my-app"
     qrcode.react "^4.0.1"
     rc-util "^5.43.0"
     react "^18.3.1"
