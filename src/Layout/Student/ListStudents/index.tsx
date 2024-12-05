@@ -121,7 +121,6 @@ export const ListStudents = () => {
     };
     fetchData();
   }, []);
-  console.log(studentData);
   useEffect(() => {
     const updatedData = studentInfor.map((student, index) => ({
       id: index + 1,

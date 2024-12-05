@@ -15,7 +15,7 @@ import {
   faCircleInfo,
   faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
@@ -33,11 +33,16 @@ import { FormInput } from "../../../Components/Form/FormInput";
 import { FormSelect } from "../../../Components/Form/FormSelect";
 import StudentFooterActions from "../../FooterWeb";
 import TableWrap from "../../../Components/TableWrap";
-import { studentInfor } from "../../../account";
+
+interface StudentData {
+  studentMsv: string;
+  [key: string]: any;
+}
 
 export const StudentInformation = () => {
   const navigate = useNavigate();
   const [form] = useForm();
+  const { studentMsv } = useParams();
   const [editState, setEditState] = useState<boolean>(true);
   const [resultState, setResultState] = useState<boolean>(true);
   const [courseEdit, setCourseEdit] = useState<boolean>(true);
@@ -55,7 +60,7 @@ export const StudentInformation = () => {
   const [year, setYear] = useState<any>();
   const [semester, setSemester] = useState<any>();
   const yearInputRef = useRef<HTMLInputElement>(null);
-  const [studentData, setStudentData] = useState();
+  const [studentData, setStudentData] = useState<StudentData[]>();
   const [selectedRecord, setSelectedRecord] = useState<any>(null);
   const option = [
     { value: "Đang học", label: "Đang học" },
@@ -71,11 +76,12 @@ export const StudentInformation = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+  console.log(studentMsv);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "http://localhost:8080/api/student/getAllStudent"
+          `http://localhost:8080/api/student/getStudentById/${studentMsv}`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -87,8 +93,8 @@ export const StudentInformation = () => {
       }
     };
     fetchData();
-  }, []);
-
+  }, [studentMsv]);
+  console.log(studentData);
   const conlumns = [
     {
       title: "STT",
@@ -462,7 +468,7 @@ export const StudentInformation = () => {
       { header: "MÃ LỚP", key: "ltc" },
       { header: "LỊCH HỌC", key: "lh" },
       { header: "GIÁO VIÊN", key: "gv" },
-      { header: "PHÒNG H��C", key: "ph" },
+      { header: "PHÒNG HC", key: "ph" },
     ];
 
     const worksheet = XLSX.utils.json_to_sheet(data, {
@@ -523,12 +529,14 @@ export const StudentInformation = () => {
     }
   }, [notification]);
   useEffect(() => {
-    studentInfor.forEach((student) => {
-      if (student.studentMsv === "MSV_001") {
-        form.setFieldsValue(student);
-      }
-    });
-  }, [form]);
+    if (studentData) {
+      studentData.forEach((student) => {
+        if (student.studentMsv === studentMsv) {
+          form.setFieldsValue(student);
+        }
+      });
+    }
+  }, [form, studentData]);
   return (
     <div>
       <HeaderWeb name="QUẢN LÝ HỌC SINH" disAble={false} />
@@ -962,7 +970,7 @@ export const StudentInformation = () => {
                     }}
                     inputProps={{
                       disabled: resultState && editState,
-                      placeholder: "Số lần nghỉ học không phép",
+                      placeholder: "S lần nghỉ hc không phép",
                     }}
                   />
                 </ColWrap>
