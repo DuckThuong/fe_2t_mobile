@@ -13,7 +13,7 @@ export const CUSTOMER_ROUTE_NAME = {
   FORGOT_EDIT_PASSWORD: "forgot-edit-password",
   FORGOT_SUCCESS: "forgot-success",
   //List_Students
-  LIST_STUDENT: "list-student",
+  TRANG_CHU: "trang-chu",
   //Student_information
   STUDENT_INFORMATION: "student-information",
   //CLASS_information
@@ -38,7 +38,7 @@ export const CUSTOMER_ROUTER_PATH = {
   FORGOT_EDIT_PASSWORD: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.FORGOT_EDIT_PASSWORD}`,
   FORGOT_SUCCESS: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.FORGOT_SUCCESS}`,
   //List_students
-  LIST_STUDENT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.LIST_STUDENT}`,
+  TRANG_CHU: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.TRANG_CHU}`,
   //Student_information
   STUDENT_INFORMATION: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.STUDENT_INFORMATION}`,
   //Subject_information

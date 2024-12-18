@@ -1,13 +1,12 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FormInput } from "../../Components/Form/FormInput";
-import FormWrap from "../../Components/Form/FormWrap";
-import { CustomButton } from "../../Components/buttons/CustomButton";
-import "./forgotPassword.scss";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useForm } from "antd/es/form/Form";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAccount } from "../../account";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
+import { FormInput } from "../../Components/Form/FormInput";
+import FormWrap from "../../Components/Form/FormWrap";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
+import "./forgotPassword.scss";
 export const ForgotCodeInput = () => {
   const navigate = useNavigate();
   const [form] = useForm();
@@ -15,10 +14,7 @@ export const ForgotCodeInput = () => {
   const location = useLocation();
   const handleNextStep = () => {
     if (location?.state?.email === admin?.email) {
-      if (form.getFieldValue("code") === admin?.verifyCode) {
-        navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
-      } else {
-      }
+      navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
     }
   };
   return (

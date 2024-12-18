@@ -1,26 +1,36 @@
+import { useQuery } from "@tanstack/react-query";
+import { useForm } from "antd/es/form/Form";
 import { Link, useNavigate } from "react-router-dom";
-import { CustomButton } from "../../Components/buttons/CustomButton";
+import { userApi } from "../../api/api";
+import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
-import "./forgotPassword.scss";
+import { QUERY_KEY } from "../../configs/apiConfig";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
-import { useForm } from "antd/es/form/Form";
-import { getAccount } from "../../account";
 import { ValidateLibrary } from "../../validate";
-import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
+import "./forgotPassword.scss";
 export const ForgotEmailInput = () => {
   const [form] = useForm();
-  const admin = getAccount("admin");
-
   const navigate = useNavigate();
+  const { data: loginApi } = useQuery({
+    queryKey: [QUERY_KEY.GET_USER],
+    queryFn: userApi.getAllUsers,
+  });
+
   const handleNextStep = () => {
-    if (form.getFieldValue("email") === admin?.email) {
+    if (
+      loginApi &&
+      loginApi.UserList &&
+      loginApi.UserList.some(
+        (user) =>
+          user.Email.toLowerCase() === form.getFieldValue("email").toLowerCase()
+      )
+    ) {
       navigate(CUSTOMER_ROUTER_PATH.FORGOT_CODE_INPUT, {
         state: {
           email: form.getFieldValue("email"),
         },
       });
-    } else {
     }
   };
   return (

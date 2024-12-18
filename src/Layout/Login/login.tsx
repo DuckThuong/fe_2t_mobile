@@ -1,52 +1,41 @@
-import "./login.scss";
-import { Link, useNavigate } from "react-router-dom";
-import FormWrap from "../../Components/Form/FormWrap";
-import { FormInput } from "../../Components/Form/FormInput";
-import { CustomButton } from "../../Components/buttons/CustomButton";
-import { FormCheckbox } from "../../Components/Form/FormCheckbox";
-import { getAccount } from "../../account";
 import { useForm } from "antd/es/form/Form";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
-import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { useEffect, useState } from "react";
-import NotificationPopup from "../Notification";
+import { useNavigate } from "react-router-dom";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
+import { FormCheckbox } from "../../Components/Form/FormCheckbox";
+import { FormInput } from "../../Components/Form/FormInput";
+import FormWrap from "../../Components/Form/FormWrap";
+import { LogoForm } from "../../Components/LogoForm/LogoForm";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
+import NotificationPopup from "../Notification";
+import "./login.scss";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../configs/apiConfig";
+import { userApi } from "../../api/api";
+
 const Login = () => {
   const [form] = useForm();
-  const admin = getAccount("admin");
   const navigate = useNavigate();
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
-  const [userData, setUserData] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/getAllUser");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data: loginApi } = useQuery({
+    queryKey: [QUERY_KEY.GET_USER],
+    queryFn: userApi.getAllUsers,
+  });
   const onFinish = () => {
     const email = form.getFieldValue("email");
     const password = form.getFieldValue("password");
 
-    const userExists = userData.some(
+    const userExists = loginApi.UserList.some(
       (user) => user.email === email && user.password === password
     );
 
     if (userExists) {
-      navigate(CUSTOMER_ROUTER_PATH.LIST_STUDENT);
+      navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
       setNotification({ message: "Thành Công", type: "success" });
     } else {
       setNotification({

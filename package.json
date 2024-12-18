@@ -15,6 +15,7 @@
     "@types/aria-query": "^5.0.4",
     "@types/lodash": "^4.17.7",
     "antd": "^5.20.6",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.13",
     "install": "^0.13.0",

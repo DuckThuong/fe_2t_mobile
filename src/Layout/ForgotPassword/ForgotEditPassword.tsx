@@ -1,35 +1,54 @@
+import { useForm } from "antd/es/form/Form";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CustomButton } from "../../Components/buttons/CustomButton";
+import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
-import "./forgotPassword.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
-import { useForm } from "antd/es/form/Form";
-import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { ValidateLibrary } from "../../validate";
-import { useEffect, useState } from "react";
-import { getAccount } from "../../account";
 import NotificationPopup from "../Notification";
+import "./forgotPassword.scss";
+import { userApi } from "../../api/api";
+import { QUERY_KEY } from "../../configs/apiConfig";
+import { useMutation, useQuery } from "@tanstack/react-query";
 export const ForgotEditPassword = () => {
   const navigate = useNavigate();
   const [form] = useForm();
-  const admin = getAccount("admin");
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
   } | null>(null);
-  const onFinish = () => {
-    if (
-      form.getFieldValue("password") === admin?.password &&
-      form.getFieldValue("email") === admin?.email
-    ) {
+  const { data: loginApi } = useQuery({
+    queryKey: [QUERY_KEY.GET_USER],
+    queryFn: userApi.getAllUsers,
+  });
+  const updatePassWord = useMutation({
+    mutationFn: ({ id, userData }: { id: string; userData: string }) =>
+      userApi.updateUser(id, userData),
+    onSuccess: () => {
       navigate(CUSTOMER_ROUTER_PATH.FORGOT_SUCCESS);
-    } else {
+    },
+    onError: () => {
       setNotification({
         message: "Địa chỉ email và mật khẩu cũ không chính xác",
         type: "error",
       });
       form.setFieldsValue("e");
+    },
+  });
+  const onFinish = () => {
+    const emailInput = form.getFieldValue("email").toLowerCase();
+    const user = loginApi.UserList.find(
+      (user) => user.Email.toLowerCase() === emailInput
+    );
+
+    if (
+      user &&
+      user.PasswordHash.toLowerCase() ===
+        form.getFieldValue("password").toLowerCase()
+    ) {
+      const userData = form.getFieldValue("confirm_password");
+      updatePassWord.mutate({ id: user.UserID, userData });
     }
   };
   useEffect(() => {

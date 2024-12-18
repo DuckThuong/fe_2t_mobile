@@ -6,6 +6,7 @@ import { ForgotCodeInput } from "../Layout/ForgotPassword/ForgotCodeInput";
 import { ForgotEditPassword } from "../Layout/ForgotPassword/ForgotEditPassword";
 import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
 import { Route, Routes } from "react-router-dom";
+import { TrangChu } from "../Layout/TrangChu";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -32,5 +33,9 @@ export const CustomerRouter = () => (
       element={<SuspenseWrapper component={<ForgotSuccess />} />}
     ></Route>
     {/* List_Students */}
+    <Route
+      path={CUSTOMER_ROUTER_PATH.TRANG_CHU}
+      element={<SuspenseWrapper component={<TrangChu />} />}
+    ></Route>
   </Routes>
 );

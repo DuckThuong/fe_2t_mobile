@@ -1,0 +1,50 @@
+// Navbar.scss
+
+.navbar {
+  background-color: #001529; // Màu nền của header
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+}
+
+.menu {
+  line-height: 64px;
+}
+
+.menu-item {
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #1890ff; // Màu nền khi hover
+    color: white; // Màu chữ khi hover
+  }
+}
+
+.menu-item a {
+  color: inherit; // Đảm bảo chữ không bị ảnh hưởng bởi thẻ <a>
+  text-decoration: none;
+}
+
+.menu-item a:hover {
+  color: inherit;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 10px;
+  }
+
+  .menu {
+    display: none; // Giấu menu trên màn hình nhỏ
+  }
+}
