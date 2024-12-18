@@ -31,3 +31,14 @@ export const imageApi = {
     apiRequest(`${API_KEY.IMAGE}/${id}`, "PATCH", userData),
   deleteImages: (id: string) => apiRequest(`${API_KEY.IMAGE}/${id}`, "DELETE"),
 };
+
+export const productApi = {
+  getAllProducts: () => apiRequest(API_KEY.PRODUCTS),
+  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCTS}/${id}`),
+  createProduct: (productData: any) =>
+    apiRequest(API_KEY.PRODUCTS, "POST", productData),
+  updateProduct: (id: string, productData: any) =>
+    apiRequest(`${API_KEY.PRODUCTS}/${id}`, "PATCH", productData),
+  deleteProduct: (id: string) =>
+    apiRequest(`${API_KEY.PRODUCTS}/${id}`, "DELETE"),
+};

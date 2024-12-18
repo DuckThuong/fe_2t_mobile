@@ -7,7 +7,12 @@ interface Props {
 const ImageCarousel: React.FC<Props> = ({ image }) => (
   <Carousel className="image-carousel" autoplay>
     {image?.map((img, index) => (
-      <Image className="image-carousel_item" key={index} src={img} />
+      <Image
+        className="image-carousel_item"
+        key={index}
+        src={img}
+        style={{ objectFit: "cover", width: "100%", height: "auto" }}
+      />
     ))}
   </Carousel>
 );

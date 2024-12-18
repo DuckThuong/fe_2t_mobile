@@ -1,14 +1,64 @@
 .home {
+  padding: 0px 120px !important;
   &-header {
-    padding: 0px 120px !important;
     .image-carousel {
       width: 100% !important;
       height: 224px;
       &_item {
         width: 100% !important;
       }
-      .slick-slide {
-        width: fit-content !important;
+      .slick-list {
+        max-height: 224px !important;
+        .slick-track {
+          max-height: 224px !important;
+          height: 224px !important;
+        }
+      }
+    }
+    .slick-slide {
+      width: fit-content !important;
+    }
+  }
+  &-list {
+    &_header {
+      &-title {
+        font-family: Verdana;
+        font-size: 24px;
+        font-weight: 600;
+        margin-top: 32px;
+      }
+    }
+    &_content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      flex-direction: row;
+      column-gap: 25px;
+      row-gap: 15px;
+
+      &-item {
+        width: 300px !important;
+        height: 400px !important;
+        max-width: 300px !important;
+        position: relative;
+        .product-image {
+          max-width: 150px !important;
+          max-height: 150px !important;
+        }
+        .product-button {
+          position: absolute;
+          bottom: 10px;
+          left: 0px;
+          width: 100% !important;
+        }
+      }
+    }
+    .ant-pagination {
+      display: flex !important;
+      justify-content: flex-end;
+      margin-top: 12px !important;
+      a {
+        font-family: Verdana;
       }
     }
   }
