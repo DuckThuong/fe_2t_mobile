@@ -1,0 +1,15 @@
+.home {
+  &-header {
+    padding: 0px 120px !important;
+    .image-carousel {
+      width: 100% !important;
+      height: 224px;
+      &_item {
+        width: 100% !important;
+      }
+      .slick-slide {
+        width: fit-content !important;
+      }
+    }
+  }
+}
