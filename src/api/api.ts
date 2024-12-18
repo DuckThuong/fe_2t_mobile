@@ -22,3 +22,12 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/${id}`, "PATCH", userData),
   deleteUser: (id: string) => apiRequest(`${API_KEY.USER}/${id}`, "DELETE"),
 };
+export const imageApi = {
+  getAllImage: () => apiRequest(API_KEY.IMAGE),
+  getImageByID: (id: string) => apiRequest(`${API_KEY.IMAGE}/${id}`),
+  confirmreateImage: (userData: any) =>
+    apiRequest(API_KEY.IMAGE, "POST", userData),
+  updateImages: (id: string, userData: any) =>
+    apiRequest(`${API_KEY.IMAGE}/${id}`, "PATCH", userData),
+  deleteImages: (id: string) => apiRequest(`${API_KEY.IMAGE}/${id}`, "DELETE"),
+};

@@ -1,9 +1,11 @@
 import Navbar from "../HeaderWeb";
+import { HomeHeader } from "./HomeHeader";
 
-export const TrangChu = () => {
+export const Home = () => {
   return (
-    <div className="trang-chu">
+    <div className="home">
       <Navbar />
+      <HomeHeader />
     </div>
   );
 };
