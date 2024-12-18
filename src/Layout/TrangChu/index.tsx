@@ -5,6 +5,7 @@ import { ListProduct } from "./ListProducts";
 import { QUERY_KEY } from "../../configs/apiConfig";
 import { imageApi } from "../../api/api";
 import "./style.scss";
+import { FooterWeb } from "../FooterWeb";
 export const Home = () => {
   const { data: imageData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
@@ -35,6 +36,7 @@ export const Home = () => {
           <ListProduct />
         </div>
       </div>
+      <FooterWeb />
     </>
   );
 };
