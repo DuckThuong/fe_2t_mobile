@@ -16,11 +16,11 @@ export const FooterWeb = () => {
       <Row gutter={16}>
         <Col span={8}>
           <Title level={4}>Liên hệ với chúng tôi</Title>
-          <Text>Email: contact@yourcompany.com</Text>
+          <Text>Email: duckthuong@gmail.com</Text>
           <br />
-          <Text>Điện thoại: (123) 456-7890</Text>
+          <Text>Điện thoại: +84 - 342030021</Text>
           <br />
-          <Text>Địa chỉ: 123 Đường ABC, Thành phố XYZ</Text>
+          <Text>Địa chỉ: 19, Nguyễn Trãi, Thanh Xuân, Hà Nội</Text>
         </Col>
         <Col span={8}>
           <Title level={4}>Thông tin</Title>

@@ -1,0 +1,76 @@
+.cart {
+  padding: 10px 120px !important;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100% !important;
+  &-label {
+    &_title {
+      font-weight: 500 !important;
+      font-size: 26px !important;
+      font-family: Verdana;
+    }
+  }
+  &-product {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 32px 32px;
+    &_row {
+      display: flex;
+      justify-content: center;
+      margin: 32px 0px;
+      align-items: center;
+    }
+    &_image {
+      margin-right: 120px;
+      margin-left: 32px;
+    }
+    &_information {
+      .ant-col-6 {
+        font-size: 16px;
+        font-weight: bold;
+        font-family: Verdana;
+      }
+      .ant-col-12 {
+        font-size: 14px;
+        font-weight: 500;
+        font-family: Verdana;
+      }
+    }
+  }
+  &-option {
+    margin-top: 32px;
+    height: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    padding: 45px 45px;
+    .ant-row {
+      display: flex;
+      align-items: center;
+      .ant-form-item {
+        margin-bottom: 0px !important;
+      }
+    }
+    &_text {
+      font-size: 24px;
+      font-weight: 600;
+      color: red;
+    }
+    &_button {
+      &-submit {
+        width: 150px;
+        height: 50px;
+        background-color: red;
+        margin-left: 140px;
+        span {
+          font-size: 18px;
+          font-weight: 600;
+          color: white;
+        }
+      }
+    }
+  }
+  .underline {
+    border: 1px solid #001529 !important;
+  }
+}
