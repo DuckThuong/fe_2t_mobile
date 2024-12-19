@@ -5,12 +5,11 @@ import { cartApi } from "../../api/api";
 import useUser from "../../hooks/useUser";
 
 export const Cartergories = () => {
-  const { id, email, fullName } = useUser();
   const { data: cartData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
   });
-  console.log({ cartData, id });
+  console.log({ cartData });
   return (
     <>
       <Navbar />
