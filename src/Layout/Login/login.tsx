@@ -40,7 +40,6 @@ const Login = () => {
     if (userExists) {
       const userData = loginApi.UserList.find((user) => user.email === email);
       if (userData) {
-        console.log("lll");
         dispatch(
           setAuthUser({
             id: userData.UserID,
