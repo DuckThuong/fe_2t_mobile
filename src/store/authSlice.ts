@@ -1,33 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from ".";
-import { CUSTOMER_ROUTER_PATH } from "../Routers/Routers";
 
-export interface AuthState {
-  loading: boolean;
-  error?: string | null;
-  authUser?: any;
+interface AuthState {
+  id: string;
+  email: string;
+  fullName: string;
 }
 
 const initialState: AuthState = {
-  loading: false,
-  error: undefined,
+  id: "",
+  email: "",
+  fullName: "",
 };
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
-      localStorage.clear();
-      sessionStorage.clear();
-
-      if (window.location.pathname !== CUSTOMER_ROUTER_PATH.LOG_IN) {
-        window.location.href = CUSTOMER_ROUTER_PATH.LOG_IN;
-      }
+    setAuthUser(state, action: PayloadAction<AuthState>) {
+      state.id = action.payload.id;
+      state.email = action.payload.email;
+      state.fullName = action.payload.fullName;
+    },
+    clearAuthUser(state) {
+      state.id = "";
+      state.email = "";
+      state.fullName = "";
     },
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { setAuthUser, clearAuthUser } = authSlice.actions;
 export const selectAuth = (state: RootState) => state.auth;
 export default authSlice.reducer;

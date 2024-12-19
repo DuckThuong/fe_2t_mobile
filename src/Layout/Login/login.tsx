@@ -1,22 +1,25 @@
+import { useQuery } from "@tanstack/react-query";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux"; // Import useDispatch
 import { useNavigate } from "react-router-dom";
+import { userApi } from "../../api/api";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
+import { QUERY_KEY } from "../../configs/apiConfig";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { setAuthUser } from "../../store/authSlice"; // Import action
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
-import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "../../configs/apiConfig";
-import { userApi } from "../../api/api";
 
 const Login = () => {
   const [form] = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Khởi tạo dispatch
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -26,6 +29,7 @@ const Login = () => {
     queryKey: [QUERY_KEY.GET_USER],
     queryFn: userApi.getAllUsers,
   });
+
   const onFinish = () => {
     const email = form.getFieldValue("email");
     const password = form.getFieldValue("password");
@@ -33,8 +37,19 @@ const Login = () => {
     const userExists = loginApi?.UserList?.some(
       (user) => user.email === email && user.password === password
     );
-
     if (userExists) {
+      const userData = loginApi.UserList.find((user) => user.email === email);
+      if (userData) {
+        console.log("lll");
+        dispatch(
+          setAuthUser({
+            id: userData.UserID,
+            email: userData.Email,
+            fullName: userData.FullName,
+          })
+        );
+      }
+
       navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
       setNotification({ message: "Thành Công", type: "success" });
     } else {
@@ -45,6 +60,7 @@ const Login = () => {
       form.setFieldsValue("e");
     }
   };
+
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -53,6 +69,7 @@ const Login = () => {
       return () => clearTimeout(timer);
     }
   }, [notification]);
+
   const handleForgotPassword = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
   };
@@ -62,7 +79,7 @@ const Login = () => {
       onFinish();
     }
   };
-  console.log(notification);
+
   return (
     <div className="login">
       <NotificationPopup
