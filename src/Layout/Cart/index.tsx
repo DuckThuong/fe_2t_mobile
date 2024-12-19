@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { cartApi } from "../../api/api";
-import { QUERY_KEY } from "../../configs/apiConfig";
-import Navbar from "../HeaderWeb";
 import { Button, Col, Row } from "antd";
+import { cartApi } from "../../api/api";
 import { SvgNull } from "../../Components/@svg/SvgNull";
-import RowWrap from "../../Components/RowWrap";
-import TableWrap from "../../Components/TableWrap";
-import { CartProduct } from "./CartProduct";
-import { FooterWeb } from "../FooterWeb";
 import { FormSelect } from "../../Components/Form/FormSelect";
+import { QUERY_KEY } from "../../configs/apiConfig";
+import { FooterWeb } from "../FooterWeb";
+import Navbar from "../HeaderWeb";
+import { CartProduct } from "./CartProduct";
+import { useState } from "react";
 
 export const Cartergories = () => {
-  const { data: cartData } = useQuery({
+  const [cartSum, setCartSum] = useState<number[]>();
+  const { data: cartData, isLoading } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
   });
@@ -29,7 +29,11 @@ export const Cartergories = () => {
         ) : (
           <div className="cart-label">
             <p className="cart-label_title">Danh sách sản phẩm</p>
-            <CartProduct />
+            <CartProduct
+              onSelectionChange={(e) => {
+                setCartSum(e);
+              }}
+            />
           </div>
         )}
         <div className="cart-option">
@@ -40,7 +44,7 @@ export const Cartergories = () => {
                   <span className="cart-option_text">Tổng tiền:</span>
                 </Col>
                 <Col span={8}>
-                  <span className="cart-option_text">...</span>
+                  <span className="cart-option_text">{cartSum || "..."}</span>
                 </Col>
               </Row>
             </Col>

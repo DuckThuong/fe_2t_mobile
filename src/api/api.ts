@@ -46,6 +46,8 @@ export const productApi = {
 export const cartApi = {
   getAllCartItems: () => apiRequest(API_KEY.CART),
   GetCartByUserId: (id: string) => apiRequest(`${API_KEY.CART}/${id}`),
+  GetCardByUserAndCartId: (userId: string, cartID: string) =>
+    axios.get(`/api/getCart/${userId}`, { params: { cartID } }),
   addCartItem: (itemData: any) => apiRequest(API_KEY.CART, "POST", itemData),
   updateCartItem: (id: string, itemData: any) =>
     apiRequest(`${API_KEY.CART}/${id}`, "PATCH", itemData),
