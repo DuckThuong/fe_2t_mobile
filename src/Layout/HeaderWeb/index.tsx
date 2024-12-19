@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu } from "antd";
-import { Link } from "react-router-dom"; // Sử dụng Link từ react-router-dom
+import { Link, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
   InfoCircleOutlined,
@@ -8,34 +8,46 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import "./Navbar.scss"; // Sử dụng SASS để tùy chỉnh giao diện
+import "./Navbar.scss";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 
 const { Header } = Layout;
 
 const Navbar = () => {
-  const [selectedKey, setSelectedKey] = React.useState("1");
+  const location = useLocation();
+  const [selectedKey, setSelectedKey] = React.useState(
+    getSelectedKey(location.pathname)
+  );
 
-  const handleMenuClick = (e: any) => {
-    setSelectedKey(e.key);
-  };
+  function getSelectedKey(pathname: string) {
+    switch (pathname) {
+      case CUSTOMER_ROUTER_PATH.TRANG_CHU:
+        return "1";
+      case "/about":
+        return "2";
+      case "/contact":
+        return "3";
+      case CUSTOMER_ROUTER_PATH.CATERGORIES:
+        return "4";
+      case "/profile":
+        return "5";
+      default:
+        return "1";
+    }
+  }
+  React.useEffect(() => {
+    setSelectedKey(getSelectedKey(location.pathname));
+  }, [location]);
 
   return (
     <Layout>
       <Header className="navbar">
-        <div
-          className="logo"
-          style={{ color: "white", fontSize: "24px", fontWeight: "bold" }}
-        >
-          Logo
-        </div>
+        <div className="logo">Logo</div>
         <Menu
           theme="dark"
           mode="horizontal"
           selectedKeys={[selectedKey]}
-          onClick={handleMenuClick}
           className="menu"
-          style={{ lineHeight: "64px" }}
         >
           <Menu.Item key="1" icon={<HomeOutlined />} className="menu-item">
             <Link to={CUSTOMER_ROUTER_PATH.TRANG_CHU}>Trang chủ</Link>
@@ -47,18 +59,18 @@ const Navbar = () => {
           >
             <Link to="/about">Giới thiệu</Link>
           </Menu.Item>
-          <Menu.Item key="2" icon={<ContactsOutlined />} className="menu-item">
+          <Menu.Item key="3" icon={<ContactsOutlined />} className="menu-item">
             <Link to="/contact">Liên hệ</Link>
           </Menu.Item>
           <Menu.Item
-            key="3"
+            key="4"
             icon={<ShoppingCartOutlined />}
             className="menu-item"
           >
             <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>Giỏ hàng</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<UserOutlined />} className="menu-item">
-            <Link to="/contact">Tải khoản</Link>
+          <Menu.Item key="5" icon={<UserOutlined />} className="menu-item">
+            <Link to="/profile">Tải khoản</Link>
           </Menu.Item>
         </Menu>
       </Header>

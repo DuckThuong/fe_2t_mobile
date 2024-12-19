@@ -1,50 +1,54 @@
-// Navbar.scss
-
 .navbar {
-  background-color: #001529; // Màu nền của header
-  padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px;
+  background-color: #001529; // màu nền tối cho Navbar
+  transition: background-color 0.3s ease;
 }
 
 .logo {
+  color: white;
   font-size: 24px;
   font-weight: bold;
-  color: white;
-  text-transform: uppercase;
+  transition: font-size 0.3s ease;
 }
 
 .menu {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   line-height: 64px;
+  transition: all 0.3s ease;
 }
 
 .menu-item {
-  font-size: 16px;
-  font-weight: 500;
+  padding: 0 16px;
   transition: all 0.3s ease;
-
-  &:hover {
-    background-color: #1890ff; // Màu nền khi hover
-    color: white; // Màu chữ khi hover
-  }
 }
 
 .menu-item a {
-  color: inherit; // Đảm bảo chữ không bị ảnh hưởng bởi thẻ <a>
+  color: white;
+  font-size: 16px;
   text-decoration: none;
+  transition: color 0.3s ease;
 }
 
-.menu-item a:hover {
-  color: inherit;
+.menu-item:hover a {
+  color: #1890ff; // thay đổi màu khi hover
 }
 
+.menu-item.selected a {
+  color: #1890ff; // màu khi mục được chọn
+}
+
+// Responsive layout
 @media (max-width: 768px) {
-  .navbar {
-    padding: 0 10px;
+  .menu {
+    display: none; // Ẩn menu cho màn hình nhỏ
   }
 
-  .menu {
-    display: none; // Giấu menu trên màn hình nhỏ
+  .logo {
+    font-size: 20px;
   }
 }
