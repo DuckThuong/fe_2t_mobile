@@ -7,7 +7,7 @@ import { ForgotEditPassword } from "../Layout/ForgotPassword/ForgotEditPassword"
 import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
 import { Route, Router, Routes } from "react-router-dom";
 import { Home } from "../Layout/TrangChu";
-import { Cartergories } from "../Layout/Cartegories";
+import { Cartergories } from "../Layout/Cart";
 
 export const CustomerRouter = () => (
   <Routes>
