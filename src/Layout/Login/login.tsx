@@ -30,7 +30,7 @@ const Login = () => {
     const email = form.getFieldValue("email");
     const password = form.getFieldValue("password");
 
-    const userExists = loginApi.UserList.some(
+    const userExists = loginApi?.UserList?.some(
       (user) => user.email === email && user.password === password
     );
 
