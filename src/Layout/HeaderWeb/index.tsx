@@ -14,6 +14,12 @@ import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 const { Header } = Layout;
 
 const Navbar = () => {
+  const [selectedKey, setSelectedKey] = React.useState("1");
+
+  const handleMenuClick = (e: any) => {
+    setSelectedKey(e.key);
+  };
+
   return (
     <Layout>
       <Header className="navbar">
@@ -26,7 +32,8 @@ const Navbar = () => {
         <Menu
           theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["1"]}
+          selectedKeys={[selectedKey]}
+          onClick={handleMenuClick}
           className="menu"
           style={{ lineHeight: "64px" }}
         >
@@ -40,7 +47,7 @@ const Navbar = () => {
           >
             <Link to="/about">Giới thiệu</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<ContactsOutlined />} className="menu-item">
+          <Menu.Item key="2" icon={<ContactsOutlined />} className="menu-item">
             <Link to="/contact">Liên hệ</Link>
           </Menu.Item>
           <Menu.Item
@@ -48,9 +55,9 @@ const Navbar = () => {
             icon={<ShoppingCartOutlined />}
             className="menu-item"
           >
-            <Link to="/contact">Giỏ hàng</Link>
+            <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>Giỏ hàng</Link>
           </Menu.Item>
-          <Menu.Item key="3" icon={<UserOutlined />} className="menu-item">
+          <Menu.Item key="4" icon={<UserOutlined />} className="menu-item">
             <Link to="/contact">Tải khoản</Link>
           </Menu.Item>
         </Menu>

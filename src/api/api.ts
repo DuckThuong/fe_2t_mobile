@@ -42,3 +42,12 @@ export const productApi = {
   deleteProduct: (id: string) =>
     apiRequest(`${API_KEY.PRODUCTS}/${id}`, "DELETE"),
 };
+
+export const cartApi = {
+  getAllCartItems: () => apiRequest(API_KEY.CART),
+  getCartItemById: (id: string) => apiRequest(`${API_KEY.CART}/${id}`),
+  addCartItem: (itemData: any) => apiRequest(API_KEY.CART, "POST", itemData),
+  updateCartItem: (id: string, itemData: any) =>
+    apiRequest(`${API_KEY.CART}/${id}`, "PATCH", itemData),
+  deleteCartItem: (id: string) => apiRequest(`${API_KEY.CART}/${id}`, "DELETE"),
+};

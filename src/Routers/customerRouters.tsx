@@ -7,6 +7,7 @@ import { ForgotEditPassword } from "../Layout/ForgotPassword/ForgotEditPassword"
 import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
 import { Route, Router, Routes } from "react-router-dom";
 import { Home } from "../Layout/TrangChu";
+import { Cartergories } from "../Layout/Cartegories";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -39,6 +40,13 @@ export const CustomerRouter = () => (
       <Route
         path={CUSTOMER_ROUTER_PATH.TRANG_CHU}
         element={<SuspenseWrapper component={<Home />} />}
+      ></Route>
+    </Route>
+    {/* Giỏ hàng */}
+    <Route>
+      <Route
+        path={CUSTOMER_ROUTER_PATH.CATERGORIES}
+        element={<SuspenseWrapper component={<Cartergories />} />}
       ></Route>
     </Route>
   </Routes>
