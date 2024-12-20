@@ -25,7 +25,7 @@ export const Home = () => {
               Danh sách sản phẩm bán chạy
             </p>
           </div>
-          <ListProduct />
+          <ListProduct itemPerPage={4} />
         </div>
         <div className="home_content">
           <div className="home-list_header">
@@ -33,7 +33,7 @@ export const Home = () => {
               Danh sách sản phẩm bán chạy
             </p>
           </div>
-          <ListProduct />
+          <ListProduct itemPerPage={4} />
         </div>
       </div>
       <FooterWeb />

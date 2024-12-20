@@ -8,16 +8,17 @@ import "../style.scss";
 
 interface Props {
   level?: string;
+  itemPerPage: number;
 }
 
-export const ListProduct: React.FC<Props> = ({ level }) => {
+export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
   const { data: productData } = useQuery({
     queryKey: [QUERY_KEY.GET_PRODUCTS],
     queryFn: productApi.getAllProducts,
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4;
+  const itemsPerPage = itemPerPage;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

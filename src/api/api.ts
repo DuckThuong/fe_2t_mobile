@@ -53,3 +53,15 @@ export const cartApi = {
     apiRequest(`${API_KEY.CART}/${id}`, "PATCH", itemData),
   deleteCartItem: (id: string) => apiRequest(`${API_KEY.CART}/${id}`, "DELETE"),
 };
+
+export const reviewApi = {
+  getAllReview: () => apiRequest(API_KEY.REVIEW),
+  getReviewById: (id: string) => apiRequest(`${API_KEY.REVIEW}/${id}`),
+  createReview: (reviewData: any) =>
+    apiRequest(API_KEY.REVIEW, "POST", reviewData),
+  updateReview: (id: string, reviewData: any) =>
+    apiRequest(`${API_KEY.REVIEW}/${id}`, "PATCH", reviewData),
+  deleteReview: (id: string) => apiRequest(`${API_KEY.REVIEW}/${id}`, "DELETE"),
+  getAllReviewByProductId: (productId: string) =>
+    apiRequest(`${API_KEY.REVIEW}/product/${productId}`),
+};

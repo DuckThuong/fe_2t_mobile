@@ -16,6 +16,8 @@ export const CUSTOMER_ROUTE_NAME = {
   TRANG_CHU: "trang-chu",
   //Catergories
   CATERGORIES: "catergories",
+  //Product_Detail:
+  PRODUCT_DETAIL: "trang-chu/:id",
 };
 export const CUSTOMER_ROUTER_PATH = {
   //Log_In
@@ -29,4 +31,6 @@ export const CUSTOMER_ROUTER_PATH = {
   TRANG_CHU: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.TRANG_CHU}`,
   //Catergories
   CATERGORIES: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.CATERGORIES}`,
+  //Product_detail
+  PRODUCT_DETAIL: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.PRODUCT_DETAIL}`,
 };
