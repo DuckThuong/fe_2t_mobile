@@ -1,15 +1,15 @@
-import React from "react";
-import { Layout, Menu } from "antd";
-import { Link, useLocation } from "react-router-dom";
 import {
   HomeOutlined,
-  InfoCircleOutlined,
-  ContactsOutlined,
+  LogoutOutlined,
+  OrderedListOutlined,
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import "./Navbar.scss";
+import { Layout, Menu } from "antd";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import "./Navbar.scss";
 
 const { Header } = Layout;
 
@@ -23,14 +23,12 @@ const Navbar = () => {
     switch (pathname) {
       case CUSTOMER_ROUTER_PATH.TRANG_CHU:
         return "1";
-      case "/about":
-        return "2";
-      case "/contact":
-        return "3";
       case CUSTOMER_ROUTER_PATH.CATERGORIES:
-        return "4";
+        return "2";
+      case "/order":
+        return "3";
       case "/profile":
-        return "5";
+        return "4";
       default:
         return "1";
     }
@@ -54,23 +52,27 @@ const Navbar = () => {
           </Menu.Item>
           <Menu.Item
             key="2"
-            icon={<InfoCircleOutlined />}
-            className="menu-item"
-          >
-            <Link to="/about">Giới thiệu</Link>
-          </Menu.Item>
-          <Menu.Item key="3" icon={<ContactsOutlined />} className="menu-item">
-            <Link to="/contact">Liên hệ</Link>
-          </Menu.Item>
-          <Menu.Item
-            key="4"
             icon={<ShoppingCartOutlined />}
             className="menu-item"
           >
             <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>Giỏ hàng</Link>
           </Menu.Item>
-          <Menu.Item key="5" icon={<UserOutlined />} className="menu-item">
-            <Link to="/profile">Tải khoản</Link>
+          <Menu.Item
+            key="3"
+            icon={<OrderedListOutlined />}
+            className="menu-item"
+          >
+            <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>Đơn hàng</Link>
+          </Menu.Item>
+          <Menu.Item key="4" title="Cài đặt" className="menu-item">
+            <Menu.SubMenu icon={<UserOutlined />}>
+              <Menu.Item title="Tài khoản" icon={<UserOutlined />} key="5-1">
+                <Link to="/profile">Thông tin cá nhân</Link>
+              </Menu.Item>
+              <Menu.Item icon={<LogoutOutlined />} key="5-2">
+                <Link to="/logout">Đăng xuất</Link>
+              </Menu.Item>
+            </Menu.SubMenu>
           </Menu.Item>
         </Menu>
       </Header>

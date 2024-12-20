@@ -10,8 +10,8 @@ import { CartProduct } from "./CartProduct";
 import { useState } from "react";
 
 export const Cartergories = () => {
-  const [cartSum, setCartSum] = useState<number[]>();
-  const { data: cartData, isLoading } = useQuery({
+  const [cartSum, setCartSum] = useState<number>();
+  const { data: cartData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
   });
@@ -44,7 +44,9 @@ export const Cartergories = () => {
                   <span className="cart-option_text">Tổng tiền:</span>
                 </Col>
                 <Col span={8}>
-                  <span className="cart-option_text">{cartSum || "..."}</span>
+                  <span className="cart-option_text">
+                    {cartSum || "0.00"} $
+                  </span>
                 </Col>
               </Row>
             </Col>
