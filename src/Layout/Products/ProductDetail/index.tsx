@@ -14,10 +14,11 @@ export interface ICreateCart {
 export const ProductDetail = () => {
   const { id } = useParams();
 
-  const { data: productData } = useQuery({
-    queryKey: [QUERY_KEY.GET_PRODUCTS],
+  const { data: productDetailData } = useQuery({
+    queryKey: [QUERY_KEY.GET_PRODUCTS, id],
     queryFn: () => productApi.getProductById(id as string),
   });
+
   const { data: reviewData } = useQuery({
     queryKey: [QUERY_KEY.GET_REVIEW],
     queryFn: () => reviewApi.getAllReviewByProductId(id as string),
@@ -55,8 +56,8 @@ export const ProductDetail = () => {
               <div className="product-detail_headerContent-image">
                 <p>Hình ảnh sản phẩm</p>
                 <img
-                  src={productData?.productById?.ImageURL}
-                  alt={productData?.productById?.Name}
+                  src={productDetailData?.productById?.ImageURL}
+                  alt={productDetailData?.productById?.Name}
                   className="product-detail_headerContent-image"
                 />
               </div>
@@ -64,19 +65,19 @@ export const ProductDetail = () => {
             <Col span={12}>
               <div className="product-detail_headerContent-name">
                 <span>Tên sản phẩm: </span>
-                {productData?.productById?.Name}
+                {productDetailData?.productById?.Name}
               </div>
               <div className="product-detail_headerContent-description">
                 <span>Chi tiết sản phẩm: </span>
-                {productData?.productById?.Description}
+                {productDetailData?.productById?.Description}
               </div>
               <p className="product-detail_headerContent-price">
                 <span>Giá: </span>
-                {productData?.productById?.Price}
+                {productDetailData?.productById?.Price}
               </p>
               <p className="product-detail_headerContent-stock">
                 <span>Đã mua: </span>
-                {productData?.productById?.Stock}
+                {productDetailData?.productById?.Stock}
               </p>
               <Button type="primary" className="buy-now-button">
                 Mua Ngay
