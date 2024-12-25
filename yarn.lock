@@ -7239,7 +7239,7 @@ multicast-dns@^7.2.5:
     install "^0.13.0"
     isemail "^3.2.0"
     lodash "^4.17.21"
-    my-app "file:../../../AppData/Local/Yarn/Cache/v6/npm-my-app-0.1.0-0acf9db1-eb50-456b-9c2c-fabbc222c43b-1734682789093/node_modules/my-app"
+    my-app "file:../../../../AppData/Local/Yarn/Cache/v6/npm-my-app-0.1.0-99eed0b6-4268-4d2f-9bdd-7f71c1b65374-1735092532662/node_modules/my-app"
     qrcode.react "^4.0.1"
     rc-util "^5.43.0"
     react "^18.3.1"
