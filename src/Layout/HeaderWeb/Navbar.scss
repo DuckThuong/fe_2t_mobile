@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background-color: #001529; // màu nền tối cho Navbar
+  background: linear-gradient(135deg, #09011d 0%, #1a3f8b 50%, #2774f9 100%);
   transition: background-color 0.3s ease;
 }
 
@@ -13,7 +13,16 @@
   font-weight: bold;
   transition: font-size 0.3s ease;
 }
-
+.ant-menu {
+  background-color: transparent !important;
+  height: 100% !important;
+  .ant-menu-item {
+    &-selected {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      border-radius: 8px !important;
+    }
+  }
+}
 .menu {
   display: flex;
   justify-content: flex-start;
@@ -35,17 +44,16 @@
 }
 
 .menu-item:hover a {
-  color: #1890ff; // thay đổi màu khi hover
+  background-color: transparent !important;
 }
 
 .menu-item.selected a {
-  color: #1890ff; // màu khi mục được chọn
+  background-color: transparent !important;
 }
 
-// Responsive layout
 @media (max-width: 768px) {
   .menu {
-    display: none; // Ẩn menu cho màn hình nhỏ
+    display: none;
   }
 
   .logo {
