@@ -6,11 +6,16 @@ import Navbar from "../../HeaderWeb";
 import { FooterWeb } from "../../FooterWeb";
 import { ListProduct } from "../../TrangChu/ListProducts";
 import { QUERY_KEY } from "../../../api/apiConfig";
+import Slider from "react-slick";
+import { Image } from "antd/lib";
+import { ProductImageGallery } from "../../../Components/ProductImage";
+
 export interface ICreateCart {
   UserID: number;
   ProductID: string;
   Quantity: number;
 }
+
 export const ProductDetail = () => {
   const { id } = useParams();
 
@@ -23,9 +28,11 @@ export const ProductDetail = () => {
     queryKey: [QUERY_KEY.GET_REVIEW],
     queryFn: () => reviewApi.getAllReviewByProductId(id as string),
   });
+
   const createCart = useMutation({
     mutationFn: (payload: ICreateCart) => cartApi.addCartItem(payload),
   });
+
   const handleCreateCart = (userId: number, quantity: number) => {
     const payload = {
       UserID: userId,
@@ -34,6 +41,7 @@ export const ProductDetail = () => {
     };
     createCart.mutate(payload);
   };
+
   const renderStars = (rating: number) => {
     const stars: JSX.Element[] = [];
     for (let i = 1; i <= 5; i++) {
@@ -53,14 +61,9 @@ export const ProductDetail = () => {
         <div className="product-detail_headerContent">
           <Row gutter={[16, 16]}>
             <Col span={12}>
-              <div className="product-detail_headerContent-image">
-                <p>Hình ảnh sản phẩm</p>
-                <img
-                  src={productDetailData?.productById?.ImageURL}
-                  alt={productDetailData?.productById?.Name}
-                  className="product-detail_headerContent-image"
-                />
-              </div>
+              <ProductImageGallery
+                images={productDetailData?.productById?.productImage}
+              />
             </Col>
             <Col span={12}>
               <div className="product-detail_headerContent-name">
@@ -109,7 +112,7 @@ export const ProductDetail = () => {
         </div>
         <div className="product-detail_bottomContent">
           <h1>Các sản phẩm tiêu biểu khác</h1>
-          <ListProduct itemPerPage={8} />
+          {/* <ListProduct itemPerPage={8} /> */}
         </div>
       </div>
       <FooterWeb />
