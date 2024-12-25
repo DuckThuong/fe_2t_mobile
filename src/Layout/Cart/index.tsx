@@ -3,11 +3,11 @@ import { Button, Col, Row } from "antd";
 import { cartApi } from "../../api/api";
 import { SvgNull } from "../../Components/@svg/SvgNull";
 import { FormSelect } from "../../Components/Form/FormSelect";
-import { QUERY_KEY } from "../../configs/apiConfig";
 import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
 import { CartProduct } from "./CartProduct";
 import { useState } from "react";
+import { QUERY_KEY } from "../../api/apiConfig";
 
 export const Cartergories = () => {
   const [cartSum, setCartSum] = useState<number>();

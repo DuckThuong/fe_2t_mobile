@@ -5,10 +5,10 @@ import { userApi } from "../../api/api";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
-import { QUERY_KEY } from "../../configs/apiConfig";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
 import "./forgotPassword.scss";
+import { QUERY_KEY } from "../../api/apiConfig";
 export const ForgotEmailInput = () => {
   const [form] = useForm();
   const navigate = useNavigate();

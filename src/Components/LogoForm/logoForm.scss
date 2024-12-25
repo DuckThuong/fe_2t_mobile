@@ -1,7 +1,10 @@
-@import '../../styles/variables.scss';
+@import "../../styles/variables.scss";
 .logo-form {
   &__container {
     width: 324px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
   }
   &__title {
     font-size: 24px;

@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Col, Row, Button } from "antd";
-import { QUERY_KEY } from "../../../configs/apiConfig";
 import { cartApi, productApi, reviewApi } from "../../../api/api";
 import { useParams } from "react-router-dom";
 import Navbar from "../../HeaderWeb";
 import { FooterWeb } from "../../FooterWeb";
 import { ListProduct } from "../../TrangChu/ListProducts";
+import { QUERY_KEY } from "../../../api/apiConfig";
 export interface ICreateCart {
   UserID: number;
   ProductID: string;

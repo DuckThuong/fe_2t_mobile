@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "../../../Components/ProductCard";
 import { productApi } from "../../../api/api";
-import { QUERY_KEY } from "../../../configs/apiConfig";
 import { Pagination } from "antd";
 import "../style.scss";
+import { QUERY_KEY } from "../../../api/apiConfig";
 
 interface Props {
   level?: string;
@@ -38,9 +38,12 @@ export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
             key={product.ProductID}
             product={{
               id: product.ProductID,
-              name: product.Name,
+              name: product.ProductName,
               price: parseFloat(product.Price),
-              image: product.ImageURL,
+              image:
+                product.images.length > 0
+                  ? product.images[0].ImageURL
+                  : "default-image-url",
               description: product.Description,
               className: "home-list_content-item",
             }}

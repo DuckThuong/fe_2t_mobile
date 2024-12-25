@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL, API_KEY } from "../configs/apiConfig";
+import { API_BASE_URL, API_KEY } from "./apiConfig";
 
 const apiRequest = async (
   endpoint: string,

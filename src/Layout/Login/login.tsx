@@ -4,22 +4,21 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux"; // Import useDispatch
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../api/api";
+import { QUERY_KEY } from "../../api/apiConfig";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-import { QUERY_KEY } from "../../configs/apiConfig";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { setAuthUser } from "../../store/authSlice"; // Import action
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
-
 const Login = () => {
   const [form] = useForm();
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Khởi tạo dispatch
+  const dispatch = useDispatch();
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -34,17 +33,18 @@ const Login = () => {
     const email = form.getFieldValue("email");
     const password = form.getFieldValue("password");
 
-    const userExists = loginApi?.UserList?.some(
-      (user) => user.email === email && user.password === password
+    const userExists = loginApi?.userList?.some(
+      (user) => user.Email === email && user.PasswordHash === password
     );
+    console.log({ email, password, userExists });
     if (userExists) {
-      const userData = loginApi.UserList.find((user) => user.email === email);
+      const userData = loginApi.userList.find((user) => user.Email === email);
       if (userData) {
         dispatch(
           setAuthUser({
             id: userData.UserID,
             email: userData.Email,
-            fullName: userData.FullName,
+            fullName: userData.Username,
           })
         );
       }
@@ -81,6 +81,10 @@ const Login = () => {
 
   return (
     <div className="login">
+      <video autoPlay muted loop id="loginVideo">
+        <source src="/112722-695433093.mp4" type="video/mp4" />
+      </video>
+
       <NotificationPopup
         message={notification?.message}
         type={notification?.type}

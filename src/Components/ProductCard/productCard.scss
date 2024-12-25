@@ -40,3 +40,12 @@
     }
   }
 }
+
+.custom-tooltip {
+  .ant-tooltip-content {
+    .ant-tooltip-inner {
+      background-color: bisque;
+      color: #001529 !important;
+    }
+  }
+}

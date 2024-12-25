@@ -9,8 +9,8 @@ import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./forgotPassword.scss";
 import { userApi } from "../../api/api";
-import { QUERY_KEY } from "../../configs/apiConfig";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../api/apiConfig";
 export const ForgotEditPassword = () => {
   const navigate = useNavigate();
   const [form] = useForm();

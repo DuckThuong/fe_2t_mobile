@@ -2,8 +2,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Checkbox, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { cartApi } from "../../../api/api";
-import { QUERY_KEY } from "../../../configs/apiConfig";
 import "../style.scss";
+import { QUERY_KEY } from "../../../api/apiConfig";
 interface CartProductProps {
   onSelectionChange: (selectedIds: number) => void;
 }
