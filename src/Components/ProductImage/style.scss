@@ -1,14 +1,18 @@
 .product-image {
-  margin-top: 20px !important;
   height: fit-content !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: fit-content !important;
-  border-radius: 15px;
-  .isopen {
+  border-radius: 15px !important;
+  .isOpen {
     display: flex;
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid black;
+    .ant-image {
+      img {
+        border-radius: 15px 15px 0px 0px !important;
+      }
+    }
   }
   .list-image {
     width: 100% !important;

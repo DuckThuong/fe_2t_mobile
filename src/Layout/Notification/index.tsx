@@ -15,10 +15,11 @@ const NotificationPopup: React.FC<NotificationPopupProps> = ({
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
-      }, 1000000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [message, type]);
+
   return (
     <div className={`notification-popup ${type} ${visible ? "show" : "hide"}`}>
       {message}

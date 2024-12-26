@@ -22,7 +22,6 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   );
   const [imageIndex, setImageIndex] = useState(0);
 
-  console.log(images);
   return (
     <div className="product-image">
       <div className="isOpen">

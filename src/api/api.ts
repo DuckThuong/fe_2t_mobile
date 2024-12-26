@@ -63,5 +63,5 @@ export const reviewApi = {
     apiRequest(`${API_KEY.REVIEW}/${id}`, "PATCH", reviewData),
   deleteReview: (id: string) => apiRequest(`${API_KEY.REVIEW}/${id}`, "DELETE"),
   getAllReviewByProductId: (productId: string) =>
-    apiRequest(`${API_KEY.REVIEW}/product/${productId}`),
+    apiRequest(`${API_KEY.REVIEW}/reviewByProduct/${productId}`),
 };

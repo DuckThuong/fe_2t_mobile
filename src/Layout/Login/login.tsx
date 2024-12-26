@@ -36,7 +36,6 @@ const Login = () => {
     const userExists = loginApi?.userList?.some(
       (user) => user.Email === email && user.PasswordHash === password
     );
-    console.log({ email, password, userExists });
     if (userExists) {
       const userData = loginApi.userList.find((user) => user.Email === email);
       if (userData) {
