@@ -28,7 +28,7 @@ export const Cartergories = () => {
           </div>
         ) : (
           <div className="cart-label">
-            <p className="cart-label_title">Danh sách sản phẩm</p>
+            <p className="cart_header-title">Danh sách sản phẩm</p>
             <CartProduct
               onSelectionChange={(e) => {
                 setCartSum(e);

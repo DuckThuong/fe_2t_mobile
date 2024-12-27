@@ -147,7 +147,7 @@ export const ProductDetail = () => {
                       <span
                         key={color.ColorID}
                         style={{
-                          backgroundColor: color.color.ColorName,
+                          backgroundColor: color.color?.ColorName,
                           padding: "5px",
                           margin: "2px",
                           border: "1px solid black",
