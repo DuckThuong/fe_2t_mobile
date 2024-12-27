@@ -1,14 +1,18 @@
-import { FC, ReactNode } from 'react';
-import { toast } from 'react-toastify';
+import { FC, ReactNode, useEffect } from "react";
+import { toast } from "react-toastify";
 
 interface ToastSuccessProps {
   content: ReactNode;
 }
 
-const ToastSuccess: FC<ToastSuccessProps> = (props) => {
-  const { content } = props;
+const ToastSuccess: FC<ToastSuccessProps> = ({ content }) => {
+  useEffect(() => {
+    toast.success(
+      <div className="d-flex align-items-center gap-10">{content}</div>
+    );
+  }, [content]);
 
-  return toast.success(<div className="d-flex align-items-center gap-10">{content}</div>);
+  return null;
 };
 
 export default ToastSuccess;

@@ -1,22 +1,20 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { cartApi, productApi, reviewApi } from "../../../api/api";
 import { QUERY_KEY } from "../../../api/apiConfig";
 import { ProductImageGallery } from "../../../Components/ProductImage";
+import ToastError from "../../../Components/Toast/ToastError";
+import ToastSuccess from "../../../Components/Toast/ToastSuccess";
 import { FooterWeb } from "../../FooterWeb";
 import Navbar from "../../HeaderWeb";
 import { ListProduct } from "../../TrangChu/ListProducts";
 import "./style.scss";
-import NotificationPopup from "../../Notification";
-import ToastSuccess from "../../../Components/Toast/ToastSuccess";
-import ToastError from "../../../Components/Toast/ToastError";
 export interface ICreateCart {
   UserID: number;
-  ProductID: string;
-  Quantity: number;
+  CartItems: { ProductID: string | undefined; Quantity: number }[];
 }
 
 interface ReviewPayload {
@@ -44,11 +42,10 @@ export const ProductDetail = () => {
     mutationFn: (payload: ICreateCart) => cartApi.addCartItem(payload),
   });
 
-  const handleCreateCart = (userId: number, quantity: number) => {
+  const handleCreateCart = () => {
     const payload = {
-      UserID: userId,
-      ProductID: id as string,
-      Quantity: quantity,
+      UserID: 3,
+      CartItems: [{ ProductID: id, Quantity: 1 }],
     };
     createCart.mutate(payload);
   };
@@ -123,7 +120,7 @@ export const ProductDetail = () => {
                 Mua Ngay
               </Button>
               <Button
-                onClick={() => handleCreateCart(3, 1)}
+                onClick={() => handleCreateCart()}
                 type="default"
                 className="add-to-cart-button"
               >
