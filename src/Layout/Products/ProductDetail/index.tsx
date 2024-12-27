@@ -28,6 +28,9 @@ export const ProductDetail = () => {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [form] = useForm();
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
+    undefined
+  );
   const { data: productDetailData } = useQuery({
     queryKey: [QUERY_KEY.GET_PRODUCTS, id],
     queryFn: () => productApi.getProductById(id as string),
@@ -73,7 +76,7 @@ export const ProductDetail = () => {
     },
     onError: () => {
       ToastError({
-        content: "Bình luận thất bại",
+        content: "Bình luận th��t bại",
       });
     },
   });
@@ -86,7 +89,12 @@ export const ProductDetail = () => {
     };
     addReviews.mutate(payload);
   };
-
+  const handleColorChange = (colorId: number) => {
+    const productImageUrl = productDetailData?.productById?.productImage?.find(
+      (image) => image.ColorID === colorId
+    )?.ImageURL;
+    setSelectedImageUrl(productImageUrl);
+  };
   return (
     <>
       <Navbar />
@@ -97,6 +105,8 @@ export const ProductDetail = () => {
             <Col span={6}>
               <ProductImageGallery
                 images={productDetailData?.productById?.productImage}
+                selectedImage={selectedImageUrl}
+                setSelectedImage={setSelectedImageUrl}
               />
             </Col>
             <Col span={12}>
@@ -116,6 +126,23 @@ export const ProductDetail = () => {
                 <span>Đã mua: </span>
                 {productDetailData?.productById?.productInfo?.Stock}
               </p>
+              <div className="product-colors">
+                {productDetailData?.productById?.productInfo?.productColors?.map(
+                  (color) => (
+                    <span
+                      key={color.ColorID}
+                      style={{
+                        backgroundColor: color.color.ColorName,
+                        padding: "5px",
+                        margin: "2px",
+                        border: "1px solid black",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => handleColorChange(color.ColorID)}
+                    />
+                  )
+                )}
+              </div>
               <Button type="primary" className="buy-now-button">
                 Mua Ngay
               </Button>

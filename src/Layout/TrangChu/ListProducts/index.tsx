@@ -29,7 +29,6 @@ export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
     startIndex,
     startIndex + itemsPerPage
   );
-
   return (
     <div className="home-list">
       <div className="home-list_content">
@@ -45,6 +44,7 @@ export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
                   ? product.images[0].ImageURL
                   : "default-image-url",
               description: product.Description,
+              colors: product?.productColors,
               className: "home-list_content-item",
             }}
           />

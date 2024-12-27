@@ -3,17 +3,26 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import "./productCard.scss";
-interface Product {
+interface ProductProps {
   id: number;
   name: string;
   price: number;
   image: string;
   description: string;
-  className?: string;
+  className: string;
+  colors: Array<{
+    ProductID: number;
+    ColorID: number;
+    color: {
+      ColorID: number;
+      ColorName: string;
+    };
+  }>;
 }
-export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+export const ProductCard: React.FC<{ product: ProductProps }> = ({
+  product,
+}) => {
   const navigate = useNavigate();
-
   return (
     <div className={`product-card ${product.className}`}>
       <img src={product.image} alt={product.name} className="product-image" />
@@ -25,6 +34,18 @@ export const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
             : product.description}
         </p>
       </Tooltip>
+      <div className="product-colors">
+        {product.colors.map((color) => (
+          <span
+            key={color.ColorID}
+            style={{
+              backgroundColor: color.color.ColorName,
+              padding: "5px",
+              margin: "2px",
+            }}
+          />
+        ))}
+      </div>
       <div className="product-button">
         <p className="product-price">
           {product.price.toLocaleString("vi-VN")} VNĐ
