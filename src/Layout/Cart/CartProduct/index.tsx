@@ -74,77 +74,81 @@ export const CartProduct: React.FC<CartProductProps> = ({
       onSelectionChange(newTotalAmount);
     }
   }, [selectedItems, cartData]);
-
+  console.log(cartData?.CartByUserId?.map((cart) => cart?.CartItems));
   return (
     <div className="cart-product">
-      {cartData?.data?.data?.cart.map((item) => (
-        <React.Fragment key={item.CartID}>
-          <Row className="cart-product_row">
-            <Col className="cart-product_checkbox" span={1}>
-              <Checkbox
-                onChange={() =>
-                  handleCheckboxChange(
-                    item.CartID,
-                    item.Product.Price,
-                    item.Quantity
-                  )
-                }
-                checked={selectedItems.includes(item.CartID)}
-              />
-            </Col>
-            <Col className="cart-product_image" span={3}>
-              <img
-                src={item.Product.ImageURL}
-                alt={item.Product.Name}
-                className="product-image"
-              />
-            </Col>
-            <Col className="cart-product_information" span={12}>
-              <Row className="cart-product_information-name">
-                <Col span={6}>Sản phẩm:</Col>
-                <Col span={12}>{item.Product.Name}</Col>
-              </Row>
-              <Row className="cart-product_information-description">
-                <Col span={6}>Chi tiết:</Col>
-                <Col span={12}>{item.Product.Description}</Col>
-              </Row>
-              <Row className="cart-product_information-price">
-                <Col span={6}>Giá:</Col>
-                <Col span={12}>{item.Product.Price} $</Col>
-              </Row>
-              <Row className="cart-product_information-quantity">
-                <Col span={6}>Số lượng:</Col>
-                <Col span={12}>
-                  <Button
-                    onClick={() =>
-                      handleDecreaseQuantity(item.CartID, item.Quantity)
-                    }
-                    disabled={item.Quantity === 1}
-                  >
-                    -
-                  </Button>
-                  <span style={{ margin: "0 10px" }}>{item.Quantity}</span>
-                  <Button
-                    onClick={() =>
-                      handleIncreaseQuantity(item.CartID, item.Quantity)
-                    }
-                  >
-                    +
-                  </Button>
-                </Col>
-              </Row>
-              <Row className="cart-product_information-sum">
-                <Col span={6}>Tổng</Col>
-                <Col span={12}>
-                  {(item.Quantity * parseFloat(item.Product.Price)).toFixed(2)}{" "}
-                  $
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <div className="underline" />
-        </React.Fragment>
-      ))}
+      {cartData?.CartByUserId?.map((cart) =>
+        cart.CartItems.items.map((item) => (
+          <React.Fragment key={item.CartItemID}>
+            <Row className="cart-product_row">
+              <Col className="cart-product_checkbox" span={1}>
+                <Checkbox
+                  onChange={() =>
+                    handleCheckboxChange(
+                      item.CartItemID,
+                      item.product.Price,
+                      item.Quantity
+                    )
+                  }
+                  checked={selectedItems.includes(item.CartItemID)}
+                />
+              </Col>
+              <Col className="cart-product_image" span={6}>
+                <img
+                  src={item.product.images[0].ImageURL}
+                  alt={item.product.ProductName}
+                  className="product-image"
+                />
+              </Col>
+              <Col className="cart-product_information" span={12}>
+                <Row className="cart-product_information-name">
+                  <Col span={6}>Sản phẩm:</Col>
+                  <Col span={12}>{item.product.ProductName}</Col>
+                </Row>
+                <Row className="cart-product_information-description">
+                  <Col span={6}>Chi tiết:</Col>
+                  <Col span={12}>{item.product.Description}</Col>
+                </Row>
+                <Row className="cart-product_information-price">
+                  <Col span={6}>Giá:</Col>
+                  <Col span={12}>{item.product.Price} $</Col>
+                </Row>
+                <Row className="cart-product_information-quantity">
+                  <Col span={6}>Số lượng:</Col>
+                  <Col span={12}>
+                    <Button
+                      onClick={() =>
+                        handleDecreaseQuantity(item.CartItemID, item.Quantity)
+                      }
+                      disabled={item.Quantity === 1}
+                    >
+                      -
+                    </Button>
+                    <span style={{ margin: "0 10px" }}>{item.Quantity}</span>
+                    <Button
+                      onClick={() =>
+                        handleIncreaseQuantity(item.CartItemID, item.Quantity)
+                      }
+                    >
+                      +
+                    </Button>
+                  </Col>
+                </Row>
+                <Row className="cart-product_information-sum">
+                  <Col span={6}>Tổng</Col>
+                  <Col span={12}>
+                    {(item.Quantity * parseFloat(item.product.Price)).toFixed(
+                      2
+                    )}{" "}
+                    $
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <div className="underline" />
+          </React.Fragment>
+        ))
+      )}
     </div>
   );
 };
