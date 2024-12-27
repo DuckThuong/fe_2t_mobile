@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Col, Form, Input, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { cartApi, productApi, reviewApi } from "../../../api/api";
 import { QUERY_KEY } from "../../../api/apiConfig";
@@ -76,7 +76,7 @@ export const ProductDetail = () => {
     },
     onError: () => {
       ToastError({
-        content: "Bình luận th��t bại",
+        content: "Bình luận thất bại",
       });
     },
   });
@@ -89,6 +89,15 @@ export const ProductDetail = () => {
     };
     addReviews.mutate(payload);
   };
+
+  useEffect(() => {
+    if (productDetailData?.productById?.productImage?.length > 0) {
+      const firstColorId =
+        productDetailData.productById.productImage[0].ColorID;
+      handleColorChange(firstColorId);
+    }
+  }, [productDetailData]);
+
   const handleColorChange = (colorId: number) => {
     const productImageUrl = productDetailData?.productById?.productImage?.find(
       (image) => image.ColorID === colorId
@@ -128,19 +137,27 @@ export const ProductDetail = () => {
               </p>
               <div className="product-colors">
                 {productDetailData?.productById?.productInfo?.productColors?.map(
-                  (color) => (
-                    <span
-                      key={color.ColorID}
-                      style={{
-                        backgroundColor: color.color.ColorName,
-                        padding: "5px",
-                        margin: "2px",
-                        border: "1px solid black",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => handleColorChange(color.ColorID)}
-                    />
-                  )
+                  (color) => {
+                    const isColorSelected =
+                      productDetailData?.productById?.productImage?.find(
+                        (image) => image.ColorID === color.ColorID
+                      )?.ImageURL === selectedImageUrl;
+
+                    return (
+                      <span
+                        key={color.ColorID}
+                        style={{
+                          backgroundColor: color.color.ColorName,
+                          padding: "5px",
+                          margin: "2px",
+                          border: "1px solid black",
+                          cursor: "pointer",
+                          transform: isColorSelected ? "scale(1.1)" : "none",
+                        }}
+                        onClick={() => handleColorChange(color.ColorID)}
+                      />
+                    );
+                  }
                 )}
               </div>
               <Button type="primary" className="buy-now-button">

@@ -1,8 +1,8 @@
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { Image } from "antd/lib";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./style.scss";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 interface ProductImageGalleryProps {
   images: {
@@ -20,10 +20,6 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
   setSelectedImage,
 }) => {
   const [imageIndex, setImageIndex] = useState(0);
-
-  useEffect(() => {
-    console.log("Selected Image URL:", selectedImage);
-  }, [selectedImage]);
 
   return (
     <div className="product-image">
@@ -47,10 +43,7 @@ export const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
                   preview={false}
                   alt={`Image ${index + 1}`}
                   key={image.ImageID}
-                  onClick={() => {
-                    console.log("Updating selected image to:", image.ImageURL);
-                    setSelectedImage(image.ImageURL);
-                  }}
+                  onClick={() => setSelectedImage(image.ImageURL)}
                 />
               ))}
               <Button
