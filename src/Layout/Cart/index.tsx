@@ -1,37 +1,48 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button, Col, Row } from "antd";
-import { cartApi } from "../../api/api";
+import { useState } from "react";
 import { SvgNull } from "../../Components/@svg/SvgNull";
 import { FormSelect } from "../../Components/Form/FormSelect";
 import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
+import "./style.scss";
+import { BackwardOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { CartProduct } from "./CartProduct";
-import { useState } from "react";
 import { QUERY_KEY } from "../../api/apiConfig";
-
+import { useQuery } from "@tanstack/react-query";
+import { cartApi } from "../../api/api";
 export const Cartergories = () => {
   const [cartSum, setCartSum] = useState<number>();
+  const navigate = useNavigate();
   const { data: cartData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
   });
-
   return (
     <>
       <Navbar />
       <div className="cart">
         {cartData?.userId?.length < 0 ? (
           <div className="cart-label">
-            <p>Giỏ hàng trống</p>
+            <h1>Giỏ hàng trống</h1>
             <SvgNull />
-            <Button className="cart-button_back">Quay về trang mua sắm</Button>
+            <Button
+              onClick={() => {
+                navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+              }}
+              icon={<BackwardOutlined />}
+              className="cart-button_back"
+            >
+              Quay về trang mua sắm
+            </Button>
           </div>
         ) : (
           <div className="cart-label">
             <p className="cart_header-title">Danh sách sản phẩm</p>
             <CartProduct
-              onSelectionChange={(e) => {
-                setCartSum(e);
+              onSelectionChange={(total) => {
+                setCartSum(total);
               }}
             />
           </div>
@@ -45,7 +56,7 @@ export const Cartergories = () => {
                 </Col>
                 <Col span={8}>
                   <span className="cart-option_text">
-                    {cartSum || "0.00"} $
+                    {cartSum?.toFixed(2)} $
                   </span>
                 </Col>
               </Row>

@@ -2,32 +2,25 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Checkbox, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { cartApi } from "../../../api/api";
-import "../style.scss";
 import { QUERY_KEY } from "../../../api/apiConfig";
+
 interface CartProductProps {
-  onSelectionChange: (selectedIds: number) => void;
+  onSelectionChange: (totalAmount: number) => void;
 }
+
 interface UpdateCartItem {
   id: number;
   quantity: number;
 }
+
 export const CartProduct: React.FC<CartProductProps> = ({
   onSelectionChange,
 }) => {
-  const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  const [selectedImageId, setselectedImageId] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedCartId, setselectedCartId] = useState<string | undefined>(
-    undefined
-  );
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
-    undefined
-  );
   const { data: cartData, refetch } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
   });
+
   const updateCart = useMutation({
     mutationFn: (payload: UpdateCartItem) =>
       cartApi.updateCartItem(payload.id, { Quantity: payload.quantity }),
@@ -35,6 +28,8 @@ export const CartProduct: React.FC<CartProductProps> = ({
       refetch();
     },
   });
+
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const handleDecreaseQuantity = (id: number, currentQuantity: number) => {
     if (currentQuantity > 1) {
@@ -53,59 +48,39 @@ export const CartProduct: React.FC<CartProductProps> = ({
     };
     updateCart.mutate(payload);
   };
-  const handleCheckboxChange = (
-    id: number,
-    price: string,
-    quantity: number
-  ) => {
-    const isSelected = selectedItems.includes(id);
-    let newSelectedItems = [...selectedItems];
-    if (isSelected) {
-      newSelectedItems = selectedItems.filter((item) => item !== id);
-    } else {
-      newSelectedItems = [...selectedItems, id];
-    }
-    setSelectedItems(newSelectedItems);
+
+  const calculateTotal = (ids: number[]) => {
+    return cartData?.CartByUserId?.reduce((total, cart) => {
+      return (
+        total +
+        cart.CartItems.items.reduce((subTotal, item) => {
+          if (ids.includes(item.CartItemID)) {
+            return subTotal + item.Quantity * parseFloat(item.product.Price);
+          }
+          return subTotal;
+        }, 0)
+      );
+    }, 0).toFixed(2);
+  };
+
+  const handleCheckboxChange = (id: number, isChecked: boolean) => {
+    setSelectedIds((prevSelectedIds) => {
+      const updatedIds = isChecked
+        ? [...prevSelectedIds, id]
+        : prevSelectedIds.filter((selectedId) => selectedId !== id);
+
+      const updatedTotal = calculateTotal(updatedIds);
+      onSelectionChange(Number(updatedTotal));
+
+      return updatedIds;
+    });
   };
 
   useEffect(() => {
-    if (cartData) {
-      const newTotalAmount = selectedItems.reduce((total, itemId) => {
-        const item = cartData?.data?.data?.cart.find(
-          (item) => item.CartID === itemId
-        );
-        if (item) {
-          return total + item.Quantity * parseFloat(item.Product.Price);
-        }
-        return total;
-      }, 0);
-      onSelectionChange(newTotalAmount);
-    }
-  }, [selectedItems, cartData]);
+    const total = calculateTotal(selectedIds);
+    onSelectionChange(Number(total));
+  }, [selectedIds, cartData]);
 
-  const handleColorChange = (cartItemId: number, colorId: number) => {
-    const productImageInfo = cartData?.CartByUserId?.flatMap((cart) =>
-      cart.CartItems.items.flatMap((item) => {
-        const image = item.product.images.find(
-          (image) => image.ColorID === colorId
-        );
-        if (image && item.CartItemID === cartItemId) {
-          return {
-            CartID: cart.CartID,
-            ImageID: image.ImageID,
-            ImageURL: image.ImageURL,
-          };
-        }
-        return undefined;
-      })
-    ).find((info) => info !== undefined);
-
-    if (productImageInfo) {
-      setselectedImageId(productImageInfo.ImageID);
-      setselectedCartId(productImageInfo.CartID);
-      setSelectedImageUrl(productImageInfo.ImageURL);
-    }
-  };
   return (
     <div className="cart-product">
       {cartData?.CartByUserId?.map((cart) =>
@@ -114,23 +89,14 @@ export const CartProduct: React.FC<CartProductProps> = ({
             <Row className="cart-product_row">
               <Col className="cart-product_checkbox" span={1}>
                 <Checkbox
-                  onChange={() =>
-                    handleCheckboxChange(
-                      item.CartItemID,
-                      item.product.Price,
-                      item.Quantity
-                    )
+                  onChange={(e) =>
+                    handleCheckboxChange(item.CartItemID, e.target.checked)
                   }
-                  checked={selectedItems.includes(item.CartItemID)}
                 />
               </Col>
               <Col className="cart-product_image" span={6}>
                 <img
-                  src={
-                    selectedImageId && selectedCartId === cart.CartID
-                      ? selectedImageUrl
-                      : item.product.images[0].ImageURL
-                  }
+                  src={item.product.images[0].ImageURL}
                   alt={item.product.ProductName}
                   className="product-image"
                 />
@@ -143,38 +109,6 @@ export const CartProduct: React.FC<CartProductProps> = ({
                 <Row className="cart-product_information-description">
                   <Col span={6}>Chi tiết:</Col>
                   <Col span={12}>{item.product.Description}</Col>
-                </Row>
-                <Row>
-                  <Col span={6}>Màu sắc:</Col>
-                  <Col span={12}>
-                    <div className="product-colors">
-                      {item.product.productColors?.map((color) => {
-                        const isColorSelected =
-                          item.product.productColors?.find(
-                            (image) => image.ColorID === color.ColorID
-                          )?.ImageURL;
-
-                        return (
-                          <span
-                            key={color.ColorID}
-                            style={{
-                              backgroundColor: color.color.ColorName,
-                              padding: "5px",
-                              margin: "2px",
-                              border: "1px solid black",
-                              cursor: "pointer",
-                              transform: isColorSelected
-                                ? "scale(1.1)"
-                                : "none",
-                            }}
-                            onClick={() =>
-                              handleColorChange(item.CartItemID, color.ColorID)
-                            }
-                          />
-                        );
-                      })}
-                    </div>
-                  </Col>
                 </Row>
                 <Row className="cart-product_information-price">
                   <Col span={6}>Giá:</Col>

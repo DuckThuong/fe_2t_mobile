@@ -4,6 +4,48 @@
   justify-content: center;
   flex-direction: column;
   width: 100% !important;
+  &-label {
+    display: flex;
+    flex-direction: column;
+    padding: 45px 45px;
+    align-items: center;
+    row-gap: 32px !important;
+    &-title {
+      font-family: "Roboto", sans-serif;
+      font-size: 34px;
+      font-weight: bold;
+      color: #ffffff;
+      text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      background: linear-gradient(
+        135deg,
+        #09011d 0%,
+        #1a3f8b 50%,
+        #2774f9 100%
+      );
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: linear-gradient(
+          135deg,
+          #2774f9 0%,
+          #1a3f8b 50%,
+          #09011d 100%
+        );
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
+    }
+    .ant-btn {
+      border: 1px solid black !important;
+      font-weight: bold;
+      color: black !important;
+    }
+  }
   &_header {
     &-title {
       font-family: "Roboto", sans-serif;
