@@ -91,6 +91,10 @@
     &_image {
       margin-right: 120px;
       margin-left: 32px;
+      img {
+        max-width: 358px !important;
+        max-height: 358px !important;
+      }
     }
     &_information {
       .ant-col-6 {

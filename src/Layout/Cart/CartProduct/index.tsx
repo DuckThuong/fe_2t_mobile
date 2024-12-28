@@ -121,7 +121,7 @@ export const CartProduct: React.FC<CartProductProps> = ({
               </Col>
               <Col className="cart-product_image" span={6}>
                 <img
-                  src={item.product.images[0].ImageURL}
+                  src={selectedImageUrl || item.product.images[0].ImageURL}
                   alt={item.product.ProductName}
                   className="product-image"
                 />
@@ -140,7 +140,7 @@ export const CartProduct: React.FC<CartProductProps> = ({
                   <Col span={12}>{item.product.Price} $</Col>
                 </Row>
                 <Row className="cart-product_information-price">
-                  <Col span={6}>Màu</Col>
+                  <Col span={6}>Màu:</Col>
                   <Col span={12} className="product-colors">
                     {item?.product?.productColors?.map((color) => {
                       const isColorSelected =
