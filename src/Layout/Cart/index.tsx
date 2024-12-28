@@ -11,7 +11,7 @@ import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { CartProduct } from "./CartProduct";
 import { QUERY_KEY } from "../../api/apiConfig";
 import { useQuery } from "@tanstack/react-query";
-import { cartApi } from "../../api/api";
+import { cartApi, paymentApi } from "../../api/api";
 export const Cartergories = () => {
   const [cartSum, setCartSum] = useState<number>();
   const navigate = useNavigate();
@@ -19,6 +19,14 @@ export const Cartergories = () => {
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
   });
+  const { data: paymentData } = useQuery({
+    queryKey: [QUERY_KEY.GET_PAYMENT],
+    queryFn: () => paymentApi.getAllPayments(),
+  });
+  const paymentOptions = paymentData?.PaymentList?.map((payment) => ({
+    label: payment.paymentMethod,
+    value: payment.paymentId,
+  }));
   return (
     <>
       <Navbar />
@@ -65,10 +73,19 @@ export const Cartergories = () => {
               <FormSelect
                 name={"costee"}
                 placeholder="Chọn phương thức thanh toán"
+                selectProps={{
+                  options: paymentOptions,
+                  disabled: cartSum === 0,
+                }}
               />
             </Col>
             <Col span={8}>
-              <Button className="cart-option_button-submit">Xác nhận</Button>
+              <Button
+                className="cart-option_button-submit"
+                disabled={cartSum === 0}
+              >
+                Xác nhận
+              </Button>
             </Col>
           </Row>
         </div>

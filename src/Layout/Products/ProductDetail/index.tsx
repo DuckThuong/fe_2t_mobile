@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Col, Form, Input, Row } from "antd";
+import { Button, Col, Form, Input, message, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -43,6 +43,13 @@ export const ProductDetail = () => {
 
   const createCart = useMutation({
     mutationFn: (payload: ICreateCart) => cartApi.addCartItem(payload),
+    onSuccess: () => {
+      refetch();
+      message.success("Thêm vào giỏ hàng thành công");
+    },
+    onError: (error) => {
+      message.error(error.message);
+    },
   });
 
   const handleCreateCart = () => {
@@ -70,14 +77,10 @@ export const ProductDetail = () => {
       refetch();
       form.resetFields();
       setRating(0);
-      ToastSuccess({
-        content: "Bình luận thành công",
-      });
+      message.success("Bình luận thành công");
     },
-    onError: () => {
-      ToastError({
-        content: "Bình luận thất bại",
-      });
+    onError: (error) => {
+      message.error(error.message);
     },
   });
   const handleAddReview = () => {

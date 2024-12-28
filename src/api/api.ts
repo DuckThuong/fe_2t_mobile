@@ -66,3 +66,14 @@ export const reviewApi = {
   getAllReviewByProductId: (productId: string) =>
     apiRequest(`${API_KEY.REVIEW}/reviewByProduct/${productId}`),
 };
+
+export const paymentApi = {
+  getAllPayments: () => apiRequest(API_KEY.PAYMENT),
+  getPaymentById: (id: string) => apiRequest(`${API_KEY.PAYMENT}/${id}`),
+  createPayment: (paymentData: any) =>
+    apiRequest(API_KEY.PAYMENT, "POST", paymentData),
+  updatePayment: (id: string, paymentData: any) =>
+    apiRequest(`${API_KEY.PAYMENT}/${id}`, "PATCH", paymentData),
+  deletePayment: (id: string) =>
+    apiRequest(`${API_KEY.PAYMENT}/${id}`, "DELETE"),
+};

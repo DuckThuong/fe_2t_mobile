@@ -11,6 +11,7 @@ import "./forgotPassword.scss";
 import { userApi } from "../../api/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEY } from "../../api/apiConfig";
+import { message } from "antd";
 export const ForgotEditPassword = () => {
   const navigate = useNavigate();
   const [form] = useForm();
@@ -27,13 +28,10 @@ export const ForgotEditPassword = () => {
       userApi.updateUser(id, userData),
     onSuccess: () => {
       navigate(CUSTOMER_ROUTER_PATH.FORGOT_SUCCESS);
+      message.success("Cập nhật thành công");
     },
-    onError: () => {
-      setNotification({
-        message: "Địa chỉ email và mật khẩu cũ không chính xác",
-        type: "error",
-      });
-      form.setFieldsValue("e");
+    onError: (error) => {
+      message.error(error.message);
     },
   });
   const onFinish = () => {
