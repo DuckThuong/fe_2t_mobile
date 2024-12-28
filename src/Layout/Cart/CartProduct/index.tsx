@@ -16,11 +16,9 @@ interface UpdateCartItem {
 export const CartProduct: React.FC<CartProductProps> = ({
   onSelectionChange,
 }) => {
-  const [image, setImage] = useState<string>("");
-  const [color, setColor] = useState<string[]>();
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
-    undefined
-  );
+  const [selectedImageUrls, setSelectedImageUrls] = useState<{
+    [key: number]: string;
+  }>({});
   const { data: cartData, refetch } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
@@ -80,27 +78,20 @@ export const CartProduct: React.FC<CartProductProps> = ({
       return updatedIds;
     });
   };
-  const handleColorChange = (colorId: number) => {
-    const productImageUrl = cartData?.CartByUserId?.map(
-      (cart) =>
-        cart.CartItems.items
-          .find((item) =>
-            item.product.images.find((image) => image.ColorID === colorId)
-          )
-          ?.product.images.find((image) => image.ColorID === colorId)?.ImageURL
-    )[0];
+  const handleColorChange = (colorId: number, cartItemId: number) => {
+    const productImageUrl = cartData?.CartByUserId?.flatMap(
+      (cart) => cart.CartItems.items
+    )
+      .find((item) => item.CartItemID === cartItemId)
+      ?.product.images.find((image) => image.ColorID === colorId)?.ImageURL;
 
-    setSelectedImageUrl(productImageUrl);
-  };
-  useEffect(() => {
-    if (cartData?.CartByUserId?.items) {
-      cartData?.CartByUserId?.items?.map((item) => {
-        if (item?.product.productColor?.length > 0) {
-          item.product.productColor.map((color) => setColor(color.Color));
-        }
-      });
+    if (productImageUrl) {
+      setSelectedImageUrls((prev) => ({
+        ...prev,
+        [cartItemId]: productImageUrl,
+      }));
     }
-  }, [cartData]);
+  };
   useEffect(() => {
     const total = calculateTotal(selectedIds);
     onSelectionChange(Number(total));
@@ -121,7 +112,10 @@ export const CartProduct: React.FC<CartProductProps> = ({
               </Col>
               <Col className="cart-product_image" span={6}>
                 <img
-                  src={selectedImageUrl || item.product.images[0].ImageURL}
+                  src={
+                    selectedImageUrls[item.CartItemID] ||
+                    item.product.images[0].ImageURL
+                  }
                   alt={item.product.ProductName}
                   className="product-image"
                 />
@@ -146,7 +140,7 @@ export const CartProduct: React.FC<CartProductProps> = ({
                       const isColorSelected =
                         item?.product?.productColors?.find(
                           (image) => image.ColorID === color.ColorID
-                        )?.ImageURL === selectedImageUrl;
+                        )?.ImageURL === selectedImageUrls[item.CartItemID];
 
                       return (
                         <span
@@ -159,7 +153,9 @@ export const CartProduct: React.FC<CartProductProps> = ({
                             cursor: "pointer",
                             transform: isColorSelected ? "scale(1.1)" : "none",
                           }}
-                          onClick={() => handleColorChange(color.ColorID)}
+                          onClick={() =>
+                            handleColorChange(color.ColorID, item.CartItemID)
+                          }
                         />
                       );
                     })}
