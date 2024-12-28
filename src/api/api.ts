@@ -51,7 +51,8 @@ export const cartApi = {
   addCartItem: (itemData: any) => apiRequest(API_KEY.CART, "POST", itemData),
   updateCartItem: (id: number, itemData: any) =>
     apiRequest(`${API_KEY.CART}/update/${id}`, "PATCH", itemData),
-  deleteCartItem: (id: string) => apiRequest(`${API_KEY.CART}/${id}`, "DELETE"),
+  deleteCartItem: (id: string) =>
+    apiRequest(`${API_KEY.CART}/delete/${id}`, "DELETE"),
 };
 
 export const reviewApi = {

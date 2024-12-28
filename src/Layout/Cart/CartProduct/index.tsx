@@ -3,6 +3,7 @@ import { Button, Checkbox, Col, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { cartApi } from "../../../api/api";
 import { QUERY_KEY } from "../../../api/apiConfig";
+import { DeleteOutlined } from "@ant-design/icons";
 
 interface CartProductProps {
   onSelectionChange: (totalAmount: number) => void;
@@ -19,6 +20,8 @@ export const CartProduct: React.FC<CartProductProps> = ({
   const [selectedImageUrls, setSelectedImageUrls] = useState<{
     [key: number]: string;
   }>({});
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
   const { data: cartData, refetch } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
@@ -31,9 +34,12 @@ export const CartProduct: React.FC<CartProductProps> = ({
       refetch();
     },
   });
-
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
+  const deleteCart = useMutation({
+    mutationFn: (id: string) => cartApi.deleteCartItem(id),
+    onSuccess: () => {
+      refetch();
+    },
+  });
   const handleDecreaseQuantity = (id: number, currentQuantity: number) => {
     if (currentQuantity > 1) {
       const payload = {
@@ -78,6 +84,7 @@ export const CartProduct: React.FC<CartProductProps> = ({
       return updatedIds;
     });
   };
+
   const handleColorChange = (colorId: number, cartItemId: number) => {
     const productImageUrl = cartData?.CartByUserId?.flatMap(
       (cart) => cart.CartItems.items
@@ -90,6 +97,14 @@ export const CartProduct: React.FC<CartProductProps> = ({
         ...prev,
         [cartItemId]: productImageUrl,
       }));
+    }
+  };
+
+  const handleDeleteCart = (id: string) => {
+    try {
+      deleteCart.mutate(id);
+    } catch (error) {
+      console.log(error);
     }
   };
   useEffect(() => {
@@ -190,6 +205,19 @@ export const CartProduct: React.FC<CartProductProps> = ({
                       2
                     )}{" "}
                     $
+                  </Col>
+                </Row>
+                <Row
+                  className="cart-product_information-sum"
+                  justify={"center"}
+                >
+                  <Col span={6}>
+                    <Button
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDeleteCart(item.CartID)}
+                    >
+                      Xóa
+                    </Button>
                   </Col>
                 </Row>
               </Col>
