@@ -127,18 +127,19 @@
     &_text {
       font-size: 24px;
       font-weight: 600;
-      color: red;
+      color: red !important;
     }
     &_button {
       &-submit {
         width: 150px;
         height: 50px;
-        background-color: red;
+        background-color: red !important;
         margin-left: 140px;
+        border: 1px solid red !important;
         span {
           font-size: 18px;
           font-weight: 600;
-          color: white;
+          color: white !important;
         }
       }
     }

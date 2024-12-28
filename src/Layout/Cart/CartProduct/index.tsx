@@ -16,6 +16,11 @@ interface UpdateCartItem {
 export const CartProduct: React.FC<CartProductProps> = ({
   onSelectionChange,
 }) => {
+  const [image, setImage] = useState<string>("");
+  const [color, setColor] = useState<string[]>();
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
+    undefined
+  );
   const { data: cartData, refetch } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
@@ -75,7 +80,27 @@ export const CartProduct: React.FC<CartProductProps> = ({
       return updatedIds;
     });
   };
+  const handleColorChange = (colorId: number) => {
+    const productImageUrl = cartData?.CartByUserId?.map(
+      (cart) =>
+        cart.CartItems.items
+          .find((item) =>
+            item.product.images.find((image) => image.ColorID === colorId)
+          )
+          ?.product.images.find((image) => image.ColorID === colorId)?.ImageURL
+    )[0];
 
+    setSelectedImageUrl(productImageUrl);
+  };
+  useEffect(() => {
+    if (cartData?.CartByUserId?.items) {
+      cartData?.CartByUserId?.items?.map((item) => {
+        if (item?.product.productColor?.length > 0) {
+          item.product.productColor.map((color) => setColor(color.Color));
+        }
+      });
+    }
+  }, [cartData]);
   useEffect(() => {
     const total = calculateTotal(selectedIds);
     onSelectionChange(Number(total));
@@ -114,6 +139,33 @@ export const CartProduct: React.FC<CartProductProps> = ({
                   <Col span={6}>Giá:</Col>
                   <Col span={12}>{item.product.Price} $</Col>
                 </Row>
+                <Row className="cart-product_information-price">
+                  <Col span={6}>Màu</Col>
+                  <Col span={12} className="product-colors">
+                    {item?.product?.productColors?.map((color) => {
+                      const isColorSelected =
+                        item?.product?.productColors?.find(
+                          (image) => image.ColorID === color.ColorID
+                        )?.ImageURL === selectedImageUrl;
+
+                      return (
+                        <span
+                          key={color.ColorID}
+                          style={{
+                            backgroundColor: color.color?.ColorName,
+                            padding: "5px",
+                            margin: "2px",
+                            border: "1px solid black",
+                            cursor: "pointer",
+                            transform: isColorSelected ? "scale(1.1)" : "none",
+                          }}
+                          onClick={() => handleColorChange(color.ColorID)}
+                        />
+                      );
+                    })}
+                  </Col>
+                </Row>
+
                 <Row className="cart-product_information-quantity">
                   <Col span={6}>Số lượng:</Col>
                   <Col span={12}>
