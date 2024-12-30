@@ -15,6 +15,8 @@ import { cartApi, paymentApi } from "../../api/api";
 export const Cartergories = () => {
   const [cartSum, setCartSum] = useState<number>();
   const navigate = useNavigate();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+
   const { data: cartData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: () => cartApi.GetCartByUserId("3"),
@@ -27,6 +29,11 @@ export const Cartergories = () => {
     label: payment.paymentMethod,
     value: payment.paymentId,
   }));
+
+  const handlePaymentChange = (value) => {
+    setSelectedPaymentMethod(value);
+  };
+  console.log(selectedPaymentMethod);
   return (
     <>
       <Navbar />
@@ -76,13 +83,14 @@ export const Cartergories = () => {
                 selectProps={{
                   options: paymentOptions,
                   disabled: cartSum === 0,
+                  onChange: handlePaymentChange,
                 }}
               />
             </Col>
             <Col span={8}>
               <Button
                 className="cart-option_button-submit"
-                disabled={cartSum === 0}
+                disabled={!selectedPaymentMethod}
               >
                 Xác nhận
               </Button>

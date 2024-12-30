@@ -80,9 +80,9 @@ const Login = () => {
 
   return (
     <div className="login">
-      <video autoPlay muted loop id="loginVideo">
+      {/* <video autoPlay muted loop id="loginVideo">
         <source src="/112722-695433093.mp4" type="video/mp4" />
-      </video>
+      </video> */}
 
       <NotificationPopup
         message={notification?.message}

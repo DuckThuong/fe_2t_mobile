@@ -77,3 +77,12 @@ export const paymentApi = {
   deletePayment: (id: string) =>
     apiRequest(`${API_KEY.PAYMENT}/${id}`, "DELETE"),
 };
+
+export const orderApi = {
+  getAllOrders: () => apiRequest(API_KEY.ORDER),
+  getOrderById: (id: string) => apiRequest(`${API_KEY.ORDER}/${id}`),
+  createOrder: (orderData: any) => apiRequest(API_KEY.ORDER, "POST", orderData),
+  updateOrder: (id: string, orderData: any) =>
+    apiRequest(`${API_KEY.ORDER}/${id}`, "PATCH", orderData),
+  deleteOrder: (id: string) => apiRequest(`${API_KEY.ORDER}/${id}`, "DELETE"),
+};
