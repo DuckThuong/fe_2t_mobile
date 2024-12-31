@@ -7,11 +7,12 @@ export const login = async (email: string, password: string) => {
       email,
       password,
     });
-    console.log(response);
-    if (response.data.accessToken) {
-      localStorage.setItem("accessToken", response.data.accessToken);
-      console.log("LoginSuccess");
+    if (response.data.token) {
+      localStorage.setItem("accessToken", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
       return response.data;
+    } else {
+      console.log("No token in response");
     }
   } catch (error) {
     console.error("Login failed:", error);

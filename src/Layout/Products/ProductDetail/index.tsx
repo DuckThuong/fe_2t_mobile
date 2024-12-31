@@ -1,17 +1,16 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Button, Col, Form, Input, message, Row } from "antd";
 import { useForm } from "antd/es/form/Form";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { cartApi, productApi, reviewApi } from "../../../api/api";
 import { QUERY_KEY } from "../../../api/apiConfig";
 import { ProductImageGallery } from "../../../Components/ProductImage";
-import ToastError from "../../../Components/Toast/ToastError";
-import ToastSuccess from "../../../Components/Toast/ToastSuccess";
 import { FooterWeb } from "../../FooterWeb";
 import Navbar from "../../HeaderWeb";
 import { ListProduct } from "../../TrangChu/ListProducts";
 import "./style.scss";
+
 export interface ICreateCart {
   UserID: number;
   CartItems: { ProductID: string | undefined; Quantity: number }[];
@@ -28,6 +27,9 @@ export const ProductDetail = () => {
   const { id } = useParams();
   const [rating, setRating] = useState(0);
   const [form] = useForm();
+  const userJSON = localStorage.getItem("user");
+  const user = userJSON ? JSON.parse(userJSON) : null;
+
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
     undefined
   );
@@ -35,7 +37,6 @@ export const ProductDetail = () => {
     queryKey: [QUERY_KEY.GET_PRODUCTS, id],
     queryFn: () => productApi.getProductById(id as string),
   });
-  console.log(localStorage.getItem("jwtToken"));
 
   const { data: reviewData, refetch } = useQuery({
     queryKey: [QUERY_KEY.GET_REVIEW],
@@ -54,7 +55,7 @@ export const ProductDetail = () => {
   });
   const handleCreateCart = () => {
     const payload = {
-      UserID: 3,
+      UserID: user.UserID,
       CartItems: [{ ProductID: id, Quantity: 1 }],
     };
     createCart.mutate(payload);
@@ -86,7 +87,7 @@ export const ProductDetail = () => {
   const handleAddReview = () => {
     const payload = {
       ProductID: id,
-      UserID: 3,
+      UserID: user.UserID,
       Rating: rating,
       Comment: form.getFieldValue("reviews"),
     };

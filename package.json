@@ -20,6 +20,7 @@
     "dayjs": "^1.11.13",
     "install": "^0.13.0",
     "isemail": "^3.2.0",
+    "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "my-app": "file:",
     "qrcode.react": "^4.0.1",

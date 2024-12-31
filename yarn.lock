@@ -6864,6 +6864,11 @@ jsonpointer@^5.0.0:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
+jwt-decode@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-4.0.0.tgz#2270352425fd413785b2faf11f6e755c5151bd4b"
+  integrity sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==
+
 keyv@^4.5.3:
   version "4.5.4"
   resolved "https://registry.npmjs.org/keyv/-/keyv-4.5.4.tgz"
@@ -7239,7 +7244,7 @@ multicast-dns@^7.2.5:
     install "^0.13.0"
     isemail "^3.2.0"
     lodash "^4.17.21"
-    my-app "file:../../../AppData/Local/Yarn/Cache/v6/npm-my-app-0.1.0-ac82e954-d51a-4011-b79c-a664c0466ac5-1735202903608/node_modules/my-app"
+    my-app "file:../../../AppData/Local/Yarn/Cache/v6/npm-my-app-0.1.0-2ddf0b78-7217-4997-a237-7c307b2df541-1735609870956/node_modules/my-app"
     qrcode.react "^4.0.1"
     rc-util "^5.43.0"
     react "^18.3.1"

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import { imageApi } from "../../api/api";
+import { QUERY_KEY } from "../../api/apiConfig";
+import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
 import { HomeHeader } from "./HomeHeader";
 import { ListProduct } from "./ListProducts";
-import { imageApi } from "../../api/api";
 import "./style.scss";
-import { FooterWeb } from "../FooterWeb";
-import { QUERY_KEY } from "../../api/apiConfig";
+
 export const Home = () => {
   const { data: imageData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],

@@ -21,10 +21,12 @@ export const CartProduct: React.FC<CartProductProps> = ({
     [key: number]: string;
   }>({});
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const userJSON = localStorage.getItem("user");
+  const user = userJSON ? JSON.parse(userJSON) : null;
 
   const { data: cartData, refetch } = useQuery({
-    queryKey: [QUERY_KEY.GET_IMAGE],
-    queryFn: () => cartApi.GetCartByUserId("3"),
+    queryKey: [QUERY_KEY.GET_IMAGE, user],
+    queryFn: () => cartApi.GetCartByUserId(user.UserID),
   });
 
   const updateCart = useMutation({

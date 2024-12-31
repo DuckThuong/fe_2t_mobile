@@ -16,10 +16,12 @@ export const Cartergories = () => {
   const [cartSum, setCartSum] = useState<number>();
   const navigate = useNavigate();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
+  const userJSON = localStorage.getItem("user");
+  const user = userJSON ? JSON.parse(userJSON) : null;
 
   const { data: cartData } = useQuery({
-    queryKey: [QUERY_KEY.GET_IMAGE],
-    queryFn: () => cartApi.GetCartByUserId("3"),
+    queryKey: [QUERY_KEY.GET_IMAGE, user],
+    queryFn: () => cartApi.GetCartByUserId(user.UserID),
   });
   const { data: paymentData } = useQuery({
     queryKey: [QUERY_KEY.GET_PAYMENT],
@@ -33,7 +35,6 @@ export const Cartergories = () => {
   const handlePaymentChange = (value) => {
     setSelectedPaymentMethod(value);
   };
-  console.log(selectedPaymentMethod);
   return (
     <>
       <Navbar />
