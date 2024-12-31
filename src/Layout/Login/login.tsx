@@ -15,6 +15,7 @@ import { setAuthUser } from "../../store/authSlice"; // Import action
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
+import { login } from "../../api/authApi";
 const Login = () => {
   const [form] = useForm();
   const navigate = useNavigate();
@@ -28,7 +29,6 @@ const Login = () => {
     queryKey: [QUERY_KEY.GET_USER],
     queryFn: userApi.getAllUsers,
   });
-
   const onFinish = () => {
     const email = form.getFieldValue("email");
     const password = form.getFieldValue("password");
@@ -47,7 +47,7 @@ const Login = () => {
           })
         );
       }
-
+      login(email, password);
       navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
       setNotification({ message: "Thành Công", type: "success" });
     } else {

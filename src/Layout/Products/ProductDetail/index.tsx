@@ -35,6 +35,7 @@ export const ProductDetail = () => {
     queryKey: [QUERY_KEY.GET_PRODUCTS, id],
     queryFn: () => productApi.getProductById(id as string),
   });
+  console.log(localStorage.getItem("jwtToken"));
 
   const { data: reviewData, refetch } = useQuery({
     queryKey: [QUERY_KEY.GET_REVIEW],
@@ -51,7 +52,6 @@ export const ProductDetail = () => {
       message.error(error.message);
     },
   });
-
   const handleCreateCart = () => {
     const payload = {
       UserID: 3,

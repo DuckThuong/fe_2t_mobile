@@ -11,6 +11,7 @@ export const Home = () => {
     queryKey: [QUERY_KEY.GET_IMAGE],
     queryFn: imageApi.getAllImage,
   });
+
   return (
     <>
       <Navbar />
