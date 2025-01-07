@@ -4,14 +4,27 @@ import { API_BASE_URL, API_KEY } from "./apiConfig";
 const apiRequest = async (
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" = "GET",
-  data?: any
+  data?: any,
+  params?: any
 ) => {
   const url = `${API_BASE_URL}/${endpoint}`;
-  const config = { method, url, data };
+  const config = {
+    method,
+    url,
+    data: method !== "GET" ? data : undefined,
+    params: method === "GET" ? params : undefined,
+  };
 
   const { data: responseData } = await axios(config);
   return responseData;
 };
+
+export enum OrderStateEnum {
+  ALL = "ALL",
+  Pending = "Pending",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+}
 
 export const userApi = {
   getAllUsers: () => apiRequest(API_KEY.USER),
@@ -22,6 +35,7 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/${id}`, "PATCH", userData),
   deleteUser: (id: string) => apiRequest(`${API_KEY.USER}/${id}`, "DELETE"),
 };
+
 export const imageApi = {
   getAllImage: () => apiRequest(API_KEY.IMAGE),
   getImageByID: (id: string) => apiRequest(`${API_KEY.IMAGE}/${id}`),
@@ -80,9 +94,26 @@ export const paymentApi = {
 
 export const orderApi = {
   getAllOrders: () => apiRequest(API_KEY.ORDER),
-  getOrderById: (id: string) => apiRequest(`${API_KEY.ORDER}/${id}`),
+  getOrderById: (id: string) => apiRequest(`${API_KEY.ORDER}/orderbyId/${id}`),
   createOrder: (orderData: any) => apiRequest(API_KEY.ORDER, "POST", orderData),
   updateOrder: (id: string, orderData: any) =>
     apiRequest(`${API_KEY.ORDER}/${id}`, "PATCH", orderData),
   deleteOrder: (id: string) => apiRequest(`${API_KEY.ORDER}/${id}`, "DELETE"),
+  getOrderByIdAndState: (userID: string, state: OrderStateEnum) =>
+    apiRequest(`${API_KEY.ORDER}/by-state`, "GET", null, {
+      userID,
+      state,
+    }),
+};
+
+export const orderDetailApi = {
+  getAllOrderDetails: () => apiRequest(API_KEY.ORDER_DETAIL),
+  getOrderDetailById: (id: string) =>
+    apiRequest(`${API_KEY.ORDER_DETAIL}/${id}`),
+  createOrderDetail: (orderDetailData: any) =>
+    apiRequest(API_KEY.ORDER_DETAIL, "POST", orderDetailData),
+  updateOrderDetail: (id: string, orderDetailData: any) =>
+    apiRequest(`${API_KEY.ORDER_DETAIL}/${id}`, "PATCH", orderDetailData),
+  deleteOrderDetail: (id: string) =>
+    apiRequest(`${API_KEY.ORDER_DETAIL}/${id}`, "DELETE"),
 };

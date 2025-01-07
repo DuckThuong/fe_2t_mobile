@@ -18,6 +18,9 @@ export const CUSTOMER_ROUTE_NAME = {
   CATERGORIES: "catergories",
   //Product_Detail:
   PRODUCT_DETAIL: "trang-chu/:id",
+  // Order
+  ORDER_LIST: "order",
+  ORDER_DETAIL: "order/:id",
 };
 export const CUSTOMER_ROUTER_PATH = {
   //Log_In
@@ -33,4 +36,7 @@ export const CUSTOMER_ROUTER_PATH = {
   CATERGORIES: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.CATERGORIES}`,
   //Product_detail
   PRODUCT_DETAIL: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.PRODUCT_DETAIL}`,
+  // Order
+  ORDER_LIST: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.ORDER_LIST}`,
+  ORDER_DETAIL: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.ORDER_DETAIL}`,
 };

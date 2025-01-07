@@ -9,6 +9,7 @@ import { ProductDetail } from "../Layout/Products/ProductDetail";
 import { Home } from "../Layout/TrangChu";
 import { SuspenseWrapper } from "../SuspenseWrapper";
 import { CUSTOMER_ROUTER_PATH } from "./Routers";
+import { Order } from "../Layout/Order";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -54,6 +55,16 @@ export const CustomerRouter = () => (
       <Route
         path={CUSTOMER_ROUTER_PATH.PRODUCT_DETAIL}
         element={<SuspenseWrapper component={<ProductDetail />} />}
+      ></Route>
+    </Route>
+    <Route>
+      <Route
+        path={CUSTOMER_ROUTER_PATH.ORDER_LIST}
+        element={<SuspenseWrapper component={<Order />} />}
+      ></Route>
+      <Route
+        path={CUSTOMER_ROUTER_PATH.ORDER_DETAIL}
+        element={<SuspenseWrapper component={<Order />} />}
       ></Route>
     </Route>
   </Routes>

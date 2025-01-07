@@ -62,7 +62,7 @@ const Navbar = () => {
             icon={<OrderedListOutlined />}
             className="menu-item"
           >
-            <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>Đơn hàng</Link>
+            <Link to={CUSTOMER_ROUTER_PATH.ORDER_LIST}>Đơn hàng</Link>
           </Menu.Item>
           <Menu.Item key="4" title="Cài đặt" className="menu-item">
             <Menu.SubMenu icon={<UserOutlined />}>

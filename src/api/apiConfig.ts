@@ -8,6 +8,7 @@ export const API_KEY = {
   REVIEW: "reviews",
   PAYMENT: "payments",
   ORDER: "orders",
+  ORDER_DETAIL: "order-details",
 };
 
 export const QUERY_KEY = {
@@ -18,4 +19,5 @@ export const QUERY_KEY = {
   GET_REVIEW: `${API_BASE_URL}/${API_KEY.REVIEW}`,
   GET_PAYMENT: `${API_BASE_URL}/${API_KEY.PAYMENT}`,
   GET_ORDER: `${API_BASE_URL}/${API_KEY.ORDER}`,
+  GET_ORDER_DETAIL: `${API_BASE_URL}/${API_KEY.ORDER}`,
 };
