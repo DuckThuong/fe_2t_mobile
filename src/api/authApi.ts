@@ -1,12 +1,20 @@
 import axios from "axios";
 import { QUERY_KEY } from "./apiConfig";
 
+interface LoginResponse {
+  token: string;
+  user: any;
+}
+
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axios.post(QUERY_KEY.GET_USER + "/login", {
-      email,
-      password,
-    });
+    const response = await axios.post<LoginResponse>(
+      QUERY_KEY.GET_USER + "/login",
+      {
+        email,
+        password,
+      }
+    );
     if (response.data.token) {
       localStorage.setItem("accessToken", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
