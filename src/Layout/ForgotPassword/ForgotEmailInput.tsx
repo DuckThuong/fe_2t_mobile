@@ -6,18 +6,19 @@ import FormWrap from "../../Components/Form/FormWrap";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
 import "./forgotPassword.scss";
+import { useState } from "react";
+import { set } from "lodash";
 
 export const ForgotEmailInput = () => {
   const [form] = useForm();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
 
-  const handleNextStep = (values) => {
-    const { email } = values;
+  const handleNextStep = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_CODE_INPUT, {
       state: { email },
     });
   };
-
   return (
     <div className="forgot-password_email">
       <FormWrap
@@ -41,6 +42,9 @@ export const ForgotEmailInput = () => {
             }}
             inputProps={{
               placeholder: "Email@gmail.com",
+              onChange: (e) => {
+                setEmail(e.target.value);
+              },
             }}
           />
         </div>

@@ -1,5 +1,5 @@
 import { useForm } from "antd/es/form/Form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
@@ -9,12 +9,14 @@ import "./forgotPassword.scss";
 export const ForgotCodeInput = () => {
   const navigate = useNavigate();
   const [form] = useForm();
-
+  const location = useLocation();
+  const emailState = location?.state?.email;
   const handleNextStep = (values) => {
     const { code } = values;
-
     if (String(code) === "123456") {
-      navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD);
+      navigate(CUSTOMER_ROUTER_PATH.FORGOT_EDIT_PASSWORD, {
+        state: { emailState },
+      });
     } else {
       form.setFields([
         {
@@ -35,7 +37,8 @@ export const ForgotCodeInput = () => {
         <h1 className="forgot-password_title">XÁC NHẬN MÃ OTP</h1>
         <p className="forgot-password_sub">
           <span>
-            Vui lòng nhập mã OTP được gửi về email của bạn (Mã OTP có hiệu lực trong vòng 1 phút).
+            Vui lòng nhập mã OTP được gửi về email của bạn (Mã OTP có hiệu lực
+            trong vòng 1 phút).
           </span>
         </p>
         <div className="forgot-password_code-input">
