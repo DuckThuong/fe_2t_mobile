@@ -27,7 +27,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     {
       validator: _validator({
         required: "Không được để trống",
-        password: "Không được để trống mật khẩu",
+        password: "Mật khẩu cần tối thiểu 8 kí tự, có chữ hoa, chữ thường và chữ số",
       }),
     },
     ..._option,
