@@ -7,11 +7,14 @@ export const ACTION = {
 export const CUSTOMER_ROUTE_NAME = {
   //Log_In
   LOG_IN: "",
+  //sign_in
+  SIGN_UP:"sign-up",
   //Forgot_password
   FORGOT_EMAIL_INPUT: "forgot-email-input",
   FORGOT_CODE_INPUT: "forgot-code-input",
   FORGOT_EDIT_PASSWORD: "forgot-edit-password",
   FORGOT_SUCCESS: "forgot-success",
+  
   //List_Students
   TRANG_CHU: "trang-chu",
   //Catergories
@@ -25,6 +28,7 @@ export const CUSTOMER_ROUTE_NAME = {
 export const CUSTOMER_ROUTER_PATH = {
   //Log_In
   LOG_IN: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.LOG_IN}`,
+  SIGN_UP: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.SIGN_UP}`,
   //Forgot_password
   FORGOT_EMAIL_INPUT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.FORGOT_EMAIL_INPUT}`,
   FORGOT_CODE_INPUT: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.FORGOT_CODE_INPUT}`,

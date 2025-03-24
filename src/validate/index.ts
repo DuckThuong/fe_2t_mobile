@@ -64,7 +64,7 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     {
       validator: _validator({
         required: "Không được để trống",
-        phone: "Số điện thoại không đúng",
+        phone: "Số điện thoại không đúng định dạng",
       }),
     },
     ..._option,
@@ -130,6 +130,20 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
       ),
     },
   ];
+const confirmPassword = [
+  {
+    validator: _validator(
+      {
+        required: "Không được để trống",
+        confirmPassword: "Mật khẩu xác nhận không khớp",
+      },
+      data // data phải chứa { password: 'giá trị password' }
+      // { password: getFieldValue('password') },
+    ),
+  },
+  // ..._option,
+];
+
 
   return {
     email,
@@ -142,7 +156,8 @@ export const ValidateLibrary: (_option?: any[], data?: unknown) => Validate = (
     passport,
     cardNumber,
     dob,
+    confirmPassword,
     space,
-    expirationDate,
+    expirationDate,   
   };
 };

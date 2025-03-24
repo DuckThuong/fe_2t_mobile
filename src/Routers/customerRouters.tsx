@@ -5,6 +5,7 @@ import { ForgotEditPassword } from "../Layout/ForgotPassword/ForgotEditPassword"
 import { ForgotEmailInput } from "../Layout/ForgotPassword/ForgotEmailInput";
 import { ForgotSuccess } from "../Layout/ForgotPassword/ForgotSuccess";
 import Login from "../Layout/Login/login";
+import Signup from "../Layout/Signup/signup";
 import { ProductDetail } from "../Layout/Products/ProductDetail";
 import { Home } from "../Layout/TrangChu";
 import { SuspenseWrapper } from "../SuspenseWrapper";
@@ -18,8 +19,17 @@ export const CustomerRouter = () => (
       path={CUSTOMER_ROUTER_PATH.LOG_IN}
       element={<SuspenseWrapper component={<Login />} />}
     ></Route>
+    {/* Signup */}
+    <Route
+      path={CUSTOMER_ROUTER_PATH.SIGN_UP}
+      element={<SuspenseWrapper component={<Signup />} />}
+    ></Route>
+      
+    
+    
     {/* Forgot_Password */}
     <Route>
+
       <Route
         path={CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT}
         element={<SuspenseWrapper component={<ForgotEmailInput />} />}
