@@ -1,4 +1,3 @@
-// ProductFormPage.tsx
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./AdminUpdatePhone.scss";
@@ -14,8 +13,7 @@ interface IProduct {
   createdAt: string;
 }
 
-// Không cần IProductFormPageProps nữa
-const ProductFormPage: React.FC = () => {
+const AdminUpdatePhone: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const editingProduct = location.state?.product as IProduct | undefined;
@@ -119,4 +117,4 @@ const ProductFormPage: React.FC = () => {
   );
 };
 
-export default ProductFormPage;
+export default AdminUpdatePhone;
