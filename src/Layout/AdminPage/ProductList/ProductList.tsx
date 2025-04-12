@@ -6,28 +6,67 @@ import "./ProductList.scss";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 
+interface IShipment {
+  id: string;
+  name: string;
+  date: string;
+  totalValue: number;
+  quantity: number;
+}
+
 interface IProduct {
   id: number;
   name: string;
   brand: string;
   category: string;
-  price: number;
+  quantity: number; // Added quantity
+  price: number; // Renamed as "Giá gốc"
+  shipmentId: string; // Added to link to a shipment
   image: string;
   createdAt: string;
 }
 
 const ProductList: React.FC = () => {
   const navigate = useNavigate();
-  const tableRef = useRef<CustomTableRef>(null); // Thêm ref cho CustomTable
+  const shipmentTableRef = useRef<CustomTableRef>(null);
+  const productTableRef = useRef<CustomTableRef>(null);
+
+  const [shipments, setShipments] = useState<IShipment[]>([
+    {
+      id: "LH7769",
+      name: "pro max test",
+      date: "04/03/2025",
+      totalValue: 30000000,
+      quantity: 3,
+    },
+    { id: "LH66bda", name: "", date: "11/04/2025", totalValue: 0, quantity: 0 },
+    {
+      id: "LH66c7c",
+      name: "13 pro max",
+      date: "04/04/2025",
+      totalValue: 13000,
+      quantity: 10,
+    },
+    {
+      id: "LH67357",
+      name: "14 PRO MAX",
+      date: "04/04/2025",
+      totalValue: 60000,
+      quantity: 20,
+    },
+    { id: "LH6938f", name: "", date: "11/04/2025", totalValue: 0, quantity: 0 },
+  ]);
+
   const [products, setProducts] = useState<IProduct[]>([
     {
       id: 1,
       name: "OnePlus Nord N20",
       brand: "OnePlus",
       category: "Phones",
+      quantity: 1,
       price: 899,
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
+      shipmentId: "LH7769",
+      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
       createdAt: "2023-07-13",
     },
     {
@@ -35,9 +74,10 @@ const ProductList: React.FC = () => {
       name: "Nokia G10",
       brand: "Nokia",
       category: "Phones",
+      quantity: 2,
       price: 689,
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
+      shipmentId: "LH7769",
+      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
       createdAt: "2023-07-13",
     },
     {
@@ -45,9 +85,10 @@ const ProductList: React.FC = () => {
       name: "Samsung Galaxy S21",
       brand: "Samsung",
       category: "Phones",
+      quantity: 5,
       price: 799,
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
+      shipmentId: "LH66c7c",
+      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
       createdAt: "2023-08-05",
     },
     {
@@ -55,9 +96,10 @@ const ProductList: React.FC = () => {
       name: "iPhone 13",
       brand: "Apple",
       category: "Phones",
+      quantity: 3,
       price: 999,
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
+      shipmentId: "LH67357",
+      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
       createdAt: "2023-09-01",
     },
     {
@@ -65,76 +107,141 @@ const ProductList: React.FC = () => {
       name: "Google Pixel 6",
       brand: "Google",
       category: "Phones",
+      quantity: 4,
       price: 899,
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
+      shipmentId: "LH67357",
+      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
       createdAt: "2023-08-15",
     },
   ]);
 
+  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(shipments[0]); 
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>(products);
+  const [filteredShipments, setFilteredShipments] = useState<IShipment[]>(shipments);
 
+  // Search for shipments
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
   const handleSearchClick = () => {
     const searchTerms = searchQuery.trim().toLowerCase().split(/\s+/);
-    const result = products.filter((product) =>
-      searchTerms.every((term) => product.name.toLowerCase().includes(term))
+    const result = shipments.filter((shipment) =>
+      searchTerms.every(
+        (term) =>
+          shipment.id.toLowerCase().includes(term) ||
+          shipment.name.toLowerCase().includes(term)
+      )
     );
-    setFilteredProducts(result);
+    setFilteredShipments(result);
   };
 
-  const handleDelete = (id: number | string) => {
+  // Handle shipment selection
+  const handleShipmentSelect = (shipment: IShipment) => {
+    setSelectedShipment(shipment);
+  };
+
+  // Filter products based on selected shipment
+  const filteredProducts = products.filter(
+    (product) => product.shipmentId === selectedShipment?.id
+  );
+
+  // Delete shipment
+  const handleDeleteShipment = (id: string) => {
+    setShipments((prevShipments) =>
+      prevShipments.filter((shipment) => shipment.id !== id)
+    );
+    setFilteredShipments((prevFilteredShipments) =>
+      prevFilteredShipments.filter((shipment) => shipment.id !== id)
+    );
+    if (selectedShipment?.id === id) {
+      setSelectedShipment(null);
+    }
+  };
+
+  // Delete product
+  const handleDeleteProduct = (id: number) => {
     setProducts((prevProducts) =>
       prevProducts.filter((product) => product.id !== id)
     );
-    setFilteredProducts((prevFilteredProducts) =>
-      prevFilteredProducts.filter((product) => product.id !== id)
-    );
   };
 
-  const handleEdit = (product: IProduct) => {
+  // Edit shipment
+  const handleEditShipment = (shipment: IShipment) => {
+    // navigate(ADMIN_ROUTER_PATH.EDIT_SHIPMENT, { state: { shipment } });
+  };
+
+  // Edit product
+  const handleEditProduct = (product: IProduct) => {
     navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT, { state: { product } });
   };
 
-  const handleCreate = () => {
-    navigate(ADMIN_ROUTER_PATH.ADD_PRODUCT);
+  // Create shipment
+  const handleCreateShipment = () => {
+    // navigate(ADMIN_ROUTER_PATH.ADD_SHIPMENT);
   };
 
+  // Shipment table columns
+  const shipmentColumns = [
+    { title: "Mã lô hàng", dataIndex: "id", key: "id" },
+    { title: "Tên lô hàng", dataIndex: "name", key: "name" },
+    { title: "Ngày nhập", dataIndex: "date", key: "date" },
+    {
+      title: "Tổng tiền",
+      dataIndex: "totalValue",
+      key: "totalValue",
+      render: (value: number) => `${value.toLocaleString()} VND`,
+    },
+    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
+  ];
+
+  // Product table columns
   const productColumns = [
-    { title: "STT", key: "index", render: (_: any, __: any, index: number) => index + 1 },
+    { title: "Mã sản phẩm", dataIndex: "id", key: "id" },
     { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
     { title: "Hãng", dataIndex: "brand", key: "brand" },
     { title: "Thể loại", dataIndex: "category", key: "category" },
+    { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     {
-      title: "Giá",
+      title: "Giá gốc",
       dataIndex: "price",
       key: "price",
-      render: (price: number) => `${price}VNĐ`,
+      render: (price: number) => `${price.toLocaleString()} VNĐ`,
     },
     {
-      title: "Ảnh",
-      dataIndex: "image",
-      key: "image",
-      render: (image: string) => (
-        <img src={image} alt="product" style={{ width: 50, height: "auto" }} />
-      ),
+      title: "Giá bán",
+      key: "sellingPrice",
+      render: (_: any, record: IProduct) =>
+        `${(record.price * 2).toLocaleString()} VNĐ`, // Giá bán = Giá gốc * 2
     },
-    { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt" },
   ];
 
-  const renderActions = (record: IProduct) => (
+  // Shipment table actions
+  const renderShipmentActions = (record: IShipment) => (
     <Space size="small">
-      <Button type="primary" onClick={() => handleEdit(record)}>
+      <Button type="primary" onClick={() => handleEditShipment(record)}>
         Sửa
       </Button>
       <Button
         type="primary"
         danger
-        onClick={() => tableRef.current?.showDeleteConfirm(record.id)}
+        onClick={() => shipmentTableRef.current?.showDeleteConfirm(record.id)}
+      >
+        Xóa
+      </Button>
+    </Space>
+  );
+
+  // Product table actions
+  const renderProductActions = (record: IProduct) => (
+    <Space size="small">
+      <Button type="primary" onClick={() => handleEditProduct(record)}>
+        Sửa
+      </Button>
+      <Button
+        type="primary"
+        danger
+        onClick={() => productTableRef.current?.showDeleteConfirm(record.id)}
       >
         Xóa
       </Button>
@@ -143,12 +250,13 @@ const ProductList: React.FC = () => {
 
   return (
     <div className="product-list-container">
+      {/* Shipment Table */}
       <div className="product-list-header">
-        <h1 className="title">Danh sách sản phẩm</h1>
+        <h1 className="title">Quản lý kho hàng</h1>
       </div>
       <div className="product-list-actions">
         <div className="left-actions">
-          <button className="btn-create" onClick={handleCreate}>
+          <button className="btn-create" onClick={handleCreateShipment}>
             Thêm mới
           </button>
           <button className="btn-refresh">Tải lại</button>
@@ -167,15 +275,43 @@ const ProductList: React.FC = () => {
         </div>
       </div>
       <CustomTable
-        ref={tableRef} // Truyền ref vào CustomTable
-        data={filteredProducts}
-        columns={productColumns}
-        customActions={renderActions}
-        onDelete={handleDelete}
+        ref={shipmentTableRef}
+        data={filteredShipments}
+        columns={shipmentColumns}
+        customActions={renderShipmentActions}
+        // onDelete={handleDeleteShipment}
         deleteConfirmMessage={(record) =>
-          `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
+          `Bạn có chắc chắn muốn xóa lô hàng ${record.id} không?`
         }
+        pagination={{ pageSize: 5 }}
+        // onRow={(record: IShipment) => ({
+        //   onClick: () => handleShipmentSelect(record),
+        //   style: {
+        //     cursor: "pointer",
+        //     background: selectedShipment?.id === record.id ? "#e6f7ff" : "",
+        //   },
+        // })}
       />
+
+      {/* Product Table */}
+      {selectedShipment && (
+        <>
+          <div className="product-list-header">
+            <h1 className="title">Sản phẩm</h1>
+          </div>
+          <CustomTable
+            ref={productTableRef}
+            data={filteredProducts}
+            columns={productColumns}
+            customActions={renderProductActions}
+            // onDelete={handleDeleteProduct}
+            deleteConfirmMessage={(record) =>
+              `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
+            }
+            pagination={{ pageSize: 5 }}
+          />
+        </>
+      )}
     </div>
   );
 };

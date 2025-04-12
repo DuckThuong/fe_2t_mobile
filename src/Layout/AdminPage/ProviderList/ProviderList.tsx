@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button, Space, Input, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons"; // Icon tìm kiếm
-import "./ProviderList.scss";
+import "./ProviderList.scss"; // Import CSS cho trang danh sách nhà cung cấp
 import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
 
 interface IProvider {
