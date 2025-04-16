@@ -1,0 +1,143 @@
+.app-layout {
+  .layout-container {
+    padding: 10px;
+
+    .inner-layout {
+      background: #fff;
+      border-radius: 8px;
+      display: flex;
+
+      .menu-sider {
+        background: #fff;
+        padding: 0 10px;
+        padding-top: 10px;
+
+        .menu-container {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+
+          .menu-button {
+            margin-bottom: 10px;
+            height: 40px;
+            font-size: 14px;
+
+            .anticon {
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+
+      .main-content {
+        flex: 1;
+        padding: 10px;
+
+        .banner-container {
+          .promo-carousel {
+            .promo-card {
+              border-radius: 8px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+              .banner-wrapper {
+                .banner-image-container {
+                  position: relative;
+                  height: 180px;
+
+                  .banner-image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                  }
+
+                  .carousel-button {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: rgba(0, 0, 0, 0.5);
+                    color: white;
+                    border: none;
+                    width: 32px;
+                    height: 32px;
+                    min-width: 32px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                    z-index: 2;
+                    opacity: 0;
+
+                    &.prev-button {
+                      left: 15px;
+                    }
+
+                    &.next-button {
+                      right: 15px;
+                    }
+
+                    &:hover {
+                      background: rgba(0, 0, 0, 0.8);
+                    }
+                  }
+
+                  &:hover .carousel-button {
+                    opacity: 1;
+                  }
+                }
+
+                .banner-text {
+                  text-align: center;
+                  padding: 10px 0;
+
+                  h2 {
+                    font-size: 20px;
+                    color: #d70018;
+                    margin-bottom: 5px;
+                  }
+
+                  h3 {
+                    font-size: 16px;
+                    margin-bottom: 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .product-grid {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 15px;
+          gap: 10px;
+
+          .product-item {
+            width: calc(20% - 8px);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+
+            &.active::after {
+              opacity: 1;
+            }
+
+            &:hover {
+              transform: translateY(-5px);
+            }
+
+            .product-image {
+              width: 100%;
+              height: 80px;
+              object-fit: cover;
+              border-radius: 4px;
+              border: 1px solid #f0f0f0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

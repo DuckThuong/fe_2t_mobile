@@ -8,9 +8,12 @@ import Login from "../Layout/Login/login";
 import Signup from "../Layout/Signup/signup";
 import { ProductDetail } from "../Layout/Products/ProductDetail";
 import { Home } from "../Layout/TrangChu";
+import { ListPage } from "../Layout/TrangList";
 import { SuspenseWrapper } from "../SuspenseWrapper";
 import { CUSTOMER_ROUTER_PATH } from "./Routers";
 import { Order } from "../Layout/Order";
+import { Purchase } from "../Layout/Purchase";
+import Profile from "../Layout/Profile";
 
 export const CustomerRouter = () => (
   <Routes>
@@ -34,6 +37,7 @@ export const CustomerRouter = () => (
         path={CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT}
         element={<SuspenseWrapper component={<ForgotEmailInput />} />}
       ></Route>
+      
       <Route
         path={CUSTOMER_ROUTER_PATH.FORGOT_CODE_INPUT}
         element={<SuspenseWrapper component={<ForgotCodeInput />} />}
@@ -54,6 +58,13 @@ export const CustomerRouter = () => (
         element={<SuspenseWrapper component={<Home />} />}
       ></Route>
     </Route>
+        <Route>
+      <Route
+        path={CUSTOMER_ROUTER_PATH.TRANG_DS_SP}
+        element={<SuspenseWrapper component={<ListPage />} />}
+      ></Route>
+    </Route>
+
     {/* Giỏ hàng */}
     <Route>
       <Route
@@ -76,6 +87,18 @@ export const CustomerRouter = () => (
         path={CUSTOMER_ROUTER_PATH.ORDER_DETAIL}
         element={<SuspenseWrapper component={<Order />} />}
       ></Route>
+      <Route
+        path={CUSTOMER_ROUTER_PATH.MUA_HANG}
+        element={<SuspenseWrapper component={<Purchase />} />}
+      ></Route>
+
+      <Route
+        path={CUSTOMER_ROUTER_PATH.PROFILE}
+        element={<SuspenseWrapper component={<Profile />} />}
+      ></Route>
+
+
+      
     </Route>
   </Routes>
 );
