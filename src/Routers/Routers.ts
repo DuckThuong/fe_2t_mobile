@@ -40,3 +40,25 @@ export const CUSTOMER_ROUTER_PATH = {
   ORDER_LIST: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.ORDER_LIST}`,
   ORDER_DETAIL: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.ORDER_DETAIL}`,
 };
+
+const ADMIN = "admin";
+
+export const ADMIN_ROUTE_NAME = {
+  ADMIN: `/${ADMIN}`,
+  DASHBOARD: `/${ADMIN}/dashboard`,
+  SUPPLIER_LIST: `/${ADMIN}/supplier-list`,
+  PRODUCT_LIST: `/${ADMIN}/product-list`,
+  ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
+  EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
+  ORDER: `/${ADMIN}/order`,
+};
+
+export const ADMIN_ROUTER_PATH = {
+  ADMIN: `/${ADMIN}`,
+  DASHBOARD: `/${ADMIN}/dashboard`,
+  SUPPLIER_LIST: `/${ADMIN}/supplier-list`,
+  PRODUCT_LIST: `/${ADMIN}/product-list`,
+  ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
+  EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
+  ORDER: `/${ADMIN}/order`,
+};
