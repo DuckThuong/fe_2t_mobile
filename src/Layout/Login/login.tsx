@@ -124,6 +124,7 @@ const Login = () => {
               name={"password"}
               formItemProps={{
                 className: "login_form-input",
+                rules: ValidateLibrary().password,
               }}
               isPassword
               inputProps={{

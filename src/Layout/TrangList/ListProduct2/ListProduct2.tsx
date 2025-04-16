@@ -3,12 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { ProductCard } from "../../../Components/ProductCard";
 import { productApi } from "../../../api/api";
 import { Pagination } from "antd";
-import "../style.scss";
+
 import { QUERY_KEY } from "../../../api/apiConfig";
 
+
 interface Props {
-  level?: string;
-  itemPerPage: number;
+  //level?: string;
+  itemPerPage?: number;
 }
 
 const mockProducts = [
@@ -174,17 +175,18 @@ const mockProducts = [
 ];
 
 
-export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
+export const ListProduct2: React.FC<Props> = ({  itemPerPage }) => {
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Sử dụng giá trị mặc định cho itemPerPage nếu không truyền vào
+  const itemPerPageValue = itemPerPage ?? mockProducts.length; // Hiển thị tất cả sản phẩm nếu không có itemPerPage
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const startIndex = (currentPage - 1) * itemPerPage;
-  const currentProducts = mockProducts.slice(startIndex, startIndex + itemPerPage); // Sử dụng dữ liệu fix cứng
-
-
+  // Chỉ cần sử dụng tất cả sản phẩm, không phân trang nữa
+  const currentProducts = mockProducts; // Hiển thị tất cả sản phẩm
 
   return (
     <div className="home-list">
@@ -192,7 +194,6 @@ export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
         {currentProducts?.map((product) => (
           <ProductCard
             key={product.ProductID}
-            
             product={{
               id: product.ProductID,
               name: product.ProductName,
@@ -208,14 +209,15 @@ export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
           />
         ))}
       </div>
-      <Pagination
+
+      {/* Nếu không muốn phân trang nữa, bạn có thể xóa Pagination hoặc để nó vẫn giữ để phân trang nếu cần */}
+      {/* <Pagination
         current={currentPage}
-        pageSize={itemPerPage}
-        //total={productData?.ProductList?.length}
-        total={mockProducts.length} // Dùng dữ liệu fix cứng
+        pageSize={itemPerPageValue}
+        total={mockProducts.length}
         onChange={handlePageChange}
         showSizeChanger={false}
-      />
+      /> */}
     </div>
   );
-}; 
+};

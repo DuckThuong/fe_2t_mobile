@@ -1,150 +1,345 @@
+// Variables
+$primary-color: #0071e3;
+$secondary-color: #f5f5f7;
+$text-color: #1d1d1f;
+$border-color: #d2d2d7;
+$hover-color: #f0f0f0;
+
+.product-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .product-detail {
-  padding: 0px 120px !important;
-  &_headerContent {
-    margin: 32px 0px;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    h1 {
-      color: #333;
-      margin-bottom: 16px;
-      font-family: "Arial", sans-serif;
-      font-size: 24px;
-      text-align: left;
-      text-shadow: 1px 1px 2px #000;
-    }
-    .ant-col {
-      &-6 {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-left: 220px;
-        height: 100% !important;
+  display: flex;
+  gap: 30px;
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  /* Phần ảnh (chiếm 3/5) */
+  .product-gallery {
+    flex: 2;
+    position: relative;
+
+    .main-image-container {
+      position: relative;
+      width: 90%;
+      padding-bottom: 100%;
+      background: $secondary-color;
+      border-radius: 12px;
+      overflow: hidden;
+
+      .main-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        background: white;
       }
-      &-12 {
-        padding: 24px 32px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
-        height: 100% !important;
+
+      .image-placeholder {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #888;
+        font-size: 18px;
+      }
+
+      .nav-button {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 10;
+        border: 1px solid $border-color;
+        outline: none;
+
+        &.prev {
+          left: 15px;
+        }
+
+        &.next {
+          right: 15px;
+        }
+
         &:hover {
-          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-          transform: translateY(-2px);
+          background: white;
         }
       }
-    }
-    .product-detail_headerContent-name,
-    .product-detail_headerContent-description,
-    .product-detail_headerContent-price,
-    .product-detail_headerContent-stock {
-      margin-bottom: 12px;
-      span {
-        font-weight: 600;
-        color: #333;
-      }
-    }
-    .buy-now-button,
-    .add-to-cart-button {
-      margin-top: 12px;
-      margin-right: 8px;
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #0056b3;
-        color: #ffffff;
+        .nav-button {
+          opacity: 1;
+        }
       }
     }
-  }
-  &_middleContent {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    .review-item {
-      border-bottom: 1px solid #ccc;
-      padding: 10px 0;
-      &:last-child {
-        border-bottom: none;
-      }
-      &:hover {
-        background-color: #f0f0f0;
-      }
-    }
-    h1 {
-      color: #333;
-      margin-bottom: 16px;
-      font-family: "Arial", sans-serif;
-      font-size: 24px;
-      text-align: left;
-      text-shadow: 1px 1px 2px #000;
-    }
-    p {
-      margin: 5px 0;
-      color: #666;
-    }
-    .star {
-      color: gray;
-      cursor: pointer;
-      font-size: 24px;
-      transition: color 0.3s;
-    }
-    .star.filled {
-      color: #f4d03f;
-    }
-    .star.unfilled {
-      color: #bdc3c7;
-    }
-    &-add-review {
-      margin-top: 20px;
-      .review-textarea {
-        width: 100%;
-        margin-bottom: 10px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      }
-      .submit-review-button {
-        width: auto;
-        padding: 8px 16px;
-        background-color: #0056b3;
-        color: #ffffff;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        &:hover {
-          background-color: #004080;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+    .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+
+      .thumbnail {
+        width: 70px;
+        height: 70px;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+        cursor: pointer;
+        overflow: hidden;
+        background: $secondary-color;
+        transition: all 0.2s;
+
+        &.active {
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        &:hover:not(.active) {
+          border-color: darken($border-color, 10%);
         }
       }
     }
   }
-  &_bottomContent {
-    margin: 32px 0px;
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    h1 {
-      color: #333;
-      margin-bottom: 16px;
-      font-family: "Arial", sans-serif;
-      font-size: 24px;
-      text-align: left;
-      text-shadow: 1px 1px 2px #000;
+
+  /* Phần thông tin (chiếm 2/5) */
+  .product-info {
+    flex: 3;
+    padding: 10px;
+
+    .product-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: $text-color;
+      margin-bottom: 5px;
     }
-  }
-  .underline {
-    border: 1px solid #001529 !important;
+
+    .product-subtitle {
+      color: #86868b;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .option-group {
+      margin-bottom: 25px;
+
+      .option-title {
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: block;
+        color: $text-color;
+      }
+
+      .option-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        .option-item {
+          border: 1px solid $border-color;
+          border-radius: 6px;
+          padding: 10px 15px;
+          cursor: pointer;
+          transition: all 0.2s;
+          text-align: center;
+          min-width: 80px;
+
+          &.active {
+            border-color: $primary-color;
+            background-color: rgba($primary-color, 0.1);
+          }
+
+          &:hover:not(.active) {
+            background-color: $hover-color;
+          }
+
+          // Style cho nút màu sắc
+          &[style*="background-color"] {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .color-name {
+              position: relative;
+              z-index: 1;
+              background: rgba(255, 255, 255, 0.7);
+              padding: 2px 5px;
+              border-radius: 3px;
+            }
+          }
+        }
+      }
+    }
+
+    .price-section {
+      margin: 30px 0;
+      padding: 15px 0;
+      border-top: 1px solid $border-color;
+      border-bottom: 1px solid $border-color;
+
+      .current-price {
+        font-size: 24px;
+        font-weight: 600;
+        color: $primary-color;
+      }
+
+      .promo-text {
+        color: #ff3b30;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+
+      .btn {
+        flex: 1;
+        height: 48px;
+        font-weight: 500;
+        font-size: 16px;
+
+        &.btn-primary {
+          background: red; // hoặc #ff0000
+          border: none;
+
+          &:hover {
+            background: darken(red, 10%);
+          }
+        }
+
+        &.btn-secondary {
+          background: $primary-color;
+          border: none;
+
+          &:hover {
+            background: darken($primary-color, 10%);
+          }
+        }
+      }
+    }
+
+    .promo-section {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #86868b;
+
+      .promo-item {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+
+        &:before {
+          content: "•";
+          margin-right: 8px;
+        }
+      }
+    }
   }
 }
 
-.rating-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 32px;
+/* Responsive */
+@media (max-width: 768px) {
+  .product-detail {
+    flex-direction: column;
+
+    .product-gallery,
+    .product-info {
+      flex: none;
+      width: 100%;
+    }
+  }
+}
+
+.tech-specs-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+
+  .tech-specs-header {
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #333;
+      border-bottom: 2px solid $primary-color;
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+  }
+
+  .tech-specs-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+    .tech-specs-column {
+      flex: 1;
+      min-width: 300px;
+
+      .spec-item {
+        display: flex;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed #eee;
+
+        .spec-title {
+          font-weight: 600;
+          color: #555;
+          min-width: 180px;
+          display: inline-block;
+        }
+
+        .spec-value {
+          color: #333;
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .tech-specs-content {
+    flex-direction: column;
+
+    .tech-specs-column {
+      min-width: 100%;
+    }
+  }
 }

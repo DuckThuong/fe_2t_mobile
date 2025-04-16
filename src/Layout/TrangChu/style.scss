@@ -9,6 +9,8 @@
       }
       .slick-list {
         max-height: 224px !important;
+        //max-height: 20px !important;
+
         .slick-track {
           max-height: 224px !important;
           height: 224px !important;
@@ -30,12 +32,7 @@
         letter-spacing: 1.2px;
         margin-top: 32px;
         text-transform: uppercase;
-        background: linear-gradient(
-          135deg,
-          #09011d 0%,
-          #1a3f8b 50%,
-          #2774f9 100%
-        );
+        background: #1877f2;
         padding: 15px 30px;
         border: none;
         border-radius: 8px;
@@ -43,12 +40,7 @@
         transition: all 0.3s ease;
 
         &:hover {
-          background: linear-gradient(
-            135deg,
-            #2774f9 0%,
-            #1a3f8b 50%,
-            #09011d 100%
-          );
+          background: #1877f2;
           box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
       }
@@ -63,13 +55,13 @@
 
       &-item {
         width: 300px !important;
-        height: 500px !important;
+        height: 420px !important;
         max-width: 300px !important;
         position: relative;
 
         .product-image {
-          max-width: 150px !important;
-          max-height: 150px !important;
+          max-width: 250px !important;
+          max-height: 250px !important;
         }
         .product-button {
           position: absolute;

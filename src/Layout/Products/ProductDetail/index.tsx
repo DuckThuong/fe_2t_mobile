@@ -1,234 +1,304 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Col, Form, Input, message, Row } from "antd";
-import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { cartApi, productApi, reviewApi } from "../../../api/api";
-import { QUERY_KEY } from "../../../api/apiConfig";
-import { ProductImageGallery } from "../../../Components/ProductImage";
-import { FooterWeb } from "../../FooterWeb";
-import Navbar from "../../HeaderWeb";
-import { ListProduct } from "../../TrangChu/ListProducts";
+import { Button } from "antd";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import "./style.scss";
-
-export interface ICreateCart {
-  UserID: number;
-  CartItems: { ProductID: string | undefined; Quantity: number }[];
-}
-
-interface ReviewPayload {
-  ProductID: string | undefined;
-  UserID: number;
-  Rating: number;
-  Comment: string;
-}
+import Navbar from "../../HeaderWeb";
+import { FooterWeb } from "../../FooterWeb";
+import { ListProduct } from "../../TrangChu/ListProducts";
+import { useNavigate } from "react-router-dom";
+import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 
 export const ProductDetail = () => {
-  const { id } = useParams();
-  const [rating, setRating] = useState(0);
-  const [form] = useForm();
-  const userJSON = localStorage.getItem("user");
-  const user = userJSON ? JSON.parse(userJSON) : null;
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedStorage, setSelectedStorage] = useState<string>("");
+  const [showNavButtons, setShowNavButtons] = useState(false);
 
-  const [selectedImageUrl, setSelectedImageUrl] = useState<string | undefined>(
-    undefined
-  );
-  const { data: productDetailData } = useQuery({
-    queryKey: [QUERY_KEY.GET_PRODUCTS, id],
-    queryFn: () => productApi.getProductById(id as string),
-  });
-
-  const { data: reviewData, refetch } = useQuery({
-    queryKey: [QUERY_KEY.GET_REVIEW],
-    queryFn: () => reviewApi.getAllReviewByProductId(id as string),
-  });
-
-  const createCart = useMutation({
-    mutationFn: (payload: ICreateCart) => cartApi.addCartItem(payload),
-    onSuccess: () => {
-      refetch();
-      message.success("Thêm vào giỏ hàng thành công");
-    },
-    onError: (error) => {
-      message.error(error.message);
-    },
-  });
-  const handleCreateCart = () => {
-    const payload = {
-      UserID: user.UserID,
-      CartItems: [{ ProductID: id, Quantity: 1 }],
-    };
-    createCart.mutate(payload);
-  };
-
-  const renderStars = (rating: number) => {
-    const stars: JSX.Element[] = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <span key={i} className={i <= rating ? "star filled" : "star"}>
-          ★
-        </span>
-      );
+  const banners = [
+    {
+      id: 1,
+      img: [
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max.png",
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-2.png",
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-3.png",
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-4.png",
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-5.png",
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-6.png",
+        "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-7.png",
+      ],
+      name: "iPhone 16 Pro Max",
+      price: "12500000",
+      details: "Cho đơn hàng điện thoại bất kỳ\n*Tùy sản phẩm, áp dụng mua tại cửa hàng",
+      color: ["Đỏ", "Vàng", "Cam", "Xanh", "Trắng", "Đen"],
+      capacity: ["128GB", "256GB", "512GB", "1TB"]
     }
-    return stars;
-  };
-  const addReviews = useMutation({
-    mutationFn: (payload: ReviewPayload) => reviewApi.createReview(payload),
-    onSuccess: () => {
-      refetch();
-      form.resetFields();
-      setRating(0);
-      message.success("Bình luận thành công");
-    },
-    onError: (error) => {
-      message.error(error.message);
-    },
-  });
-  const handleAddReview = () => {
-    const payload = {
-      ProductID: id,
-      UserID: user.UserID,
-      Rating: rating,
-      Comment: form.getFieldValue("reviews"),
-    };
-    addReviews.mutate(payload);
-  };
+  ];
+  const parameter = [
+  {
+    id: 1,
+    kichThuocManHinh: "6.9 inches",
+    congNgheManHinh: "Dynamic AMOLED 2X",
+    cameraSau: [
+      "Camera siêu rộng 50MP",
+      "Camera góc rộng 200 MP",
+      "Camera Tele (5x) 50MP",
+      "Camera Tele (3x) 10MP"
+    ],
+    cameraTruoc: "12 MP",
+    chipset: "Snapdragon 8 Elite dành cho Galaxy (3nm)",
+    congNgheNFC: "Có",
+    dungLuongRAM: "12 GB",
+    boNhoTrong: "1 TB",
+    pin: "5000 mAh",
+    theSIM: "2 Nano-SIM + eSIM",
+    heDieuHanh: "Android 17",
+    doPhanGiaiManHinh: "3120 x 1440 pixels (Quad HD+)",
+    tinhNangManHinh: ["120Hz", "2600 nits", "Corning® Gorilla® Armor 2"]
+  }
+];
+  
+
+  const product = banners[0]; // Lấy sản phẩm đầu tiên trong mảng
 
   useEffect(() => {
-    if (productDetailData?.productById?.productImage?.length > 0) {
-      const firstColorId =
-        productDetailData.productById.productImage[0].ColorID;
-      handleColorChange(firstColorId);
+    if (product.img.length > 0) {
+      setSelectedImageUrl(product.img[0]);
     }
-  }, [productDetailData]);
+    if (product.color.length > 0) {
+      setSelectedColor(product.color[0]);
+    }
+    if (product.capacity.length > 0) {
+      setSelectedStorage(product.capacity[0]);
+    }
+  }, []);
 
-  const handleColorChange = (colorId: number) => {
-    const productImageUrl = productDetailData?.productById?.productImage?.find(
-      (image) => image.ColorID === colorId
-    )?.ImageURL;
-    setSelectedImageUrl(productImageUrl);
+  const handleImageClick = (url: string) => {
+    setSelectedImageUrl(url);
   };
+
+  const handlePrevImage = () => {
+    const currentIndex = product.img.indexOf(selectedImageUrl);
+    const prevIndex = (currentIndex - 1 + product.img.length) % product.img.length;
+    setSelectedImageUrl(product.img[prevIndex]);
+  };
+
+  const handleNextImage = () => {
+    const currentIndex = product.img.indexOf(selectedImageUrl);
+    const nextIndex = (currentIndex + 1) % product.img.length;
+    setSelectedImageUrl(product.img[nextIndex]);
+  };
+    const navigate = useNavigate();
+
+  const formatPrice = (price: string) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(Number(price));
+  };
+
   return (
     <>
-      <Navbar />
+    <Navbar />
+    <div className="product-detail-container">
       <div className="product-detail">
-        <div className="product-detail_headerContent">
-          <h1>Chi tiết sản phẩm</h1>
-          <Row gutter={[16, 16]}>
-            <Col span={6}>
-              <ProductImageGallery
-                images={productDetailData?.productById?.productImage}
-                selectedImage={selectedImageUrl}
-                setSelectedImage={setSelectedImageUrl}
+        {/* Phần ảnh (chiếm 3/5) */}
+        <div className="product-gallery">
+          <div 
+            className="main-image-container"
+            onMouseEnter={() => setShowNavButtons(true)}
+            onMouseLeave={() => setShowNavButtons(false)}
+          >
+            {selectedImageUrl ? (
+              <img 
+                className="main-image" 
+                src={selectedImageUrl} 
+                alt={product.name} 
               />
-            </Col>
-            <Col span={12}>
-              <div className="product-detail_headerContent-name">
-                <span>Tên sản phẩm: </span>
-                {productDetailData?.productById?.productInfo?.ProductName}
-              </div>
-              <div className="product-detail_headerContent-description">
-                <span>Chi tiết sản phẩm: </span>
-                {productDetailData?.productById?.productInfo?.Description}
-              </div>
-              <p className="product-detail_headerContent-price">
-                <span>Giá: </span>
-                {productDetailData?.productById?.productInfo?.Price}
-              </p>
-              <p className="product-detail_headerContent-stock">
-                <span>Đã mua: </span>
-                {productDetailData?.productById?.productInfo?.Stock}
-              </p>
-              <div className="product-colors">
-                {productDetailData?.productById?.productInfo?.productColors?.map(
-                  (color) => {
-                    const isColorSelected =
-                      productDetailData?.productById?.productImage?.find(
-                        (image) => image.ColorID === color.ColorID
-                      )?.ImageURL === selectedImageUrl;
+            ) : (
+              <div className="image-placeholder">Ảnh sản phẩm</div>
+            )}
+            
+            {showNavButtons && (
+              <>
+                <button 
+                  className="nav-button prev" 
+                  onClick={handlePrevImage}
+                >
+                  <LeftOutlined />
+                </button>
+                <button 
+                  className="nav-button next" 
+                  onClick={handleNextImage}
+                >
+                  <RightOutlined />
+                </button>
+              </>
+            )}
+          </div>
 
-                    return (
-                      <span
-                        key={color.ColorID}
-                        style={{
-                          backgroundColor: color.color?.ColorName,
-                          padding: "5px",
-                          margin: "2px",
-                          border: "1px solid black",
-                          cursor: "pointer",
-                          transform: isColorSelected ? "scale(1.1)" : "none",
-                        }}
-                        onClick={() => handleColorChange(color.ColorID)}
-                      />
-                    );
-                  }
-                )}
-              </div>
-              <Button type="primary" className="buy-now-button">
-                Mua Ngay
-              </Button>
-              <Button
-                onClick={() => handleCreateCart()}
-                type="default"
-                className="add-to-cart-button"
+          <div className="thumbnail-container">
+            {product.img.map((imgUrl, index) => (
+              <div 
+                key={index}
+                className={`thumbnail ${selectedImageUrl === imgUrl ? 'active' : ''}`}
+                onClick={() => handleImageClick(imgUrl)}
               >
-                Thêm Vào Giỏ Hàng
-              </Button>
-            </Col>
-          </Row>
-        </div>
-        <div className="product-detail_middleContent">
-          <h1>Bình Luận</h1>
-          <div className="underline" />
-          {reviewData?.ReviewList?.length > 0 ? (
-            reviewData.ReviewList.map((review) => (
-              <div key={review.ReviewID} className="review-item">
-                <h2>{review.user.FullName}</h2>
-                <p>Rating: {renderStars(review.Rating)}</p>
-                <p>{review.Comment}</p>
-                <p>{new Date(review.CreatedAt).toLocaleDateString()}</p>
+                <img src={imgUrl} alt={`Thumbnail ${index + 1}`} />
               </div>
-            ))
-          ) : (
-            <p>Không có bình luận</p>
-          )}
-          <div className="product-detail_middleContent-add-review">
-            <Form form={form}>
-              <Form.Item name={"reviews"}>
-                <Input.TextArea
-                  rows={4}
-                  placeholder="Thêm bình luận của bạn..."
-                  className="review-textarea"
-                />
-              </Form.Item>
-              <div className="rating-container">
-                <p>Đánh giá: </p>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    onClick={() => setRating(rating === star ? 0 : star)}
-                    className={rating >= star ? "star filled" : "star unfilled"}
-                  >
-                    ★
-                  </span>
-                ))}
-              </div>
-              <Button
-                type="primary"
-                onClick={handleAddReview}
-                className="submit-review-button"
-              >
-                Gửi Bình Luận
-              </Button>
-            </Form>
+            ))}
           </div>
         </div>
-        <div className="product-detail_bottomContent">
-          <h1>Các sản phẩm tiêu biểu khác</h1>
-          <ListProduct itemPerPage={8} />
+
+        {/* Phần thông tin (chiếm 2/5) */}
+        <div className="product-info">
+          <h1 className="product-title">{product.name}</h1>
+
+          {/* Phần chọn dung lượng */}
+          <div className="option-group">
+            <span className="option-title">Dung lượng</span>
+            <div className="option-list">
+              {product.capacity.map((capacity, index) => (
+                <div
+                  key={index}
+                  className={`option-item ${selectedStorage === capacity ? 'active' : ''}`}
+                  onClick={() => setSelectedStorage(capacity)}
+                >
+                  {capacity}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phần chọn màu sắc */}
+          <div className="option-group">
+            <span className="option-title">Màu sắc</span>
+            <div className="option-list">
+              {product.color.map((color, index) => (
+                <div
+                  key={index}
+                  className={`option-item ${selectedColor === color ? 'active' : ''}`}
+                  onClick={() => setSelectedColor(color)}
+                  
+                  title={color}
+                >
+                  <span className="color-name">{color}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Phần giá */}
+          <div className="price-section">
+            <div className="current-price">
+              {formatPrice(product.price)}
+            </div>
+            
+          </div>
+
+          {/* Nút hành động */}
+          <div className="action-buttons">
+            <Button 
+              type="primary" 
+              className="btn btn-primary"
+              size="large"
+              onClick={() => {
+                          navigate(CUSTOMER_ROUTER_PATH.CATERGORIES);
+                        }}
+            >
+              Mua Ngay
+            </Button>
+            <Button 
+              type="default" 
+              className="btn btn-secondary"
+              size="large"
+            >
+              Thêm Vào Giỏ Hàng
+            </Button>
+          </div>
         </div>
       </div>
-      <FooterWeb />
+
+    </div>
+    <div className="tech-specs-container">
+        <div className="tech-specs-header">
+          <h2>Thông số kỹ thuật</h2>
+        </div>
+        <div className="tech-specs-content">
+          <div className="tech-specs-column">
+            <div className="spec-item">
+              <span className="spec-title">Màn hình:</span>
+              <span className="spec-value">{parameter[0].kichThuocManHinh}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Công nghệ màn hình:</span>
+              <span className="spec-value">{parameter[0].congNgheManHinh}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Độ phân giải:</span>
+              <span className="spec-value">{parameter[0].doPhanGiaiManHinh}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Tính năng màn hình:</span>
+              <span className="spec-value">
+                {parameter[0].tinhNangManHinh.join(", ")}
+              </span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Camera sau:</span>
+              <span className="spec-value">
+                {parameter[0].cameraSau.join(", ")}
+              </span>
+            </div>
+          </div>
+          
+          <div className="tech-specs-column">
+            <div className="spec-item">
+              <span className="spec-title">Camera trước:</span>
+              <span className="spec-value">{parameter[0].cameraTruoc}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Chipset:</span>
+              <span className="spec-value">{parameter[0].chipset}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">RAM:</span>
+              <span className="spec-value">{parameter[0].dungLuongRAM}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Bộ nhớ trong:</span>
+              <span className="spec-value">{parameter[0].boNhoTrong}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Pin:</span>
+              <span className="spec-value">{parameter[0].pin}</span>
+            </div>
+          </div>
+          
+          <div className="tech-specs-column">
+            <div className="spec-item">
+              <span className="spec-title">Thẻ SIM:</span>
+              <span className="spec-value">{parameter[0].theSIM}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">Hệ điều hành:</span>
+              <span className="spec-value">{parameter[0].heDieuHanh}</span>
+            </div>
+            <div className="spec-item">
+              <span className="spec-title">NFC:</span>
+              <span className="spec-value">{parameter[0].congNgheNFC}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div className="home_content">
+              <div className="home-list_header">
+                <p className="home-list_header-title">
+                  Danh sách sản phẩm liên quan
+                </p>
+              </div>
+              <ListProduct itemPerPage={4} />
+            </div>
+       <div style={{ width: "auto", height: "30px" }}>
+      </div>
+    <FooterWeb />
     </>
   );
 };
+

@@ -1,6 +1,6 @@
 @import "../../styles/mixins";
 @import "../../styles/variables.scss";
-.login {
+.signup {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,7 +95,7 @@
       }
     }
 
-    &-login {
+    &-signup {
       margin-top: 32px;
       border-radius: 8px;
 
@@ -132,17 +132,7 @@
         width: 100%;
       }
     }
-    &-checkbox {
-      margin-top: 24px;
-      .form__checkbox-title {
-        color: #646464 !important;
-        font-family: Open Sans;
-        font-size: 14px;
-        font-weight: 400;
-        line-height: 22px;
-        text-align: left;
-      }
-    }
+
     &-signIn {
       margin-top: 64px;
       border-radius: 8px;
