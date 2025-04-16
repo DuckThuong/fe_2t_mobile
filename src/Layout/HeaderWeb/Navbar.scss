@@ -3,26 +3,92 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
-  background: linear-gradient(135deg, #09011d 0%, #1a3f8b 50%, #2774f9 100%);
+  background: #1877f2;
   transition: background-color 0.3s ease;
 }
 
 .logo {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  transition: font-size 0.3s ease;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  img {
+    height: 60px;
+    margin-right: 10px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+  }
 }
+
+/* Sửa phần submenu để background fit content */
+.ant-menu-submenu {
+  &-popup {
+    .ant-menu {
+      background-color: #1877f2 !important;
+      border-radius: 8px;
+      padding: 8px 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      width: fit-content !important; // Quan trọng: fit với nội dung
+      min-width: 120px !important; // Độ rộng tối thiểu
+      height: fit-content !important;
+      .ant-menu-item {
+        height: 36px; // Giảm chiều cao mỗi item
+        line-height: 36px;
+
+        margin: 0 !important;
+        padding: 0 12px !important; // Giảm padding
+        transition: all 0.2s ease;
+        white-space: nowrap;
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.15) !important;
+        }
+
+        a {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px; // Giảm cỡ chữ nếu cần
+        }
+      }
+
+      .ant-menu-divider {
+        margin: 4px 0; // Giảm khoảng cách divider
+      }
+    }
+  }
+}
+
+/* Giữ nguyên hover behavior */
+.ant-menu-submenu-title:hover {
+  color: white !important;
+}
+
 .ant-menu {
   background-color: transparent !important;
   height: 100% !important;
-  .ant-menu-item {
+
+  .ant-menu-item,
+  .ant-menu-submenu {
     &-selected {
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       border-radius: 8px !important;
     }
   }
+
+  .ant-menu-submenu {
+    .ant-menu {
+      background-color: #1877f2 !important;
+      border-radius: 8px;
+
+      .ant-menu-item {
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.1) !important;
+        }
+      }
+    }
+  }
 }
+
 .menu {
   display: flex;
   justify-content: flex-start;
@@ -36,7 +102,8 @@
   transition: all 0.3s ease;
 }
 
-.menu-item a {
+.menu-item a,
+.ant-menu-submenu-title {
   color: white;
   font-size: 16px;
   text-decoration: none;
@@ -51,6 +118,12 @@
   background-color: transparent !important;
 }
 
+.navbar-search {
+  flex-grow: 1;
+  max-width: 500px;
+  margin: 0 20px;
+}
+
 @media (max-width: 768px) {
   .menu {
     display: none;
@@ -58,5 +131,13 @@
 
   .logo {
     font-size: 20px;
+
+    &-img {
+      height: 32px;
+    }
+  }
+
+  .navbar-search {
+    display: none;
   }
 }

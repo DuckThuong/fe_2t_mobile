@@ -1,11 +1,11 @@
-@import '../../../styles/variables';
+@import "../../../styles/variables";
 
 .form__input-search {
   margin-bottom: 20px;
   height: 30px;
 
   .ant-input {
-    height: 28px;
+    height: 50px;
     border-radius: 8px;
     border: 1px solid $border_color;
     font-size: 14px;
@@ -68,7 +68,7 @@
 
     &::after {
       position: unset !important;
-      content: '' !important;
+      content: "" !important;
     }
   }
 

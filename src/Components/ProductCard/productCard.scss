@@ -9,15 +9,17 @@
 
 .product-image {
   width: 100%;
-  height: 150px;
+  height: 250px;
   object-fit: cover;
   margin-bottom: 8px;
+  cursor: pointer; /* Thêm con trỏ khi hover */
+  transition: transform 0.3s ease;
 
   &:hover {
     transform: translateY(-5px);
-    transition: transform 0.3s ease;
   }
 }
+
 .product-colors {
   span {
     border: 1px solid black !important;
@@ -27,6 +29,7 @@
     height: 20px;
   }
 }
+
 .product-price {
   color: #e91e63;
   font-weight: bold;
