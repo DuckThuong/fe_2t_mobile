@@ -1,7 +1,7 @@
 @import "../../styles/variables.scss";
 
 .admin-sidebar {
-  background-color: $primary-color !important;
+  background-color: rgb(24, 119, 242) !important;
   min-height: 100vh;
   overflow: hidden;
 
@@ -23,7 +23,7 @@
 
   .ant-menu-item-selected,
   .ant-menu-submenu-selected > .ant-menu-submenu-title {
-    color: $primary-color !important;
+    color: rgb(24, 119, 242) !important;
     background: white !important;
   }
 

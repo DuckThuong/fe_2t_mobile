@@ -15,7 +15,7 @@ import { ADMIN_ROUTE_NAME } from "../../Routers/Routers";
 const SidebarAdminPage = () => {
   return (
     <Sider className="admin-sidebar">
-      <img src="/logotao.png" alt="" className="logo" />
+      <img src="/logo.jpg" alt="" className="logo" />
       <Menu mode="inline" defaultSelectedKeys={["1"]} className="admin-menu">
         <Menu.Item key="1" icon={<HomeFilled />}>
           <Link to={ADMIN_ROUTE_NAME.DASHBOARD}>Tổng quan</Link>

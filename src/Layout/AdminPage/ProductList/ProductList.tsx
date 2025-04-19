@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable"; // Điều chỉnh đường dẫn
+import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable"; 
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import "./ProductList.scss";
@@ -19,9 +19,9 @@ interface IProduct {
   name: string;
   brand: string;
   category: string;
-  quantity: number; // Added quantity
-  price: number; // Renamed as "Giá gốc"
-  shipmentId: string; // Added to link to a shipment
+  quantity: number;
+  price: number; 
+  shipmentId: string; 
   image: string;
   createdAt: string;
 }
