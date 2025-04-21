@@ -1,0 +1,222 @@
+.profile-page {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  .profile-sidebar {
+    width: 160px;
+    background: #1877f2;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e8e8e8;
+
+    .logo-link {
+      display: block;
+      margin-bottom: 30px;
+      text-align: center;
+      padding: 0 15px;
+
+      .logo-image {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: scale(1.03);
+        }
+      }
+    }
+
+    .sidebar-tabs {
+      width: 100%;
+
+      .ant-tabs-nav {
+        width: 100%;
+
+        .ant-tabs-tab {
+          padding: 12px 16px;
+          margin: 0 !important;
+          width: 100%;
+          color: rgba(255, 255, 255, 0.9);
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+          }
+
+          .anticon {
+            margin-right: 8px;
+            font-size: 16px;
+          }
+        }
+
+        .ant-tabs-tab-active {
+          color: white;
+          background: rgba(255, 255, 255, 0.2);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .profile-content {
+    flex: 1;
+    padding: 20px;
+    min-width: 0;
+
+    .profile-card {
+      border-radius: 8px;
+      border: 1px solid #e8e8e8;
+
+      .ant-card-head {
+        border-bottom: 1px solid #e8e8e8;
+        padding: 0 16px;
+
+        .ant-card-head-title {
+          padding: 16px 0;
+        }
+      }
+
+      .ant-card-body {
+        padding: 16px;
+      }
+
+      .upload-section {
+        margin-top: 16px;
+        text-align: center;
+
+        .avatar-preview {
+          width: 100px;
+          height: 100px;
+          border-radius: 8px;
+          object-fit: cover;
+          margin-top: 10px;
+          border: 1px solid #e8e8e8;
+        }
+
+        p {
+          margin: 8px 0 0;
+          color: #888;
+          font-size: 12px;
+        }
+      }
+
+      .bank-section,
+      .address-section,
+      .security-section {
+        .ant-table {
+          margin-bottom: 20px;
+
+          .ant-table-tbody > tr > td {
+            padding: 12px 8px;
+          }
+        }
+      }
+
+      .address-card {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        border: 1px solid #e8e8e8;
+        border-radius: 6px;
+        margin-bottom: 12px;
+
+        .address-info {
+          flex: 1;
+
+          h4 {
+            margin: 0 0 4px 0;
+            font-size: 15px;
+          }
+
+          p {
+            margin: 0;
+            color: #555;
+            font-size: 13px;
+          }
+        }
+
+        .address-actions {
+          display: flex;
+          align-items: flex-start;
+
+          button {
+            margin-left: 8px;
+          }
+        }
+      }
+
+      .add-form {
+        margin-top: 24px;
+        padding: 16px;
+        background: #f9f9f9;
+        border-radius: 6px;
+
+        h3 {
+          margin-top: 0;
+          margin-bottom: 16px;
+          font-size: 16px;
+        }
+
+        .ant-form-item {
+          margin-bottom: 12px;
+        }
+      }
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .profile-page {
+    flex-direction: column;
+    max-width: 100%;
+
+    .profile-sidebar {
+      width: 100%;
+      padding: 10px;
+
+      .logo-link {
+        margin-bottom: 15px;
+
+        .logo-image {
+          max-width: 150px;
+        }
+      }
+
+      .sidebar-tabs {
+        .ant-tabs-nav {
+          display: flex;
+
+          .ant-tabs-tab {
+            padding: 8px 12px;
+            justify-content: center;
+            flex: 1;
+          }
+        }
+      }
+    }
+
+    .profile-content {
+      padding: 15px;
+
+      .profile-card {
+        .address-card {
+          flex-direction: column;
+
+          .address-actions {
+            margin-top: 8px;
+            justify-content: flex-end;
+          }
+        }
+      }
+    }
+  }
+}

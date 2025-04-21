@@ -1,105 +1,130 @@
-import { Button, Col, Row } from "antd";
-import { useState } from "react";
-import { SvgNull } from "../../Components/@svg/SvgNull";
-import { FormSelect } from "../../Components/Form/FormSelect";
-import { FooterWeb } from "../FooterWeb";
-import Navbar from "../HeaderWeb";
-import "./style.scss";
-import { BackwardOutlined } from "@ant-design/icons";
+import React, { useState } from 'react';
+import CartProduct from './CartProduct';
+import './style.scss';
+import Navbar from '../HeaderWeb';
+import { FooterWeb } from '../FooterWeb';
+import { CUSTOMER_ROUTER_PATH } from '../../Routers/Routers';
 import { useNavigate } from "react-router-dom";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
-import { CartProduct } from "./CartProduct";
-import { QUERY_KEY } from "../../api/apiConfig";
-import { useQuery } from "@tanstack/react-query";
-import { cartApi, paymentApi } from "../../api/api";
+
+interface CartItem {
+  id: string;
+  name: string;
+  color:string;
+  capacity:string;
+  price: number;
+  
+  quantity: number;
+  image: string;
+  selected?: boolean;
+}
+
 export const Cartergories = () => {
-  const [cartSum, setCartSum] = useState<number>();
+  const [cartItems, setCartItems] = useState<CartItem[]>([
+    {
+      id: '1',
+      name: 'iPhone 16 Pro Max',
+      color: 'màu bạc',
+      capacity:'128GB',
+      price: 100000,
+      quantity: 1,
+      image: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max.png',
+      selected: false,
+    },
+    {
+      id: '2',
+      name: 'iPhone 13 128GB',
+      color: 'màu bạc',
+      capacity:'128GB',
+      price: 200000,
+      quantity: 2,
+      image: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/1/11_3_12_2_1_5.jpg',
+      selected: false,
+    },
+  ]);
   const navigate = useNavigate();
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
-  const userJSON = localStorage.getItem("user");
-  const user = userJSON ? JSON.parse(userJSON) : null;
+  const [selectAll, setSelectAll] = useState(false);
 
-  const { data: cartData } = useQuery({
-    queryKey: [QUERY_KEY.GET_IMAGE, user],
-    queryFn: () => cartApi.GetCartByUserId(user.UserID),
-  });
-  const { data: paymentData } = useQuery({
-    queryKey: [QUERY_KEY.GET_PAYMENT],
-    queryFn: () => paymentApi.getAllPayments(),
-  });
-  const paymentOptions = paymentData?.PaymentList?.map((payment) => ({
-    label: payment.paymentMethod,
-    value: payment.paymentId,
-  }));
+  const totalAmount = cartItems.reduce((sum, item) => {
+    return item.selected ? sum + item.price * item.quantity : sum;
+  }, 0);
 
-  const handlePaymentChange = (value) => {
-    setSelectedPaymentMethod(value);
+  const toggleSelectAll = () => {
+    const newSelectAll = !selectAll;
+    setSelectAll(newSelectAll);
+    setCartItems(cartItems.map(item => ({ ...item, selected: newSelectAll })));
   };
+
+  const updateProduct = (id: string, updates: Partial<CartItem>) => {
+    setCartItems(
+      cartItems.map(item => 
+        item.id === id ? { ...item, ...updates } : item
+      )
+    );
+  };
+
+  const handleRemoveProduct = (id: string) => {
+    setCartItems(cartItems.filter(item => item.id !== id));
+    // Nếu xóa hết sản phẩm thì tắt chọn tất cả
+    if (cartItems.length === 1) {
+      setSelectAll(false);
+    }
+  };
+
   return (
-    <>
-      <Navbar />
-      <div className="cart">
-        {cartData?.userId?.length < 0 ? (
-          <div className="cart-label">
-            <h1>Giỏ hàng trống</h1>
-            <SvgNull />
-            <Button
-              onClick={() => {
-                navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-              }}
-              icon={<BackwardOutlined />}
-              className="cart-button_back"
-            >
-              Quay về trang mua sắm
-            </Button>
-          </div>
-        ) : (
-          <div className="cart-label">
-            <p className="cart_header-title">Danh sách sản phẩm</p>
-            <CartProduct
-              onSelectionChange={(total) => {
-                setCartSum(total);
-              }}
-            />
-          </div>
-        )}
-        <div className="cart-option">
-          <Row gutter={[16, 16]}>
-            <Col span={8}>
-              <Row gutter={[16, 16]}>
-                <Col span={8}>
-                  <span className="cart-option_text">Tổng tiền:</span>
-                </Col>
-                <Col span={8}>
-                  <span className="cart-option_text">
-                    {cartSum?.toFixed(2)} $
-                  </span>
-                </Col>
-              </Row>
-            </Col>
-            <Col span={8}>
-              <FormSelect
-                name={"costee"}
-                placeholder="Chọn phương thức thanh toán"
-                selectProps={{
-                  options: paymentOptions,
-                  disabled: cartSum === 0,
-                  onChange: handlePaymentChange,
-                }}
-              />
-            </Col>
-            <Col span={8}>
-              <Button
-                className="cart-option_button-submit"
-                disabled={!selectedPaymentMethod}
-              >
-                Xác nhận
-              </Button>
-            </Col>
-          </Row>
-        </div>
+    <div>
+      <div>
+        <Navbar/>
       </div>
-      <FooterWeb />
-    </>
+    <div className="cart-container">
+      <h2>Giỏ hàng của bạn</h2>
+      
+      {cartItems.length > 0 ? (
+        <>
+          <div className="cart-header">
+            <div className="select-all">
+              <input
+                type="checkbox"
+                checked={selectAll}
+                onChange={toggleSelectAll}
+              />
+              <span>Chọn tất cả ({cartItems.length} sản phẩm)</span>
+            </div>
+          </div>
+
+          <div className="cart-items">
+            {cartItems.map((item) => (
+              <CartProduct
+                key={item.id}
+                product={item}
+                onUpdate={updateProduct}
+                onRemove={handleRemoveProduct}
+              />
+            ))}
+          </div>
+
+          <div className="cart-summary">
+            <div className="total-amount">
+              Tổng thanh toán ({cartItems.filter(item => item.selected).length} sản phẩm):
+              <span>{totalAmount.toLocaleString()}đ</span>
+            </div>
+            {/* <button className="checkout-btn" onClick={=>{navigate(CUSTOMER_ROUTER_PATH.MUA_HANG);}}>Mua hàng</button> */}
+            <button className="checkout-btn" onClick={() => { navigate(CUSTOMER_ROUTER_PATH.MUA_HANG); }}>
+               Mua hàng
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="empty-cart">
+          <p>Giỏ hàng của bạn đang trống</p>
+          <button className="continue-shopping">Tiếp tục mua sắm</button>
+        </div>
+      )}
+    </div>
+    <div>
+      <FooterWeb/>
+    </div>
+    </div>
   );
 };
+
+//export default Cart;

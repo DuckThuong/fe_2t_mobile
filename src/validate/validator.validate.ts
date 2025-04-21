@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import dayjs from "dayjs";
 import isEmail from 'validator/lib/isEmail';
+import Password from "antd/es/input/Password";
 
 
 type Option = {
@@ -18,6 +19,8 @@ type validateType =
   | "space"
   | "number"
   | "dob"
+  | "_validator"
+  | "confirmPassword"
   | "expirationDate";
 
 type ValidatorOption = string | boolean | Option;
@@ -27,7 +30,7 @@ export const regexPass =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}$/;
 export const regexPosCode = /^\d{6,}$/;
 export const spaceRegex = /\s+/;
-export const REGEX_PHONE_NUMBER = /^\+81\d{2}\d{4}\d{4}$/;
+export const REGEX_PHONE_NUMBER = /^0\d{9}$/;
 export const regexEmoji = /\p{Extended_Pictographic}/gu;
 
 const getMessage = (option: ValidatorOption): string => {
@@ -67,6 +70,13 @@ const VALIDATOR: any = {
       throw new Error(getMessage(option));
     }
   },
+  confirmPassword: (value: string, option: ValidatorOption, data: { password: string }) => {
+  if (!value) return;
+  console.log(data)
+  if (value !== data?.password) {
+    throw new Error(getMessage(option));
+    }
+  },
 
   space: (value: string, option: ValidatorOption) => {
     if (!value) {
@@ -85,12 +95,31 @@ const VALIDATOR: any = {
       throw new Error(getMessage(option));
     }
   },
+
+  
+
+
   phone: (value: string, option: ValidatorOption) => {
-    const phoneNumber = value?.replace(/[-\s]/g, "");
+    // Chuẩn hóa: Bỏ dấu gạch và khoảng trắng
+    const phoneNumber = (value ?? "").replace(/[-\s]/g, "");
+
+    // Nếu không nhập gì thì cho qua (hoặc bạn có thể kiểm tra required tùy yêu cầu)
+    if (phoneNumber.length === 0) return ;
+
+    // Kiểm tra định dạng số điện thoại
     if (!REGEX_PHONE_NUMBER.test(phoneNumber)) {
       throw new Error(getMessage(option));
     }
+
+    return true; // Hợp lệ
   },
+
+
+  
+  
+
+
+  
 
   postCode: (value: string, option: Option) => {
     if (!value) {
