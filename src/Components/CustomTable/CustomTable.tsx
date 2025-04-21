@@ -19,7 +19,6 @@ interface ICustomTableProps<T extends ITableData> {
   deleteConfirmMessage?: (record: T) => string;
 }
 
-// Thêm ref để expose hàm showDeleteConfirm
 export interface CustomTableRef {
   showDeleteConfirm: (id: number | string) => void;
 }

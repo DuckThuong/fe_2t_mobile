@@ -59,6 +59,7 @@ const ADMIN = "admin";
 export const ADMIN_ROUTE_NAME = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
+  USER_LIST: `/${ADMIN}/user-list`,
   SUPPLIER_LIST: `/${ADMIN}/supplier-list`,
   PRODUCT_LIST: `/${ADMIN}/product-list`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
@@ -69,6 +70,7 @@ export const ADMIN_ROUTE_NAME = {
 export const ADMIN_ROUTER_PATH = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
+  USER_LIST: `/${ADMIN}/user-list`,
   SUPPLIER_LIST: `/${ADMIN}/supplier-list`,
   PRODUCT_LIST: `/${ADMIN}/product-list`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,

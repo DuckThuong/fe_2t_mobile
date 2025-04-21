@@ -1,0 +1,41 @@
+.info-section {
+    margin-bottom: 24px;
+  
+    .section-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+  
+    .info-grid {
+      display: grid;
+      gap: 16px;
+  
+      &.columns-1 {
+        grid-template-columns: 1fr;
+      }
+  
+      &.columns-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+  
+      &.columns-3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  
+    .info-item {
+      display: flex;
+      flex-direction: column;
+  
+      .label {
+        font-size: 12px;
+        color: #999;
+      }
+  
+      .value {
+        font-weight: 500;
+        color: #333;
+      }
+    }
+  }
+  

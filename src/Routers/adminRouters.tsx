@@ -5,6 +5,7 @@ import ProductList from "../Layout/AdminPage/ProductList/ProductList";
 import AdminUpdatePhone from "../Components/AdminUpdatePhone/AdminupdatePhone";
 import Orders from "../Layout/AdminPage/InvoiceList/InvoiceList";
 import SupplierList from "../Layout/AdminPage/ProviderList/ProviderList";
+import UsersList from "../Layout/AdminPage/UserList/UserList";
 
 export const AdminRouters = () => {
   return (
@@ -12,6 +13,7 @@ export const AdminRouters = () => {
       <Route path="/*" element={<AdminPage />}>
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="user-list" element={<UsersList />} />
         <Route path="supplier-list" element={<SupplierList />} />
         <Route path="product-list" element={<ProductList />} />
         <Route path="product-list/add-product" element={<AdminUpdatePhone />} />
