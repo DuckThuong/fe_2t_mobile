@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button, Space, Input, message } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { SearchOutlined } from "@ant-design/icons"; // Icon tìm kiếm
-import "./ProviderList.scss"; // Import CSS cho trang danh sách nhà cung cấp
-import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
+import { SearchOutlined } from "@ant-design/icons";
+import "./ProviderList.scss";
+import CustomTable, {
+  CustomTableRef,
+} from "../../../Components/CustomTable/CustomTable";
+import { useNavigate } from "react-router-dom";
+import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 
 interface IProvider {
   id: number;
@@ -16,6 +20,7 @@ interface IProvider {
 }
 
 const ProviderList: React.FC = () => {
+  const navigate = useNavigate();
   const [providers, setProviders] = useState<IProvider[]>([
     {
       id: 1,
@@ -37,74 +42,41 @@ const ProviderList: React.FC = () => {
     },
   ]);
 
-  // State cho ô tìm kiếm
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProviders, setFilteredProviders] = useState<IProvider[]>(providers);
-
-  // Ref để gọi hàm showDeleteConfirm từ CustomTable
   const tableRef = useRef<CustomTableRef>(null);
 
-  // Cập nhật filteredProviders khi providers thay đổi
   useEffect(() => {
     setFilteredProviders(providers);
   }, [providers]);
 
-  // Định nghĩa các cột cho bảng
   const columns: ColumnsType<IProvider> = [
-    {
-      title: "Mã nhà cung cấp",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "Tên nhà cung cấp",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Số điện thoại",
-      dataIndex: "phone",
-      key: "phone",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
-    },
+    { title: "Mã nhà cung cấp", dataIndex: "id", key: "id" },
+    { title: "Tên nhà cung cấp", dataIndex: "name", key: "name" },
+    { title: "Số điện thoại", dataIndex: "phone", key: "phone" },
+    { title: "Email", dataIndex: "email", key: "email" },
+    { title: "Địa chỉ", dataIndex: "address", key: "address" },
   ];
 
-  // Hàm xử lý khi nhấn nút "Thêm mới"
   const handleAddProvider = () => {
-    message.info("Chuyển hướng đến trang thêm nhà cung cấp (chưa triển khai)");
-    // Thay bằng logic thực tế, ví dụ: chuyển hướng đến trang thêm mới
+    navigate(ADMIN_ROUTER_PATH.ADD_PROVIDER);
   };
 
-  // Hàm xử lý khi nhấn nút "Tải lại"
   const handleReload = () => {
-    setSearchQuery(""); // Xóa ô tìm kiếm
-    setFilteredProviders(providers); // Đặt lại danh sách đã lọc
+    setSearchQuery("");
+    setFilteredProviders(providers);
     message.info("Đã tải lại danh sách nhà cung cấp");
-    // Thay bằng logic thực tế, ví dụ: gọi lại API để lấy dữ liệu mới
   };
 
-  // Hàm xử lý khi nhập vào ô tìm kiếm
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchQuery(value);
 
-    // Nếu ô tìm kiếm rỗng, đặt lại danh sách
     if (!value.trim()) {
       setFilteredProviders(providers);
-      return;
     }
   };
 
-  // Hàm xử lý khi nhấn nút tìm kiếm
   const handleSearchClick = () => {
     if (!searchQuery.trim()) {
       setFilteredProviders(providers);
@@ -115,31 +87,23 @@ const ProviderList: React.FC = () => {
     const result = providers.filter((provider) =>
       searchTerms.every(
         (term) =>
-          provider.id.toString().toLowerCase().includes(term) ||
+          provider.id.toString().includes(term) ||
           provider.name.toLowerCase().includes(term)
       )
     );
     setFilteredProviders(result);
   };
 
-  // Hàm xử lý khi nhấn nút "Sửa"
   const handleEdit = (record: IProvider) => {
-    message.info(`Mở form sửa nhà cung cấp với ID: ${record.id}`);
-    // Thay bằng logic thực tế, ví dụ: mở modal hoặc chuyển hướng
+    navigate(ADMIN_ROUTER_PATH.EDIT_PROVIDER(record.id));
   };
 
-  // Hàm xử lý khi nhấn nút "Xóa"
   const handleDelete = (id: number | string) => {
-    setProviders((prevProviders) =>
-      prevProviders.filter((provider) => provider.id !== id)
-    );
-    setFilteredProviders((prevFilteredProviders) =>
-      prevFilteredProviders.filter((provider) => provider.id !== id)
-    );
+    setProviders((prev) => prev.filter((p) => p.id !== id));
+    setFilteredProviders((prev) => prev.filter((p) => p.id !== id));
     message.success(`Đã xóa nhà cung cấp với ID: ${id}`);
   };
 
-  // Hàm tùy chỉnh cột "Hành động"
   const customActions = (record: IProvider) => (
     <Space size="middle">
       <Button type="primary" onClick={() => handleEdit(record)}>
@@ -155,7 +119,6 @@ const ProviderList: React.FC = () => {
     </Space>
   );
 
-  // Hàm tùy chỉnh thông điệp xác nhận xóa
   const deleteConfirmMessage = (record: IProvider) =>
     `Bạn có chắc chắn muốn xóa nhà cung cấp "${record.name}" không?`;
 
@@ -187,10 +150,9 @@ const ProviderList: React.FC = () => {
         </div>
       </div>
 
-      {/* Bảng danh sách nhà cung cấp */}
       <CustomTable
         ref={tableRef}
-        data={filteredProviders} // Sử dụng filteredProviders thay vì providers
+        data={filteredProviders}
         columns={columns}
         rowKey="id"
         pagination={{ pageSize: 10 }}

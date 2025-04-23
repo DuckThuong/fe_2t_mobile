@@ -60,10 +60,12 @@ export const ADMIN_ROUTE_NAME = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
   USER_LIST: `/${ADMIN}/user-list`,
-  SUPPLIER_LIST: `/${ADMIN}/supplier-list`,
+  PROVIDER_LIST: `/${ADMIN}/provider-list`,
+  ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
+  EDIT_PROVIDER: (id: string | number) => `/${ADMIN}/provider-list/edit-provider/${id}`,
   PRODUCT_LIST: `/${ADMIN}/product-list`,
-  ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
-  EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
+  ADD_PRODUCT: `/${ADMIN}/product-list/add-provider`,
+  EDIT_PRODUCT: `/${ADMIN}/product-list/edit-provider`,
   ORDER: `/${ADMIN}/order`,
 };
 
@@ -71,7 +73,10 @@ export const ADMIN_ROUTER_PATH = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
   USER_LIST: `/${ADMIN}/user-list`,
-  SUPPLIER_LIST: `/${ADMIN}/supplier-list`,
+  PROVIDER_LIST: `/${ADMIN}/provider-list`,
+  ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
+  EDIT_PROVIDER: (id: string | number) => `/${ADMIN}/provider-list/edit-provider/${id}`,
+
   PRODUCT_LIST: `/${ADMIN}/product-list`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,

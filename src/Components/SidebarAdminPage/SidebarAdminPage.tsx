@@ -25,7 +25,7 @@ const SidebarAdminPage = () => {
         </Menu.Item>
         <Menu.Item key="3" icon={<SwapOutlined />}>
           Nhà cung cấp
-          <Link to={ADMIN_ROUTE_NAME.SUPPLIER_LIST}></Link>
+          <Link to={ADMIN_ROUTE_NAME.PROVIDER_LIST}></Link>
         </Menu.Item>
 
         <Menu.Item key="4" icon={<BankFilled />}>
