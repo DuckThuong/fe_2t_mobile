@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
-import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
+import CustomTable, {
+  CustomTableRef,
+} from "../../../Components/CustomTable/CustomTable";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -96,8 +98,15 @@ const UserList: React.FC = () => {
 
   const renderActions = (record: IUser) => (
     <Space>
-      <Button onClick={() => navigate(`/admin/users/${record.id}`)}>Chi tiết</Button>
-      <Button type="primary" danger onClick={() => tableRef.current?.showDeleteConfirm(record.id)}>
+      <Button onClick={() => navigate(`/admin/user-list/${record.id}`)}>
+        Chi tiết
+      </Button>
+
+      <Button
+        type="primary"
+        danger
+        onClick={() => tableRef.current?.showDeleteConfirm(record.id)}
+      >
         Xóa
       </Button>
     </Space>
@@ -140,6 +149,3 @@ const UserList: React.FC = () => {
 };
 
 export default UserList;
-
-
-
