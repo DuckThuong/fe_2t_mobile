@@ -9,6 +9,7 @@ import UserDetail from "../Layout/AdminPage/UserList/UserDetail/UserDetail";
 import ProviderAdd from "../Layout/AdminPage/ProviderList/ProviderAdd/ProviderAdd";
 import ProviderEdit from "../Layout/AdminPage/ProviderList/ProviderEdit/ProviderEdit";
 import ProviderList from "../Layout/AdminPage/ProviderList/ProviderList";
+import AddShipment from "../Layout/AdminPage/ProductList/AddShipment/AddShipment";
 
 export const AdminRouters = () => {
   return (
@@ -25,6 +26,7 @@ export const AdminRouters = () => {
           element={<ProviderEdit />}
         />
         <Route path="product-list" element={<ProductList />} />
+        <Route path="product-list/add-shipment" element={<AddShipment />} />
         <Route path="product-list/add-product" element={<AdminUpdatePhone />} />
         <Route
           path="product-list/edit-product"

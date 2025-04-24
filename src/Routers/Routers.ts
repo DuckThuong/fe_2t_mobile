@@ -8,14 +8,14 @@ export const CUSTOMER_ROUTE_NAME = {
   //Log_In
   LOG_IN: "",
   //sign_in
-  SIGN_UP:"sign-up",
+  SIGN_UP: "sign-up",
   //Forgot_password
   FORGOT_EMAIL_INPUT: "forgot-email-input",
   FORGOT_CODE_INPUT: "forgot-code-input",
   FORGOT_EDIT_PASSWORD: "forgot-edit-password",
   FORGOT_SUCCESS: "forgot-success",
-  MUA_HANG:"mua-hang",
-  
+  MUA_HANG: "mua-hang",
+
   //List_Students
   TRANG_CHU: "trang-chu",
   TRANG_DS_SP: "trang_ds_sp",
@@ -27,7 +27,7 @@ export const CUSTOMER_ROUTE_NAME = {
   ORDER_LIST: "order",
   ORDER_DETAIL: "order/:id",
   //cá nhân
-  PROFILE:"profile",
+  PROFILE: "profile",
 };
 export const CUSTOMER_ROUTER_PATH = {
   //Log_In
@@ -49,9 +49,9 @@ export const CUSTOMER_ROUTER_PATH = {
   // Order
   ORDER_LIST: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.ORDER_LIST}`,
   ORDER_DETAIL: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.ORDER_DETAIL}`,
-  MUA_HANG:`${CUSTOMER}/${CUSTOMER_ROUTE_NAME.MUA_HANG}`,
+  MUA_HANG: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.MUA_HANG}`,
   //cá nhân
-  PROFILE:`${CUSTOMER}/${CUSTOMER_ROUTE_NAME.PROFILE}`,
+  PROFILE: `${CUSTOMER}/${CUSTOMER_ROUTE_NAME.PROFILE}`,
 };
 
 const ADMIN = "admin";
@@ -62,8 +62,10 @@ export const ADMIN_ROUTE_NAME = {
   USER_LIST: `/${ADMIN}/user-list`,
   PROVIDER_LIST: `/${ADMIN}/provider-list`,
   ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
-  EDIT_PROVIDER: (id: string | number) => `/${ADMIN}/provider-list/edit-provider/${id}`,
+  EDIT_PROVIDER: (id: string | number) =>
+    `/${ADMIN}/provider-list/edit-provider/${id}`,
   PRODUCT_LIST: `/${ADMIN}/product-list`,
+  ADD_SHIPMENT: `/${ADMIN}/product-list/add-shipment`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-provider`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-provider`,
   ORDER: `/${ADMIN}/order`,
@@ -75,9 +77,11 @@ export const ADMIN_ROUTER_PATH = {
   USER_LIST: `/${ADMIN}/user-list`,
   PROVIDER_LIST: `/${ADMIN}/provider-list`,
   ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
-  EDIT_PROVIDER: (id: string | number) => `/${ADMIN}/provider-list/edit-provider/${id}`,
+  EDIT_PROVIDER: (id: string | number) =>
+    `/${ADMIN}/provider-list/edit-provider/${id}`,
 
   PRODUCT_LIST: `/${ADMIN}/product-list`,
+  ADD_SHIPMENT: `/${ADMIN}/product-list/add-shipment`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
   ORDER: `/${ADMIN}/order`,

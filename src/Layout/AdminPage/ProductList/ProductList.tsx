@@ -34,12 +34,11 @@ const ProductList: React.FC = () => {
   const [shipments, setShipments] = useState<IShipment[]>([
     {
       id: "LH7769",
-      name: "pro max test",
+      name: "12 pro max",
       date: "04/03/2025",
       totalValue: 30000000,
       quantity: 3,
     },
-    { id: "LH66bda", name: "", date: "11/04/2025", totalValue: 0, quantity: 0 },
     {
       id: "LH66c7c",
       name: "13 pro max",
@@ -54,7 +53,7 @@ const ProductList: React.FC = () => {
       totalValue: 60000,
       quantity: 20,
     },
-    { id: "LH6938f", name: "", date: "11/04/2025", totalValue: 0, quantity: 0 },
+    
   ]);
 
   const [products, setProducts] = useState<IProduct[]>([
@@ -178,7 +177,7 @@ const ProductList: React.FC = () => {
 
   // Create shipment
   const handleCreateShipment = () => {
-    // navigate(ADMIN_ROUTER_PATH.ADD_SHIPMENT);
+    navigate(ADMIN_ROUTER_PATH.ADD_SHIPMENT);
   };
 
   // Shipment table columns
