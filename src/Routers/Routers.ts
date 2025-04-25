@@ -66,6 +66,7 @@ export const ADMIN_ROUTE_NAME = {
     `/${ADMIN}/provider-list/edit-provider/${id}`,
   PRODUCT_LIST: `/${ADMIN}/product-list`,
   ADD_SHIPMENT: `/${ADMIN}/product-list/add-shipment`,
+  EDIT_SHIPMENT: `/${ADMIN}/product-list/edit-shipment`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-provider`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-provider`,
   ORDER: `/${ADMIN}/order`,
@@ -82,6 +83,7 @@ export const ADMIN_ROUTER_PATH = {
 
   PRODUCT_LIST: `/${ADMIN}/product-list`,
   ADD_SHIPMENT: `/${ADMIN}/product-list/add-shipment`,
+  EDIT_SHIPMENT: `/${ADMIN}/product-list/edit-shipment`,
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
   ORDER: `/${ADMIN}/order`,

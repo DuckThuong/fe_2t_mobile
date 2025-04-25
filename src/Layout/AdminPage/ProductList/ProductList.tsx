@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable"; 
+import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import "./ProductList.scss";
@@ -20,8 +20,8 @@ interface IProduct {
   brand: string;
   category: string;
   quantity: number;
-  price: number; 
-  shipmentId: string; 
+  price: number;
+  shipmentId: string;
   image: string;
   createdAt: string;
 }
@@ -53,7 +53,6 @@ const ProductList: React.FC = () => {
       totalValue: 60000,
       quantity: 20,
     },
-    
   ]);
 
   const [products, setProducts] = useState<IProduct[]>([
@@ -114,7 +113,7 @@ const ProductList: React.FC = () => {
     },
   ]);
 
-  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(shipments[0]); 
+  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredShipments, setFilteredShipments] = useState<IShipment[]>(shipments);
 
@@ -138,12 +137,16 @@ const ProductList: React.FC = () => {
   // Handle shipment selection
   const handleShipmentSelect = (shipment: IShipment) => {
     setSelectedShipment(shipment);
+    // TODO: Sau này tích hợp back-end, gọi API để load products theo shipment.id
+    // Ví dụ: axios.get(`/api/products?shipmentId=${shipment.id}`).then((response) => {
+    //   setProducts(response.data);
+    // });
   };
 
   // Filter products based on selected shipment
-  const filteredProducts = products.filter(
-    (product) => product.shipmentId === selectedShipment?.id
-  );
+  const filteredProducts = selectedShipment
+    ? products.filter((product) => product.shipmentId === selectedShipment.id)
+    : [];
 
   // Delete shipment
   const handleDeleteShipment = (id: string) => {
@@ -152,6 +155,9 @@ const ProductList: React.FC = () => {
     );
     setFilteredShipments((prevFilteredShipments) =>
       prevFilteredShipments.filter((shipment) => shipment.id !== id)
+    );
+    setProducts((prevProducts) =>
+      prevProducts.filter((product) => product.shipmentId !== id)
     );
     if (selectedShipment?.id === id) {
       setSelectedShipment(null);
@@ -167,7 +173,9 @@ const ProductList: React.FC = () => {
 
   // Edit shipment
   const handleEditShipment = (shipment: IShipment) => {
-    // navigate(ADMIN_ROUTER_PATH.EDIT_SHIPMENT, { state: { shipment } });
+    navigate(`${ADMIN_ROUTER_PATH.EDIT_SHIPMENT}/${shipment.id}`, {
+      state: { shipment, products },
+    });
   };
 
   // Edit product
@@ -211,7 +219,7 @@ const ProductList: React.FC = () => {
       title: "Giá bán",
       key: "sellingPrice",
       render: (_: any, record: IProduct) =>
-        `${(record.price * 2).toLocaleString()} VNĐ`, // Giá bán = Giá gốc * 2
+        `${(record.price * 2).toLocaleString()} VNĐ`,
     },
   ];
 
@@ -278,39 +286,35 @@ const ProductList: React.FC = () => {
         data={filteredShipments}
         columns={shipmentColumns}
         customActions={renderShipmentActions}
-        // onDelete={handleDeleteShipment}
+        onDelete={handleDeleteShipment}
         deleteConfirmMessage={(record) =>
           `Bạn có chắc chắn muốn xóa lô hàng ${record.id} không?`
         }
         pagination={{ pageSize: 5 }}
-        // onRow={(record: IShipment) => ({
-        //   onClick: () => handleShipmentSelect(record),
-        //   style: {
-        //     cursor: "pointer",
-        //     background: selectedShipment?.id === record.id ? "#e6f7ff" : "",
-        //   },
-        // })}
+        onRow={(record: IShipment) => ({
+          onClick: () => handleShipmentSelect(record),
+          style: {
+            cursor: "pointer",
+            background: selectedShipment?.id === record.id ? "#e6f7ff" : "",
+          },
+        })}
       />
 
       {/* Product Table */}
-      {selectedShipment && (
-        <>
-          <div className="product-list-header">
-            <h1 className="title">Sản phẩm</h1>
-          </div>
-          <CustomTable
-            ref={productTableRef}
-            data={filteredProducts}
-            columns={productColumns}
-            customActions={renderProductActions}
-            // onDelete={handleDeleteProduct}
-            deleteConfirmMessage={(record) =>
-              `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
-            }
-            pagination={{ pageSize: 5 }}
-          />
-        </>
-      )}
+      <div className="product-list-header">
+        <h1 className="title">Sản phẩm</h1>
+      </div>
+      <CustomTable
+        ref={productTableRef}
+        data={filteredProducts}
+        columns={productColumns}
+        customActions={renderProductActions}
+        onDelete={handleDeleteProduct}
+        deleteConfirmMessage={(record) =>
+          `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
+        }
+        pagination={{ pageSize: 5 }}
+      />
     </div>
   );
 };

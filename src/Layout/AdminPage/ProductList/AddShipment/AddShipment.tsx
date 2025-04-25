@@ -1,8 +1,18 @@
 import React, { useState } from "react";
-import { Button, DatePicker, Form, Input, Modal, Select, Table, TimePicker, Radio } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Table,
+  TimePicker,
+  Radio,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import "./AddShipment.scss";
 import AdminProviderForm from "../../../../Components/AdminProviderForm/AdminProviderForm";
@@ -67,8 +77,11 @@ const AddShipment: React.FC = () => {
             ...p,
             sku: value,
             name: mockSKUs.find((sku) => sku.value === value)?.label || "",
-            capacity: mockSKUs.find((sku) => sku.value === value)?.capacity || p.capacity,
-            color: mockSKUs.find((sku) => sku.value === value)?.color || p.color,
+            capacity:
+              mockSKUs.find((sku) => sku.value === value)?.capacity ||
+              p.capacity,
+            color:
+              mockSKUs.find((sku) => sku.value === value)?.color || p.color,
           }
         : p
     );
@@ -223,10 +236,6 @@ const AddShipment: React.FC = () => {
           pagination={false}
         />
 
-        <Button onClick={handleAddProductRow} style={{ marginTop: 10 }}>
-          Thêm sản phẩm
-        </Button>
-
         <div style={{ marginTop: 20 }}>
           <Button
             type="primary"
@@ -259,7 +268,11 @@ const AddShipment: React.FC = () => {
         onCancel={() => setShowNewProductModal(false)}
         footer={null}
       >
-        <Form layout="vertical" form={newProductForm} onFinish={handleNewProduct}>
+        <Form
+          layout="vertical"
+          form={newProductForm}
+          onFinish={handleNewProduct}
+        >
           <Form.Item
             name="name"
             label="Tên sản phẩm"
@@ -295,9 +308,24 @@ const AddShipment: React.FC = () => {
 export default AddShipment;
 
 const mockSKUs = [
-  { value: "SKU001-128", label: "12 pro max (128)", capacity: "128GB", color: "Xanh" },
-  { value: "SKU001-256", label: "12 pro max (256)", capacity: "256GB", color: "Vàng" },
-  { value: "SKU001-512", label: "12 pro max (512)", capacity: "512GB", color: "Đen" },
+  {
+    value: "SKU001-128",
+    label: "12 pro max (128)",
+    capacity: "128GB",
+    color: "Xanh",
+  },
+  {
+    value: "SKU001-256",
+    label: "12 pro max (256)",
+    capacity: "256GB",
+    color: "Vàng",
+  },
+  {
+    value: "SKU001-512",
+    label: "12 pro max (512)",
+    capacity: "512GB",
+    color: "Đen",
+  },
   { value: "SKU002", label: "13 pro max", capacity: "256GB", color: "Xám" },
   { value: "SKU003", label: "14 PRO MAX", capacity: "1TB", color: "Tím" },
 ];

@@ -10,6 +10,7 @@ import ProviderAdd from "../Layout/AdminPage/ProviderList/ProviderAdd/ProviderAd
 import ProviderEdit from "../Layout/AdminPage/ProviderList/ProviderEdit/ProviderEdit";
 import ProviderList from "../Layout/AdminPage/ProviderList/ProviderList";
 import AddShipment from "../Layout/AdminPage/ProductList/AddShipment/AddShipment";
+import EditShipment from "../Layout/AdminPage/ProductList/EditShipment/EditShipment";
 
 export const AdminRouters = () => {
   return (
@@ -27,14 +28,16 @@ export const AdminRouters = () => {
         />
         <Route path="product-list" element={<ProductList />} />
         <Route path="product-list/add-shipment" element={<AddShipment />} />
+        <Route
+          path="product-list/edit-shipment/:id"
+          element={<EditShipment  />}
+        />
         <Route path="product-list/add-product" element={<AdminUpdatePhone />} />
         <Route
           path="product-list/edit-product"
           element={<AdminUpdatePhone />}
         />
         <Route path="order" element={<Orders />} />
-
-        {/* <Route path="product-detail" element={<ProductDetail />} /> */}
       </Route>
     </Routes>
   );
