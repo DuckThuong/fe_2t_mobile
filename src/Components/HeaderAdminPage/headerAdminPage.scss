@@ -1,0 +1,41 @@
+.admin-header {
+  background: rgba(237, 242, 249, 0.96);;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between ;
+  padding: 0 20px;
+
+  .admin-header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+    .admin-header-title {
+      font-size: 30px;
+      font-weight: bold;
+      color: rgb(24, 119, 242); 
+      text-transform: uppercase;
+    }
+  }
+    
+  .admin-icon-group {
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+    cursor: pointer;
+
+    .admin-avatar {
+      cursor: pointer;
+    }
+  }
+
+  .admin-icon {
+    font-size: 24px;
+  color: #4a4a4a; 
+
+  &:hover {
+    color: #b0b0b0; 
+  }
+  }
+}

@@ -1,0 +1,58 @@
+@import "../../styles/variables.scss";
+
+.admin-sidebar {
+  background-color: rgb(24, 119, 242) !important;
+  min-height: 100vh;
+  overflow: hidden;
+
+  .logo {
+    width: 100%;
+    height: auto;
+  }
+
+  .ant-menu {
+    background: transparent;
+    color: white !important;
+  }
+
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    color: white !important;
+    font-weight: 500 !important;
+  }
+
+  .ant-menu-item-selected,
+  .ant-menu-submenu-selected > .ant-menu-submenu-title {
+    color: rgb(24, 119, 242) !important;
+    background: white !important;
+  }
+
+  .ant-menu-item:hover,
+  .ant-menu-submenu-title:hover {
+    color: #b0b0b0 !important;
+  }
+
+  .ant-menu-submenu-open {
+    .ant-menu-sub {
+      background: transparent !important;
+    }
+
+    .ant-menu-item {
+      color: white !important;
+    }
+
+    .ant-menu-item-selected {
+      color: $primary-color !important;
+      background: white !important;
+    }
+  }
+
+  .ant-menu-submenu-arrow::before,
+  .ant-menu-submenu-arrow::after {
+    background: white !important;
+  }
+
+  .admin-menu a{
+    text-decoration: none;
+  }
+}

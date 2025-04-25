@@ -1,0 +1,104 @@
+.invoice-list-container {
+  padding: 24px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin: 0 auto;
+
+  .invoice-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    .title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1f1f1f;
+    }
+  }
+
+  .invoice-list-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .left-actions {
+      display: flex;
+      gap: 8px;
+
+      .btn-toggle {
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        background-color: #fff;
+        color: #595959;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        outline: none;
+
+        &.active {
+          background-color: #1890ff;
+          color: #fff;
+          border-color: #1890ff;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        &:hover:not(.active) {
+          background-color: #e6f7ff;
+          border-color: #40a9ff;
+          color: #40a9ff;
+        }
+
+        &:focus {
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.65;
+        }
+      }
+    }
+
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .invoice-list-actions {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .left-actions {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .right-actions {
+        display: flex;
+        align-items: center;
+      
+        .search-input {
+          padding: 8px;
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          margin-right: 10px;
+          width: 200px;
+        }
+      
+        .btn-search {
+          background-color: #ddd;
+        }
+      
+        .btn-search:hover {
+          background-color: #ccc;
+        }
+      }
+    }
+  }
+}
+
