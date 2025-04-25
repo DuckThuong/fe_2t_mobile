@@ -1,3 +1,6 @@
+import AddBill_Client from "../Layout/AdminPage/addbill_client";
+
+
 const CUSTOMER = "";
 export const ACTION = {
   CREATE: "create",
@@ -64,6 +67,9 @@ export const ADMIN_ROUTE_NAME = {
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
   ORDER: `/${ADMIN}/order`,
+  ADDBILL_CLIENT: `/${ADMIN}/add-bill-client`,
+
+
 };
 
 export const ADMIN_ROUTER_PATH = {
@@ -74,4 +80,7 @@ export const ADMIN_ROUTER_PATH = {
   ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
   EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
   ORDER: `/${ADMIN}/order`,
+  ADDBILL_CLIENT: `/${ADMIN}/add-bill-client`,
+
+
 };

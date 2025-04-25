@@ -16,11 +16,11 @@ export const FooterWeb = () => {
       <Row gutter={16}>
         <Col span={8}>
           <Title level={4}>Liên hệ với chúng tôi</Title>
-          <Text>Email: duckthuong@gmail.com</Text>
+          <Text>Email: khanhhhungg213@gmail.com</Text>
           <br />
-          <Text>Điện thoại: +84 - 342030021</Text>
+          <Text>Điện thoại: 0948682103</Text>
           <br />
-          <Text>Địa chỉ: 19, Nguyễn Trãi, Thanh Xuân, Hà Nội</Text>
+          <Text>Địa chỉ: 112 Bạch Mai - Hai Bà Trưng - Hà Nội</Text>
         </Col>
         <Col span={8}>
           <Title level={4}>Thông tin</Title>
@@ -80,7 +80,7 @@ export const FooterWeb = () => {
           <Title level={4}>Bản đồ</Title>
           <iframe
             title="Bản đồ"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d385.39803871043847!2d105.82055753446795!3d21.00216079034001!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac12e174af3f%3A0x85ac9ddcec447625!2zQ8OUTkcgVFkgQ-G7lCBQSOG6pk4gQ8OUTkcgTkdI4buGIFbDgCBUUlVZ4buATiBUSMOUTkcgVENPTQ!5e0!3m2!1svi!2s!4v1734497488332!5m2!1svi!2s"
+            src="https://www.google.com/maps/place/X%C3%B4i+T%C3%BA+112+B%E1%BA%A1ch+Mai/@21.0062111,105.8486242,17z/data=!3m1!4b1!4m6!3m5!1s0x3135ad1147852c3d:0x13862f098588ded9!8m2!3d21.0062111!4d105.8511991!16s%2Fg%2F11n0l9j4ks?entry=ttu&g_ep=EgoyMDI1MDQyMC4wIKXMDSoASAFQAw%3D%3D"
             width="100%"
             height="200"
             style={{ border: 0 }}

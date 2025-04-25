@@ -6,6 +6,8 @@ import AdminUpdatePhone from "../Components/AdminUpdatePhone/AdminupdatePhone";
 import Orders from "../Layout/AdminPage/InvoiceList/InvoiceList";
 import SupplierList from "../Layout/AdminPage/ProviderList/ProviderList";
 
+import AddBill_Client from "../Layout/AdminPage/addbill_client/index";
+
 export const AdminRouters = () => {
   return (
     <Routes>
@@ -17,6 +19,9 @@ export const AdminRouters = () => {
         <Route path="product-list/add-product" element={<AdminUpdatePhone />} />
         <Route path="product-list/edit-product" element={<AdminUpdatePhone />} />
         <Route path="order" element={<Orders />} />
+        <Route path="add-bill-client" element={<AddBill_Client/>}/>
+   
+
   
         {/* <Route path="product-detail" element={<ProductDetail />} /> */}
       </Route>

@@ -6,6 +6,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { Badge } from "antd"; 
 import { Layout, Menu, Modal } from "antd";
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -16,7 +17,11 @@ import { FormInputSearch } from "../../Components/Form/FormInputSearch";
 const { Header } = Layout;
 const { confirm } = Modal;
 
-const Navbar = () => {
+interface NavbarProps {
+  cartCount?: number;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedKey, setSelectedKey] = React.useState(
@@ -43,10 +48,7 @@ const Navbar = () => {
       title: "Bạn có muốn đăng xuất?",
       content: "Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng dịch vụ.",
       onOk() {
-        // Thực hiện logic đăng xuất ở đây
         console.log("Đăng xuất thành công");
-        // Sau đó có thể chuyển hướng về trang đăng nhập
-        // navigate('/login');
       },
       onCancel() {
         console.log("Hủy đăng xuất");
@@ -61,12 +63,9 @@ const Navbar = () => {
   return (
     <Layout>
       <Header className="navbar">
-       <Link 
-            to={CUSTOMER_ROUTER_PATH.TRANG_CHU} 
-            className="logo"
-          >
-            <img src="/logo.jpg" alt="Logo công ty" />
-      </Link>
+        <Link to={CUSTOMER_ROUTER_PATH.TRANG_CHU} className="logo">
+          <img src="/logo.jpg" alt="Logo công ty" />
+        </Link>
         <div className="navbar-search">
           <FormInputSearch
             name="search"
@@ -84,13 +83,25 @@ const Navbar = () => {
             <Link to={CUSTOMER_ROUTER_PATH.TRANG_CHU}>Trang chủ</Link>
           </Menu.Item>
 
-          <Menu.Item
-            key="2"
-            icon={<ShoppingCartOutlined />}
-            className="menu-item"
-          >
-            <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>Giỏ hàng</Link>
+          <Menu.Item key="2" className="menu-item">
+            <Link to={CUSTOMER_ROUTER_PATH.CATERGORIES}>
+              <Badge 
+                count={cartCount} 
+                size="small" 
+                offset={[5, -5]} 
+                showZero={false}
+                style={{ 
+                  backgroundColor: '#ff4d4f',
+                  fontSize: '10px',
+                  fontWeight: 'bold'
+                }}
+              >
+                <ShoppingCartOutlined style={{ fontSize: 20, color:'white' }} />
+              </Badge>
+              <span style={{ marginLeft: 8 }}>Giỏ hàng</span>
+            </Link>
           </Menu.Item>
+          
           <Menu.Item
             key="3"
             icon={<OrderedListOutlined />}
@@ -100,31 +111,30 @@ const Navbar = () => {
           </Menu.Item>
     
           <Menu.SubMenu 
-          key="personal" 
-          icon={<UserOutlined />}
-          title="Cá nhân"
-          popupClassName="user-menu-dropdown"
-          
+            key="personal" 
+            icon={<UserOutlined />}
+            title="Cá nhân"
+            popupClassName="user-menu-dropdown"
           >
-          <Menu.Item key="profile">
-            <Link to="/profile">
-              <UserOutlined /> Hồ sơ
-            </Link>
-          </Menu.Item>
-          <Menu.Item key="settings">
-            <Link to="/settings">
-              <SettingOutlined /> Cài đặt
-            </Link>
-          </Menu.Item>
-          <Menu.Divider />
-          <Menu.Item 
-            key="logout" 
-            onClick={handleLogout}
-            danger
-          >
-            <LogoutOutlined /> Đăng xuất
-          </Menu.Item>
-        </Menu.SubMenu>
+            <Menu.Item key="profile">
+              <Link to="/profile">
+                <UserOutlined /> Hồ sơ
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="settings">
+              <Link to="/settings">
+                <SettingOutlined /> Cài đặt
+              </Link>
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item 
+              key="logout" 
+              onClick={handleLogout}
+              danger
+            >
+              <LogoutOutlined /> Đăng xuất
+            </Menu.Item>
+          </Menu.SubMenu>
         </Menu>
       </Header>
     </Layout>

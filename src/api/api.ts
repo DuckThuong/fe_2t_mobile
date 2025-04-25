@@ -21,9 +21,11 @@ const apiRequest = async (
 
 export enum OrderStateEnum {
   ALL = "ALL",
-  Pending = "Pending",
-  Completed = "Completed",
-  Cancelled = "Cancelled",
+  CONFIRMING = "Confirming",
+  DELIVERING = "Delivering",
+  COMPLETED = "Completed",
+  CANCELLED = "Cancelled",
+  RETURNED = "Returned",
 }
 
 export const userApi = {

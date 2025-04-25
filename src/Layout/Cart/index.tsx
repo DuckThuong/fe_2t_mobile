@@ -23,7 +23,7 @@ export const Cartergories = () => {
     {
       id: '1',
       name: 'iPhone 16 Pro Max',
-      color: 'màu bạc',
+      color: 'Black',
       capacity:'128GB',
       price: 100000,
       quantity: 1,
@@ -33,17 +33,17 @@ export const Cartergories = () => {
     {
       id: '2',
       name: 'iPhone 13 128GB',
-      color: 'màu bạc',
+      color: 'Titanium Gray',
       capacity:'128GB',
       price: 200000,
-      quantity: 2,
-      image: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/1/11_3_12_2_1_5.jpg',
+      quantity: 1,
+    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/2/12_3_8_2_8.jpg",
       selected: false,
     },
   ]);
   const navigate = useNavigate();
   const [selectAll, setSelectAll] = useState(false);
-
+  const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalAmount = cartItems.reduce((sum, item) => {
     return item.selected ? sum + item.price * item.quantity : sum;
   }, 0);
@@ -73,7 +73,7 @@ export const Cartergories = () => {
   return (
     <div>
       <div>
-        <Navbar/>
+        <Navbar cartCount={totalCartItems} />
       </div>
     <div className="cart-container">
       <h2>Giỏ hàng của bạn</h2>
