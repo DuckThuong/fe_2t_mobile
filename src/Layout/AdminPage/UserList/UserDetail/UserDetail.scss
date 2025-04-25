@@ -1,0 +1,116 @@
+.user-detail-container {
+    padding: 24px;
+    background-color: #f5f7fa;
+  
+    .user-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+  
+      .user-name {
+        font-size: 20px;
+        font-weight: 600;
+  
+        .user-email {
+          color: #1a73e8;
+          font-weight: 400;
+          margin-left: 4px;
+        }
+      }
+  
+      .user-actions button + button {
+        margin-left: 8px;
+      }
+    }
+  
+    .user-event {
+      background: #ffffff;
+      border-left: 4px solid #28a745;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #333;
+  
+      .event-icon {
+        margin-right: 8px;
+      }
+  
+      .event-time {
+        float: right;
+        color: #888;
+        font-size: 12px;
+      }
+    }
+  
+    .user-details-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+  
+      .info-section {
+        display: flex;
+        gap: 40px;
+  
+        .info-block {
+          flex: 1;
+  
+          h4 {
+            text-transform: uppercase;
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+          }
+  
+          .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+  
+            label {
+              font-size: 13px;
+              color: #888;
+              width: 130px;
+            }
+  
+            span {
+              font-size: 14px;
+              font-weight: 500;
+              color: #333;
+              text-align: right;
+              flex: 1;
+  
+              a {
+                color: #1a73e8;
+              }
+  
+              &.text-muted {
+                color: #bbb;
+                font-style: italic;
+              }
+            }
+          }
+        }
+      }
+  
+      .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 24px;
+  
+        button + button {
+          margin-left: 12px;
+        }
+      }
+    }
+  }
+  

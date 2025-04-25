@@ -1,20 +1,29 @@
 import React, { useState, useRef } from "react";
 import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, Space } from "antd";
+import { Button, Space, Select } from "antd";
 import "./InvoiceList.scss";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 
-interface IInvoice {
+interface ICustomerInvoice {
   id: number;
   user_id: number;
   userName: string;
   total: number;
   payment_method: string;
-  paymentStatus: string;
-  status: string;
-  return_status: string;
+  paymentStatus: "Pending" | "Completed" | "Failed"; // Cập nhật trạng thái
+  invoiceStatus: "Pending" | "Paid" | "Cancelled";
+  created_at: string;
+}
+
+interface ISupplierInvoice {
+  id: number;
+  supplierName: string;
+  total: number;
+  payment_method: string;
+  paymentStatus: "Pending" | "Completed" | "Failed"; // Cập nhật trạng thái
+  invoiceStatus: "Pending" | "Paid" | "Cancelled";
   created_at: string;
 }
 
@@ -22,16 +31,19 @@ const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
   const tableRef = useRef<CustomTableRef>(null);
 
-  const [invoices, setInvoices] = useState<IInvoice[]>([
+  // State để chọn loại bảng
+  const [tableType, setTableType] = useState<"customer" | "supplier">("customer");
+
+  // Dữ liệu cho hóa đơn khách hàng
+  const [customerInvoices, setCustomerInvoices] = useState<ICustomerInvoice[]>([
     {
       id: 1,
       user_id: 1,
       userName: "John Doe",
       total: 5000,
       payment_method: "Credit Card",
-      paymentStatus: "Paid",
-      status: "Paid",
-      return_status: "No Return",
+      paymentStatus: "Completed", // Cập nhật trạng thái
+      invoiceStatus: "Paid",
       created_at: "2025-04-01",
     },
     {
@@ -40,9 +52,8 @@ const InvoiceList: React.FC = () => {
       userName: "Jane Smith",
       total: 3000,
       payment_method: "Cash",
-      paymentStatus: "Pending",
-      status: "Pending",
-      return_status: "Returned",
+      paymentStatus: "Pending", // Cập nhật trạng thái
+      invoiceStatus: "Pending",
       created_at: "2025-04-02",
     },
     {
@@ -51,15 +62,54 @@ const InvoiceList: React.FC = () => {
       userName: "Alice Johnson",
       total: 7000,
       payment_method: "Bank Transfer",
-      paymentStatus: "Overdue",
-      status: "Pending",
-      return_status: "No Return",
+      paymentStatus: "Failed", // Cập nhật trạng thái
+      invoiceStatus: "Cancelled",
       created_at: "2025-04-03",
     },
   ]);
 
+  // Dữ liệu cho hóa đơn nhà cung cấp
+  const [supplierInvoices, setSupplierInvoices] = useState<ISupplierInvoice[]>([
+    {
+      id: 1,
+      supplierName: "Supplier A",
+      total: 10000,
+      payment_method: "Bank Transfer",
+      paymentStatus: "Completed", // Cập nhật trạng thái
+      invoiceStatus: "Paid",
+      created_at: "2025-04-01",
+    },
+    {
+      id: 2,
+      supplierName: "Supplier B",
+      total: 8000,
+      payment_method: "Cash",
+      paymentStatus: "Pending", // Cập nhật trạng thái
+      invoiceStatus: "Pending",
+      created_at: "2025-04-02",
+    },
+    {
+      id: 3,
+      supplierName: "Supplier C",
+      total: 12000,
+      payment_method: "Credit Card",
+      paymentStatus: "Failed", // Cập nhật trạng thái
+      invoiceStatus: "Cancelled",
+      created_at: "2025-04-03",
+    },
+  ]);
+
+  // State để theo dõi các thay đổi tạm thời
+  const [tempStatuses, setTempStatuses] = useState<{
+    [key: number]: {
+      paymentStatus?: "Pending" | "Completed" | "Failed";
+      invoiceStatus?: "Pending" | "Paid" | "Cancelled";
+    };
+  }>({});
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>(invoices);
+  const [filteredCustomerInvoices, setFilteredCustomerInvoices] = useState<ICustomerInvoice[]>(customerInvoices);
+  const [filteredSupplierInvoices, setFilteredSupplierInvoices] = useState<ISupplierInvoice[]>(supplierInvoices);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -67,42 +117,147 @@ const InvoiceList: React.FC = () => {
 
   const handleSearchClick = () => {
     const searchTerms = searchQuery.trim().toLowerCase().split(/\s+/);
-    const result = invoices.filter((invoice) =>
-      searchTerms.every(
-        (term) =>
-          invoice.id.toString().toLowerCase().includes(term) ||
-          invoice.userName.toLowerCase().includes(term) 
-      )
-    );
-    setFilteredInvoices(result);
+    if (tableType === "customer") {
+      const result = customerInvoices.filter((invoice) =>
+        searchTerms.every(
+          (term) =>
+            invoice.id.toString().toLowerCase().includes(term) ||
+            invoice.userName.toLowerCase().includes(term) ||
+            invoice.user_id.toString().toLowerCase().includes(term)
+        )
+      );
+      setFilteredCustomerInvoices(result);
+    } else {
+      const result = supplierInvoices.filter((invoice) =>
+        searchTerms.every(
+          (term) =>
+            invoice.id.toString().toLowerCase().includes(term) ||
+            invoice.supplierName.toLowerCase().includes(term)
+        )
+      );
+      setFilteredSupplierInvoices(result);
+    }
   };
 
   const handleDelete = (id: number | string) => {
-    setInvoices((prevInvoices) =>
-      prevInvoices.filter((invoice) => invoice.id !== id)
-    );
-    setFilteredInvoices((prevFilteredInvoices) =>
-      prevFilteredInvoices.filter((invoice) => invoice.id !== id)
-    );
+    if (tableType === "customer") {
+      setCustomerInvoices((prevInvoices) =>
+        prevInvoices.filter((invoice) => invoice.id !== id)
+      );
+      setFilteredCustomerInvoices((prevFilteredInvoices) =>
+        prevFilteredInvoices.filter((invoice) => invoice.id !== id)
+      );
+    } else {
+      setSupplierInvoices((prevInvoices) =>
+        prevInvoices.filter((invoice) => invoice.id !== id)
+      );
+      setFilteredSupplierInvoices((prevFilteredInvoices) =>
+        prevFilteredInvoices.filter((invoice) => invoice.id !== id)
+      );
+    }
+    // Xóa trạng thái tạm thời nếu có
+    setTempStatuses((prev) => {
+      const newStatuses = { ...prev };
+      delete newStatuses[id as number];
+      return newStatuses;
+    });
   };
-
-  // const handleEdit = (invoice: IInvoice) => {
-  //   navigate(`${ADMIN_ROUTER_PATH.ORDER}/${invoice.id}`, {
-  //     state: { invoice },
-  //   });
-  // };
 
   const handleCreate = () => {
     navigate(ADMIN_ROUTER_PATH.ORDER);
   };
 
-  const invoiceColumns = [
+  // Xử lý thay đổi trạng thái thanh toán (lưu tạm thời)
+  const handlePaymentStatusChange = (
+    id: number,
+    value: "Pending" | "Completed" | "Failed"
+  ) => {
+    setTempStatuses((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], paymentStatus: value },
+    }));
+  };
+
+  // Xử lý thay đổi trạng thái hóa đơn (lưu tạm thời)
+  const handleInvoiceStatusChange = (
+    id: number,
+    value: "Pending" | "Paid" | "Cancelled"
+  ) => {
+    setTempStatuses((prev) => ({
+      ...prev,
+      [id]: { ...prev[id], invoiceStatus: value },
+    }));
+  };
+
+  // Xử lý lưu trạng thái
+  const handleSave = (id: number) => {
+    const tempStatus = tempStatuses[id];
+    if (!tempStatus) return;
+
+    if (tableType === "customer") {
+      setCustomerInvoices((prevInvoices) =>
+        prevInvoices.map((invoice) =>
+          invoice.id === id
+            ? {
+                ...invoice,
+                paymentStatus: tempStatus.paymentStatus || invoice.paymentStatus,
+                invoiceStatus: tempStatus.invoiceStatus || invoice.invoiceStatus,
+              }
+            : invoice
+        )
+      );
+      setFilteredCustomerInvoices((prevFilteredInvoices) =>
+        prevFilteredInvoices.map((invoice) =>
+          invoice.id === id
+            ? {
+                ...invoice,
+                paymentStatus: tempStatus.paymentStatus || invoice.paymentStatus,
+                invoiceStatus: tempStatus.invoiceStatus || invoice.invoiceStatus,
+              }
+            : invoice
+        )
+      );
+    } else {
+      setSupplierInvoices((prevInvoices) =>
+        prevInvoices.map((invoice) =>
+          invoice.id === id
+            ? {
+                ...invoice,
+                paymentStatus: tempStatus.paymentStatus || invoice.paymentStatus,
+                invoiceStatus: tempStatus.invoiceStatus || invoice.invoiceStatus,
+              }
+            : invoice
+        )
+      );
+      setFilteredSupplierInvoices((prevFilteredInvoices) =>
+        prevFilteredInvoices.map((invoice) =>
+          invoice.id === id
+            ? {
+                ...invoice,
+                paymentStatus: tempStatus.paymentStatus || invoice.paymentStatus,
+                invoiceStatus: tempStatus.invoiceStatus || invoice.invoiceStatus,
+              }
+            : invoice
+        )
+      );
+    }
+
+    // Xóa trạng thái tạm thời sau khi lưu
+    setTempStatuses((prev) => {
+      const newStatuses = { ...prev };
+      delete newStatuses[id];
+      return newStatuses;
+    });
+  };
+
+  const customerColumns = [
     {
       title: "STT",
       key: "index",
       render: (_: any, __: any, index: number) => index + 1,
     },
     { title: "Mã hóa đơn", dataIndex: "id", key: "id" },
+    { title: "Mã người dùng", dataIndex: "user_id", key: "user_id" },
     { title: "Người dùng", dataIndex: "userName", key: "userName" },
     {
       title: "Tổng tiền",
@@ -119,21 +274,108 @@ const InvoiceList: React.FC = () => {
       title: "Trạng thái thanh toán",
       dataIndex: "paymentStatus",
       key: "paymentStatus",
+      render: (_: any, record: ICustomerInvoice) => (
+        <Select
+          value={tempStatuses[record.id]?.paymentStatus || record.paymentStatus}
+          onChange={(value: string) =>
+            handlePaymentStatusChange(record.id, value as "Pending" | "Completed" | "Failed")
+          }
+          style={{ width: 120 }}
+        >
+          <Select.Option value="Pending">Pending</Select.Option>
+          <Select.Option value="Completed">Completed</Select.Option>
+          <Select.Option value="Failed">Failed</Select.Option>
+        </Select>
+      ),
     },
-    { title: "Trạng thái hóa đơn", dataIndex: "status", key: "status" },
     {
-      title: "Trạng thái trả hàng",
-      dataIndex: "return_status",
-      key: "return_status",
+      title: "Trạng thái hóa đơn",
+      dataIndex: "invoiceStatus",
+      key: "invoiceStatus",
+      render: (_: any, record: ICustomerInvoice) => (
+        <Select
+          value={tempStatuses[record.id]?.invoiceStatus || record.invoiceStatus}
+          onChange={(value: string) =>
+            handleInvoiceStatusChange(record.id, value as "Pending" | "Paid" | "Cancelled")
+          }
+          style={{ width: 120 }}
+        >
+          <Select.Option value="Pending">Pending</Select.Option>
+          <Select.Option value="Paid">Paid</Select.Option>
+          <Select.Option value="Cancelled">Cancelled</Select.Option>
+        </Select>
+      ),
     },
     { title: "Ngày tạo", dataIndex: "created_at", key: "created_at" },
   ];
 
-  const renderActions = (record: IInvoice) => (
+  const supplierColumns = [
+    {
+      title: "STT",
+      key: "index",
+      render: (_: any, __: any, index: number) => index + 1,
+    },
+    { title: "Mã hóa đơn", dataIndex: "id", key: "id" },
+    { title: "Nhà cung cấp", dataIndex: "supplierName", key: "supplierName" },
+    {
+      title: "Tổng tiền",
+      dataIndex: "total",
+      key: "total",
+      render: (total: number) => `${total} VNĐ`,
+    },
+    {
+      title: "Phương thức thanh toán",
+      dataIndex: "payment_method",
+      key: "payment_method",
+    },
+    {
+      title: "Trạng thái thanh toán",
+      dataIndex: "paymentStatus",
+      key: "paymentStatus",
+      render: (_: any, record: ISupplierInvoice) => (
+        <Select
+          value={tempStatuses[record.id]?.paymentStatus || record.paymentStatus}
+          onChange={(value: string) =>
+            handlePaymentStatusChange(record.id, value as "Pending" | "Completed" | "Failed")
+          }
+          style={{ width: 120 }}
+        >
+          <Select.Option value="Pending">Pending</Select.Option>
+          <Select.Option value="Completed">Completed</Select.Option>
+          <Select.Option value="Failed">Failed</Select.Option>
+        </Select>
+      ),
+    },
+    {
+      title: "Trạng thái hóa đơn",
+      dataIndex: "invoiceStatus",
+      key: "invoiceStatus",
+      render: (_: any, record: ISupplierInvoice) => (
+        <Select
+          value={tempStatuses[record.id]?.invoiceStatus || record.invoiceStatus}
+          onChange={(value: string) =>
+            handleInvoiceStatusChange(record.id, value as "Pending" | "Paid" | "Cancelled")
+          }
+          style={{ width: 120 }}
+        >
+          <Select.Option value="Pending">Pending</Select.Option>
+          <Select.Option value="Paid">Paid</Select.Option>
+          <Select.Option value="Cancelled">Cancelled</Select.Option>
+        </Select>
+      ),
+    },
+    { title: "Ngày tạo", dataIndex: "created_at", key: "created_at" },
+  ];
+
+  const renderActions = (record: ICustomerInvoice | ISupplierInvoice) => (
     <Space size="small">
-      {/* <Button type="primary" onClick={() => handleEdit(record)}>
-        Sửa
-      </Button> */}
+      <Button
+        type="primary"
+        onClick={() => handleSave(record.id)}
+        disabled={!tempStatuses[record.id]}
+      >
+        Lưu
+      </Button>
       <Button
         type="primary"
         danger
@@ -151,10 +393,18 @@ const InvoiceList: React.FC = () => {
       </div>
       <div className="invoice-list-actions">
         <div className="left-actions">
-          {/* <button className="btn-create" onClick={handleCreate}>
-            Thêm mới
-          </button> */}
-          <button className="btn-refresh">Tải lại</button>
+          <button
+            className={`btn-toggle ${tableType === "customer" ? "active" : ""}`}
+            onClick={() => setTableType("customer")}
+          >
+            Hóa đơn cho khách
+          </button>
+          <button
+            className={`btn-toggle ${tableType === "supplier" ? "active" : ""}`}
+            onClick={() => setTableType("supplier")}
+          >
+            Hóa đơn cho nhà cung cấp
+          </button>
         </div>
         <div className="right-actions">
           <input
@@ -171,12 +421,14 @@ const InvoiceList: React.FC = () => {
       </div>
       <CustomTable
         ref={tableRef}
-        data={filteredInvoices}
-        columns={invoiceColumns}
+        data={tableType === "customer" ? filteredCustomerInvoices : filteredSupplierInvoices}
+        columns={tableType === "customer" ? customerColumns : supplierColumns}
         customActions={renderActions}
         onDelete={handleDelete}
         deleteConfirmMessage={(record) =>
-          `Bạn có chắc chắn muốn xóa hóa đơn của ${record.userName} không?`
+          `Bạn có chắc chắn muốn xóa hóa đơn của ${
+            tableType === "customer" ? (record as ICustomerInvoice).userName : (record as ISupplierInvoice).supplierName
+          } không?`
         }
       />
     </div>

@@ -7,7 +7,6 @@ import {
   HomeFilled,
   LogoutOutlined,
   PlusCircleOutlined,
- 
   ShoppingOutlined,
   SwapOutlined,
   UserOutlined,
@@ -23,11 +22,11 @@ const SidebarAdminPage = () => {
           <Link to={ADMIN_ROUTE_NAME.DASHBOARD}>Tổng quan</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<UserOutlined />}>
-          <Link to={ADMIN_ROUTE_NAME.ADD_PRODUCT}>Người dùng</Link>
+          <Link to={ADMIN_ROUTE_NAME.USER_LIST}>Người dùng</Link>
         </Menu.Item>
         <Menu.Item key="3" icon={<SwapOutlined />}>
           Nhà cung cấp
-          <Link to={ADMIN_ROUTE_NAME.SUPPLIER_LIST}></Link>
+          <Link to={ADMIN_ROUTE_NAME.PROVIDER_LIST}></Link>
         </Menu.Item>
 
         <Menu.Item key="4" icon={<BankFilled />}>
@@ -40,8 +39,7 @@ const SidebarAdminPage = () => {
         <Menu.Item key="6" icon={<PlusCircleOutlined />}>
           <Link to={ADMIN_ROUTE_NAME.ADDBILL_CLIENT}>Thêm HĐ khách hàng</Link>
         </Menu.Item>
-        
-        
+
         <Menu.Item key="8" icon={<LogoutOutlined />}>
           Đăng xuất
         </Menu.Item>

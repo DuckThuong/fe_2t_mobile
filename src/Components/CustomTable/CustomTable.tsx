@@ -1,6 +1,6 @@
 import React, { useState, useImperativeHandle, forwardRef } from "react";
 import { Table, Modal } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TableProps } from "antd/es/table";
 
 interface ITableData {
   id: number | string;
@@ -15,11 +15,11 @@ interface ICustomTableProps<T extends ITableData> {
   scroll?: { x?: number | string; y?: number | string };
   loading?: boolean;
   customActions?: (record: T) => React.ReactNode;
-  onDelete?: (id: number | string) => void;
+  onDelete?: (id: T["id"]) => void; // Use T["id"] for generic id type
   deleteConfirmMessage?: (record: T) => string;
+  onRow?: TableProps<T>["onRow"];
 }
 
-// Thêm ref để expose hàm showDeleteConfirm
 export interface CustomTableRef {
   showDeleteConfirm: (id: number | string) => void;
 }
@@ -36,6 +36,7 @@ const CustomTable = forwardRef<CustomTableRef, ICustomTableProps<any>>(
       customActions,
       onDelete,
       deleteConfirmMessage,
+      onRow,
     },
     ref
   ) => {
@@ -88,6 +89,7 @@ const CustomTable = forwardRef<CustomTableRef, ICustomTableProps<any>>(
           loading={loading}
           locale={{ emptyText: "Không có dữ liệu" }}
           className="custom-table"
+          onRow={onRow}
         />
         {onDelete && (
           <Modal
