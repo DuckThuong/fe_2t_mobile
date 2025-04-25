@@ -38,9 +38,9 @@ export const ProductCard: React.FC<{ product: ProductProps }> = ({
       />
       
       <h3>{product.name}</h3>
-      
+      {/* <h4>Chỉ từ</h4> */}
       {product.description && (
-        <Tooltip title={product.description} overlayClassName="custom-tooltip">
+        <Tooltip  title={product.description} overlayClassName="custom-tooltip">
           <p>
             {product.description.length > 100
               ? `${product.description.substring(0, 100)}...`

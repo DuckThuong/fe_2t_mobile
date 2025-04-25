@@ -34,6 +34,7 @@ const allWards = {
   301: [{ id: 30101, name: "Phường Thanh Bình" }],
   302: [{ id: 30201, name: "Phường An Khê" }],
 };
+//  Dữ liệu đơn hàng
 
 // Dữ liệu sản phẩm
 const phoneProducts = [
@@ -41,37 +42,31 @@ const phoneProducts = [
     id: 1,
     name: "iPhone 16 Pro Max",
     color: "Black",
-    capacity: "256GB",
-    currentPrice: "30.990.000đ",
+    capacity: "128GB",
+    currentPrice: "100000đ",
     image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-2.png",
     quantity: 1,
   },
   {
     id: 2,
-    name: "Samsung Galaxy S24 Ultra",
+    name: "iPhone 13 128GB",
     color: "Titanium Gray",
-    capacity: "512GB",
-    currentPrice: "28.990.000đ",
-    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-2.png",
+    capacity: "128GB",
+    currentPrice: "200000đ",
+    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/2/12_3_8_2_8.jpg",
     quantity: 1,
   },
-  {
-    id: 3,
-    name: "Xiaomi 14 Pro",
-    color: "White",
-    capacity: "256GB",
-    currentPrice: "22.990.000đ",
-    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-2.png",
-    quantity: 2,
-  },
+  
 ];
-
+const idOrderCode = "hd213";
+const encodedOrderCode = encodeURIComponent(idOrderCode); // Đảm bảo mã hóa đúng
 // Dữ liệu khách hàng
 const customerData = {
   name: "Trần Khánh Hùng",
   phone: "0948682103",
   email: "khanhhhungg213@gmail.com",
   memberId: "S-NULL",
+  
 };
 
 export const Purchase = () => {
@@ -87,22 +82,18 @@ export const Purchase = () => {
 
   const navigate = useNavigate();
 
-  // const handleNextStep = () => {
-  //   if (currentStep === 1) {
-  //     setCurrentStep(2);
-  //   } else {
-  //     alert("Đặt hàng thành công!");
-  //   }
-  // };
   const handleNextStep = () => {
       if (currentStep === 1) {
         setCurrentStep(2);
       } else {
         alert("Đặt hàng thành công!");
         // Thêm timeout để người dùng đọc thông báo
-        setTimeout(() => {
+        // setTimeout(() => {
+        //   navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+        // }, 1500);
+         
           navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-        }, 1500);
+        
       }
     };
 
@@ -326,14 +317,24 @@ export const Purchase = () => {
               
               {paymentMethod === "banking" && (
                 <div className="bank-transfer-details">
-                  <h3>Chuyển khoản ngân hàng</h3>
+                  
                   <div className="transfer-info">
-                    <p>Quý khách vui lòng chuyển khoản theo thông tin sau:</p>
-                    <p><strong>19028903445567</strong></p>
-                    <p><strong>NGO VAN THUAN</strong></p>
-                    <p><strong>TECHCOMBANK</strong></p>
-                    <p><strong>Chi Nhánh: Hà Thành</strong></p>
-                    <p>Nội dung CK: Họ Tên + SĐT</p>
+                    {/* Thêm ảnh QR ở đây */}
+                      <div className="qr-code-box">
+                        <img
+                          // src={`https://img.vietqr.io/image/techcombank-19028903445567-compact2.jpg?amount=
+                          //   ${totalPrice}&addInfo=${encodeURIComponent(customerData.name + customerData.phone)}
+                          //   &accountName=${encodeURIComponent("NGO VAN THUAN")}`}
+                          
+                          src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=
+                            ${totalPrice}&addInfo=${encodedOrderCode}`}  
+                          
+
+                          
+                          alt="Mã QR chuyển khoản"
+                          style={{ width: "200px", marginTop: "10px" }}
+                        />
+                      </div>
                   </div>
                   
                 </div>

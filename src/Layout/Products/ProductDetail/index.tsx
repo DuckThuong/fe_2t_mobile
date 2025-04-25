@@ -27,10 +27,14 @@ export const ProductDetail = () => {
         "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-7.png",
       ],
       name: "iPhone 16 Pro Max",
-      price: "12500000",
+      price: [
+        "30590000",
+        "37190000",
+        "41790000"
+      ],
       details: "Cho đơn hàng điện thoại bất kỳ\n*Tùy sản phẩm, áp dụng mua tại cửa hàng",
-      color: ["Đỏ", "Vàng", "Cam", "Xanh", "Trắng", "Đen"],
-      capacity: ["128GB", "256GB", "512GB", "1TB"]
+      color: ["Titan đen", "Titan sa mạc", "Titan tự nhiên", "Titan trắng"],
+      capacity: [ "256GB", "512GB", "1TB"]
     }
   ];
   const parameter = [
@@ -187,7 +191,7 @@ export const ProductDetail = () => {
           {/* Phần giá */}
           <div className="price-section">
             <div className="current-price">
-              {formatPrice(product.price)}
+              {formatPrice(product.price[product.capacity.indexOf(selectedStorage)])}
             </div>
             
           </div>

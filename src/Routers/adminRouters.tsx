@@ -12,6 +12,8 @@ import ProviderList from "../Layout/AdminPage/ProviderList/ProviderList";
 import AddShipment from "../Layout/AdminPage/ProductList/AddShipment/AddShipment";
 import EditShipment from "../Layout/AdminPage/ProductList/EditShipment/EditShipment";
 
+import AddBill_Client from "../Layout/AdminPage/addbill_client/index";
+
 export const AdminRouters = () => {
   return (
     <Routes>
@@ -30,7 +32,7 @@ export const AdminRouters = () => {
         <Route path="product-list/add-shipment" element={<AddShipment />} />
         <Route
           path="product-list/edit-shipment/:id"
-          element={<EditShipment  />}
+          element={<EditShipment />}
         />
         <Route path="product-list/add-product" element={<AdminUpdatePhone />} />
         <Route
@@ -38,6 +40,8 @@ export const AdminRouters = () => {
           element={<AdminUpdatePhone />}
         />
         <Route path="order" element={<Orders />} />
+        <Route path="add-bill-client" element={<AddBill_Client />} />
+        {/* <Route path="product-detail" element={<ProductDetail />} /> */}
       </Route>
     </Routes>
   );

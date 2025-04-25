@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux"; // Import useDispatch
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../api/api";
 import { QUERY_KEY } from "../../api/apiConfig";
@@ -10,12 +10,13 @@ import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
-import { setAuthUser } from "../../store/authSlice"; // Import action
+import { CUSTOMER_ROUTER_PATH, ADMIN_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
+import { setAuthUser } from "../../store/authSlice";
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
 import { login } from "../../api/authApi";
+
 const Login = () => {
   const [form] = useForm();
   const navigate = useNavigate();
@@ -29,15 +30,29 @@ const Login = () => {
     queryKey: [QUERY_KEY.GET_USER],
     queryFn: userApi.getAllUsers,
   });
+
+  const users = [
+    {
+      phone: "0948682103",
+      password: "Khanhhung1@",
+      role: "client",
+    },
+    {
+      phone: "0948682102",
+      password: "Khanhhung1@",
+      role: "admin",
+    },
+  ];
+
   const onFinish = () => {
-    const email = form.getFieldValue("email");
+    const phone = form.getFieldValue("phone");
     const password = form.getFieldValue("password");
 
     const userExists = loginApi?.userList?.some(
-      (user) => user.Email === email && user.PasswordHash === password
+      (user) => user.Phone === phone && user.PasswordHash === password
     );
     if (userExists) {
-      const userData = loginApi.userList.find((user) => user.Email === email);
+      const userData = loginApi.userList.find((user) => user.Phone === phone);
       if (userData) {
         dispatch(
           setAuthUser({
@@ -46,16 +61,21 @@ const Login = () => {
             fullName: userData.Username,
           })
         );
+
+        // Điều hướng đến trang tương ứng
+        if (userData.Role === "admin") {
+          navigate(ADMIN_ROUTER_PATH.DASHBOARD);  // Điều hướng admin
+        } else {
+          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU); // Điều hướng client
+        }
       }
-      login(email, password);
-      navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+      login(phone, password);
       setNotification({ message: "Thành Công", type: "success" });
     } else {
       setNotification({
         message: "Sai tài khoản hoặc mật khẩu",
         type: "error",
       });
-      form.setFieldsValue("e");
     }
   };
 
@@ -78,12 +98,12 @@ const Login = () => {
     }
   };
 
+  const handleRegister = () => {
+    navigate(CUSTOMER_ROUTER_PATH.SIGN_UP); // Điều hướng đến trang đăng ký
+  };
+
   return (
     <div className="login">
-      {/* <video autoPlay muted loop id="loginVideo">
-        <source src="/112722-695433093.mp4" type="video/mp4" />
-      </video> */}
-
       <NotificationPopup
         message={notification?.message}
         type={notification?.type}
@@ -96,17 +116,17 @@ const Login = () => {
           <div className="login_form-header">
             <p className="login_form-header-content">ĐĂNG NHẬP</p>
           </div>
-          <div className="login_form-email">
-            <p className="login_form-label">Email</p>
+          <div className="login_form-phone">
+            <p className="login_form-label">Số điện thoại</p>
             <FormInput
-              name={"email"}
+              name={"phone"}
               formItemProps={{
                 className: "login_form-input",
-                rules: ValidateLibrary().email,
+                rules: ValidateLibrary().phone,
               }}
               inputProps={{
                 onKeyPress: handleKeyPress,
-                placeholder: "Email@gmail.com",
+                placeholder: "SĐT: 0123456789",
               }}
             />
           </div>
@@ -145,19 +165,6 @@ const Login = () => {
             />
           </div>
 
-          {/* <div className="login_form-privacy">
-            <span>●●● of </span>
-            <Link className="login_form-privacy-link" to={"/"}>
-              Terms of service
-            </Link>
-            <span> and </span>
-            <Link className="login_form-privacy-link" to={"/"}>
-              I agree to the privacy terms.
-            </Link>
-            <span> Place where you can get it. </span>
-            <span>If so, please log in.</span>
-          </div> */}
-
           <div className="login_form-checkbox ">
             <FormCheckbox
               name={"submit"}
@@ -168,15 +175,12 @@ const Login = () => {
             />
           </div>
 
-          {/* <div className="login_form-signIn">
-            <CustomButton
-              content="Register Now"
-              buttonProps={{
-                className: "login_form-signIn-button",
-                onFinish: handleRegister,
-              }}
-            />
-          </div> */}
+          {/* Thêm nút đăng ký */}
+          <div className="login_form-register">
+            <button onClick={handleRegister} className="login_form-register-button">
+              Đăng ký
+            </button>
+          </div>
         </FormWrap>
       </div>
     </div>

@@ -11,7 +11,7 @@ import { Home } from "../Layout/TrangChu";
 import { ListPage } from "../Layout/TrangList";
 import { SuspenseWrapper } from "../SuspenseWrapper";
 import { CUSTOMER_ROUTER_PATH } from "./Routers";
-import { Order } from "../Layout/Order";
+import Order from "../Layout/Order";
 import { Purchase } from "../Layout/Purchase";
 import Profile from "../Layout/Profile";
 

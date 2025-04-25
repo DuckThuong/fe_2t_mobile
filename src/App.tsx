@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
 
 const App = () => {
+  
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

@@ -18,17 +18,13 @@ interface MenuItem {
   label: string;
 }
 
-interface BannerItem {
-  id: number;
-  img: string;
-  title: string;
-  description: string;
-}
+
 
 interface ProductImage {
   id: number;
   img: string;
   bannerIndex: number;
+  title :string;
 }
 
 const App: React.FC = () => {
@@ -37,54 +33,40 @@ const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
-  // Banner data
-  const banners: BannerItem[] = [
-    {
-      id: 1,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/500k-gia-dung-3.png",
-      title: "GIẢM NGAY 500K",
-      description: "MUA KÈM GIÀ DỤNG",
-    },
-    {
-      id: 2,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/s23-ultra-690-300.png",
-      title: "SAMSUNG S23 ULTRA",
-      description: "GIẢM GIÁ SỐC",
-    },
-    {
-      id: 3,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/oppo-690-300.png",
-      title: "OPPO RENO 10",
-      description: "ƯU ĐÃI ĐẶC BIỆT",
-    },
-  ];
+
+
 
   // Product images - tương ứng với các banner
   const productImages: ProductImage[] = [
     {
       id: 1,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:150:0/q:80/plain/https://dashboard.cellphones.com.vn/storage/500k-gia-dung-thumb.png",
-      bannerIndex: 0
+      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:10/plain/https://dashboard.cellphones.com.vn/storage/dien-thoai-samsung-galaxy-m55-5g-8gb-256gb-moi.png",
+      bannerIndex: 1,
+       title: "Tin sốc 1"
     },
     {
       id: 2,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:150:0/q:80/plain/https://dashboard.cellphones.com.vn/storage/s23-ultra-thumb.png",
-      bannerIndex: 1
+      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/iphone-16-pro-max-thu-cu-moi-home.jpg",
+      bannerIndex: 2,
+      title: "Tin sốc 1"
     },
     {
       id: 3,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:150:0/q:80/plain/https://dashboard.cellphones.com.vn/storage/oppo-reno10-thumb.png",
-      bannerIndex: 2
+      img: "https://cdnv2.tgdd.vn/mwg-static/tgdd/Banner/c7/f6/c7f6e01395bf270e9d9bb9795d74ebf3.png",
+      bannerIndex: 3,
+      title: "Tin sốc 1"
     },
     {
       id: 4,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:150:0/q:80/plain/https://dashboard.cellphones.com.vn/storage/iphone-14-pro-thumb.png",
-      bannerIndex: 0
+      img: "https://cdnv2.tgdd.vn/mwg-static/tgdd/Banner/c1/8d/c18de02da648ceb2e6ea6d1e7def18aa.png",
+      bannerIndex: 4,
+      title: "Tin sốc 1"
     },
     {
       id: 5,
-      img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:150:0/q:80/plain/https://dashboard.cellphones.com.vn/storage/xiaomi-13-thumb.png",
-      bannerIndex: 1
+      img: "https://cdnv2.tgdd.vn/mwg-static/tgdd/Banner/8b/45/8b4570e3fbab8cfae7f55324bd4e1909.png",
+      bannerIndex: 5,
+      title: "Tin sốc 1"
     },
   ];
 
@@ -100,6 +82,7 @@ const App: React.FC = () => {
       { key: "7", label: "Dòng iPhone 10" },
       { key: "8", label: "Dòng iPhone 8" },
       { key: "9", label: "Dòng iPhone 7" },
+      
     ],
     android: [
       { key: "10", label: "Samsung" },
@@ -205,19 +188,19 @@ const App: React.FC = () => {
           {/* Content chính */}
           <Content className="main-content">
             <div className="banner-container">
-              <Carousel 
+              {/* <Carousel 
                 ref={carouselRef}
                 dots={false}
                 className="promo-carousel"
                 beforeChange={handleBeforeChange}
               >
-                {banners.map((banner) => (
+                {productImages.map((banner) => (
                   <Card key={banner.id} className="promo-card">
                     <div className="banner-wrapper">
                       <div className="banner-image-container">
                         <img
                           src={banner.img}
-                          alt={banner.title}
+                          
                           className="banner-image"
                         />
                         <Button 
@@ -231,9 +214,35 @@ const App: React.FC = () => {
                           onClick={() => carouselRef.current?.next()}
                         />
                       </div>
-                      <div className="banner-text">
-                        <h2>{banner.title}</h2>
-                        <h3>{banner.description}</h3>
+                      
+                    </div>
+                  </Card>
+                ))}
+              </Carousel> */}
+              <Carousel
+                ref={carouselRef}
+                dots={false}
+                className="promo-carousel"
+                beforeChange={handleBeforeChange}
+              >
+                {productImages.map((item) => (
+                  <Card key={item.id} className="promo-card">
+                    <div className="banner-wrapper">
+                      <div className="banner-image-container">
+                        <img
+                          src={item.img}
+                          className="banner-image"
+                        />
+                        <Button
+                          className="carousel-button prev-button"
+                          icon={<LeftOutlined />}
+                          onClick={() => carouselRef.current?.prev()}
+                        />
+                        <Button
+                          className="carousel-button next-button"
+                          icon={<RightOutlined />}
+                          onClick={() => carouselRef.current?.next()}
+                        />
                       </div>
                     </div>
                   </Card>
@@ -243,16 +252,12 @@ const App: React.FC = () => {
               {/* Các ảnh sản phẩm dưới banner */}
               <div className="product-grid">
                 {productImages.map((product) => (
-                  <div 
+                  <div
                     key={product.id}
                     className={`product-item ${currentSlide === product.bannerIndex ? 'active' : ''}`}
                     onClick={() => handleProductClick(product.bannerIndex)}
                   >
-                    <img 
-                      src={product.img} 
-                      alt={`Product ${product.id}`} 
-                      className="product-image" 
-                    />
+                    <div className="product-title">{product.title}</div>
                   </div>
                 ))}
               </div>
