@@ -12,7 +12,7 @@ interface ICustomerInvoice {
   userName: string;
   total: number;
   payment_method: string;
-  paymentStatus: "Pending" | "Completed" | "Failed"; // Cập nhật trạng thái
+  paymentStatus: "Pending" | "Completed" | "Failed";
   invoiceStatus: "Pending" | "Paid" | "Cancelled";
   created_at: string;
 }
@@ -22,7 +22,7 @@ interface ISupplierInvoice {
   supplierName: string;
   total: number;
   payment_method: string;
-  paymentStatus: "Pending" | "Completed" | "Failed"; // Cập nhật trạng thái
+  paymentStatus: "Pending" | "Completed" | "Failed";
   invoiceStatus: "Pending" | "Paid" | "Cancelled";
   created_at: string;
 }
@@ -31,10 +31,10 @@ const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
   const tableRef = useRef<CustomTableRef>(null);
 
-  // State để chọn loại bảng
+  // State to select table type
   const [tableType, setTableType] = useState<"customer" | "supplier">("customer");
 
-  // Dữ liệu cho hóa đơn khách hàng
+  // Customer invoice data
   const [customerInvoices, setCustomerInvoices] = useState<ICustomerInvoice[]>([
     {
       id: 1,
@@ -42,7 +42,7 @@ const InvoiceList: React.FC = () => {
       userName: "John Doe",
       total: 5000,
       payment_method: "Credit Card",
-      paymentStatus: "Completed", // Cập nhật trạng thái
+      paymentStatus: "Completed",
       invoiceStatus: "Paid",
       created_at: "2025-04-01",
     },
@@ -52,7 +52,7 @@ const InvoiceList: React.FC = () => {
       userName: "Jane Smith",
       total: 3000,
       payment_method: "Cash",
-      paymentStatus: "Pending", // Cập nhật trạng thái
+      paymentStatus: "Pending",
       invoiceStatus: "Pending",
       created_at: "2025-04-02",
     },
@@ -62,20 +62,20 @@ const InvoiceList: React.FC = () => {
       userName: "Alice Johnson",
       total: 7000,
       payment_method: "Bank Transfer",
-      paymentStatus: "Failed", // Cập nhật trạng thái
+      paymentStatus: "Failed",
       invoiceStatus: "Cancelled",
       created_at: "2025-04-03",
     },
   ]);
 
-  // Dữ liệu cho hóa đơn nhà cung cấp
+  // Supplier invoice data
   const [supplierInvoices, setSupplierInvoices] = useState<ISupplierInvoice[]>([
     {
       id: 1,
       supplierName: "Supplier A",
       total: 10000,
       payment_method: "Bank Transfer",
-      paymentStatus: "Completed", // Cập nhật trạng thái
+      paymentStatus: "Completed",
       invoiceStatus: "Paid",
       created_at: "2025-04-01",
     },
@@ -84,7 +84,7 @@ const InvoiceList: React.FC = () => {
       supplierName: "Supplier B",
       total: 8000,
       payment_method: "Cash",
-      paymentStatus: "Pending", // Cập nhật trạng thái
+      paymentStatus: "Pending",
       invoiceStatus: "Pending",
       created_at: "2025-04-02",
     },
@@ -93,13 +93,13 @@ const InvoiceList: React.FC = () => {
       supplierName: "Supplier C",
       total: 12000,
       payment_method: "Credit Card",
-      paymentStatus: "Failed", // Cập nhật trạng thái
+      paymentStatus: "Failed",
       invoiceStatus: "Cancelled",
       created_at: "2025-04-03",
     },
   ]);
 
-  // State để theo dõi các thay đổi tạm thời
+  // State to track temporary status changes
   const [tempStatuses, setTempStatuses] = useState<{
     [key: number]: {
       paymentStatus?: "Pending" | "Completed" | "Failed";
@@ -139,7 +139,7 @@ const InvoiceList: React.FC = () => {
     }
   };
 
-  const handleDelete = (id: number | string) => {
+  const handleDelete = (id: number) => {
     if (tableType === "customer") {
       setCustomerInvoices((prevInvoices) =>
         prevInvoices.filter((invoice) => invoice.id !== id)
@@ -155,10 +155,9 @@ const InvoiceList: React.FC = () => {
         prevFilteredInvoices.filter((invoice) => invoice.id !== id)
       );
     }
-    // Xóa trạng thái tạm thời nếu có
     setTempStatuses((prev) => {
       const newStatuses = { ...prev };
-      delete newStatuses[id as number];
+      delete newStatuses[id];
       return newStatuses;
     });
   };
@@ -167,7 +166,20 @@ const InvoiceList: React.FC = () => {
     navigate(ADMIN_ROUTER_PATH.ORDER);
   };
 
-  // Xử lý thay đổi trạng thái thanh toán (lưu tạm thời)
+  // Handle viewing invoice details
+  const handleViewDetail = (record: ICustomerInvoice | ISupplierInvoice) => {
+    if (tableType === "customer") {
+      navigate(ADMIN_ROUTER_PATH.CUSTOMER_INVOICE_DETAIL(record.id), {
+        state: { invoice: record },
+      });
+    } else {
+      navigate(ADMIN_ROUTER_PATH.PROVIDER_INVOICE_DETAIL(record.id), {
+        state: { invoice: record },
+      });
+    }
+  };
+
+  // Handle payment status change (temporary)
   const handlePaymentStatusChange = (
     id: number,
     value: "Pending" | "Completed" | "Failed"
@@ -178,7 +190,7 @@ const InvoiceList: React.FC = () => {
     }));
   };
 
-  // Xử lý thay đổi trạng thái hóa đơn (lưu tạm thời)
+  // Handle invoice status change (temporary)
   const handleInvoiceStatusChange = (
     id: number,
     value: "Pending" | "Paid" | "Cancelled"
@@ -189,7 +201,7 @@ const InvoiceList: React.FC = () => {
     }));
   };
 
-  // Xử lý lưu trạng thái
+  // Handle saving status changes
   const handleSave = (id: number) => {
     const tempStatus = tempStatuses[id];
     if (!tempStatus) return;
@@ -242,7 +254,6 @@ const InvoiceList: React.FC = () => {
       );
     }
 
-    // Xóa trạng thái tạm thời sau khi lưu
     setTempStatuses((prev) => {
       const newStatuses = { ...prev };
       delete newStatuses[id];
@@ -376,6 +387,9 @@ const InvoiceList: React.FC = () => {
       >
         Lưu
       </Button>
+      <Button type="default" onClick={() => handleViewDetail(record)}>
+        Chi tiết
+      </Button>
       <Button
         type="primary"
         danger
@@ -400,7 +414,7 @@ const InvoiceList: React.FC = () => {
             Hóa đơn cho khách
           </button>
           <button
-            className={`btn-toggle ${tableType === "supplier" ? "active" : ""}`}
+            className={` W btn-toggle ${tableType === "supplier" ? "active" : ""}`}
             onClick={() => setTableType("supplier")}
           >
             Hóa đơn cho nhà cung cấp
