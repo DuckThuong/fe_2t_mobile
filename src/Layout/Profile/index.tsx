@@ -28,41 +28,41 @@ const Profile = () => {
   const [profile, setProfile] = useState({
     username: 'Khanh.hung03',
     name: 'KhanhHung',
-    email: '',
-    phone: '...03',
+    email: 'Khanhhhung2132gmail.com',
+    phone: '0948682103',
     gender: 'male',
     dob: '**/**/2003',
     avatar: ''
   });
 
-  const [banks, setBanks] = useState([
-    {
-      id: '1',
-      bank: 'VCB - NH TMCP NGOAI THUONG VIE...',
-      status: 'Đã kiểm tra',
-      name: 'TRAN KHANH HUNG',
-      isDefault: true,
-      branch: 'Viet Nam (Vietcombank)/Chi nhánh khác',
-      cardNumber: '•••• 4868'
-    }
-  ]);
+  // const [banks, setBanks] = useState([
+  //   {
+  //     id: '1',
+  //     bank: 'VCB - NH TMCP NGOAI THUONG VIE...',
+  //     status: 'Đã kiểm tra',
+  //     name: 'TRAN KHANH HUNG',
+  //     isDefault: true,
+  //     branch: 'Viet Nam (Vietcombank)/Chi nhánh khác',
+  //     cardNumber: '•••• 4868'
+  //   }
+  // ]);
 
-  const [addresses, setAddresses] = useState([
-    {
-      id: '1',
-      name: 'Trần khánh hùng',
-      phone: '(+84) 948 682 103',
-      address: 'Số 167, Phố Định Công Hạ, Phường Định Công, Quận Hoàng Mai, Hà Nội',
-      isDefault: true
-    },
-    {
-      id: '2',
-      name: 'Hoàng Ngu (mới)',
-      phone: '(+84) 846 850 458',
-      address: 'Số Nhà 06,   Thị Trấn Cẩm Xuyên, Huyện Cẩm Xuyên, Hà Tĩnh',
-      isDefault: false
-    },
-  ]);
+  // const [addresses, setAddresses] = useState([
+  //   {
+  //     id: '1',
+  //     name: 'Trần khánh hùng',
+  //     phone: '(+84) 948 682 103',
+  //     address: 'Số 167, Phố Định Công Hạ, Phường Định Công, Quận Hoàng Mai, Hà Nội',
+  //     isDefault: true
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Hoàng Ngu (mới)',
+  //     phone: '(+84) 846 850 458',
+  //     address: 'Số Nhà 06,   Thị Trấn Cẩm Xuyên, Huyện Cẩm Xuyên, Hà Tĩnh',
+  //     isDefault: false
+  //   },
+  // ]);
 
   // Xử lý cập nhật profile
   const handleProfileSubmit = (values: any) => {
@@ -71,70 +71,70 @@ const Profile = () => {
   };
 
   // Xử lý thêm ngân hàng
-  const handleAddBank = (values: any) => {
-    const newBank = {
-      id: Date.now().toString(),
-      bank: values.bankName,
-      status: 'Chờ xác minh',
-      name: values.accountName,
-      isDefault: false,
-      branch: values.branch,
-      cardNumber: `•••• ${values.cardNumber.slice(-4)}`
-    };
-    setBanks([...banks, newBank]);
-    bankForm.resetFields();
-    message.success('Thêm ngân hàng thành công');
-  };
+  // const handleAddBank = (values: any) => {
+  //   const newBank = {
+  //     id: Date.now().toString(),
+  //     bank: values.bankName,
+  //     status: 'Chờ xác minh',
+  //     name: values.accountName,
+  //     isDefault: false,
+  //     branch: values.branch,
+  //     cardNumber: `•••• ${values.cardNumber.slice(-4)}`
+  //   };
+  //   setBanks([...banks, newBank]);
+  //   bankForm.resetFields();
+  //   message.success('Thêm ngân hàng thành công');
+  // };
 
   // Xử lý thêm địa chỉ
-  const handleAddAddress = (values: any) => {
-    const newAddress = {
-      id: Date.now().toString(),
-      name: values.name,
-      phone: values.phone,
-      address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
-      isDefault: false
-    };
-    setAddresses([...addresses, newAddress]);
-    addressForm.resetFields();
-    message.success('Thêm địa chỉ thành công');
-  };
+  // const handleAddAddress = (values: any) => {
+  //   const newAddress = {
+  //     id: Date.now().toString(),
+  //     name: values.name,
+  //     phone: values.phone,
+  //     address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
+  //     isDefault: false
+  //   };
+  //   setAddresses([...addresses, newAddress]);
+  //   addressForm.resetFields();
+  //   message.success('Thêm địa chỉ thành công');
+  // };
 
   // Xử lý xóa ngân hàng
-  const handleDeleteBank = (id: string) => {
-    if (banks.find(b => b.id === id)?.isDefault) {
-      message.error('Không thể xóa tài khoản mặc định');
-      return;
-    }
-    setBanks(banks.filter(b => b.id !== id));
-    message.success('Xóa tài khoản ngân hàng thành công');
-  };
+  // const handleDeleteBank = (id: string) => {
+  //   if (banks.find(b => b.id === id)?.isDefault) {
+  //     message.error('Không thể xóa tài khoản mặc định');
+  //     return;
+  //   }
+  //   setBanks(banks.filter(b => b.id !== id));
+  //   message.success('Xóa tài khoản ngân hàng thành công');
+  // };
 
-  // Xử lý xóa địa chỉ
-  const handleDeleteAddress = (id: string) => {
-    if (addresses.find(a => a.id === id)?.isDefault) {
-      message.error('Không thể xóa địa chỉ mặc định');
-      return;
-    }
-    setAddresses(addresses.filter(a => a.id !== id));
-    message.success('Xóa địa chỉ thành công');
-  };
+  // // Xử lý xóa địa chỉ
+  // const handleDeleteAddress = (id: string) => {
+  //   if (addresses.find(a => a.id === id)?.isDefault) {
+  //     message.error('Không thể xóa địa chỉ mặc định');
+  //     return;
+  //   }
+  //   setAddresses(addresses.filter(a => a.id !== id));
+  //   message.success('Xóa địa chỉ thành công');
+  // };
 
-  // Xử lý đặt làm mặc định
-  const handleSetDefault = (type: 'bank' | 'address', id: string) => {
-    if (type === 'bank') {
-      setBanks(banks.map(b => ({
-        ...b,
-        isDefault: b.id === id
-      })));
-    } else {
-      setAddresses(addresses.map(a => ({
-        ...a,
-        isDefault: a.id === id
-      })));
-    }
-    message.success('Đặt làm mặc định thành công');
-  };
+  // // Xử lý đặt làm mặc định
+  // const handleSetDefault = (type: 'bank' | 'address', id: string) => {
+  //   if (type === 'bank') {
+  //     setBanks(banks.map(b => ({
+  //       ...b,
+  //       isDefault: b.id === id
+  //     })));
+  //   } else {
+  //     setAddresses(addresses.map(a => ({
+  //       ...a,
+  //       isDefault: a.id === id
+  //     })));
+  //   }
+  //   message.success('Đặt làm mặc định thành công');
+  // };
 
   return (
     <div className="profile-page">
@@ -167,11 +167,15 @@ const Profile = () => {
               initialValues={profile}
               onFinish={handleProfileSubmit}
             >
-              <Form.Item label="Tên đăng nhập" name="username">
-                <Input disabled />
+              <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
+                <Input disabled/>
               </Form.Item>
+
+              {/* <Form.Item label="Tên đăng nhập" name="username">
+                <Input disabled />
+              </Form.Item> */}
               
-              <Form.Item label="Tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
+              <Form.Item label="Họ và tên" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên' }]}>
                 <Input />
               </Form.Item>
               
@@ -179,9 +183,7 @@ const Profile = () => {
                 <Input />
               </Form.Item>
               
-              <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
-                <Input />
-              </Form.Item>
+              
               
               <Form.Item label="Giới tính" name="gender">
                 <Radio.Group>
@@ -200,7 +202,7 @@ const Profile = () => {
               </Form.Item>
             </Form>
             
-            <div className="upload-section">
+            {/* <div className="upload-section">
               <Upload
                 beforeUpload={(file) => {
                   if (file.size > 1024 * 1024) {
@@ -218,11 +220,11 @@ const Profile = () => {
               {profile.avatar && <img src={profile.avatar} alt="Avatar" className="avatar-preview" />}
               <p>Dụng lượng file tối đa 1 MB</p>
               <p>Định dạng: JPEG, .PNG</p>
-            </div>
+            </div> */}
           </Card>
         )}
 
-        {activeTab === 'bank' && (
+        {/* {activeTab === 'bank' && (
           <Card title="Thẻ Tín Dụng/Ghi Nợ" bordered={false} className="profile-card">
             <div className="bank-section">
               <h3>Tài Khoản Ngân Hàng Của Tôi</h3>
@@ -342,7 +344,7 @@ const Profile = () => {
               </Form>
             </div>
           </Card>
-        )}
+        )} */}
 
         {activeTab === 'password' && (
           <Card title="Bảo mật tài khoản" bordered={false} className="profile-card">

@@ -126,7 +126,6 @@
           flex: 1;
           display: flex;
           flex-direction: column;
-          //justify-content: space-between;
 
           .product-name {
             font-weight: bold;
@@ -150,33 +149,6 @@
             }
           }
         }
-      }
-    }
-  }
-
-  .customer-info {
-    .customer-details {
-      .detail-row {
-        display: flex;
-        margin-bottom: 10px;
-
-        .label {
-          font-weight: bold;
-          width: 120px;
-          color: #555;
-        }
-
-        .value {
-          flex: 1;
-        }
-      }
-    }
-
-    .checkbox-field {
-      margin: 15px 0;
-
-      input {
-        margin-right: 10px;
       }
     }
   }
@@ -210,7 +182,6 @@
           min-height: 20px;
         }
 
-        select,
         input,
         textarea {
           width: 100%;
@@ -306,6 +277,7 @@
     }
   }
 }
+
 .bank-transfer-details {
   margin-top: 20px;
   padding: 15px;

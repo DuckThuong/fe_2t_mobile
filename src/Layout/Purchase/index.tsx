@@ -4,38 +4,6 @@ import { Cartergories } from "../Cart";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { useNavigate } from "react-router-dom";
 
-// Dữ liệu giả lập
-const allProvinces = [
-  { id: 1, name: "Hà Nội" },
-  { id: 2, name: "Hồ Chí Minh" },
-  { id: 3, name: "Đà Nẵng" },
-];
-
-const allDistricts = {
-  1: [
-    { id: 101, name: "Ba Đình" },
-    { id: 102, name: "Hoàn Kiếm" },
-  ],
-  2: [
-    { id: 201, name: "Quận 1" },
-    { id: 202, name: "Quận 3" },
-  ],
-  3: [
-    { id: 301, name: "Hải Châu" },
-    { id: 302, name: "Thanh Khê" },
-  ],
-};
-
-const allWards = {
-  101: [{ id: 10101, name: "Phường Phúc Xá" }],
-  102: [{ id: 10201, name: "Phường Hàng Bạc" }],
-  201: [{ id: 20101, name: "Phường Bến Nghé" }],
-  202: [{ id: 20201, name: "Phường Võ Thị Sáu" }],
-  301: [{ id: 30101, name: "Phường Thanh Bình" }],
-  302: [{ id: 30201, name: "Phường An Khê" }],
-};
-//  Dữ liệu đơn hàng
-
 // Dữ liệu sản phẩm
 const phoneProducts = [
   {
@@ -49,67 +17,45 @@ const phoneProducts = [
   },
   {
     id: 2,
-    name: "iPhone 13 128GB",
+    name: "iPhone 13",
     color: "Titanium Gray",
     capacity: "128GB",
     currentPrice: "200000đ",
     image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/2/12_3_8_2_8.jpg",
     quantity: 1,
   },
-  
 ];
 const idOrderCode = "hd213";
-const encodedOrderCode = encodeURIComponent(idOrderCode); // Đảm bảo mã hóa đúng
+const encodedOrderCode = encodeURIComponent(idOrderCode);
 // Dữ liệu khách hàng
 const customerData = {
   name: "Trần Khánh Hùng",
   phone: "0948682103",
   email: "khanhhhungg213@gmail.com",
   memberId: "S-NULL",
-  
 };
 
 export const Purchase = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedWard, setSelectedWard] = useState("");
-  const [street, setStreet] = useState("");
+  const [address, setAddress] = useState("");
   const [deliveryNote, setDeliveryNote] = useState("");
   const [acceptMarketing, setAcceptMarketing] = useState(false);
   const [isProductListCollapsed, setIsProductListCollapsed] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // Thêm state cho phương thức thanh toán
+  const [paymentMethod, setPaymentMethod] = useState("cod");
 
   const navigate = useNavigate();
 
   const handleNextStep = () => {
-      if (currentStep === 1) {
-        setCurrentStep(2);
-      } else {
-        alert("Đặt hàng thành công!");
-        // Thêm timeout để người dùng đọc thông báo
-        // setTimeout(() => {
-        //   navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-        // }, 1500);
-         
-          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-        
-      }
-    };
+    if (currentStep === 1) {
+      setCurrentStep(2);
+    } else {
+      alert("Đặt hàng thành công!");
+      navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+    }
+  };
 
   const handlePrevStep = () => {
     setCurrentStep(1);
-  };
-
-  const handleProvinceChange = (e) => {
-    setSelectedProvince(e.target.value);
-    setSelectedDistrict("");
-    setSelectedWard("");
-  };
-
-  const handleDistrictChange = (e) => {
-    setSelectedDistrict(e.target.value);
-    setSelectedWard("");
   };
 
   const handleStepClick = (step) => {
@@ -180,7 +126,7 @@ export const Purchase = () => {
                       </div>
                       <div className="product-details">
                         <div className="product-name">
-                          {product.name} <br/> {product.capacity} {product.color}
+                          {product.name} <br/>{product.color} {product.capacity}
                         </div>
                         <div className="product-price-quantity">
                           <span className="current-price">
@@ -213,65 +159,14 @@ export const Purchase = () => {
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Tỉnh/Thành phố</label>
-                    <select
-                      value={selectedProvince}
-                      onChange={handleProvinceChange}
-                    >
-                      <option value="">-- Chọn tỉnh/thành phố --</option>
-                      {allProvinces.map((province) => (
-                        <option key={province.id} value={province.id}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Quận/Huyện</label>
-                    <select
-                      value={selectedDistrict}
-                      onChange={handleDistrictChange}
-                      disabled={!selectedProvince}
-                    >
-                      <option value="">-- Chọn quận/huyện --</option>
-                      {selectedProvince &&
-                        allDistricts[selectedProvince]?.map((district) => (
-                          <option key={district.id} value={district.id}>
-                            {district.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Phường/Xã</label>
-                    <select
-                      value={selectedWard}
-                      onChange={(e) => setSelectedWard(e.target.value)}
-                      disabled={!selectedDistrict}
-                    >
-                      <option value="">-- Chọn phường/xã --</option>
-                      {selectedDistrict &&
-                        allWards[selectedDistrict]?.map((ward) => (
-                          <option key={ward.id} value={ward.id}>
-                            {ward.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Số nhà, tên đường</label>
-                    <input
-                      type="text"
-                      value={street}
-                      onChange={(e) => setStreet(e.target.value)}
-                      placeholder="Nhập số nhà và tên đường"
-                    />
-                  </div>
+                <div className="form-group">
+                  <label>Địa chỉ nhận hàng</label>
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Nhập địa chỉ đầy đủ (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"
+                  />
                 </div>
 
                 <div className="form-group">
@@ -317,26 +212,15 @@ export const Purchase = () => {
               
               {paymentMethod === "banking" && (
                 <div className="bank-transfer-details">
-                  
                   <div className="transfer-info">
-                    {/* Thêm ảnh QR ở đây */}
-                      <div className="qr-code-box">
-                        <img
-                          // src={`https://img.vietqr.io/image/techcombank-19028903445567-compact2.jpg?amount=
-                          //   ${totalPrice}&addInfo=${encodeURIComponent(customerData.name + customerData.phone)}
-                          //   &accountName=${encodeURIComponent("NGO VAN THUAN")}`}
-                          
-                          src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=
-                            ${totalPrice}&addInfo=${encodedOrderCode}`}  
-                          
-
-                          
-                          alt="Mã QR chuyển khoản"
-                          style={{ width: "200px", marginTop: "10px" }}
-                        />
-                      </div>
+                    <div className="qr-code-box">
+                      <img
+                        src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=${totalPrice}&addInfo=${encodedOrderCode}`}  
+                        alt="Mã QR chuyển khoản"
+                        style={{ width: "200px", marginTop: "10px" }}
+                      />
+                    </div>
                   </div>
-                  
                 </div>
               )}
             </div>
@@ -351,19 +235,14 @@ export const Purchase = () => {
             <span>Tổng tiền tạm tính:</span>
             <span className="amount">{formattedTotalPrice}</span>
           </div>
-          
         </div>
 
         <button
           className="continue-button"
           onClick={handleNextStep}
-          disabled={
-            currentStep === 1 &&
-            (!selectedProvince || !selectedDistrict || !selectedWard || !street)
-          }
+          disabled={currentStep === 1 && !address}
         >
           {currentStep === 1 ? "Tiếp tục" : "Đặt hàng"}
-          
         </button>
       </div>
     </div>
