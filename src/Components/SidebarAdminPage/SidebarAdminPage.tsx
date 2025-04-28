@@ -6,6 +6,7 @@ import {
   BankFilled,
   HomeFilled,
   LogoutOutlined,
+  PercentageOutlined,
   PlusCircleOutlined,
   ShoppingOutlined,
   SwapOutlined,
@@ -39,8 +40,13 @@ const SidebarAdminPage = () => {
         <Menu.Item key="6" icon={<PlusCircleOutlined />}>
           <Link to={ADMIN_ROUTE_NAME.ADDBILL_CLIENT}>Thêm HĐ khách hàng</Link>
         </Menu.Item>
-
-        <Menu.Item key="8" icon={<LogoutOutlined />}>
+        <Menu.Item key="7" icon={<PlusCircleOutlined />}>
+          <Link to={ADMIN_ROUTE_NAME.ADDBILL_PROVIDER}>Thêm HĐ nhà cung cấp</Link>
+        </Menu.Item>
+        <Menu.Item key="8" icon={<PercentageOutlined />}>
+          <Link to={ADMIN_ROUTE_NAME.PROMOTION_LIST}>Khuyến mãi</Link>
+        </Menu.Item>
+        <Menu.Item key="9" icon={<LogoutOutlined />}>
           Đăng xuất
         </Menu.Item>
       </Menu>

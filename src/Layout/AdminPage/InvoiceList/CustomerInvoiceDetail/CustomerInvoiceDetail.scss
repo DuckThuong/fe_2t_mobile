@@ -1,0 +1,40 @@
+.invoice-detail-container {
+    padding: 20px;
+  }
+  
+  .invoice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .customer-info,
+  .invoice-info {
+    flex: 1; 
+    padding: 10px;
+  }
+  
+  .customer-info h2 {
+    margin-bottom: 10px;
+  }
+  
+  .invoice-info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  .invoice-summary {
+    margin-top: 20px;
+  }
+  
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  
+  .summary-item.total {
+    font-weight: bold;
+    margin-top: 10px;
+  }
