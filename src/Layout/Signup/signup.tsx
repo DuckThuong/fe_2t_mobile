@@ -11,7 +11,7 @@ import { ValidateLibrary } from "../../validate";
 import "./signup.scss";
 import Password from "antd/es/input/Password";
 import { _validator } from "../../validate/validator.validate";
-
+import axios from "axios";
 
  const Signup = () => {
     const [form] = useForm();
@@ -22,6 +22,28 @@ import { _validator } from "../../validate/validator.validate";
     type: "success" | "error";
   } | null>(null);
 
+  const submit = async () => {
+  try {
+    // validateFields sẽ kiểm tra các rules trước khi trả dữ liệu
+    const values = await form.validateFields();
+
+    const payload = {
+      userName: values.email.split('@')[0], // hoặc tạo thêm field userName trong form nếu cần
+      address: "ha tinh",
+      email: values.email,
+      password: values.password,
+      phoneNumber: values.phone,
+    };
+
+    const res = await axios.post("https://t2-mobile.vercel.app/v1/auth/register", payload);
+
+    setNotification({ message: "Đăng ký thành công!", type: "success" });
+    navigate("/login"); // chuyển sang trang login nếu thành công
+  } catch (error) {
+    setNotification({ message: "Đăng ký thất bại!", type: "error" });
+    console.error("Đăng ký lỗi: ", error);
+  }
+};
 
   
   useEffect(() => {
@@ -44,14 +66,6 @@ import { _validator } from "../../validate/validator.validate";
 
   return(
      <div className="signup">
-      {/* <video autoPlay muted loop id="signupVideo">
-        <source src="/112722-695433093.mp4" type="video/mp4" />
-      </video> */}
-
-      {/* <NotificationPopup
-        message={notification?.message}
-        type={notification?.type}
-      /> */}
       <div>
         <LogoForm />
       </div>
@@ -117,7 +131,7 @@ import { _validator } from "../../validate/validator.validate";
                 className: "signup_form-input",
                 dependencies: ['password'], // 👈 theo dõi password
             
-                  rules: ValidateLibrary([], { password: form.getFieldValue('password') }).confirmPassword,
+                  // rules: ValidateLibrary([], { password: form.getFieldValue('password') }).confirmPassword,
 
               }}
      
@@ -130,40 +144,17 @@ import { _validator } from "../../validate/validator.validate";
           </div>
 
           <div className="signup_form-signup">
-            <FormButtonSubmit
+            <FormButtonSubmit 
               content="Đăng Ký"
               buttonProps={{
                 className: "signup_form-signup-button",
-                // onClick: onFinish,
+                 onClick: submit,
                 type: "default",
               }}
             />
           </div>
 
-          {/* <div className="signup_form-privacy">
-            <span>●●● of </span>
-            <Link className="signup_form-privacy-link" to={"/"}>
-              Terms of service
-            </Link>
-            <span> and </span>
-            <Link className="signup_form-privacy-link" to={"/"}>
-              I agree to the privacy terms.
-            </Link>
-            <span> Place where you can get it. </span>
-            <span>If so, please log in.</span>
-          </div> */}
-
           
-
-          {/* <div className="signup_form-signIn">
-            <CustomButton
-              content="Register Now"
-              buttonProps={{
-                className: "signup_form-signIn-button",
-                onFinish: handleRegister,
-              }}
-            />
-          </div> */}
         </FormWrap>
       </div>
     </div>
