@@ -13,13 +13,12 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
-
-import "./AddShipment.scss";
-import AdminProviderForm from "../../../../Components/AdminProviderForm/AdminProviderForm";
+import "./AddBillProvider.scss";
+import AdminProviderForm from "../../../Components/AdminProviderForm/AdminProviderForm";
 
 const { Option } = Select;
 
-const AddShipment: React.FC = () => {
+const AddBillProvider: React.FC = () => {
   const [providerModalOpen, setProviderModalOpen] = useState(false);
   const [showNewProductModal, setShowNewProductModal] = useState(false);
   const [form] = Form.useForm();
@@ -305,7 +304,7 @@ const AddShipment: React.FC = () => {
   );
 };
 
-export default AddShipment;
+export default AddBillProvider;
 
 const mockSKUs = [
   {
