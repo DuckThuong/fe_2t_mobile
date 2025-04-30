@@ -201,6 +201,7 @@ const AddBillProvider: React.FC = () => {
       console.log("error");
     },
   });
+
   const onModalSubmit = () => {
     const payload: CreateProductPayload = {
       name: newProductForm.getFieldValue("name"),
