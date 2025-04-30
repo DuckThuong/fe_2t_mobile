@@ -3,3 +3,8 @@ export interface RegisterPayload {
   Password: string;
   PhoneNumber: string;
 }
+export interface CreateProductPayload {
+  name: string;
+  warranty: number;
+  color: number;
+}
