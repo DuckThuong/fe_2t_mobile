@@ -1,21 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userApi } from "../../api/api";
-import { QUERY_KEY } from "../../api/apiConfig";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-import { CUSTOMER_ROUTER_PATH, ADMIN_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
-import { setAuthUser } from "../../store/authSlice";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
-import { login } from "../../api/authApi";
 
 const Login = () => {
   const [form] = useForm();
@@ -25,11 +20,6 @@ const Login = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
-
-  const { data: loginApi } = useQuery({
-    queryKey: [QUERY_KEY.GET_USER],
-    queryFn: userApi.getAllUsers,
-  });
 
   const users = [
     {
@@ -44,40 +34,40 @@ const Login = () => {
     },
   ];
 
-  const onFinish = () => {
-    const phone = form.getFieldValue("phone");
-    const password = form.getFieldValue("password");
+  // const onFinish = () => {
+  //   const phone = form.getFieldValue("phone");
+  //   const password = form.getFieldValue("password");
 
-    const userExists = loginApi?.userList?.some(
-      (user) => user.Phone === phone && user.PasswordHash === password
-    );
-    if (userExists) {
-      const userData = loginApi.userList.find((user) => user.Phone === phone);
-      if (userData) {
-        dispatch(
-          setAuthUser({
-            id: userData.UserID,
-            email: userData.Email,
-            fullName: userData.Username,
-          })
-        );
+  //   const userExists = loginApi?.userList?.some(
+  //     (user) => user.Phone === phone && user.PasswordHash === password
+  //   );
+  //   if (userExists) {
+  //     const userData = loginApi.userList.find((user) => user.Phone === phone);
+  //     if (userData) {
+  //       dispatch(
+  //         setAuthUser({
+  //           id: userData.UserID,
+  //           email: userData.Email,
+  //           fullName: userData.Username,
+  //         })
+  //       );
 
-        // Điều hướng đến trang tương ứng
-        if (userData.Role === "admin") {
-          navigate(ADMIN_ROUTER_PATH.DASHBOARD);  // Điều hướng admin
-        } else {
-          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU); // Điều hướng client
-        }
-      }
-      login(phone, password);
-      setNotification({ message: "Thành Công", type: "success" });
-    } else {
-      setNotification({
-        message: "Sai tài khoản hoặc mật khẩu",
-        type: "error",
-      });
-    }
-  };
+  //       // Điều hướng đến trang tương ứng
+  //       if (userData.Role === "admin") {
+  //         navigate(ADMIN_ROUTER_PATH.DASHBOARD);  // Điều hướng admin
+  //       } else {
+  //         navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU); // Điều hướng client
+  //       }
+  //     }
+  //     login(phone, password);
+  //     setNotification({ message: "Thành Công", type: "success" });
+  //   } else {
+  //     setNotification({
+  //       message: "Sai tài khoản hoặc mật khẩu",
+  //       type: "error",
+  //     });
+  //   }
+  // };
 
   useEffect(() => {
     if (notification) {
@@ -94,7 +84,7 @@ const Login = () => {
 
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      onFinish();
+      // onFinish();
     }
   };
 
@@ -112,7 +102,7 @@ const Login = () => {
         <LogoForm />
       </div>
       <div className="login_form">
-        <FormWrap onFinish={onFinish} form={form} className="login_form-wrap">
+        <FormWrap form={form} className="login_form-wrap">
           <div className="login_form-header">
             <p className="login_form-header-content">ĐĂNG NHẬP</p>
           </div>
@@ -159,7 +149,6 @@ const Login = () => {
               content="Đăng nhập"
               buttonProps={{
                 className: "login_form-login-button",
-                onClick: onFinish,
                 type: "default",
               }}
             />
@@ -177,7 +166,10 @@ const Login = () => {
 
           {/* Thêm nút đăng ký */}
           <div className="login_form-register">
-            <button onClick={handleRegister} className="login_form-register-button">
+            <button
+              onClick={handleRegister}
+              className="login_form-register-button"
+            >
               Đăng ký
             </button>
           </div>
