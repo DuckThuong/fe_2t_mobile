@@ -131,28 +131,7 @@ const Signup = () => {
             />
           </div>
 
-          {/* <div className="signup_form-privacy">
-            <span>●●● of </span>
-            <Link className="signup_form-privacy-link" to={"/"}>
-              Terms of service
-            </Link>
-            <span> and </span>
-            <Link className="signup_form-privacy-link" to={"/"}>
-              I agree to the privacy terms.
-            </Link>
-            <span> Place where you can get it. </span>
-            <span>If so, please log in.</span>
-          </div> */}
-
-          {/* <div className="signup_form-signIn">
-            <CustomButton
-              content="Register Now"
-              buttonProps={{
-                className: "signup_form-signIn-button",
-                onFinish: handleRegister,
-              }}
-            />
-          </div> */}
+          
         </FormWrap>
       </div>
     </div>

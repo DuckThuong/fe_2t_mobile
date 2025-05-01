@@ -36,11 +36,18 @@ const Profile = () => {
     avatar: ''
   });
 
+<<<<<<< Updated upstream
    const handleProfileSubmit = (values: any) => {
+=======
+
+  // Xử lý cập nhật profile
+  const handleProfileSubmit = (values: any) => {
+>>>>>>> Stashed changes
     setProfile({...profile, ...values});
     message.success('Cập nhật thông tin thành công');
   };
 
+<<<<<<< Updated upstream
  const navigate = useNavigate();
  const submit = async () => {
   try {
@@ -66,6 +73,8 @@ const Profile = () => {
 };
 
 
+=======
+>>>>>>> Stashed changes
 
   return (
     <div className="profile-page">
