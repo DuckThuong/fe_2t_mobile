@@ -15,6 +15,10 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import "./AddBillProvider.scss";
 import AdminProviderForm from "../../../Components/AdminProviderForm/AdminProviderForm";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { CreateProductPayload } from "../../../api/constants";
+import { productApi } from "../../../api/api";
 
 const { Option } = Select;
 
@@ -182,6 +186,26 @@ const AddBillProvider: React.FC = () => {
       render: (text) => <span>{text.toLocaleString()} đ</span>,
     },
   ];
+  const createProductMutation = useMutation({
+    mutationFn: (payload: CreateProductPayload) =>
+      productApi.createProduct(payload),
+    onSuccess: () => {
+      console.log("success");
+      setShowNewProductModal(false);
+    },
+    onError: () => {
+      console.log("error");
+    },
+  });
+
+  const onModalSubmit = () => {
+    const payload: CreateProductPayload = {
+      name: newProductForm.getFieldValue("name"),
+      warranty: newProductForm.getFieldValue("capacity"),
+      color: newProductForm.getFieldValue("color"),
+    };
+    createProductMutation.mutate(payload);
+  };
 
   return (
     <div className="add-shipment-page">
@@ -290,7 +314,11 @@ const AddBillProvider: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary"
+              onClick={() => onModalSubmit()}
+              htmlType="submit"
+            >
               Thêm
             </Button>
           </Form.Item>
