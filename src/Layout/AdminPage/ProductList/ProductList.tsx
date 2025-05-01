@@ -114,7 +114,7 @@ const ProductList: React.FC = () => {
 
   // Edit product
   const handleEditProduct = (product: IProduct) => {
-    navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT, { state: { product } });
+    navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT(product.id), { state: { product } });
   };
 
   // Product table columns (renamed brand to Dung lượng, category to Màu sắc)

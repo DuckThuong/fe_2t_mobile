@@ -32,6 +32,13 @@ export enum OrderStateEnum {
 export const userApi = {
   doRegister: (data: RegisterPayload) =>
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
+  doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
+  doDeleteUser: (id: string | number) =>
+    apiRequest(`${API_KEY.USER}/delete-user-by-id/${id}`, "DELETE"),
+  doGetUserById: (id: string | number) =>
+    apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
+  doSearchUsers: (query: string) =>
+    apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
 };
 
 export const imageApi = {

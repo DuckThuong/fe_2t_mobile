@@ -103,32 +103,28 @@ const AddBillProvider: React.FC = () => {
     {
       title: "Mã sản phẩm",
       dataIndex: "sku",
+      width: 220,
       render: (text, record) => (
-        <Select
-          value={text}
-          onChange={(val) => handleProductChange(val, record)}
-          placeholder="Chọn mã sản phẩm"
-          style={{ width: 160 }}
-          dropdownRender={(menu) => (
-            <>
-              {menu}
-              <Button
-                icon="+"
-                type="link"
-                onClick={() => setShowNewProductModal(true)}
-                style={{ marginLeft: 8 }}
-              >
-                Thêm sản phẩm mới
-              </Button>
-            </>
-          )}
-        >
-          {mockSKUs.map((item) => (
-            <Option key={item.value} value={item.value}>
-              {item.value} - {item.label}
-            </Option>
-          ))}
-        </Select>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Select
+            value={text}
+            onChange={(val) => handleProductChange(val, record)}
+            placeholder="Chọn mã sản phẩm"
+            style={{ width: 160 }}
+          >
+            {mockSKUs.map((item) => (
+              <Option key={item.value} value={item.value}>
+                {item.value} - {item.label}
+              </Option>
+            ))}
+          </Select>
+          <Button
+            icon="+"
+            type="link"
+            className="add-product-button"
+            onClick={() => setShowNewProductModal(true)}
+          ></Button>
+        </div>
       ),
     },
     { title: "Tên sản phẩm", dataIndex: "name" },
