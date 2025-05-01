@@ -1,17 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { userApi } from "../../api/api";
-import { QUERY_KEY } from "../../api/apiConfig";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-import { CUSTOMER_ROUTER_PATH, ADMIN_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
-import { setAuthUser } from "../../store/authSlice";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
@@ -26,59 +22,6 @@ const Login = () => {
     type: "success" | "error";
   } | null>(null);
 
-  const { data: loginApi } = useQuery({
-    queryKey: [QUERY_KEY.GET_USER],
-    queryFn: userApi.getAllUsers,
-  });
-
-  const users = [
-    {
-      phone: "0948682103",
-      password: "Khanhhung1@",
-      role: "client",
-    },
-    {
-      phone: "0948682102",
-      password: "Khanhhung1@",
-      role: "admin",
-    },
-  ];
-
-  const onFinish = () => {
-    const phone = form.getFieldValue("phone");
-    const password = form.getFieldValue("password");
-
-    const userExists = loginApi?.userList?.some(
-      (user) => user.Phone === phone && user.PasswordHash === password
-    );
-    if (userExists) {
-      const userData = loginApi.userList.find((user) => user.Phone === phone);
-      if (userData) {
-        dispatch(
-          setAuthUser({
-            id: userData.UserID,
-            email: userData.Email,
-            fullName: userData.Username,
-          })
-        );
-
-        // Điều hướng đến trang tương ứng
-        if (userData.Role === "admin") {
-          navigate(ADMIN_ROUTER_PATH.DASHBOARD);  // Điều hướng admin
-        } else {
-          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU); // Điều hướng client
-        }
-      }
-      login(phone, password);
-      setNotification({ message: "Thành Công", type: "success" });
-    } else {
-      setNotification({
-        message: "Sai tài khoản hoặc mật khẩu",
-        type: "error",
-      });
-    }
-  };
-
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -87,19 +30,18 @@ const Login = () => {
       return () => clearTimeout(timer);
     }
   }, [notification]);
-
+  const onFinish = () => {
+    const phone = form.getFieldValue("phone");
+    const password = form.getFieldValue("password");
+    login(phone, password);
+    navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+  };
   const handleForgotPassword = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      onFinish();
-    }
-  };
-
   const handleRegister = () => {
-    navigate(CUSTOMER_ROUTER_PATH.SIGN_UP); // Điều hướng đến trang đăng ký
+    navigate(CUSTOMER_ROUTER_PATH.SIGN_UP);
   };
 
   return (
@@ -125,7 +67,6 @@ const Login = () => {
                 rules: ValidateLibrary().phone,
               }}
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "SĐT: 0123456789",
               }}
             />
@@ -144,11 +85,10 @@ const Login = () => {
               name={"password"}
               formItemProps={{
                 className: "login_form-input",
-                rules: ValidateLibrary().password,
+                // rules: ValidateLibrary().password,
               }}
               isPassword
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "Mật khẩu",
               }}
             />
@@ -159,8 +99,8 @@ const Login = () => {
               content="Đăng nhập"
               buttonProps={{
                 className: "login_form-login-button",
-                onClick: onFinish,
                 type: "default",
+                htmlType: "submit",
               }}
             />
           </div>
@@ -177,7 +117,10 @@ const Login = () => {
 
           {/* Thêm nút đăng ký */}
           <div className="login_form-register">
-            <button onClick={handleRegister} className="login_form-register-button">
+            <button
+              onClick={handleRegister}
+              className="login_form-register-button"
+            >
               Đăng ký
             </button>
           </div>

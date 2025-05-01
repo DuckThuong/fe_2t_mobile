@@ -1,7 +1,25 @@
 import axios from "axios";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
+import { CreateProductPayload, RegisterPayload } from "./constants";
 
-const apiRequest = async (
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+export const apiRequest = async (
   endpoint: string,
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" = "GET",
   data?: any,
@@ -15,7 +33,7 @@ const apiRequest = async (
     params: method === "GET" ? params : undefined,
   };
 
-  const { data: responseData } = await axios(config);
+  const { data: responseData } = await axiosInstance(config);
   return responseData;
 };
 
@@ -29,13 +47,15 @@ export enum OrderStateEnum {
 }
 
 export const userApi = {
-  getAllUsers: () => apiRequest(API_KEY.USER),
-  getUserByIds: (id: string) => apiRequest(`${API_KEY.USER}/${id}`),
-  confirmreateUser: (userData: any) =>
-    apiRequest(API_KEY.USER, "POST", userData),
-  updateUser: (id: string, userData: any) =>
-    apiRequest(`${API_KEY.USER}/${id}`, "PATCH", userData),
-  deleteUser: (id: string) => apiRequest(`${API_KEY.USER}/${id}`, "DELETE"),
+  doRegister: (data: RegisterPayload) =>
+    apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
+  doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
+  doDeleteUser: (id: string | number) =>
+    apiRequest(`${API_KEY.USER}/delete-user-by-id/${id}`, "DELETE"),
+  doGetUserById: (id: string | number) =>
+    apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
+  doSearchUsers: (query: string) =>
+    apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
 };
 
 export const imageApi = {
@@ -49,14 +69,24 @@ export const imageApi = {
 };
 
 export const productApi = {
-  getAllProducts: () => apiRequest(API_KEY.PRODUCTS),
-  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCTS}/${id}`),
-  createProduct: (productData: any) =>
-    apiRequest(API_KEY.PRODUCTS, "POST", productData),
+  getAllProducts: () => apiRequest(API_KEY.PRODUCT, "GET"),
+  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/${id}`, "GET"),
+  createProduct: (productData: CreateProductPayload) =>
+    apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
   updateProduct: (id: string, productData: any) =>
-    apiRequest(`${API_KEY.PRODUCTS}/${id}`, "PATCH", productData),
+    apiRequest(`${API_KEY.PRODUCT}/${id}`, "PATCH", productData),
   deleteProduct: (id: string) =>
-    apiRequest(`${API_KEY.PRODUCTS}/${id}`, "DELETE"),
+    apiRequest(`${API_KEY.PRODUCT}/${id}`, "DELETE"),
+};
+
+export const colorApi = {
+  getAllColors: () => apiRequest(`${API_KEY.COLOR}/get-all-colors`, "GET"),
+  getColorById: (id: string) => apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
+};
+
+export const capacityApi = {
+  getAllCapacities: () => apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
+  getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
 };
 
 export const cartApi = {

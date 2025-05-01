@@ -1,4 +1,3 @@
-
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux"; // Import useDispatch
@@ -9,12 +8,12 @@ import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { ValidateLibrary } from "../../validate";
 import "./signup.scss";
-import Password from "antd/es/input/Password";
-import { _validator } from "../../validate/validator.validate";
+import { useMutation } from "@tanstack/react-query";
+import { userApi } from "../../api/api";
+import { RegisterPayload } from "../../api/constants";
 
-
- const Signup = () => {
-    const [form] = useForm();
+const Signup = () => {
+  const [form] = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [notification, setNotification] = useState<{
@@ -22,8 +21,6 @@ import { _validator } from "../../validate/validator.validate";
     type: "success" | "error";
   } | null>(null);
 
-
-  
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -32,18 +29,26 @@ import { _validator } from "../../validate/validator.validate";
       return () => clearTimeout(timer);
     }
   }, [notification]);
+  // :()=>{}
+  const registerMutate = useMutation({
+    mutationFn: (data: RegisterPayload) => {
+      return userApi.doRegister(data);
+    },
+    onSuccess: () => {},
+    onError: () => {},
+  });
 
- 
-
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      // onFinish();
-    }
+  const onFinish = () => {
+    const data: RegisterPayload = {
+      Email: form.getFieldValue("email"),
+      Password: form.getFieldValue("password"),
+      PhoneNumber: form.getFieldValue("phone"),
+    };
+    registerMutate.mutate(data);
   };
 
-
-  return(
-     <div className="signup">
+  return (
+    <div className="signup">
       {/* <video autoPlay muted loop id="signupVideo">
         <source src="/112722-695433093.mp4" type="video/mp4" />
       </video> */}
@@ -56,7 +61,7 @@ import { _validator } from "../../validate/validator.validate";
         <LogoForm />
       </div>
       <div className="signup_form">
-        <FormWrap  form={form} className="signup_form-wrap">
+        <FormWrap onFinish={onFinish} form={form} className="signup_form-wrap">
           <div className="signup_form-header">
             <p className="signup_form-header-content">ĐĂNG KÝ</p>
           </div>
@@ -69,7 +74,6 @@ import { _validator } from "../../validate/validator.validate";
                 rules: ValidateLibrary().email,
               }}
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "Email@gmail.com",
               }}
             />
@@ -83,7 +87,6 @@ import { _validator } from "../../validate/validator.validate";
                 rules: ValidateLibrary().phone,
               }}
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "Số điện thoại",
               }}
             />
@@ -91,7 +94,6 @@ import { _validator } from "../../validate/validator.validate";
           <div className="signup_form-password">
             <div className="signup_form-password-title">
               <span className="signup_form-label">Mật khẩu</span>
-            
             </div>
             <FormInput
               name={"password"}
@@ -101,7 +103,6 @@ import { _validator } from "../../validate/validator.validate";
               }}
               isPassword
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "Mật khẩu",
               }}
             />
@@ -109,21 +110,18 @@ import { _validator } from "../../validate/validator.validate";
           <div className="signup_form-password">
             <div className="signup_form-password-title">
               <span className="signup_form-label">Nhập lại mật khẩu</span>
-            
             </div>
             <FormInput
               name={"CF_password"}
               formItemProps={{
                 className: "signup_form-input",
-                dependencies: ['password'], // 👈 theo dõi password
-            
-                  rules: ValidateLibrary([], { password: form.getFieldValue('password') }).confirmPassword,
-
+                dependencies: ["password"], // 👈 theo dõi password
+                // rules: ValidateLibrary([], {
+                //   password: form.getFieldValue("password"),
+                // }).confirmPassword,
               }}
-     
               isPassword
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "Nhập lại mật khẩu",
               }}
             />
@@ -134,8 +132,8 @@ import { _validator } from "../../validate/validator.validate";
               content="Đăng Ký"
               buttonProps={{
                 className: "signup_form-signup-button",
-                // onClick: onFinish,
-                type: "default",
+                type: "primary",
+                htmlType: "submit",
               }}
             />
           </div>
@@ -153,8 +151,6 @@ import { _validator } from "../../validate/validator.validate";
             <span>If so, please log in.</span>
           </div> */}
 
-          
-
           {/* <div className="signup_form-signIn">
             <CustomButton
               content="Register Now"
@@ -168,7 +164,6 @@ import { _validator } from "../../validate/validator.validate";
       </div>
     </div>
   );
-
- };
+};
 
 export default Signup;
