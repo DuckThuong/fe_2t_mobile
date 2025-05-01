@@ -7,6 +7,8 @@ import { Button, Space, Spin, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../../api/api";
 import "./UserList.scss";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../../api/apiConfig";
 
 interface IUser {
   id: number;
@@ -30,25 +32,35 @@ const UserList: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await userApi.doGetAllUsers();
-      setUsers(response);
-      setFilteredUsers(response);
-    } catch (err) {
-      setError("Không thể tải danh sách người dùng. Vui lòng thử lại.");
-      message.error("Lỗi khi tải danh sách người dùng!");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchUsers = async () => {
+  //   setLoading(true);
+  //   setError(null);
+  //   try {
+  //     const response = await userApi.doGetAllUsers();
+  //     setUsers(response);
+  //     setFilteredUsers(response);
+  //   } catch (err) {
+  //     setError("Không thể tải danh sách người dùng. Vui lòng thử lại.");
+  //     message.error("Lỗi khi tải danh sách người dùng!");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const createProductMutation = useMutation({
+    mutationFn: () => userApi.doGetAllUsers(),
+    onSuccess: () => {
+      console.log("success");
+    },
+    onError: () => {
+      console.log("error");
+    },
+  });
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
     if (!query.trim()) {
-      setFilteredUsers(users); 
+      setFilteredUsers(users);
       return;
     }
 
@@ -67,7 +79,7 @@ const UserList: React.FC = () => {
 
   // Gọi API khi component được render lần đầu
   useEffect(() => {
-    fetchUsers();
+    createProductMutation.mutate();
   }, []);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +100,7 @@ const UserList: React.FC = () => {
 
   const handleRefresh = () => {
     setSearchQuery(""); // Xóa query tìm kiếm
-    fetchUsers(); // Tải lại danh sách đầy đủ
+    // fetchUsers(); // Tải lại danh sách đầy đủ
   };
 
   const userColumns = [
