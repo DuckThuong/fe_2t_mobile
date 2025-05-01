@@ -7,12 +7,13 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Badge } from "antd"; 
-import { Layout, Menu, Modal } from "antd";
-import React from "react";
+import { Layout, Menu, Modal, notification } from "antd";  // Sửa phần import ở đây
+import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import "./Navbar.scss";
 import { FormInputSearch } from "../../Components/Form/FormInputSearch";
+import axios from "axios";
 
 const { Header } = Layout;
 const { confirm } = Modal;
@@ -27,6 +28,10 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
   const [selectedKey, setSelectedKey] = React.useState(
     getSelectedKey(location.pathname)
   );
+  const [notification, setNotification] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null); // Thêm state để lưu thông báo
 
   function getSelectedKey(pathname: string) {
     switch (pathname) {
@@ -47,8 +52,36 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
     confirm({
       title: "Bạn có muốn đăng xuất?",
       content: "Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng dịch vụ.",
-      onOk() {
-        console.log("Đăng xuất thành công");
+      async onOk() {
+        try {
+          const response = await axios.post(
+            "http://localhost:3300/user/log-out",
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              },
+            }
+          );
+          if (response.status === 200) {
+            localStorage.removeItem("accessToken"); // Xóa token
+            navigate(""); // Điều hướng về trang đăng nhập
+
+            // Thông báo đăng xuất thành công
+            setNotification({
+              message: "Đăng xuất thành công!",
+              type: "success",
+            });
+          }
+        } catch (error) {
+          console.error("Đăng xuất thất bại:", error);
+          
+          // Thông báo đăng xuất thất bại
+          setNotification({
+            message: "Đăng xuất không thành công. Vui lòng thử lại.",
+            type: "error",
+          });
+        }
       },
       onCancel() {
         console.log("Hủy đăng xuất");
@@ -59,6 +92,21 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
   React.useEffect(() => {
     setSelectedKey(getSelectedKey(location.pathname));
   }, [location]);
+
+  React.useEffect(() => {
+    if (notification) {
+      notification[notification.type]({
+        message: notification.message,
+      });
+
+      // Clear notification after 3 seconds
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
 
   return (
     <Layout>
@@ -89,7 +137,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
                 count={cartCount} 
                 size="small" 
                 offset={[5, -5]} 
-                showZero={false}
+                showZero={false} 
                 style={{ 
                   backgroundColor: '#ff4d4f',
                   fontSize: '10px',

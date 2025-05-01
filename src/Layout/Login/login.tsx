@@ -7,10 +7,13 @@ import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
+import { LoginPayload } from "../../api/constants";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../../api/authApi"; // đảm bảo đường dẫn đúng với file bạn để login()
 
 const Login = () => {
   const [form] = useForm();
@@ -21,53 +24,29 @@ const Login = () => {
     type: "success" | "error";
   } | null>(null);
 
-  const users = [
-    {
-      phone: "0948682103",
-      password: "Khanhhung1@",
-      role: "client",
+  const loginMutate = useMutation({
+    mutationFn: (data: LoginPayload) =>
+      login(data.PhoneNumber, data.Password),
+    onSuccess: (res) => {
+      setNotification({ message: "Đăng nhập thành công!", type: "success" });
+      navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU || "/trang-chu");
     },
-    {
-      phone: "0948682102",
-      password: "Khanhhung1@",
-      role: "admin",
+    onError: () => {
+      setNotification({
+        message:
+          "Đăng nhập thất bại. Vui lòng kiểm tra lại tài khoản hoặc mật khẩu.",
+        type: "error",
+      });
     },
-  ];
+  });
 
-  // const onFinish = () => {
-  //   const phone = form.getFieldValue("phone");
-  //   const password = form.getFieldValue("password");
-
-  //   const userExists = loginApi?.userList?.some(
-  //     (user) => user.Phone === phone && user.PasswordHash === password
-  //   );
-  //   if (userExists) {
-  //     const userData = loginApi.userList.find((user) => user.Phone === phone);
-  //     if (userData) {
-  //       dispatch(
-  //         setAuthUser({
-  //           id: userData.UserID,
-  //           email: userData.Email,
-  //           fullName: userData.Username,
-  //         })
-  //       );
-
-  //       // Điều hướng đến trang tương ứng
-  //       if (userData.Role === "admin") {
-  //         navigate(ADMIN_ROUTER_PATH.DASHBOARD);  // Điều hướng admin
-  //       } else {
-  //         navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU); // Điều hướng client
-  //       }
-  //     }
-  //     login(phone, password);
-  //     setNotification({ message: "Thành Công", type: "success" });
-  //   } else {
-  //     setNotification({
-  //       message: "Sai tài khoản hoặc mật khẩu",
-  //       type: "error",
-  //     });
-  //   }
-  // };
+  const onFinish = () => {
+    const data: LoginPayload = {
+      PhoneNumber: form.getFieldValue("phone"),
+      Password: form.getFieldValue("password"),
+    };
+    loginMutate.mutate(data);
+  };
 
   useEffect(() => {
     if (notification) {
@@ -82,14 +61,8 @@ const Login = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      // onFinish();
-    }
-  };
-
   const handleRegister = () => {
-    navigate(CUSTOMER_ROUTER_PATH.SIGN_UP); // Điều hướng đến trang đăng ký
+    navigate(CUSTOMER_ROUTER_PATH.SIGN_UP);
   };
 
   return (
@@ -102,7 +75,7 @@ const Login = () => {
         <LogoForm />
       </div>
       <div className="login_form">
-        <FormWrap form={form} className="login_form-wrap">
+        <FormWrap form={form} onFinish={onFinish} className="login_form-wrap">
           <div className="login_form-header">
             <p className="login_form-header-content">ĐĂNG NHẬP</p>
           </div>
@@ -115,7 +88,6 @@ const Login = () => {
                 rules: ValidateLibrary().phone,
               }}
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "SĐT: 0123456789",
               }}
             />
@@ -138,7 +110,6 @@ const Login = () => {
               }}
               isPassword
               inputProps={{
-                onKeyPress: handleKeyPress,
                 placeholder: "Mật khẩu",
               }}
             />
@@ -149,7 +120,8 @@ const Login = () => {
               content="Đăng nhập"
               buttonProps={{
                 className: "login_form-login-button",
-                type: "default",
+                type: "primary",
+                htmlType: "submit",
               }}
             />
           </div>
@@ -164,7 +136,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Thêm nút đăng ký */}
           <div className="login_form-register">
             <button
               onClick={handleRegister}
@@ -178,4 +149,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

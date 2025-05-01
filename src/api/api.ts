@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
-import { RegisterPayload } from "./constants";
+import { LoginPayload, RegisterPayload } from "./constants";
 
 const apiRequest = async (
   endpoint: string,
@@ -32,7 +32,10 @@ export enum OrderStateEnum {
 export const userApi = {
   doRegister: (data: RegisterPayload) =>
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
+  doLogin:(data:LoginPayload)=>
+    apiRequest(`${API_KEY.USER}/log-in`, "POST", data),
 };
+
 
 export const imageApi = {
   getAllImage: () => apiRequest(API_KEY.IMAGE),

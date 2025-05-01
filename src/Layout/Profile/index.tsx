@@ -11,9 +11,10 @@ import {
   EditOutlined,
   CheckOutlined
 } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CUSTOMER_ROUTER_PATH } from '../../Routers/Routers';
 import './styles.scss';
+import axios from 'axios';
 
 const { TabPane } = Tabs;
 const { confirm } = Modal;
@@ -35,106 +36,36 @@ const Profile = () => {
     avatar: ''
   });
 
-  // const [banks, setBanks] = useState([
-  //   {
-  //     id: '1',
-  //     bank: 'VCB - NH TMCP NGOAI THUONG VIE...',
-  //     status: 'Đã kiểm tra',
-  //     name: 'TRAN KHANH HUNG',
-  //     isDefault: true,
-  //     branch: 'Viet Nam (Vietcombank)/Chi nhánh khác',
-  //     cardNumber: '•••• 4868'
-  //   }
-  // ]);
-
-  // const [addresses, setAddresses] = useState([
-  //   {
-  //     id: '1',
-  //     name: 'Trần khánh hùng',
-  //     phone: '(+84) 948 682 103',
-  //     address: 'Số 167, Phố Định Công Hạ, Phường Định Công, Quận Hoàng Mai, Hà Nội',
-  //     isDefault: true
-  //   },
-  //   {
-  //     id: '2',
-  //     name: 'Hoàng Ngu (mới)',
-  //     phone: '(+84) 846 850 458',
-  //     address: 'Số Nhà 06,   Thị Trấn Cẩm Xuyên, Huyện Cẩm Xuyên, Hà Tĩnh',
-  //     isDefault: false
-  //   },
-  // ]);
-
-  // Xử lý cập nhật profile
-  const handleProfileSubmit = (values: any) => {
+   const handleProfileSubmit = (values: any) => {
     setProfile({...profile, ...values});
     message.success('Cập nhật thông tin thành công');
   };
 
-  // Xử lý thêm ngân hàng
-  // const handleAddBank = (values: any) => {
-  //   const newBank = {
-  //     id: Date.now().toString(),
-  //     bank: values.bankName,
-  //     status: 'Chờ xác minh',
-  //     name: values.accountName,
-  //     isDefault: false,
-  //     branch: values.branch,
-  //     cardNumber: `•••• ${values.cardNumber.slice(-4)}`
-  //   };
-  //   setBanks([...banks, newBank]);
-  //   bankForm.resetFields();
-  //   message.success('Thêm ngân hàng thành công');
-  // };
+ const navigate = useNavigate();
+ const submit = async () => {
+  try {
+    const values = await form.validateFields();
 
-  // Xử lý thêm địa chỉ
-  // const handleAddAddress = (values: any) => {
-  //   const newAddress = {
-  //     id: Date.now().toString(),
-  //     name: values.name,
-  //     phone: values.phone,
-  //     address: `${values.street}, ${values.ward}, ${values.district}, ${values.province}`,
-  //     isDefault: false
-  //   };
-  //   setAddresses([...addresses, newAddress]);
-  //   addressForm.resetFields();
-  //   message.success('Thêm địa chỉ thành công');
-  // };
+    const payload = {
+      userName: values.email.split('@')[0],
+      email: values.email,
+      phoneNumber: values.phone,
+      gender: values.gender,
+      name: values.name,
+      dob: values.dob,
+    };
 
-  // Xử lý xóa ngân hàng
-  // const handleDeleteBank = (id: string) => {
-  //   if (banks.find(b => b.id === id)?.isDefault) {
-  //     message.error('Không thể xóa tài khoản mặc định');
-  //     return;
-  //   }
-  //   setBanks(banks.filter(b => b.id !== id));
-  //   message.success('Xóa tài khoản ngân hàng thành công');
-  // };
+    const res = await axios.post("http://localhost:3300/user/update-profile", payload);
 
-  // // Xử lý xóa địa chỉ
-  // const handleDeleteAddress = (id: string) => {
-  //   if (addresses.find(a => a.id === id)?.isDefault) {
-  //     message.error('Không thể xóa địa chỉ mặc định');
-  //     return;
-  //   }
-  //   setAddresses(addresses.filter(a => a.id !== id));
-  //   message.success('Xóa địa chỉ thành công');
-  // };
+    message.success("Cập nhật thông tin thành công!");
+    setProfile({ ...profile, ...values });
+  } catch (error) {
+    message.error("Cập nhật thất bại!");
+    console.error("Lỗi cập nhật: ", error);
+  }
+};
 
-  // // Xử lý đặt làm mặc định
-  // const handleSetDefault = (type: 'bank' | 'address', id: string) => {
-  //   if (type === 'bank') {
-  //     setBanks(banks.map(b => ({
-  //       ...b,
-  //       isDefault: b.id === id
-  //     })));
-  //   } else {
-  //     setAddresses(addresses.map(a => ({
-  //       ...a,
-  //       isDefault: a.id === id
-  //     })));
-  //   }
-  //   message.success('Đặt làm mặc định thành công');
-  // };
+
 
   return (
     <div className="profile-page">
@@ -165,7 +96,7 @@ const Profile = () => {
               form={form}
               layout="vertical"
               initialValues={profile}
-              onFinish={handleProfileSubmit}
+              onFinish={submit}
             >
               <Form.Item label="Số điện thoại" name="phone" rules={[{ required: true, message: 'Vui lòng nhập số điện thoại' }]}>
                 <Input disabled/>
@@ -202,149 +133,11 @@ const Profile = () => {
               </Form.Item>
             </Form>
             
-            {/* <div className="upload-section">
-              <Upload
-                beforeUpload={(file) => {
-                  if (file.size > 1024 * 1024) {
-                    message.error('File phải nhỏ hơn 1MB');
-                    return false;
-                  }
-                  setProfile({...profile, avatar: URL.createObjectURL(file)});
-                  return false;
-                }}
-                accept=".jpg,.jpeg,.png"
-                showUploadList={false}
-              >
-                <Button icon={<UploadOutlined />}>Chọn Ảnh</Button>
-              </Upload>
-              {profile.avatar && <img src={profile.avatar} alt="Avatar" className="avatar-preview" />}
-              <p>Dụng lượng file tối đa 1 MB</p>
-              <p>Định dạng: JPEG, .PNG</p>
-            </div> */}
+
           </Card>
         )}
 
-        {/* {activeTab === 'bank' && (
-          <Card title="Thẻ Tín Dụng/Ghi Nợ" bordered={false} className="profile-card">
-            <div className="bank-section">
-              <h3>Tài Khoản Ngân Hàng Của Tôi</h3>
-              
-              <Table
-                columns={[
-                  { title: 'Ngân hàng', dataIndex: 'bank', key: 'bank' },
-                  { title: 'Tên tài khoản', dataIndex: 'name', key: 'name' },
-                  { title: 'Số thẻ', dataIndex: 'cardNumber', key: 'cardNumber' },
-                  { 
-                    title: 'Mặc định', 
-                    key: 'isDefault',
-                    render: (_, record) => (
-                      record.isDefault 
-                        ? <Tag icon={<CheckOutlined />} color="success">Mặc định</Tag>
-                        : <Button 
-                            type="link" 
-                            onClick={() => handleSetDefault('bank', record.id)}
-                          >
-                            Đặt mặc định
-                          </Button>
-                    )
-                  },
-                  {
-                    title: 'Thao tác',
-                    key: 'action',
-                    render: (_, record) => (
-                      <Button 
-                        type="text" 
-                        danger 
-                        icon={<DeleteOutlined />} 
-                        onClick={() => handleDeleteBank(record.id)}
-                        disabled={record.isDefault}
-                      />
-                    ),
-                  },
-                ]}
-                dataSource={banks}
-                pagination={false}
-                rowKey="id"
-              />
-              
-              <Form form={bankForm} layout="vertical" onFinish={handleAddBank} className="add-form">
-                <h3>Thêm ngân hàng mới</h3>
-                <Form.Item name="bankName" label="Tên ngân hàng" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="accountName" label="Tên chủ tài khoản" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="cardNumber" label="Số thẻ" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="branch" label="Chi nhánh" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Button type="primary" htmlType="submit" icon={<PlusOutlined />}>Thêm ngân hàng</Button>
-              </Form>
-            </div>
-          </Card>
-        )}
-
-        {activeTab === 'address' && (
-          <Card title="Địa chỉ của tôi" bordered={false} className="profile-card">
-            <div className="address-section">
-              <h3>Danh sách địa chỉ</h3>
-              
-              {addresses.map(address => (
-                <div key={address.id} className="address-card">
-                  <div className="address-info">
-                    <h4>{address.name} {address.phone}</h4>
-                    <p>{address.address}</p>
-                    {address.isDefault && <Tag color="blue">Mặc định</Tag>}
-                  </div>
-                  <div className="address-actions">
-                    {!address.isDefault && (
-                      <>
-                        <Button 
-                          type="link" 
-                          onClick={() => handleSetDefault('address', address.id)}
-                        >
-                          Đặt mặc định
-                        </Button>
-                        <Button 
-                          type="text" 
-                          danger 
-                          icon={<DeleteOutlined />} 
-                          onClick={() => handleDeleteAddress(address.id)}
-                        />
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-              
-              <Form form={addressForm} layout="vertical" onFinish={handleAddAddress} className="add-form">
-                <h3>Thêm địa chỉ mới</h3>
-                <Form.Item name="name" label="Họ và tên" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="phone" label="Số điện thoại" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="street" label="Số nhà, đường" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="ward" label="Phường/Xã" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="district" label="Quận/Huyện" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Form.Item name="province" label="Tỉnh/Thành phố" rules={[{ required: true }]}>
-                  <Input />
-                </Form.Item>
-                <Button type="primary" htmlType="submit" icon={<PlusOutlined />}>Thêm địa chỉ</Button>
-              </Form>
-            </div>
-          </Card>
-        )} */}
+ 
 
         {activeTab === 'password' && (
           <Card title="Bảo mật tài khoản" bordered={false} className="profile-card">

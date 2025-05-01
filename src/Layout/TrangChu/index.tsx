@@ -1,23 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { imageApi, productApi } from "../../api/api";
+import { imageApi, productApi, userApi } from "../../api/api";
 import { QUERY_KEY } from "../../api/apiConfig";
 import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
 import { HomeHeader } from "./HomeHeader";
 import { ListProduct } from "./ListProducts";
-import App from "./Content"
-
+import App from "./Content";
+import { getProfile } from "../../api/authApi";
 
 
 export const Home = () => {
-  const { data: imageData } = useQuery({
-     queryKey: [QUERY_KEY.GET_IMAGE],
-    // queryKey: [QUERY_KEY.GET_PRODUCTS],
-    queryFn: imageApi.getAllImage,
-    //  staleTime: 60000, // Giữ cache 1 phút
-    // retry: 1, // Thử lại 1 lần nếu lỗi
-  });
-
+// authApi.get("/user/profile");
+const { data: userProfile } = useQuery({
+  queryKey: ["user-profile"],
+  queryFn: getProfile,
+});
   return (
     <>
       <Navbar />

@@ -49,14 +49,7 @@ const Signup = () => {
 
   return (
     <div className="signup">
-      {/* <video autoPlay muted loop id="signupVideo">
-        <source src="/112722-695433093.mp4" type="video/mp4" />
-      </video> */}
-
-      {/* <NotificationPopup
-        message={notification?.message}
-        type={notification?.type}
-      /> */}
+      
       <div>
         <LogoForm />
       </div>

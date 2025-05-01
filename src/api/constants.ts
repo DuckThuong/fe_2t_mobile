@@ -3,3 +3,8 @@ export interface RegisterPayload {
   Password: string;
   PhoneNumber: string;
 }
+export interface LoginPayload {
+
+  Password: string;
+  PhoneNumber: string;
+}
