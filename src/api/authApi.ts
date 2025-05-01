@@ -1,5 +1,5 @@
-import { QUERY_KEY } from "./apiConfig";
 import { apiRequest } from "./api";
+import { API_KEY } from "./apiConfig";
 
 interface LoginResponse {
   token: string;
@@ -8,7 +8,7 @@ interface LoginResponse {
 
 export const login = async (PhoneNumber: string, Password: string) => {
   try {
-    const response = (await apiRequest(QUERY_KEY.GET_USER + "/log-in", "POST", {
+    const response = (await apiRequest(API_KEY.USER + "/log-in", "POST", {
       PhoneNumber,
       Password,
     })) as LoginResponse;
