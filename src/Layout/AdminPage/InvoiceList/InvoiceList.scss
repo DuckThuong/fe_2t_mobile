@@ -65,40 +65,76 @@
       }
     }
 
+    .right-actions {
+      display: flex;
+      align-items: center;
+
+      .search-input {
+        outline: none;
+        padding: 8px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        margin-right: 10px;
+        width: 200px;
+      }
+
+      .btn-search {
+        background-color: #1677ff;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #0958d9;
+        }
+
+        .anticon {
+          font-size: 16px;
+        }
+      }
+      
+    }
+
   }
 
   // Responsive adjustments
-  @media (max-width: 768px) {
-    .invoice-list-actions {
-      flex-direction: column;
-      align-items: flex-start;
+  // @media (max-width: 768px) {
+  //   .invoice-list-actions {
+  //     flex-direction: column;
+  //     align-items: flex-start;
 
-      .left-actions {
-        width: 100%;
-        justify-content: center;
-      }
+  //     .left-actions {
+  //       width: 100%;
+  //       justify-content: center;
+  //     }
 
-      .right-actions {
-        display: flex;
-        align-items: center;
+  //     .right-actions {
+  //       display: flex;
+  //       align-items: center;
       
-        .search-input {
-          padding: 8px;
-          border: 1px solid #d9d9d9;
-          border-radius: 4px;
-          margin-right: 10px;
-          width: 200px;
-        }
+  //       .search-input {
+  //         padding: 8px;
+  //         border: 1px solid #d9d9d9;
+  //         border-radius: 4px;
+  //         margin-right: 10px;
+  //         width: 200px;
+  //       }
       
-        .btn-search {
-          background-color: #ddd;
-        }
+  //       .btn-search {
+  //         background-color: #ddd;
+  //       }
       
-        .btn-search:hover {
-          background-color: #ccc;
-        }
-      }
-    }
-  }
+  //       .btn-search:hover {
+  //         background-color: #ccc;
+  //       }
+  //     }
+  //   }
+  // }
 }
 

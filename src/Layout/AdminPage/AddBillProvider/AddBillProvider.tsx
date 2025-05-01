@@ -15,10 +15,10 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import "./AddBillProvider.scss";
 import AdminProviderForm from "../../../Components/AdminProviderForm/AdminProviderForm";
-import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { CreateProductPayload } from "../../../api/constants";
-import { productApi } from "../../../api/api";
+import { capacityApi, colorApi, productApi } from "../../../api/api";
+import { PlusOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -39,7 +39,24 @@ const AddBillProvider: React.FC = () => {
       total: 0,
     },
   ]);
+  const [recentlyAddedProducts, setRecentlyAddedProducts] = useState<any[]>([]);
   const [shipmentCode] = useState(`SHIP-${uuidv4().slice(0, 8)}`);
+
+  const { data: capacities, isLoading: isCapacitiesLoading } = useQuery({
+    queryKey: ["capacities"],
+    queryFn: async () => {
+      const response = await colorApi.getAllColors();
+      return response.data; 
+    },
+  });
+
+  const { data: colors, isLoading: isColorsLoading } = useQuery({
+    queryKey: ["colors"],
+    queryFn: async () => {
+      const response = await capacityApi.getAllCapacities();
+      return response.data; 
+    },
+  });
 
   const handleAddProductRow = () => {
     setProductRows([
@@ -57,34 +74,16 @@ const AddBillProvider: React.FC = () => {
     ]);
   };
 
-  const handleNewProduct = (values: any) => {
-    const newProduct = {
-      id: uuidv4(),
-      sku: `SKU-${Date.now()}`,
-      name: values.name,
-      capacity: values.capacity,
-      color: values.color,
-      quantity: 1,
-      price: 0,
-      total: 0,
-    };
-    setProductRows([...productRows, newProduct]);
-    setShowNewProductModal(false);
-    newProductForm.resetFields();
-  };
-
   const handleProductChange = (value: string, record: any) => {
+    const selectedProduct = recentlyAddedProducts.find((p) => p.sku === value);
     const updated = productRows.map((p) =>
       p.id === record.id
         ? {
             ...p,
             sku: value,
-            name: mockSKUs.find((sku) => sku.value === value)?.label || "",
-            capacity:
-              mockSKUs.find((sku) => sku.value === value)?.capacity ||
-              p.capacity,
-            color:
-              mockSKUs.find((sku) => sku.value === value)?.color || p.color,
+            name: selectedProduct?.name || "",
+            capacity: selectedProduct?.capacity || p.capacity,
+            color: selectedProduct?.color || p.color,
           }
         : p
     );
@@ -115,19 +114,20 @@ const AddBillProvider: React.FC = () => {
             onChange={(val) => handleProductChange(val, record)}
             placeholder="Chọn mã sản phẩm"
             style={{ width: 160 }}
+            disabled={recentlyAddedProducts.length === 0}
           >
-            {mockSKUs.map((item) => (
-              <Option key={item.value} value={item.value}>
-                {item.value} - {item.label}
+            {recentlyAddedProducts.slice(0, 5).map((item) => (
+              <Option key={item.sku} value={item.sku}>
+                {item.sku} - {item.name}
               </Option>
             ))}
           </Select>
           <Button
-            icon="+"
+            icon={<PlusOutlined />}
             type="link"
             className="add-product-button"
             onClick={() => setShowNewProductModal(true)}
-          ></Button>
+          />
         </div>
       ),
     },
@@ -186,6 +186,7 @@ const AddBillProvider: React.FC = () => {
       render: (text) => <span>{text.toLocaleString()} đ</span>,
     },
   ];
+
   const createProductMutation = useMutation({
     mutationFn: (payload: CreateProductPayload) =>
       productApi.createProduct(payload),
@@ -198,13 +199,37 @@ const AddBillProvider: React.FC = () => {
     },
   });
 
-  const onModalSubmit = () => {
-    const payload: CreateProductPayload = {
-      name: newProductForm.getFieldValue("name"),
-      warranty: newProductForm.getFieldValue("capacity"),
-      color: newProductForm.getFieldValue("color"),
-    };
-    createProductMutation.mutate(payload);
+  const onModalSubmit = async () => {
+    try {
+      const values = await newProductForm.validateFields();
+      const payload: CreateProductPayload = {
+        name: values.name,
+        warranty: values.capacity,
+        color: values.color,
+      };
+      createProductMutation.mutate(payload, {
+        onSuccess: () => {
+          const newProduct = {
+            id: uuidv4(),
+            sku: `SKU-${Date.now()}`,
+            name: values.name,
+            capacity: values.capacity,
+            color: values.color,
+            quantity: 1,
+            price: 0,
+            total: 0,
+          };
+          // Add to productRows for the table
+          setProductRows([...productRows, newProduct]);
+          // Add to recentlyAddedProducts for the dropdown
+          setRecentlyAddedProducts([newProduct, ...recentlyAddedProducts]);
+          setShowNewProductModal(false);
+          newProductForm.resetFields();
+        },
+      });
+    } catch (err) {
+      console.log("Validation failed:", err);
+    }
   };
 
   return (
@@ -228,7 +253,10 @@ const AddBillProvider: React.FC = () => {
               <Option value="1">Công ty A</Option>
               <Option value="2">Công ty B</Option>
             </Select>
-            <Button icon="+" onClick={() => setProviderModalOpen(true)} />
+            <Button
+              icon={<PlusOutlined />}
+              onClick={() => setProviderModalOpen(true)}
+            />
           </div>
         </Form.Item>
 
@@ -290,7 +318,7 @@ const AddBillProvider: React.FC = () => {
         <Form
           layout="vertical"
           form={newProductForm}
-          onFinish={handleNewProduct}
+          onFinish={onModalSubmit}
         >
           <Form.Item
             name="name"
@@ -302,23 +330,39 @@ const AddBillProvider: React.FC = () => {
           <Form.Item
             name="capacity"
             label="Dung lượng"
-            rules={[{ required: true, message: "Vui lòng nhập dung lượng" }]}
+            rules={[{ required: true, message: "Vui lòng chọn dung lượng" }]}
           >
-            <Input />
+            <Select
+              placeholder="Chọn dung lượng"
+              loading={isCapacitiesLoading}
+              disabled={isCapacitiesLoading}
+            >
+              {capacities?.map((capacity: string) => (
+                <Option key={capacity} value={capacity}>
+                  {capacity}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="color"
             label="Màu sắc"
-            rules={[{ required: true, message: "Vui lòng nhập màu sắc" }]}
+            rules={[{ required: true, message: "Vui lòng chọn màu sắc" }]}
           >
-            <Input />
+            <Select
+              placeholder="Chọn màu sắc"
+              loading={isColorsLoading}
+              disabled={isColorsLoading}
+            >
+              {colors?.map((color: string) => (
+                <Option key={color} value={color}>
+                  {color}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item>
-            <Button
-              type="primary"
-              onClick={() => onModalSubmit()}
-              htmlType="submit"
-            >
+            <Button type="primary" onClick={() => onModalSubmit()}>
               Thêm
             </Button>
           </Form.Item>
@@ -329,26 +373,3 @@ const AddBillProvider: React.FC = () => {
 };
 
 export default AddBillProvider;
-
-const mockSKUs = [
-  {
-    value: "SKU001-128",
-    label: "12 pro max (128)",
-    capacity: "128GB",
-    color: "Xanh",
-  },
-  {
-    value: "SKU001-256",
-    label: "12 pro max (256)",
-    capacity: "256GB",
-    color: "Vàng",
-  },
-  {
-    value: "SKU001-512",
-    label: "12 pro max (512)",
-    capacity: "512GB",
-    color: "Đen",
-  },
-  { value: "SKU002", label: "13 pro max", capacity: "256GB", color: "Xám" },
-  { value: "SKU003", label: "14 PRO MAX", capacity: "1TB", color: "Tím" },
-];

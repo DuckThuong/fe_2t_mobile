@@ -69,14 +69,24 @@ export const imageApi = {
 };
 
 export const productApi = {
-  getAllProducts: () => apiRequest(API_KEY.PRODUCT),
-  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/${id}`),
+  getAllProducts: () => apiRequest(API_KEY.PRODUCT, "GET"),
+  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
   updateProduct: (id: string, productData: any) =>
     apiRequest(`${API_KEY.PRODUCT}/${id}`, "PATCH", productData),
   deleteProduct: (id: string) =>
     apiRequest(`${API_KEY.PRODUCT}/${id}`, "DELETE"),
+};
+
+export const colorApi = {
+  getAllColors: () => apiRequest(`${API_KEY.COLOR}/get-all-colors`, "GET"),
+  getColorById: (id: string) => apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
+};
+
+export const capacityApi = {
+  getAllCapacities: () => apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
+  getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
 };
 
 export const cartApi = {

@@ -1,16 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
-import { Button, Space, Input } from "antd";
+import { Button, Space, Input, Spin, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import "./ProductList.scss";
 import { useNavigate } from "react-router-dom";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
+import { productApi } from "../../../api/api"; // Đường dẫn tới file API của bạn
 
 interface IProduct {
   id: number;
   name: string;
-  capacity: string; // Renamed from brand
-  color: string; // Renamed from category
+  capacity: string;
+  color: string;
   quantity: number;
   price: number;
   shipmentId: string;
@@ -22,68 +23,34 @@ const ProductList: React.FC = () => {
   const navigate = useNavigate();
   const productTableRef = useRef<CustomTableRef>(null);
 
-  const [products, setProducts] = useState<IProduct[]>([
-    {
-      id: 1,
-      name: "OnePlus Nord N20",
-      capacity: "128GB",
-      color: "Blue",
-      quantity: 1,
-      price: 899,
-      shipmentId: "LH7769",
-      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-07-13",
-    },
-    {
-      id: 2,
-      name: "Nokia G10",
-      capacity: "64GB",
-      color: "Black",
-      quantity: 2,
-      price: 689,
-      shipmentId: "LH7769",
-      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-07-13",
-    },
-    {
-      id: 3,
-      name: "Samsung Galaxy S21",
-      capacity: "256GB",
-      color: "White",
-      quantity: 5,
-      price: 799,
-      shipmentId: "LH66c7c",
-      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-08-05",
-    },
-    {
-      id: 4,
-      name: "iPhone 13",
-      capacity: "128GB",
-      color: "Red",
-      quantity: 3,
-      price: 999,
-      shipmentId: "LH67357",
-      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-09-01",
-    },
-    {
-      id: 5,
-      name: "Google Pixel 6",
-      capacity: "128GB",
-      color: "Green",
-      quantity: 4,
-      price: 899,
-      shipmentId: "LH67357",
-      image: "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-08-15",
-    },
-  ]);
-
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState<IProduct[]>(products);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // Search for products
+  // Lấy danh sách sản phẩm từ API
+  const fetchProducts = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await productApi.getAllProducts();
+      setProducts(response);
+      setFilteredProducts(response);
+    } catch (err) {
+      setError("Không thể tải danh sách sản phẩm. Vui lòng thử lại.");
+      message.error("Lỗi khi tải danh sách sản phẩm!");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Gọi API khi component được render
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // Tìm kiếm sản phẩm (phía client)
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
@@ -102,22 +69,28 @@ const ProductList: React.FC = () => {
     setFilteredProducts(result);
   };
 
-  // Delete product
-  const handleDeleteProduct = (id: number) => {
-    setProducts((prevProducts) =>
-      prevProducts.filter((product) => product.id !== id)
-    );
-    setFilteredProducts((prevFilteredProducts) =>
-      prevFilteredProducts.filter((product) => product.id !== id)
-    );
+  // Xóa sản phẩm
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      await productApi.deleteProduct(id.toString());
+      setProducts((prevProducts) =>
+        prevProducts.filter((product) => product.id !== id)
+      );
+      setFilteredProducts((prevFilteredProducts) =>
+        prevFilteredProducts.filter((product) => product.id !== id)
+      );
+      message.success("Xóa sản phẩm thành công!");
+    } catch (err) {
+      message.error("Lỗi khi xóa sản phẩm. Vui lòng thử lại!");
+    }
   };
 
-  // Edit product
+  // Sửa sản phẩm
   const handleEditProduct = (product: IProduct) => {
     navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT(product.id), { state: { product } });
   };
 
-  // Product table columns (renamed brand to Dung lượng, category to Màu sắc)
+  // Cột của bảng sản phẩm
   const productColumns = [
     { title: "Mã sản phẩm", dataIndex: "id", key: "id" },
     { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
@@ -138,7 +111,7 @@ const ProductList: React.FC = () => {
     },
   ];
 
-  // Product table actions
+  // Hành động trên bảng sản phẩm
   const renderProductActions = (record: IProduct) => (
     <Space size="small">
       <Button type="primary" onClick={() => handleEditProduct(record)}>
@@ -173,17 +146,28 @@ const ProductList: React.FC = () => {
           </Button>
         </div>
       </div>
-      <CustomTable
-        ref={productTableRef}
-        data={filteredProducts}
-        columns={productColumns}
-        customActions={renderProductActions}
-        onDelete={handleDeleteProduct}
-        deleteConfirmMessage={(record) =>
-          `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
-        }
-        pagination={{ pageSize: 5 }}
-      />
+      {loading ? (
+        <div className="loading-container">
+          <Spin tip="Đang tải dữ liệu..." />
+        </div>
+      ) : error ? (
+        <div className="error-container">
+          <p>{error}</p>
+          <Button onClick={fetchProducts}>Thử lại</Button>
+        </div>
+      ) : (
+        <CustomTable
+          ref={productTableRef}
+          data={filteredProducts}
+          columns={productColumns}
+          customActions={renderProductActions}
+          onDelete={handleDeleteProduct}
+          deleteConfirmMessage={(record) =>
+            `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
+          }
+          pagination={{ pageSize: 5 }}
+        />
+      )}
     </div>
   );
 };

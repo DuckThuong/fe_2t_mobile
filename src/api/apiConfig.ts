@@ -9,6 +9,8 @@ export const API_KEY = {
   PAYMENT: "payments",
   ORDER: "orders",
   ORDER_DETAIL: "order-details",
+  COLOR: "colors",
+  CAPACITY: "capacities",
 };
 
 export const QUERY_KEY = {
@@ -20,4 +22,6 @@ export const QUERY_KEY = {
   GET_PAYMENT: `${API_BASE_URL}/${API_KEY.PAYMENT}`,
   GET_ORDER: `${API_BASE_URL}/${API_KEY.ORDER}`,
   GET_ORDER_DETAIL: `${API_BASE_URL}/${API_KEY.ORDER}`,
+  GET_COLOR: `${API_BASE_URL}/${API_KEY.COLOR}`,
+  GET_CAPACITY: `${API_BASE_URL}/${API_KEY.CAPACITY}`,
 };
