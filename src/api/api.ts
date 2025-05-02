@@ -82,12 +82,15 @@ export const productApi = {
 
 export const colorApi = {
   getAllColors: () => apiRequest(`${API_KEY.COLOR}/get-all-colors`, "GET"),
-  getColorById: (id: string) => apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
+  getColorById: (id: string) =>
+    apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
 };
 
 export const capacityApi = {
-  getAllCapacities: () => apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
-  getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
+  getAllCapacities: () =>
+    apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
+  getCapacityById: (id: string) =>
+    apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
 };
 
 export const cartApi = {

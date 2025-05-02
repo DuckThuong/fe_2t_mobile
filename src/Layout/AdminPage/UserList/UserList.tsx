@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import { SearchOutlined } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
+import { Button, Space, Spin, message } from "antd";
+import React, { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { userApi } from "../../../api/api";
 import CustomTable, {
   CustomTableRef,
 } from "../../../Components/CustomTable/CustomTable";
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Space, Spin, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { userApi } from "../../../api/api";
-import "./UserList.scss";
-import { useMutation } from "@tanstack/react-query";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
+import "./UserList.scss";
 
 interface IUser {
   id: number;
@@ -54,7 +54,7 @@ const UserList: React.FC = () => {
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
     if (!query.trim()) {
-      setFilteredUsers(users);
+      setFilteredUsers(filteredUsers);
       return;
     }
 
@@ -92,26 +92,13 @@ const UserList: React.FC = () => {
 
   const handleDelete = async (id: string | number) => {
     try {
-      const response = await userApi.doDeleteUser(id);
-      console.log("Delete response:", {
-        status: response?.status,
-        data: response?.data,
-      });
-
-      if (response?.status === 200 || response?.status === 204) {
-        message.success("Xóa người dùng thành công!");
-        setFilteredUsers((prev) =>
-          prev.filter((user) => user.id !== Number(id))
-        );
-      } else {
-        message.error(response?.data?.message || "Lỗi khi xóa người dùng!");
-        console.log("Failed condition, response:", response);
-      }
+      await userApi.doDeleteUser(id);
+      message.success("Xóa người dùng thành công!");
+      setFilteredUsers((prev) => prev.filter((user) => user.id !== Number(id)));
     } catch (err: any) {
       console.error("Delete user error:", err);
       const errorMessage =
         err?.response?.data?.message ||
-        err?.message ||
         "Lỗi khi xóa người dùng. Vui lòng thử lại!";
       message.error(errorMessage);
     }
@@ -176,9 +163,12 @@ const UserList: React.FC = () => {
             onChange={handleSearchInputChange}
             className="search-input"
           />
-          <button className="btn-search" onClick={handleSearch}>
+          <Button
+            className="btn-search"
+            onClick={() => handleSearch(searchQuery)}
+          >
             <SearchOutlined />
-          </button>
+          </Button>
         </div>
       </div>
       {loading ? (
