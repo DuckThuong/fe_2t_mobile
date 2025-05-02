@@ -7,68 +7,82 @@ import { Button, Space, Spin, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../../api/api";
 import "./UserList.scss";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { QUERY_KEY } from "../../../api/apiConfig";
+import { useMutation } from "@tanstack/react-query";
+import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 
 interface IUser {
   id: number;
   user_name: string;
-  phone_number: string;
   email: string;
+  phone_number: string;
   is_admin: boolean;
   user_rank: string;
   is_active: boolean;
-  created_at: string;
-  address: string;
 }
 
 const UserList: React.FC = () => {
   const tableRef = useRef<CustomTableRef>(null);
   const navigate = useNavigate();
 
-  const [users, setUsers] = useState<IUser[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // const fetchUsers = async () => {
-  //   setLoading(true);
-  //   setError(null);
-  //   try {
-  //     const response = await userApi.doGetAllUsers();
-  //     setUsers(response);
-  //     setFilteredUsers(response);
-  //   } catch (err) {
-  //     setError("Không thể tải danh sách người dùng. Vui lòng thử lại.");
-  //     message.error("Lỗi khi tải danh sách người dùng!");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const createProductMutation = useMutation({
     mutationFn: () => userApi.doGetAllUsers(),
-    onSuccess: () => {
-      console.log("success");
+    onSuccess: (response) => {
+      const formattedUsers = response.data.map((user: any) => ({
+        id: user.id,
+        user_name: user.userName || user.email.split("@")[0] || "Unknown",
+        email: user.email,
+        phone_number: user.phoneNumber,
+        is_admin: user.isAdmin,
+        user_rank: user.userRank,
+        is_active: user.isActive,
+      }));
+      setFilteredUsers(formattedUsers);
+      setLoading(false);
     },
     onError: () => {
-      console.log("error");
+      setError("Lỗi khi tải danh sách người dùng!");
+      message.error("Lỗi khi tải danh sách người dùng!");
+      setLoading(false);
     },
   });
 
-  const handleSearch = async (query: string) => {
-    setSearchQuery(query);
-    if (!query.trim()) {
-      setFilteredUsers(users);
+  useEffect(() => {
+    setLoading(true);
+    createProductMutation.mutate();
+  }, []);
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      setLoading(true);
+      createProductMutation.mutate();
       return;
     }
 
     setLoading(true);
     setError(null);
     try {
-      const response = await userApi.doSearchUsers(query.trim());
-      setFilteredUsers(response);
+      const response = await userApi.doSearchUsers(searchQuery.trim());
+      const usersToMap = Array.isArray(response)
+        ? response
+        : response.data || [];
+      if (usersToMap.length === 0) {
+        message.info("Không tìm thấy người dùng nào!");
+      }
+      const formattedResponse = usersToMap.map((user: any) => ({
+        id: user.id,
+        user_name: user.userName || user.email.split("@")[0] || "Unknown",
+        email: user.email,
+        phone_number: user.phoneNumber,
+        is_admin: user.isAdmin,
+        user_rank: user.userRank,
+        is_active: user.isActive,
+      }));
+      setFilteredUsers(formattedResponse);
     } catch (err) {
       setError("Không thể tìm kiếm người dùng. Vui lòng thử lại.");
       message.error("Lỗi khi tìm kiếm người dùng!");
@@ -77,30 +91,41 @@ const UserList: React.FC = () => {
     }
   };
 
-  // Gọi API khi component được render lần đầu
-  useEffect(() => {
-    createProductMutation.mutate();
-  }, []);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value;
-    handleSearch(query);
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   const handleDelete = async (id: string | number) => {
     try {
-      await userApi.doDeleteUser(id);
-      setUsers((prev) => prev.filter((user) => user.id !== Number(id)));
-      setFilteredUsers((prev) => prev.filter((user) => user.id !== Number(id)));
-      message.success("Xóa người dùng thành công!");
-    } catch (err) {
-      message.error("Lỗi khi xóa người dùng. Vui lòng thử lại!");
+      const response = await userApi.doDeleteUser(id);
+      console.log("Delete response:", {
+        status: response?.status,
+        data: response?.data,
+      });
+  
+      if (response?.status === 200 || response?.status === 204) {
+        message.success("Xóa người dùng thành công!");
+        setFilteredUsers((prev) =>
+          prev.filter((user) => user.id !== Number(id))
+        );
+      } else {
+        message.error(response?.data?.message || "Lỗi khi xóa người dùng!");
+        console.log("Failed condition, response:", response);
+      }
+    } catch (err: any) {
+      console.error("Delete user error:", err);
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Lỗi khi xóa người dùng. Vui lòng thử lại!";
+      message.error(errorMessage);
     }
   };
-
+  
   const handleRefresh = () => {
-    setSearchQuery(""); // Xóa query tìm kiếm
-    // fetchUsers(); // Tải lại danh sách đầy đủ
+    setSearchQuery("");
+    setLoading(true);
+    createProductMutation.mutate();
   };
 
   const userColumns = [
@@ -112,14 +137,16 @@ const UserList: React.FC = () => {
     { title: "Tên tài khoản", dataIndex: "user_name", key: "user_name" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Số điện thoại", dataIndex: "phone_number", key: "phone_number" },
-    { title: "Địa chỉ", dataIndex: "address", key: "address" },
     { title: "Hạng", dataIndex: "user_rank", key: "user_rank" },
-    { title: "Ngày tạo", dataIndex: "created_at", key: "created_at" },
   ];
 
   const renderActions = (record: IUser) => (
     <Space>
-      <Button onClick={() => navigate(`/admin/user-list/${record.id}`)}>
+      <Button
+        onClick={() =>
+          navigate(`${ADMIN_ROUTER_PATH.USER_DETAIL}/${record.id}`)
+        }
+      >
         Chi tiết
       </Button>
       <Button
@@ -148,10 +175,10 @@ const UserList: React.FC = () => {
             type="text"
             placeholder="Tìm kiếm..."
             value={searchQuery}
-            onChange={handleSearchChange}
+            onChange={handleSearchInputChange}
             className="search-input"
           />
-          <button className="btn-search">
+          <button className="btn-search" onClick={handleSearch}>
             <SearchOutlined />
           </button>
         </div>
@@ -164,6 +191,11 @@ const UserList: React.FC = () => {
         <div className="error-container">
           <p>{error}</p>
           <Button onClick={handleRefresh}>Thử lại</Button>
+        </div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="empty-container">
+          <p>Không có người dùng nào.</p>
+          <Button onClick={handleRefresh}>Tải lại</Button>
         </div>
       ) : (
         <CustomTable

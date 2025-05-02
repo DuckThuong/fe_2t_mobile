@@ -51,11 +51,12 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
   doDeleteUser: (id: string | number) =>
-    apiRequest(`${API_KEY.USER}/delete-user-by-id/${id}`, "DELETE"),
+    apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
+
   doGetUserById: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
-  doSearchUsers: (query: string) =>
-    apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
+  doSearchUsers: (keyword: string) =>
+    apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { keyword }),
 };
 
 export const imageApi = {

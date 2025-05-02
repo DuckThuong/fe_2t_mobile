@@ -45,34 +45,18 @@ const AddBillProvider: React.FC = () => {
   const { data: capacities, isLoading: isCapacitiesLoading } = useQuery({
     queryKey: ["capacities"],
     queryFn: async () => {
-      const response = await colorApi.getAllColors();
-      return response.data; 
+      const response = await capacityApi.getAllCapacities();
+      return response.data;
     },
   });
 
   const { data: colors, isLoading: isColorsLoading } = useQuery({
     queryKey: ["colors"],
     queryFn: async () => {
-      const response = await capacityApi.getAllCapacities();
-      return response.data; 
+      const response = await colorApi.getAllColors();
+      return response.data;
     },
   });
-
-  const handleAddProductRow = () => {
-    setProductRows([
-      ...productRows,
-      {
-        id: uuidv4(),
-        sku: null,
-        name: "",
-        capacity: "",
-        color: "",
-        quantity: 1,
-        price: 0,
-        total: 0,
-      },
-    ]);
-  };
 
   const handleProductChange = (value: string, record: any) => {
     const selectedProduct = recentlyAddedProducts.find((p) => p.sku === value);
@@ -82,8 +66,8 @@ const AddBillProvider: React.FC = () => {
             ...p,
             sku: value,
             name: selectedProduct?.name || "",
-            capacity: selectedProduct?.capacity || p.capacity,
-            color: selectedProduct?.color || p.color,
+            capacity: selectedProduct?.capacity || "",
+            color: selectedProduct?.color || "",
           }
         : p
     );
@@ -108,50 +92,24 @@ const AddBillProvider: React.FC = () => {
       dataIndex: "sku",
       width: 220,
       render: (text, record) => (
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <Select
-            value={text}
-            onChange={(val) => handleProductChange(val, record)}
-            placeholder="Chọn mã sản phẩm"
-            style={{ width: 160 }}
-            disabled={recentlyAddedProducts.length === 0}
-          >
-            {recentlyAddedProducts.slice(0, 5).map((item) => (
-              <Option key={item.sku} value={item.sku}>
-                {item.sku} - {item.name}
-              </Option>
-            ))}
-          </Select>
-          <Button
-            icon={<PlusOutlined />}
-            type="link"
-            className="add-product-button"
-            onClick={() => setShowNewProductModal(true)}
-          />
-        </div>
+        <Select
+          value={text}
+          onChange={(val) => handleProductChange(val, record)}
+          placeholder="Chọn mã sản phẩm"
+          style={{ width: 160 }}
+          disabled={recentlyAddedProducts.length === 0}
+        >
+          {recentlyAddedProducts.slice(0, 5).map((item) => (
+            <Option key={item.sku} value={item.sku}>
+              {item.sku} - {item.name}
+            </Option>
+          ))}
+        </Select>
       ),
     },
     { title: "Tên sản phẩm", dataIndex: "name" },
-    {
-      title: "Dung lượng",
-      dataIndex: "capacity",
-      render: (text, record) => (
-        <Input
-          value={text}
-          onChange={(e) => handleChange("capacity", e.target.value, record)}
-        />
-      ),
-    },
-    {
-      title: "Màu sắc",
-      dataIndex: "color",
-      render: (text, record) => (
-        <Input
-          value={text}
-          onChange={(e) => handleChange("color", e.target.value, record)}
-        />
-      ),
-    },
+    { title: "Dung lượng", dataIndex: "capacity" },
+    { title: "Màu sắc", dataIndex: "color" },
     {
       title: "Số lượng",
       dataIndex: "quantity",
@@ -191,7 +149,6 @@ const AddBillProvider: React.FC = () => {
     mutationFn: (payload: CreateProductPayload) =>
       productApi.createProduct(payload),
     onSuccess: () => {
-      console.log("success");
       setShowNewProductModal(false);
     },
     onError: () => {
@@ -219,9 +176,7 @@ const AddBillProvider: React.FC = () => {
             price: 0,
             total: 0,
           };
-          // Add to productRows for the table
           setProductRows([...productRows, newProduct]);
-          // Add to recentlyAddedProducts for the dropdown
           setRecentlyAddedProducts([newProduct, ...recentlyAddedProducts]);
           setShowNewProductModal(false);
           newProductForm.resetFields();
@@ -282,6 +237,13 @@ const AddBillProvider: React.FC = () => {
           rowKey="id"
           pagination={false}
         />
+        <Button
+          icon={<PlusOutlined />}
+          className="add-product-button"
+          onClick={() => setShowNewProductModal(true)}
+        >
+          Thêm sản phẩm
+        </Button>
 
         <div style={{ marginTop: 20 }}>
           <Button
@@ -289,7 +251,7 @@ const AddBillProvider: React.FC = () => {
             style={{ marginRight: 10 }}
             onClick={() => form.submit()}
           >
-            Thêm
+            Lưu
           </Button>
           <Button danger onClick={() => form.resetFields()}>
             Hủy
@@ -337,9 +299,9 @@ const AddBillProvider: React.FC = () => {
               loading={isCapacitiesLoading}
               disabled={isCapacitiesLoading}
             >
-              {capacities?.map((capacity: string) => (
-                <Option key={capacity} value={capacity}>
-                  {capacity}
+              {capacities?.map((capacity: { id: number; display_name: string }) => (
+                <Option key={capacity.id} value={capacity.display_name}>
+                  {capacity.display_name}
                 </Option>
               ))}
             </Select>
@@ -354,9 +316,9 @@ const AddBillProvider: React.FC = () => {
               loading={isColorsLoading}
               disabled={isColorsLoading}
             >
-              {colors?.map((color: string) => (
-                <Option key={color} value={color}>
-                  {color}
+              {colors?.map((color: { id: number; name: string }) => (
+                <Option key={color.id} value={color.name}>
+                  {color.name}
                 </Option>
               ))}
             </Select>
