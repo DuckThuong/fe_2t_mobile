@@ -10,14 +10,21 @@ import "./UserList.scss";
 
 interface IUser {
   id: number;
-  user_name: string;
-  phone_number: string;
+  userName: string | null;
+  phoneNumber: string;
   email: string;
-  is_admin: boolean;
-  user_rank: string;
-  is_active: boolean;
-  created_at: string;
-  address: string;
+  isAdmin: boolean;
+  userRank: string;
+  isActive: boolean;
+  createdAt: string;
+  userInformation: any | null;
+}
+
+interface IApiResponse {
+  data: IUser[];
+  total: number;
+  page: number;
+  size: number;
 }
 
 const UserList: React.FC = () => {
@@ -35,8 +42,9 @@ const UserList: React.FC = () => {
     setError(null);
     try {
       const response = await userApi.doGetAllUsers();
-      setUsers(response);
-      setFilteredUsers(response);
+      const userData = (response as IApiResponse).data || [];
+      setUsers(userData);
+      setFilteredUsers(userData);
     } catch (err) {
       setError("Không thể tải danh sách người dùng. Vui lòng thử lại.");
       message.error("Lỗi khi tải danh sách người dùng!");
@@ -48,7 +56,7 @@ const UserList: React.FC = () => {
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
     if (!query.trim()) {
-      setFilteredUsers(users); 
+      setFilteredUsers(users);
       return;
     }
 
@@ -56,7 +64,8 @@ const UserList: React.FC = () => {
     setError(null);
     try {
       const response = await userApi.doSearchUsers(query.trim());
-      setFilteredUsers(response);
+      const userData = (response as IApiResponse).data || [];
+      setFilteredUsers(userData);
     } catch (err) {
       setError("Không thể tìm kiếm người dùng. Vui lòng thử lại.");
       message.error("Lỗi khi tìm kiếm người dùng!");
@@ -97,12 +106,11 @@ const UserList: React.FC = () => {
       key: "index",
       render: (_: any, __: any, index: number) => index + 1,
     },
-    { title: "Tên tài khoản", dataIndex: "user_name", key: "user_name" },
+    { title: "Tên tài khoản", dataIndex: "userName", key: "userName" },
     { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Số điện thoại", dataIndex: "phone_number", key: "phone_number" },
-    { title: "Địa chỉ", dataIndex: "address", key: "address" },
-    { title: "Hạng", dataIndex: "user_rank", key: "user_rank" },
-    { title: "Ngày tạo", dataIndex: "created_at", key: "created_at" },
+    { title: "Số điện thoại", dataIndex: "phoneNumber", key: "phoneNumber" },
+    { title: "Hạng", dataIndex: "userRank", key: "userRank" },
+    { title: "Ngày tạo", dataIndex: "createdAt", key: "createdAt" },
   ];
 
   const renderActions = (record: IUser) => (
@@ -161,7 +169,7 @@ const UserList: React.FC = () => {
           customActions={renderActions}
           onDelete={handleDelete}
           deleteConfirmMessage={(record) =>
-            `Bạn có chắc chắn muốn xóa tài khoản ${record.user_name} không?`
+            `Bạn có chắc chắn muốn xóa tài khoản ${record.userName} không?`
           }
         />
       )}
