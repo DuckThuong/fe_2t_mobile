@@ -60,6 +60,8 @@ export const ADMIN_ROUTER_PATH = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
   USER_LIST: `/${ADMIN}/user-list`,
+  USER_DETAIL: (id: string | number) =>
+    `/${ADMIN}/user-list/user-detail/${id}`, // Thay đổi đường dẫn ở đây
   PROVIDER_LIST: `/${ADMIN}/provider-list`,
   ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
   EDIT_PROVIDER: (id: string | number) =>
