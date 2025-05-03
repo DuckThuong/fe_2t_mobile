@@ -11,6 +11,8 @@ export const API_KEY = {
   ORDER_DETAIL: "order-details",
   COLOR: "colors",
   CAPACITY: "capacities",
+  PURCHASE: "purchases",
+  VENDORS: "vendors",
 };
 
 export const QUERY_KEY = {
@@ -24,4 +26,5 @@ export const QUERY_KEY = {
   GET_ORDER_DETAIL: `${API_BASE_URL}/${API_KEY.ORDER}`,
   GET_COLOR: `${API_BASE_URL}/${API_KEY.COLOR}`,
   GET_CAPACITY: `${API_BASE_URL}/${API_KEY.CAPACITY}`,
+  CREATE_PURCHASE: `${API_BASE_URL}/${API_KEY.PURCHASE}`,
 };

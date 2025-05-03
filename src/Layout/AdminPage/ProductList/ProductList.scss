@@ -33,6 +33,16 @@
     .left-actions {
       flex: 1;
       justify-content: flex-start;
+      .btn-refresh {
+        background-color: transparent;
+        border: #2c7be5 1px solid;
+        color: #2c7be5;
+      }
+      
+      .btn-refresh:hover {
+        background-color: #2569c3;
+        color: #fff;
+      }
     }
 
     .right-actions {

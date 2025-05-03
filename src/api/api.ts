@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
-import { CreateProductPayload, RegisterPayload } from "./constants";
+import { CreateProductPayload, CreatePurchasePayload, RegisterPayload } from "./constants";
+import { Purchase } from "../Layout/Purchase";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -91,6 +92,25 @@ export const capacityApi = {
     apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
   getCapacityById: (id: string) =>
     apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
+};
+
+export const purchaseApi = {
+  createPurchase: (PurchaseData: CreatePurchasePayload) =>
+    apiRequest(`${API_KEY.PURCHASE}`, "POST", PurchaseData),
+  getAllPurchase: () =>
+    apiRequest(`${API_KEY.PURCHASE}`, "GET"),
+  getPurchaseById: (id: string) =>
+    apiRequest(`${API_KEY.PURCHASE}/${id}`, "GET"),
+  deletePurchase: (id: string) =>
+    apiRequest(`${API_KEY.PURCHASE}/${id}`, "DELETE"),
+  updatePurchase: (id: string, purchaseData: CreatePurchasePayload) =>
+    apiRequest(`${API_KEY.PURCHASE}/${id}`, "PATCH", purchaseData),
+};
+
+export const vendorsApi = {
+  getAllVendors: () => apiRequest(`${API_KEY.VENDORS}/get-all-vendors`, "GET"),
+  getVendorById: (id: string) =>
+    apiRequest(`${API_KEY.VENDORS}/get-vendor-by-id/${id}`, "GET"),
 };
 
 export const cartApi = {

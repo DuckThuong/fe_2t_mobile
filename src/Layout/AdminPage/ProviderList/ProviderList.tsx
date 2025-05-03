@@ -58,9 +58,9 @@ const ProviderList: React.FC = () => {
     { title: "Địa chỉ", dataIndex: "address", key: "address" },
   ];
 
-  const handleAddProvider = () => {
-    navigate(ADMIN_ROUTER_PATH.ADD_PROVIDER);
-  };
+  // const handleAddProvider = () => {
+  //   navigate(ADMIN_ROUTER_PATH.ADD_PROVIDER);
+  // };
 
   const handleReload = () => {
     setSearchQuery("");
@@ -129,9 +129,9 @@ const ProviderList: React.FC = () => {
       </div>
       <div className="provider-list-actions">
         <div className="left-actions">
-          <button className="btn-create" onClick={handleAddProvider}>
+          {/* <button className="btn-create" onClick={handleAddProvider}>
             Thêm mới
-          </button>
+          </button> */}
           <button className="btn-refresh" onClick={handleReload}>
             Tải lại
           </button>

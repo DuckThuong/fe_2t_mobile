@@ -8,3 +8,7 @@ export interface CreateProductPayload {
   warranty: number;
   color: number;
 }
+
+export interface CreatePurchasePayload {
+  
+}
