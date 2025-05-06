@@ -7,16 +7,19 @@ import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
-import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers"; // Thêm ADMIN_ROUTER_PATH
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
 import { login } from "../../api/authApi";
+import { setAuthUser } from "../../store/authSlice";
+import { message } from "antd";
 
 const Login = () => {
   const [form] = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
     type: "success" | "error";
@@ -30,12 +33,46 @@ const Login = () => {
       return () => clearTimeout(timer);
     }
   }, [notification]);
-  const onFinish = () => {
-    const phone = form.getFieldValue("phone");
-    const password = form.getFieldValue("password");
-    login(phone, password);
-    navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+
+  const onFinish = async () => {
+    try {
+      setLoading(true);
+      const phone = form.getFieldValue("phone");
+      const password = form.getFieldValue("password");
+
+      const response = await login(phone, password);
+
+      if (response && response.user) {
+        dispatch(
+          setAuthUser({
+            id: response.user.id,
+            email: response.user.email,
+            fullName: response.user.full_name || response.user.user_name,
+          })
+        );
+
+        setNotification({
+          message: "Đăng nhập thành công!",
+          type: "success",
+        });
+
+        // Wait a bit before navigating to show the success message
+        setTimeout(() => {
+          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+        }, 1000);
+      }
+    } catch (error: any) {
+      setNotification({
+        message:
+          error.response?.data?.message ||
+          "Đăng nhập thất bại. Vui lòng thử lại!",
+        type: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
   const handleForgotPassword = () => {
     navigate(CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT);
   };
@@ -85,7 +122,7 @@ const Login = () => {
               name={"password"}
               formItemProps={{
                 className: "login_form-input",
-                // rules: ValidateLibrary().password,
+                rules: ValidateLibrary().password,
               }}
               isPassword
               inputProps={{
@@ -98,35 +135,21 @@ const Login = () => {
             <FormButtonSubmit
               content="Đăng nhập"
               buttonProps={{
-                className: "login_form-login-button",
-                type: "default",
-                htmlType: "submit",
+                loading: loading,
+                disabled: loading,
               }}
             />
           </div>
-
-          <div className="login_form-checkbox ">
-            <FormCheckbox
-              name={"submit"}
-              content={"Lưu mật khẩu"}
-              formItemProps={{
-                className: "login_form-checkbox-sumit",
-              }}
-            />
-          </div>
-
-          {/* Thêm nút đăng ký */}
           <div className="login_form-register">
-            <button
-              onClick={handleRegister}
-              className="login_form-register-button"
-            >
-              Đăng ký
-            </button>
+            <p>
+              Bạn chưa có tài khoản?{" "}
+              <span onClick={handleRegister}>Đăng ký ngay</span>
+            </p>
           </div>
         </FormWrap>
       </div>
     </div>
   );
 };
+
 export default Login;

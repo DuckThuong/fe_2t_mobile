@@ -56,32 +56,6 @@ export const CUSTOMER_ROUTER_PATH = {
 
 const ADMIN = "admin";
 
-export const ADMIN_ROUTE_NAME = {
-  ADMIN: `/${ADMIN}`,
-  DASHBOARD: `/${ADMIN}/dashboard`,
-  USER_LIST: `/${ADMIN}/user-list`,
-  PROVIDER_LIST: `/${ADMIN}/provider-list`,
-  ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
-  EDIT_PROVIDER: (id: string | number) =>
-    `/${ADMIN}/provider-list/edit-provider/${id}`,
-  PRODUCT_LIST: `/${ADMIN}/product-list`,
-  ADD_SHIPMENT: `/${ADMIN}/product-list/add-shipment`,
-  EDIT_SHIPMENT: `/${ADMIN}/product-list/edit-shipment`,
-  ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
-  EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
-  ORDER: `/${ADMIN}/order`,
-  CUSTOMER_INVOICE_DETAIL: (id: string | number) =>
-    `/${ADMIN}/order/customer-invoice-detail/${id}`,
-  PROVIDER_INVOICE_DETAIL: (id: string | number) =>
-    `/${ADMIN}/order/provider-invoice-detail/${id}`,
-  ADDBILL_CLIENT: `/${ADMIN}/add-bill-client`,
-  ADDBILL_PROVIDER: `/${ADMIN}/add-bill-provider`,
-  PROMOTION_LIST: `/${ADMIN}/promotion-list`,
-  ADD_PROMOTION: `/${ADMIN}/promotion-list/add-promotion`,
-  EDIT_PROMOTION: (id: string | number) =>
-    `/${ADMIN}/promotion-list/edit-promotion/${id}`,
-};
-
 export const ADMIN_ROUTER_PATH = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
@@ -92,10 +66,7 @@ export const ADMIN_ROUTER_PATH = {
     `/${ADMIN}/provider-list/edit-provider/${id}`,
 
   PRODUCT_LIST: `/${ADMIN}/product-list`,
-  ADD_SHIPMENT: `/${ADMIN}/product-list/add-shipment`,
-  EDIT_SHIPMENT: `/${ADMIN}/product-list/edit-shipment`,
-  ADD_PRODUCT: `/${ADMIN}/product-list/add-product`,
-  EDIT_PRODUCT: `/${ADMIN}/product-list/edit-product`,
+  EDIT_PRODUCT: (id: string | number) => `/${ADMIN}/product-list/edit-product/${id}`,
   ORDER: `/${ADMIN}/order`,
   CUSTOMER_INVOICE_DETAIL: (id: string | number) =>
     `/${ADMIN}/order/customer-invoice-detail/${id}`,

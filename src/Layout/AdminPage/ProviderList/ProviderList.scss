@@ -26,10 +26,10 @@
           cursor: pointer;
         }
   
-        // .btn-create {
-        //   background-color: #1890ff;
-        //   color: white;
-        // }
+        .btn-create {
+          background-color: #1890ff;
+          color: white;
+        }
   
         .btn-refresh {
           background-color: transparent;
@@ -48,19 +48,33 @@
         align-items: center;
   
         .search-input {
+          outline: none;
           padding: 8px;
           border: 1px solid #d9d9d9;
           border-radius: 4px;
           margin-right: 10px;
-          width: 25%;
+          width: 200px;
         }
   
         .btn-search {
-          background-color: #ddd;
-        }
-        
-        .btn-search:hover {
-          background-color: #ccc;
+          background-color: #1677ff;
+          color: #fff;
+          border: none;
+          padding: 8px 12px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+  
+          &:hover {
+            background-color: #0958d9;
+          }
+  
+          .anticon {
+            font-size: 16px;
+          }
         }
         
       }
