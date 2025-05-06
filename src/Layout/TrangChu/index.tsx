@@ -1,23 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { imageApi, productApi } from "../../api/api";
+import { imageApi } from "../../api/api";
 import { QUERY_KEY } from "../../api/apiConfig";
+import { useUser } from "../../api/useHook";
 import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
-import { HomeHeader } from "./HomeHeader";
+import App from "./Content";
 import { ListProduct } from "./ListProducts";
-import App from "./Content"
-
-
-
 export const Home = () => {
   const { data: imageData } = useQuery({
-     queryKey: [QUERY_KEY.GET_IMAGE],
+    queryKey: [QUERY_KEY.GET_IMAGE],
     // queryKey: [QUERY_KEY.GET_PRODUCTS],
     queryFn: imageApi.getAllImage,
     //  staleTime: 60000, // Giữ cache 1 phút
     // retry: 1, // Thử lại 1 lần nếu lỗi
   });
-
+  const user = useUser();
+  console.log(user);
   return (
     <>
       <Navbar />
@@ -40,13 +38,11 @@ export const Home = () => {
         </div>
         <div className="home_content">
           <div className="home-list_header">
-            <p className="home-list_header-title">
-              Danh sách sản phẩm mới
-            </p>
+            <p className="home-list_header-title">Danh sách sản phẩm mới</p>
           </div>
           <ListProduct itemPerPage={4} />
         </div>
-         <div className="home_content">
+        <div className="home_content">
           <div className="home-list_header">
             <p className="home-list_header-title">
               Danh sách sản phẩm phụ kiện
@@ -55,11 +51,8 @@ export const Home = () => {
           <ListProduct itemPerPage={4} />
         </div>
       </div>
-      <div style={{ width: "auto", height: "30px" }}>
-      </div>
+      <div style={{ width: "auto", height: "30px" }}></div>
       <FooterWeb />
     </>
   );
-   
-
 };
