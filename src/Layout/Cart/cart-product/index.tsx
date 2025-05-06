@@ -5,8 +5,8 @@ interface CartProductProps {
   product: {
     id: string;
     name: string;
-    color:string;
-    capacity:string;
+    color: string;
+    capacity: string;
     price: number;
     quantity: number;
     image: string;
@@ -16,14 +16,13 @@ interface CartProductProps {
   onRemove: (id: string) => void;
 }
 
-const CartProduct = ({ product, onUpdate, onRemove }: CartProductProps) => {
+export const CartProduct = ({ product, onUpdate, onRemove }: CartProductProps) => {
   const toggleSelection = () => {
     onUpdate(product.id, { selected: !product.selected });
   };
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity < 1) {
-      // Nếu số lượng = 0 thì xóa sản phẩm
       onRemove(product.id);
       return;
     }
@@ -50,8 +49,6 @@ const CartProduct = ({ product, onUpdate, onRemove }: CartProductProps) => {
       
       <div className="product-info">
         <h3>{product.name} {product.capacity}</h3>
-        
-        
         <h3>Màu sắc: {product.color}</h3>
         <div className="product-price">{product.price.toLocaleString()}đ</div>
       </div>
@@ -79,4 +76,3 @@ const CartProduct = ({ product, onUpdate, onRemove }: CartProductProps) => {
   );
 };
 
-export default CartProduct;

@@ -11,11 +11,11 @@ export const LogoForm: React.FC = () => {
         height={140}
         className="my-auto"
         src={
-          "https://cafefcdn.com/thumb_w/640/203337114487263232/2022/3/23/photo1648012210921-16480122111121649082453.jpg"
+          "logo.jpg"
         }
         alt={"imageFormLogin"}
       />
-      <h2 className="logo-form__title text-center">REPO WEB</h2>
+      <h2 className="logo-form__title text-center">2T_MOBILE</h2>
     </div>
   );
 };

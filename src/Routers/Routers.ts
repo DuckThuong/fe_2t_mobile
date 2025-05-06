@@ -6,7 +6,7 @@ export const ACTION = {
 };
 export const CUSTOMER_ROUTE_NAME = {
   //Log_In
-  LOG_IN: "",
+  LOG_IN: "log-in",
   //sign_in
   SIGN_UP: "sign-up",
   //Forgot_password
@@ -17,7 +17,7 @@ export const CUSTOMER_ROUTE_NAME = {
   MUA_HANG: "mua-hang",
 
   //List_Students
-  TRANG_CHU: "trang-chu",
+  TRANG_CHU: "",
   TRANG_DS_SP: "trang_ds_sp",
   //Catergories
   CATERGORIES: "catergories",

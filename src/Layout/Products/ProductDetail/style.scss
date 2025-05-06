@@ -26,7 +26,7 @@ $hover-color: #f0f0f0;
 
     .main-image-container {
       position: relative;
-      width: 90%;
+      width: 100%;
       padding-bottom: 100%;
       background: $secondary-color;
       border-radius: 12px;
@@ -39,7 +39,6 @@ $hover-color: #f0f0f0;
         width: 100%;
         height: 100%;
         object-fit: contain;
-        background: white;
       }
 
       .image-placeholder {
@@ -93,35 +92,27 @@ $hover-color: #f0f0f0;
       }
     }
 
-    .thumbnail-container {
+    .thumbnail-gallery {
       display: flex;
       gap: 10px;
       margin-top: 15px;
-      flex-wrap: wrap;
+      overflow-x: auto;
 
-      .thumbnail {
-        width: 70px;
-        height: 70px;
-        border-radius: 8px;
-        border: 1px solid $border-color;
+      .thumbnail-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border: 2px solid $border-color;
+        border-radius: 6px;
         cursor: pointer;
-        overflow: hidden;
-        background: $secondary-color;
-        transition: all 0.2s;
+        transition: border-color 0.3s;
 
         &.active {
           border-color: $primary-color;
-          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
         }
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        &:hover:not(.active) {
-          border-color: darken($border-color, 10%);
+        &:hover {
+          border-color: darken($primary-color, 10%);
         }
       }
     }
@@ -137,12 +128,6 @@ $hover-color: #f0f0f0;
       font-weight: 600;
       color: $text-color;
       margin-bottom: 5px;
-    }
-
-    .product-subtitle {
-      color: #86868b;
-      margin-bottom: 20px;
-      font-size: 14px;
     }
 
     .option-group {
@@ -168,6 +153,8 @@ $hover-color: #f0f0f0;
           transition: all 0.2s;
           text-align: center;
           min-width: 80px;
+          background-color: #ffffff;
+          color: #000000;
 
           &.active {
             border-color: $primary-color;
@@ -176,23 +163,6 @@ $hover-color: #f0f0f0;
 
           &:hover:not(.active) {
             background-color: $hover-color;
-          }
-
-          // Style cho nút màu sắc
-          &[style*="background-color"] {
-            position: relative;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            .color-name {
-              position: relative;
-              z-index: 1;
-              background: rgba(255, 255, 255, 0.7);
-              padding: 2px 5px;
-              border-radius: 3px;
-            }
           }
         }
       }
@@ -209,12 +179,6 @@ $hover-color: #f0f0f0;
         font-weight: 600;
         color: $primary-color;
       }
-
-      .promo-text {
-        color: #ff3b30;
-        font-size: 14px;
-        margin-top: 8px;
-      }
     }
 
     .action-buttons {
@@ -229,7 +193,7 @@ $hover-color: #f0f0f0;
         font-size: 16px;
 
         &.btn-primary {
-          background: red; // hoặc #ff0000
+          background: red;
           border: none;
 
           &:hover {
@@ -247,23 +211,6 @@ $hover-color: #f0f0f0;
         }
       }
     }
-
-    .promo-section {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #86868b;
-
-      .promo-item {
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-
-        &:before {
-          content: "•";
-          margin-right: 8px;
-        }
-      }
-    }
   }
 }
 
@@ -277,6 +224,11 @@ $hover-color: #f0f0f0;
       flex: none;
       width: 100%;
     }
+  }
+
+  .thumbnail-gallery {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
@@ -333,7 +285,7 @@ $hover-color: #f0f0f0;
   }
 }
 
-// Responsive
+/* Responsive */
 @media (max-width: 768px) {
   .tech-specs-content {
     flex-direction: column;
@@ -343,3 +295,19 @@ $hover-color: #f0f0f0;
     }
   }
 }
+
+// /* Điều chỉnh chiều rộng của danh sách sản phẩm liên quan */
+// .home_content {
+//   width: 90%;
+//   margin: 0 auto;
+
+//   .home-list_header {
+//     margin-bottom: 20px;
+
+//     .home-list_header-title {
+//       font-size: 20px;
+//       font-weight: 600;
+//       color: #333;
+//     }
+//   }
+// }

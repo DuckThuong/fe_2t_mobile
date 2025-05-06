@@ -47,6 +47,8 @@ export enum OrderStateEnum {
 }
 
 export const userApi = {
+  doUpdateProfile: (data: any) =>
+    apiRequest('user/update-profile', 'PUT', null, data),
   doRegister: (data: RegisterPayload) =>
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
@@ -69,8 +71,9 @@ export const imageApi = {
 };
 
 export const productApi = {
-  getAllProducts: () => apiRequest(API_KEY.PRODUCT, "GET"),
-  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/${id}`, "GET"),
+  getAllProducts: ({ page = 1, size = 10 }: { page?: number; size?: number } = {}) =>
+    apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, { page, size }),
+  getProductById: (id: string) => apiRequest(`product/get-product-by-ID?id=${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
   updateProduct: (id: string, productData: any) =>
@@ -90,11 +93,14 @@ export const capacityApi = {
 };
 
 export const cartApi = {
+  creatCart :(id: string) => apiRequest(`${API_KEY.CART}/create-cart`, "POST",id),
   getAllCartItems: () => apiRequest(API_KEY.CART),
-  GetCartByUserId: (id: string) => apiRequest(`${API_KEY.CART}/${id}`),
+  GetCartByUserId: (id: string) => apiRequest(`cart/get-cart-by-user?user_id=${id}`, "GET"),
+  //GetCartByUserId: (id: string) => apiRequest(`${API_KEY.CART}/get-cart-by-user/${id}`, "GET"),
+
   GetCardByUserAndCartId: (userId: string, cartID: string) =>
     axios.get(`/api/getCart/${userId}`, { params: { cartID } }),
-  addCartItem: (itemData: any) => apiRequest(API_KEY.CART, "POST", itemData),
+  addCartItem: (itemData: any) => apiRequest(`${API_KEY.CART}/add-item-to-cart`, "POST", itemData),
   updateCartItem: (id: number, itemData: any) =>
     apiRequest(`${API_KEY.CART}/update/${id}`, "PATCH", itemData),
   deleteCartItem: (id: string) =>

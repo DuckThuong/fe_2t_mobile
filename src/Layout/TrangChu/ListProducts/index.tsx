@@ -4,218 +4,134 @@ import { ProductCard } from "../../../Components/ProductCard";
 import { productApi } from "../../../api/api";
 import { Pagination } from "antd";
 import "../style.scss";
-import { QUERY_KEY } from "../../../api/apiConfig";
+
+interface Capacity {
+  id: number;
+  value: number;
+  unit: string;
+  display_name: string;
+  price: {
+    id: number;
+    price: string;
+    discount_price: string;
+  };
+}
+
+interface Image {
+  id: number;
+  imageUrl: string;
+  isThumbnail: boolean;
+  sortOrder: number;
+}
+
+interface ProductDetail {
+  id: number;
+  stock_quantity: number;
+  serial_number: string;
+  import_price?: string | null;
+  selling_price: string;
+  capacity: Capacity;
+}
+
+interface Product {
+  id: number;
+  name: string;
+  productDetails: ProductDetail[];
+  images: Image[];
+}
+
+interface ApiResponse {
+  data: Product[];
+  pagination: {
+    total: number;
+    page: string;
+    size: string;
+    total_pages: number;
+  };
+}
 
 interface Props {
   level?: string;
-  itemPerPage: number;
+  itemPerPage?: number;
 }
 
-
-export const mockProducts = [
-  {
-    ProductID: 1,
-    ProductName: "iPhone 16 Pro Max",
-    Price: "30590000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max.png" }],
-    Description: "Điện thoại cao cấp với chip A17 Bionic.",
-    productColors: [
-      { ProductID: 1, ColorID: 101, color: { ColorID: 101, ColorName: "Blue" } },
-      { ProductID: 1, ColorID: 102, color: { ColorID: 102, ColorName: "Black" } },
-      { ProductID: 1, ColorID: 103, color: { ColorID: 103, ColorName: "Silver" } },
-    ],
-  },
-  {
-    ProductID: 2,
-    ProductName: "iPhone 15",
-    Price: "15690000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-15-plus_1__1.png" }],
-    Description: "Smartphone mạnh mẽ với camera 200MP.",
-    productColors: [
-      { ProductID: 2, ColorID: 201, color: { ColorID: 201, ColorName: "White" } },
-      { ProductID: 2, ColorID: 202, color: { ColorID: 202, ColorName: "Green" } },
-      { ProductID: 2, ColorID: 203, color: { ColorID: 203, ColorName: "Phantom Black" } },
-    ],
-  },
-  {
-    ProductID: 3,
-    ProductName: "iPhone 15 Pro",
-    Price: "28590000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-15-pro-max_4.png" }],
-    Description: "Hiệu năng mạnh mẽ với Snapdragon 8 Gen 2.",
-    productColors: [
-      { ProductID: 3, ColorID: 301, color: { ColorID: 301, ColorName: "Black" } },
-      { ProductID: 3, ColorID: 302, color: { ColorID: 302, ColorName: "Ceramic White" } },
-    ],
-  },
-  {
-    ProductID: 4,
-    ProductName: "iPhone 16 Pro",
-    Price: "25090000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro_1.png" }],
-    Description: "Camera AI thông minh với chip Tensor G3.",
-    productColors: [
-      { ProductID: 4, ColorID: 401, color: { ColorID: 401, ColorName: "Obsidian" } },
-      { ProductID: 4, ColorID: 402, color: { ColorID: 402, ColorName: "Rose" } },
-      { ProductID: 4, ColorID: 403, color: { ColorID: 403, ColorName: "Hazel" } },
-    ],
-  },
-  {
-    ProductID: 5,
-    ProductName: "iPhone 16e",
-    Price: "16190000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16e-128gb.png" }],
-    Description: "Màn hình đẹp, camera xuất sắc với Hasselblad.",
-    productColors: [
-      { ProductID: 5, ColorID: 501, color: { ColorID: 501, ColorName: "Gold" } },
-      { ProductID: 5, ColorID: 502, color: { ColorID: 502, ColorName: "Black" } },
-      { ProductID: 5, ColorID: 503, color: { ColorID: 503, ColorName: "Orange" } },
-    ],
-  },
-  {
-    ProductID: 6,
-    ProductName: "iPhone 14",
-    Price: "12790000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-14_1.png" }],
-    Description: "Flagship killer với Snapdragon 8 Gen 2.",
-    productColors: [
-      { ProductID: 6, ColorID: 601, color: { ColorID: 601, ColorName: "Titan Black" } },
-      { ProductID: 6, ColorID: 602, color: { ColorID: 602, ColorName: "Eternal Green" } },
-    ],
-  },
-  {
-    ProductID: 7,
-    ProductName: "iPhone 16",
-    Price: "18990000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-1.png" }],
-    Description: "Thiết kế độc đáo với mặt lưng LED.",
-    productColors: [
-      { ProductID: 7, ColorID: 701, color: { ColorID: 701, ColorName: "White" } },
-      { ProductID: 7, ColorID: 702, color: { ColorID: 702, ColorName: "Black" } },
-    ],
-  },
-  {
-    ProductID: 8,
-    ProductName: "iPhone 15 Plus",
-    Price: "19190000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-15-plus_1_.png" }],
-    Description: "Gaming phone với màn hình 165Hz.",
-    productColors: [
-      { ProductID: 8, ColorID: 801, color: { ColorID: 801, ColorName: "Storm White" } },
-      { ProductID: 8, ColorID: 802, color: { ColorID: 802, ColorName: "Phantom Black" } },
-    ],
-  },
-  {
-    ProductID: 9,
-    ProductName: "iPhone 14 pro MAX",
-    Price: "25590000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-14-pro_2__5.png" }],
-    Description: "Gaming phone với màn hình 165Hz.",
-    productColors: [
-      { ProductID: 8, ColorID: 801, color: { ColorID: 801, ColorName: "Storm White" } },
-      { ProductID: 8, ColorID: 802, color: { ColorID: 802, ColorName: "Phantom Black" } },
-    ],
-  },
-  {
-    ProductID: 10,
-    ProductName: "iPhone 11",
-    Price: "9490000",
-    images: [{ ImageURL: "hhttps://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-11-128gb.png" }],
-    Description: "Gaming phone với màn hình 165Hz.",
-    productColors: [
-      { ProductID: 8, ColorID: 801, color: { ColorID: 801, ColorName: "Storm White" } },
-      { ProductID: 8, ColorID: 802, color: { ColorID: 802, ColorName: "Phantom Black" } },
-    ],
-  },
-  {
-    ProductID: 11,
-    ProductName: "Nothing Phone (2)",
-    Price: "15990000",
-    images: [{ ImageURL: "https://via.placeholder.com/150" }],
-    Description: "Thiết kế độc đáo với mặt lưng LED.",
-    productColors: [
-      { ProductID: 7, ColorID: 701, color: { ColorID: 701, ColorName: "White" } },
-      { ProductID: 7, ColorID: 702, color: { ColorID: 702, ColorName: "Black" } },
-    ],
-  },
-  {
-    ProductID: 12,
-    ProductName: "iPhone 12 Pro Max",
-    Price: "23990000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/_/1_251_1.jpg" }],
-    Description: "Gaming phone với màn hình 165Hz.",
-    productColors: [
-      { ProductID: 8, ColorID: 801, color: { ColorID: 801, ColorName: "Storm White" } },
-      { ProductID: 8, ColorID: 802, color: { ColorID: 802, ColorName: "Phantom Black" } },
-    ],
-  },
-  {
-    ProductID: 13,
-    ProductName: "iPhone 16e",
-    Price: "23990000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max.png" }],
-    Description: "Gaming phone với màn hình 165Hz.",
-    productColors: [
-      { ProductID: 8, ColorID: 801, color: { ColorID: 801, ColorName: "Storm White" } },
-      { ProductID: 8, ColorID: 802, color: { ColorID: 802, ColorName: "Phantom Black" } },
-    ],
-  },
-  {
-    ProductID: 14,
-    ProductName: "Asus ROG Phone 7",
-    Price: "23990000",
-    images: [{ ImageURL: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max.png" }],
-    Description: "Gaming phone với màn hình 165Hz.",
-    productColors: [
-      { ProductID: 8, ColorID: 801, color: { ColorID: 801, ColorName: "Storm White" } },
-      { ProductID: 8, ColorID: 802, color: { ColorID: 802, ColorName: "Phantom Black" } },
-    ],
-  },
-
-];
-
-export const ListProduct: React.FC<Props> = ({ level, itemPerPage }) => {
+export const ListProduct: React.FC<Props> = ({ level, itemPerPage = 4 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { data: apiResponse, isLoading, error } = useQuery<ApiResponse>({
+    queryKey: ["products", currentPage, itemPerPage],
+    queryFn: async () => {
+      const response = await productApi.getAllProducts({ page: currentPage, size: itemPerPage });
+      console.log("API Response:", response); // Debug response
+      return response;
+    },
+  });
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const startIndex = (currentPage - 1) * itemPerPage;
-  const currentProducts = mockProducts.slice(startIndex, startIndex + itemPerPage); // Sử dụng dữ liệu fix cứng
+  if (isLoading) return <div>Đang tải...</div>;
+  if (error) return <div>Không thể tải sản phẩm: {(error as Error).message}</div>;
 
+  const productData = apiResponse?.data || [];
+  const totalItems = apiResponse?.pagination.total || 0;
+  console.log("Total Items:", totalItems, "Products:", productData.length); // Debug total and current page data
 
+  if (!productData.length && !isLoading) {
+    return <div>Không có sản phẩm nào để hiển thị.</div>;
+  }
 
   return (
     <div className="home-list">
       <div className="home-list_content">
-        {currentProducts?.map((product) => (
-          <ProductCard
-            key={product.ProductID}
-            
-            product={{
-              id: product.ProductID,
-              name: product.ProductName,
-              price: parseFloat(product.Price),
-              image:
-                product.images.length > 0
-                  ? product.images[0].ImageURL
-                  : "default-image-url",
-              // description: product.Description,
-              // colors: product?.productColors,
-              className: "home-list_content-item",
-            }}
-          />
-        ))}
+        {productData.map((product) => {
+          const productDetail = product.productDetails[0] || {};
+          const capacityDisplayName = productDetail.capacity?.display_name || "N/A";
+          
+          // Tính tổng giá: selling_price + capacity.price.price
+          const sellingPrice = productDetail.selling_price
+            ? parseFloat(productDetail.selling_price.replace(/[^0-9.-]+/g, "")) || 0
+            : 0;
+          const capacityPrice = productDetail.capacity?.price?.price
+            ? parseFloat(productDetail.capacity.price.price.replace(/[^0-9.-]+/g, "")) || 0
+            : 0;
+          const totalPrice = sellingPrice + capacityPrice;
+
+          // Lấy imageUrl từ images của product
+          const imageUrl = product.images?.find((img) => img.isThumbnail)?.imageUrl || "https://via.placeholder.com/150";
+
+          // Kiểm tra dữ liệu hợp lệ
+          if (!product.id || !product.name || totalPrice === 0) {
+            console.warn(`Sản phẩm có dữ liệu không đầy đủ:`, product);
+            return null;
+          }
+
+          return (
+            <ProductCard
+              key={product.id}
+              product={{
+                id: product.id,
+                name: product.name,
+                capacity: capacityDisplayName,
+                price: totalPrice,
+                image: imageUrl,
+                className: "home-list_content-item",
+              }}
+            />
+          );
+        })}
       </div>
       <Pagination
         current={currentPage}
         pageSize={itemPerPage}
-        //total={productData?.ProductList?.length}
-        total={mockProducts.length} // Dùng dữ liệu fix cứng
+        total={totalItems}
         onChange={handlePageChange}
         showSizeChanger={false}
+        showTotal={(total) => `Tổng ${total} sản phẩm`}
       />
     </div>
   );
-}; 
+};
+
+export default ListProduct;
