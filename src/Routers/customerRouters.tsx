@@ -27,17 +27,14 @@ export const CustomerRouter = () => (
       path={CUSTOMER_ROUTER_PATH.SIGN_UP}
       element={<SuspenseWrapper component={<Signup />} />}
     ></Route>
-      
-    
-    
+
     {/* Forgot_Password */}
     <Route>
-
       <Route
         path={CUSTOMER_ROUTER_PATH.FORGOT_EMAIL_INPUT}
         element={<SuspenseWrapper component={<ForgotEmailInput />} />}
       ></Route>
-      
+
       <Route
         path={CUSTOMER_ROUTER_PATH.FORGOT_CODE_INPUT}
         element={<SuspenseWrapper component={<ForgotCodeInput />} />}
@@ -58,7 +55,7 @@ export const CustomerRouter = () => (
         element={<SuspenseWrapper component={<Home />} />}
       ></Route>
     </Route>
-        <Route>
+    <Route>
       <Route
         path={CUSTOMER_ROUTER_PATH.TRANG_DS_SP}
         element={<SuspenseWrapper component={<ListPage />} />}
@@ -96,9 +93,6 @@ export const CustomerRouter = () => (
         path={CUSTOMER_ROUTER_PATH.PROFILE}
         element={<SuspenseWrapper component={<Profile />} />}
       ></Route>
-
-
-      
     </Route>
   </Routes>
 );

@@ -1,32 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { Button, Form, Input, Upload, message } from "antd";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import {
+  Button,
+  Form,
+  Input,
+  Upload,
+  message,
+  Select,
+  Spin,
+  Checkbox,
+} from "antd";
 import { UploadOutlined, CloseCircleFilled } from "@ant-design/icons";
 import "./EditProduct.scss";
 import { ADMIN_ROUTER_PATH } from "../../../../Routers/Routers";
-
+import { productApi, vendorsApi } from "../../../../api/api";
+import { UpdateProductPayload } from "../../../../api/constants";
 
 interface ISpecs {
-  screen_size: string;
-  resolution: string;
-  chipset: string;
-  ram: string;
-  os: string;
-  battery_capacity: string;
-  charging_tech: string;
+  screen_size?: string;
+  resolution?: string;
+  chipset?: string;
+  ram?: string;
+  os?: string;
+  battery_capacity?: string;
+  charging_tech?: string;
 }
 
 interface IProduct {
   id: number;
   name: string;
-  capacity: string;
-  color: string;
-  quantity: number;
-  price: number;
-  shipmentId: string;
-  image: string;
-  createdAt: string;
-  specs?: ISpecs;
+  model: string;
+  description?: string;
+  warranty_period?: number;
+  release_year?: number;
+  is_featured?: boolean;
+  status?: "Active" | "Inactive";
+  vendor_id: number;
+  color_id: number;
+  color_ids?: number[];
+  capacity_id: number;
+  stock_quantity?: number;
+  serial_number?: string;
+  import_price: string;
+  selling_price: string;
+  specs: ISpecs;
+  image_urls?: string[];
+}
+
+interface IVendor {
+  id: number;
+  name: string;
 }
 
 interface ImageFile {
@@ -37,36 +60,130 @@ interface ImageFile {
 
 const EditProduct: React.FC = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const location = useLocation();
-  const editingProduct = location.state?.product as IProduct | undefined;
   const [form] = Form.useForm();
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
+  const [vendors, setVendors] = useState<IVendor[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [product, setProduct] = useState<IProduct | null>(null);
 
-  // Initialize imageFiles and handle missing product
+  // Lấy dữ liệu từ state nếu có (từ ProductList)
+  const initialProductData = (location.state as { productData?: IProduct })
+    ?.productData;
+
+  // Lấy danh sách nhà cung cấp
   useEffect(() => {
-    if (!editingProduct) {
-      message.error("Không tìm thấy sản phẩm để chỉnh sửa!");
-      navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
-    } else {
-      setImageFiles([
-        {
-          uid: "-1",
-          url: editingProduct.image,
-          name: "image.png",
-        },
-      ]);
-    }
-  }, [editingProduct, navigate]);
+    const fetchVendors = async () => {
+      try {
+        const vendorsData = await vendorsApi.getAllVendors();
+        setVendors(vendorsData);
+      } catch (err) {
+        message.error("Không thể tải danh sách nhà cung cấp!");
+        console.error("Lỗi fetch vendors:", err);
+      }
+    };
+    fetchVendors();
+  }, []);
 
-  // Render nothing until redirect happens
-  if (!editingProduct) {
-    return null;
-  }
+  // Lấy dữ liệu sản phẩm
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Sử dụng dữ liệu từ state nếu có, nếu không thì gọi API
+        const productData =
+          initialProductData || (await productApi.getProductById(id!));
+        console.log("Dữ liệu sản phẩm:", productData); // Kiểm tra dữ liệu
+
+        // Chuẩn hóa dữ liệu
+        const normalizedData: IProduct = {
+          id: productData.id,
+          name: productData.name || "",
+          model: productData.model || "",
+          description: productData.description || "",
+          warranty_period: productData.warranty_period || 0,
+          release_year: productData.release_year || new Date().getFullYear(),
+          is_featured: productData.is_featured || false,
+          status: productData.status || "Active",
+          vendor_id: productData.vendor?.id || productData.vendor_id || 0,
+          color_id: productData.color_id || 0,
+          color_ids:
+            productData.color_ids?.filter((id: number | null) => id !== null) ||
+            [],
+          capacity_id: productData.capacity_id || 0,
+          stock_quantity: productData.stock_quantity || 0,
+          serial_number: productData.serial_number || "",
+          import_price: productData.import_price || "",
+          selling_price: productData.selling_price || "",
+          specs: {
+            screen_size: productData.specs?.screen_size || "",
+            resolution: productData.specs?.resolution || "",
+            chipset: productData.specs?.chipset || "",
+            ram: productData.specs?.ram || "",
+            os: productData.specs?.os || "",
+            battery_capacity: productData.specs?.battery_capacity || "",
+            charging_tech: productData.specs?.charging_tech || "",
+          },
+          image_urls:
+            productData.image_urls?.filter(
+              (url: string | null) => url !== null
+            ) || [],
+        };
+
+        setProduct(normalizedData);
+
+        // Set form values
+        form.setFieldsValue({
+          name: normalizedData.name,
+          model: normalizedData.model,
+          description: normalizedData.description,
+          warranty_period: normalizedData.warranty_period,
+          release_year: normalizedData.release_year,
+          is_featured: normalizedData.is_featured,
+          status: normalizedData.status,
+          vendor_id: normalizedData.vendor_id,
+          color_id: normalizedData.color_id,
+          capacity_id: normalizedData.capacity_id,
+          stock_quantity: normalizedData.stock_quantity,
+          serial_number: normalizedData.serial_number,
+          import_price: normalizedData.import_price,
+          selling_price: normalizedData.selling_price,
+          specs: normalizedData.specs,
+        });
+
+        // Set images
+        if (normalizedData.image_urls && normalizedData.image_urls.length > 0) {
+          setImageFiles(
+            normalizedData.image_urls.map((url, index) => ({
+              uid: `-${index + 1}`,
+              url,
+              name: `image-${index + 1}.png`,
+            }))
+          );
+        }
+      } catch (err) {
+        message.error("Không thể tải dữ liệu sản phẩm!");
+        navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    } else {
+      message.error("Không tìm thấy ID sản phẩm!");
+      navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
+    }
+  }, [id, navigate, form, initialProductData]);
 
   const handleImageChange = (info: any) => {
     const newFiles = info.fileList.map((file: any) => ({
       uid: file.uid,
-      url: file.originFileObj ? URL.createObjectURL(file.originFileObj) : file.url,
+      url: file.originFileObj
+        ? URL.createObjectURL(file.originFileObj)
+        : file.url,
       name: file.name,
     }));
     setImageFiles(newFiles);
@@ -76,104 +193,176 @@ const EditProduct: React.FC = () => {
     setImageFiles((prev) => prev.filter((file) => file.uid !== uid));
   };
 
-  const handleSubmit = (values: any) => {
-    const updatedProduct: IProduct = {
-      ...editingProduct,
-      name: values.name,
-      capacity: values.capacity,
-      color: values.color,
-      quantity: parseInt(values.quantity) || 0,
-      price: parseFloat(values.price) || 0,
-      shipmentId: values.shipmentId,
-      image: imageFiles[0]?.url || "",
-      specs: {
-        screen_size: values.screen_size || "",
-        resolution: values.resolution || "",
-        chipset: values.chipset || "",
-        ram: values.ram || "",
-        os: values.os || "",
-        battery_capacity: values.battery_capacity || "",
-        charging_tech: values.charging_tech || "",
-      },
-    };
-    navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST, { state: { updatedProduct } });
-    message.success("Cập nhật sản phẩm thành công!");
+  const handleSubmit = async (values: any) => {
+    setLoading(true);
+    try {
+      const updatedProductData: UpdateProductPayload = {
+        id: Number(id),
+        name: values.name,
+        model: values.model,
+        description: values.description || "",
+        warranty_period: Number(values.warranty_period) || 0,
+        release_year: Number(values.release_year) || 0,
+        is_featured: values.is_featured || false,
+        status: values.status || "Active",
+        vendor_id: Number(values.vendor_id),
+        color_id: Number(values.color_id) || 0,
+        color_ids: values.color_ids || [],
+        capacity_id: Number(values.capacity_id) || 0,
+        stock_quantity: Number(values.stock_quantity) || 0,
+        serial_number: values.serial_number || "",
+        import_price: values.import_price || "",
+        selling_price: values.selling_price || "",
+        specs: {
+          screen_size: values.specs?.screen_size || "",
+          resolution: values.specs?.resolution || "",
+          chipset: values.specs?.chipset || "",
+          ram: values.specs?.ram || "",
+          os: values.specs?.os || "",
+          battery_capacity: values.specs?.battery_capacity || "",
+          charging_tech: values.specs?.charging_tech || "",
+        },
+        image_urls: imageFiles.map((file) => file.url),
+      };
+
+      // Validation
+      if (
+        !updatedProductData.name ||
+        !updatedProductData.model ||
+        !updatedProductData.vendor_id
+      ) {
+        message.error("Vui lòng điền đầy đủ các trường bắt buộc!");
+        setLoading(false);
+        return;
+      }
+
+      console.log("Payload gửi đi:", updatedProductData); // Kiểm tra payload
+      await productApi.updateProduct(id!, updatedProductData);
+      message.success("Cập nhật sản phẩm thành công!");
+      navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
+    } catch (err: any) {
+      message.error(
+        err?.response?.data?.message || "Lỗi khi cập nhật sản phẩm!"
+      );
+      console.error("Lỗi update sản phẩm:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
     navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
   };
 
+  if (!product) {
+    return (
+      <div className="loading-container">
+        <Spin tip="Đang tải dữ liệu..." />
+      </div>
+    );
+  }
+
   return (
     <div className="product-form-page">
       <h2>Sửa sản phẩm</h2>
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={{
-          name: editingProduct.name,
-          capacity: editingProduct.capacity,
-          color: editingProduct.color,
-          quantity: editingProduct.quantity,
-          price: editingProduct.price,
-          shipmentId: editingProduct.shipmentId,
-          screen_size: editingProduct.specs?.screen_size || "",
-          resolution: editingProduct.specs?.resolution || "",
-          chipset: editingProduct.specs?.chipset || "",
-          ram: editingProduct.specs?.ram || "",
-          os: editingProduct.specs?.os || "",
-          battery_capacity: editingProduct.specs?.battery_capacity || "",
-          charging_tech: editingProduct.specs?.charging_tech || "",
-        }}
-        onFinish={handleSubmit}
-      >
+      <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item
           label="Tên sản phẩm"
           name="name"
-          rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
+          rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
+        >
+          <Input readOnly />
+        </Form.Item>
+        <Form.Item
+          label="Model"
+          name="model"
+          rules={[{ required: true, message: "Vui lòng nhập model!" }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item
-          label="Dung lượng"
-          name="capacity"
-          rules={[{ required: true, message: "Vui lòng nhập dung lượng" }]}
-        >
-          <Input />
+        <Form.Item label="Mô tả" name="description">
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item label="Thời gian bảo hành (tháng)" name="warranty_period">
+          <Input type="number" min={0} />
+        </Form.Item>
+        <Form.Item label="Năm ra mắt" name="release_year">
+          <Input type="number" min={1900} max={new Date().getFullYear()} />
+        </Form.Item>
+        <Form.Item label="Nổi bật" name="is_featured" valuePropName="checked">
+          <Checkbox />
         </Form.Item>
         <Form.Item
-          label="Màu sắc"
-          name="color"
-          rules={[{ required: true, message: "Vui lòng nhập màu sắc" }]}
+          label="Trạng thái"
+          name="status"
+          rules={[{ required: true, message: "Vui lòng chọn trạng thái!" }]}
         >
-          <Input />
+          <Select>
+            <Select.Option value="Active">Hoạt động</Select.Option>
+            <Select.Option value="Inactive">Ngưng hoạt động</Select.Option>
+          </Select>
         </Form.Item>
         <Form.Item
-          label="Số lượng"
-          name="quantity"
-          rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
+          label="Nhà cung cấp"
+          name="vendor_id"
+          rules={[{ required: true, message: "Vui lòng chọn nhà cung cấp!" }]}
+        >
+          <Select
+            placeholder="Chọn nhà cung cấp"
+            loading={vendors.length === 0}
+            showSearch
+            optionFilterProp="children"
+          >
+            {vendors.map((vendor) => (
+              <Select.Option key={vendor.id} value={vendor.id}>
+                {vendor.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        {/* <Form.Item
+          label="Màu sắc chính (ID)"
+          name="color_id"
+          rules={[{ required: true, message: "Vui lòng nhập ID màu sắc!" }]}
         >
           <Input type="number" min={0} />
         </Form.Item>
         <Form.Item
-          label="Giá gốc"
-          name="price"
-          rules={[{ required: true, message: "Vui lòng nhập giá gốc" }]}
+          label="Dung lượng (ID)"
+          name="capacity_id"
+          rules={[{ required: true, message: "Vui lòng nhập ID dung lượng!" }]}
+        >
+          <Input type="number" min={0} />
+        </Form.Item> */}
+        <Form.Item
+          label="Số lượng tồn kho"
+          name="stock_quantity"
+          rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
         >
           <Input type="number" min={0} />
         </Form.Item>
-        <Form.Item
-          label="Mã lô hàng"
-          name="shipmentId"
-          rules={[{ required: true, message: "Vui lòng nhập mã lô hàng" }]}
-        >
+        <Form.Item label="Số serial" name="serial_number">
           <Input />
         </Form.Item>
-        <Form.Item label="Ảnh">
+        {/* <Form.Item
+          label="Giá nhập"
+          name="import_price"
+          rules={[{ required: true, message: "Vui lòng nhập giá nhập!" }]}
+        >
+          <Input type="text" />
+        </Form.Item> */}
+        <Form.Item
+          label="Giá bán"
+          name="selling_price"
+          rules={[{ required: true, message: "Vui lòng nhập giá bán!" }]}
+        >
+          <Input type="text" />
+        </Form.Item>
+        <Form.Item label="Ảnh" name="image_urls">
           <Upload
             listType="picture"
-            showUploadList={false} // Hide default vertical list
-            beforeUpload={() => false} // Prevent auto-upload
+            showUploadList={false}
+            beforeUpload={() => false}
             onChange={handleImageChange}
             multiple
           >
@@ -192,32 +381,42 @@ const EditProduct: React.FC = () => {
           </div>
         </Form.Item>
         <h3>Thông số kỹ thuật</h3>
-        <Form.Item label="Kích thước màn hình" name="screen_size">
+        <Form.Item label="Kích thước màn hình" name={["specs", "screen_size"]}>
           <Input />
         </Form.Item>
-        <Form.Item label="Độ phân giải" name="resolution">
+        <Form.Item label="Độ phân giải" name={["specs", "resolution"]}>
           <Input />
         </Form.Item>
-        <Form.Item label="Chipset" name="chipset">
+        <Form.Item label="Chipset" name={["specs", "chipset"]}>
           <Input />
         </Form.Item>
-        <Form.Item label="RAM" name="ram">
+        <Form.Item label="RAM" name={["specs", "ram"]}>
           <Input />
         </Form.Item>
-        <Form.Item label="Hệ điều hành" name="os">
+        <Form.Item label="Hệ điều hành" name={["specs", "os"]}>
           <Input />
         </Form.Item>
-        <Form.Item label="Dung lượng pin" name="battery_capacity">
+        <Form.Item label="Dung lượng pin" name={["specs", "battery_capacity"]}>
           <Input />
         </Form.Item>
-        <Form.Item label="Công nghệ sạc" name="charging_tech">
+        <Form.Item label="Công nghệ sạc" name={["specs", "charging_tech"]}>
           <Input />
         </Form.Item>
         <div className="form-actions">
-          <Button type="primary" htmlType="submit" className="btn-submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="btn-submit"
+            onClick={handleSubmit}
+            loading={loading}
+          >
             Lưu thay đổi
           </Button>
-          <Button className="btn-cancel" onClick={handleCancel}>
+          <Button
+            className="btn-cancel"
+            onClick={handleCancel}
+            disabled={loading}
+          >
             Hủy
           </Button>
         </div>

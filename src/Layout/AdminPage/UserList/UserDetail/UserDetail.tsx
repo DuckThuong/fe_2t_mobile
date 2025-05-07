@@ -1,36 +1,46 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Spin, message } from "antd";
+import { Button, Spin, message, Modal } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 import "./UserDetail.scss";
 import { userApi } from "../../../../api/api";
+import { ADMIN_ROUTER_PATH } from "../../../../Routers/Routers";
 
+// Interface khớp với dữ liệu API
 interface IUser {
   id: number;
-  user_name: string;
-  phone_number: string;
+  userName: string | null;
+  phoneNumber: string;
   email: string;
-  is_admin: boolean;
-  user_rank: string;
-  is_active: boolean;
-  created_at: string;
-  full_name: string;
-  address: string;
-  gender: string;
-  birthday: string;
-  avatar: string;
+  isAdmin: boolean;
+  userRank: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  userInformation?: any;
+  fullName?: string;
+  address?: string;
+  gender?: string;
+  birthday?: string;
+  avatar?: string;
 }
 
 const UserDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Lấy ID từ URL
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [user, setUser] = useState<IUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // Hàm lấy thông tin người dùng theo ID
+  // Hàm lấy thông tin người dùng
   const fetchUser = async () => {
-    if (!id) return;
+    if (!id || isNaN(Number(id))) {
+      setError("ID người dùng không hợp lệ.");
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -49,25 +59,36 @@ const UserDetail: React.FC = () => {
   const handleDelete = async () => {
     if (!id) return;
 
-    if (window.confirm("Bạn có chắc chắn muốn xóa tài khoản này không?")) {
-      try {
-        await userApi.doDeleteUser(id);
-        message.success("Xóa tài khoản thành công!");
-        navigate("/admin/user-list"); // Quay lại trang danh sách sau khi xóa
-      } catch (err) {
-        message.error("Lỗi khi xóa tài khoản. Vui lòng thử lại!");
-      }
+    setIsModalVisible(true);
+  };
+
+  // Xử lý khi xác nhận xóa trong modal
+  const handleOk = async () => {
+    setIsModalVisible(false);
+    if (!id) return;
+
+    try {
+      await userApi.doDeleteUser(id); // Gọi API: DELETE /delete-user-by-id?Id=${id}
+      message.success("Xóa tài khoản thành công!");
+      navigate(ADMIN_ROUTER_PATH.USER_LIST);
+    } catch (err) {
+      message.error("Lỗi khi xóa tài khoản. Vui lòng thử lại!");
     }
   };
 
-  // Gọi API khi component được render
+  // Xử lý khi hủy hoặc đóng modal
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  // Gọi API khi component render
   useEffect(() => {
     fetchUser();
   }, [id]);
 
-  // Hàm quay lại trang danh sách
+  // Hàm quay lại
   const handleBack = () => {
-    navigate("/admin/user-list");
+    navigate(ADMIN_ROUTER_PATH.USER_LIST);
   };
 
   return (
@@ -86,16 +107,19 @@ const UserDetail: React.FC = () => {
       ) : error ? (
         <div className="error-container">
           <p>{error}</p>
-          <Button type="primary" onClick={fetchUser}>
-            Thử lại
-          </Button>
+          <div>
+            <Button type="primary" onClick={fetchUser} style={{ marginRight: 8 }}>
+              Thử lại
+            </Button>
+            <Button onClick={handleBack}>Quay lại</Button>
+          </div>
         </div>
       ) : user ? (
         <>
           <div className="user-header">
             <div>
               <h2 className="user-name">
-                {user.full_name}
+                {user.fullName || user.userName || "Không có tên"}
                 <a href={`mailto:${user.email}`} className="user-email">
                   ({user.email})
                 </a>
@@ -108,7 +132,9 @@ const UserDetail: React.FC = () => {
               <UserOutlined />
             </span>{" "}
             Tài khoản đã được tạo
-            <span className="event-time">{user.created_at}</span>
+            <span className="event-time">
+              {dayjs(user.createdAt).format("DD/MM/YYYY HH:mm")}
+            </span>
           </div>
 
           <div className="user-details-card">
@@ -125,23 +151,23 @@ const UserDetail: React.FC = () => {
                 </div>
                 <div className="info-row">
                   <label>Tên đăng nhập</label>
-                  <span>{user.user_name}</span>
+                  <span>{user.userName || "Không có"}</span>
                 </div>
                 <div className="info-row">
                   <label>Hạng người dùng</label>
-                  <span>{user.user_rank}</span>
+                  <span>{user.userRank}</span>
                 </div>
                 <div className="info-row">
                   <label>Giới tính</label>
-                  <span>{user.gender}</span>
+                  <span>{user.gender || "Không có"}</span>
                 </div>
                 <div className="info-row">
                   <label>Ngày sinh</label>
-                  <span>{user.birthday}</span>
+                  <span>{user.birthday || "Không có"}</span>
                 </div>
                 <div className="info-row">
                   <label>Trạng thái</label>
-                  <span>{user.is_active ? "Đang hoạt động" : "Ngừng hoạt động"}</span>
+                  <span>{user.isActive ? "Đang hoạt động" : "Ngừng hoạt động"}</span>
                 </div>
               </div>
 
@@ -156,12 +182,12 @@ const UserDetail: React.FC = () => {
                 <div className="info-row">
                   <label>Số điện thoại</label>
                   <span>
-                    <a href={`tel:${user.phone_number}`}>{user.phone_number}</a>
+                    <a href={`tel:${user.phoneNumber}`}>{user.phoneNumber}</a>
                   </span>
                 </div>
                 <div className="info-row">
                   <label>Địa chỉ</label>
-                  <span>{user.address}</span>
+                  <span>{user.address || "Không có"}</span>
                 </div>
               </div>
             </div>
@@ -172,9 +198,30 @@ const UserDetail: React.FC = () => {
               </Button>
             </div>
           </div>
+
+          <Modal
+            title="Xác nhận xóa"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            okText="Xóa"
+            cancelText="Hủy"
+            okButtonProps={{ style: { backgroundColor: "#ff4d4f", borderColor: "#ff4d4f" } }}
+            cancelButtonProps={{ style: { borderColor: "#d9d9d9", color: "#000" } }}
+          >
+            <p>
+              Bạn có chắc chắn muốn xóa tài khoản{" "}
+              <strong>{user?.userName}</strong> không?
+            </p>
+          </Modal>
         </>
       ) : (
-        <p>Không tìm thấy thông tin người dùng.</p>
+        <div className="empty-container">
+          <p>Không tìm thấy thông tin người dùng.</p>
+          <Button type="primary" onClick={handleBack}>
+            Quay lại danh sách
+          </Button>
+        </div>
       )}
     </div>
   );

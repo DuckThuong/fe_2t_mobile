@@ -1,35 +1,51 @@
 import React, { useRef, useState, useEffect } from "react";
-import CustomTable, {
-  CustomTableRef,
-} from "../../../Components/CustomTable/CustomTable";
 import { Button, Space, Input, Spin, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import "./ProductList.scss";
 import { useNavigate } from "react-router-dom";
+import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 import { productApi } from "../../../api/api";
+import dayjs from "dayjs";
+import "./ProductList.scss";
+
+interface IProduct {
+  id: number;
+  name: string;
+  model: string;
+  description?: string;
+  warranty_period?: number;
+  release_year?: number;
+  is_featured?: boolean;
+  status?: "Active" | "Inactive";
+  vendor: { id: number; name: string } | null;
+  color_id: number;
+  color_ids?: number[];
+  capacity_id: number;
+  stock_quantity?: number;
+  serial_number?: string;
+  import_price: string;
+  selling_price: string;
+  specs: {
+    screen_size?: string;
+    resolution?: string;
+    chipset?: string;
+    ram?: string;
+    os?: string;
+    battery_capacity?: string;
+    charging_tech?: string;
+  };
+  image_urls?: string[];
+  created_at: string;
+  productDetails: IProductDetail[];
+}
 
 interface IProductDetail {
   id: number;
   stock_quantity: number;
   serial_number: string | null;
   color: string | null;
-  capacity: string | null;
-}
-
-interface IProduct {
-  id: number;
-  name: string;
-  // model: string | null;
-  // description: string | null;
-  // warranty_period: string | null;
-  // release_year: string | null;
-  // is_featured: boolean;
-  // status: string;
-  created_at: string;
-  // updated_at: string;
-  provider: string | null;
-  productDetails: IProductDetail[];
+  color_id: number | null;
+  capacity: { id: number; value: number; unit: string; display_name: string } | null;
 }
 
 const ProductList: React.FC = () => {
@@ -42,100 +58,142 @@ const ProductList: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Lấy danh sách sản phẩm từ API
-  const fetchProducts = async () => {
+  // Fetch products from API
+  const fetchProducts = async (page: number = 1, size: number = 10) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await productApi.getAllProducts();
-      const products = Array.isArray(response) ? response : response.data || [];
-      setProducts(response);
-      setFilteredProducts(response);
-    } catch (err) {
+      const response = await productApi.getAllProducts({
+        page,
+        size,
+        order: "ASC",
+      });
+      const productsData = Array.isArray(response) ? response : response.data || [];
+      if (!Array.isArray(productsData)) {
+        throw new Error("Dữ liệu trả về không phải là mảng");
+      }
+      console.log("Dữ liệu sản phẩm:", productsData); // Kiểm tra dữ liệu
+      setProducts(productsData);
+      setFilteredProducts(productsData);
+    } catch (err: any) {
       setError("Không thể tải danh sách sản phẩm. Vui lòng thử lại.");
-      message.error("Lỗi khi tải danh sách sản phẩm!");
+      message.error(err?.response?.data?.message || "Lỗi khi tải danh sách sản phẩm!");
+      console.error("Lỗi fetch sản phẩm:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Gọi API khi component được render
+  // Initial fetch
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  // Tìm kiếm sản phẩm (phía client)
+  // Handle search input
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
 
+  // Handle search button click
   const handleSearchClick = () => {
-    const searchTerms = searchQuery.trim().toLowerCase().split(/\s+/);
-    const result = products.filter((product) =>
-      searchTerms.every(
-        (term) =>
-          product.id.toString().toLowerCase().includes(term) ||
-          product.name.toLowerCase().includes(term) ||
-          product.productDetails.some(
-            (detail) =>
-              detail.capacity?.toLowerCase().includes(term) ||
-              detail.color?.toLowerCase().includes(term)
-          )
-      )
-    );
-    setFilteredProducts(result);
-  };
+    if (!searchQuery.trim()) {
+      setFilteredProducts(products);
+      return;
+    }
 
-  // Xóa sản phẩm
-  const handleDeleteProduct = async (id: number) => {
     try {
-      await productApi.deleteProduct(id.toString());
-      setProducts((prevProducts) => prevProducts.filter((product) => product.id !== id));
-      setFilteredProducts((prevFilteredProducts) =>
-        prevFilteredProducts.filter((product) => product.id !== id)
+      const searchTerms = searchQuery.trim().toLowerCase().split(/\s+/);
+      const result = products.filter((product) =>
+        searchTerms.every((term) =>
+          [
+            product.id.toString(),
+            product.name.toLowerCase(),
+            product.model?.toLowerCase() || "",
+            product.vendor?.name?.toLowerCase() || "",
+            product.productDetails?.[0]?.capacity?.display_name?.toLowerCase() || "",
+            product.productDetails?.[0]?.color?.toLowerCase() || "",
+          ].some((field) => field.includes(term))
+        )
       );
-      message.success("Xóa sản phẩm thành công!");
-    } catch (err: any) {
-      const errorMessage =
-        err?.response?.data?.message ||
-        err?.message ||
-        "Lỗi khi xóa sản phẩm. Vui lòng thử lại!";
-      message.error(errorMessage);
+      setFilteredProducts(result);
+      console.log("Filtered Products:", result);
+    } catch (err) {
+      message.error("Lỗi khi tìm kiếm sản phẩm!");
+      console.error("Search Error:", err);
     }
   };
 
-  // Sửa sản phẩm
-  const handleEditProduct = (product: IProduct) => {
-    navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT(product.id), {
-      state: { product },
-    });
+  // Delete product
+  const handleDeleteProduct = async (id: number) => {
+    try {
+      await productApi.deleteProduct(id.toString());
+      setProducts((prev) => prev.filter((product) => product.id !== id));
+      setFilteredProducts((prev) => prev.filter((product) => product.id !== id));
+      message.success("Xóa sản phẩm thành công!");
+    } catch (err: any) {
+      message.error(err?.response?.data?.message || "Lỗi khi xóa sản phẩm!");
+      console.error("Lỗi xóa sản phẩm:", err);
+    }
   };
 
-  // Cột của bảng sản phẩm
+  // Edit product
+  const handleEditProduct = async (product: IProduct) => {
+    try {
+      // Lấy chi tiết sản phẩm từ API để đảm bảo dữ liệu đầy đủ
+      const productData = await productApi.getProductById(product.id.toString());
+      console.log("Dữ liệu chi tiết sản phẩm:", productData);
+      // Chuyển hướng đến trang chỉnh sửa với dữ liệu sản phẩm
+      navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT(product.id), {
+        state: { productData },
+      });
+    } catch (err: any) {
+      message.error("Lỗi khi tải thông tin sản phẩm!");
+      console.error("Lỗi fetch chi tiết sản phẩm:", err);
+    }
+  };
+
+  // Table columns
   const productColumns = [
     { title: "Mã sản phẩm", dataIndex: "id", key: "id" },
     { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
+    { title: "Model", dataIndex: "model", key: "model" },
     {
       title: "Dung lượng",
       key: "capacity",
       render: (_: any, record: IProduct) =>
-        record.productDetails[0]?.capacity || "N/A",
+        record.productDetails?.[0]?.capacity?.display_name || "N/A",
     },
     {
       title: "Màu sắc",
       key: "color",
-      render: (_: any, record: IProduct) => record.productDetails[0]?.color || "N/A",
+      render: (_: any, record: IProduct) => record.productDetails?.[0]?.color || "N/A",
     },
     {
       title: "Số lượng",
       key: "quantity",
       render: (_: any, record: IProduct) =>
-        record.productDetails[0]?.stock_quantity || 0,
+        record.productDetails?.[0]?.stock_quantity ?? 0,
     },
-    // Loại bỏ cột price và sellingPrice vì API không cung cấp
+    {
+      title: "Giá bán",
+      dataIndex: "selling_price",
+      key: "selling_price",
+      render: (price: string) => (price ? `${price} VNĐ` : "N/A"),
+    },
+    {
+      title: "Nhà cung cấp",
+      key: "vendor",
+      render: (_: any, record: IProduct) => record.vendor?.name || "N/A",
+    },
+    {
+      title: "Ngày tạo",
+      key: "created_at",
+      render: (_: any, record: IProduct) =>
+        dayjs(record.created_at).format("DD/MM/YYYY HH:mm"),
+    },
   ];
 
-  // Hành động trên bảng sản phẩm
+  // Table actions
   const renderProductActions = (record: IProduct) => (
     <Space size="small">
       <Button type="primary" onClick={() => handleEditProduct(record)}>
@@ -143,7 +201,8 @@ const ProductList: React.FC = () => {
       </Button>
       <Button
         type="primary"
-        danger
+        className="delete-btn"
+        aria-label="Xóa"
         onClick={() => productTableRef.current?.showDeleteConfirm(record.id)}
       >
         Xóa
@@ -157,11 +216,11 @@ const ProductList: React.FC = () => {
         <h2 className="title">Quản lý kho hàng</h2>
       </div>
       <div className="product-list-actions">
-      <div className="left-actions">
-    <Button className="btn-refresh" onClick={fetchProducts}>
-      Tải lại
-    </Button>
-  </div>
+        <div className="left-actions">
+          <Button className="btn-refresh" onClick={() => fetchProducts()}>
+            Tải lại
+          </Button>
+        </div>
         <div className="right-actions">
           <Input
             placeholder="Tìm kiếm..."
@@ -182,7 +241,7 @@ const ProductList: React.FC = () => {
       ) : error ? (
         <div className="error-container">
           <p>{error}</p>
-          <Button onClick={fetchProducts}>Thử lại</Button>
+          <Button onClick={() => fetchProducts()}>Thử lại</Button>
         </div>
       ) : (
         <CustomTable

@@ -4,7 +4,9 @@ import { Button, Space, Spin, message } from "antd";
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../../../api/api";
-import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
+import CustomTable, {
+  CustomTableRef,
+} from "../../../Components/CustomTable/CustomTable";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 import "./UserList.scss";
 
@@ -46,11 +48,18 @@ const UserList: React.FC = () => {
       is_active: user.isActive,
     }));
 
-  const { data: usersData, isLoading, error, refetch } = useQuery({
+  const {
+    data: usersData,
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const response = await userApi.doGetAllUsers();
-      return formatUserData(Array.isArray(response) ? response : response?.data || []);
+      return formatUserData(
+        Array.isArray(response) ? response : response?.data || []
+      );
     },
   });
 
@@ -69,7 +78,9 @@ const UserList: React.FC = () => {
     }
     try {
       const response = await userApi.doSearchUsers(query.trim());
-      const usersToMap = Array.isArray(response) ? response : response?.data || [];
+      const usersToMap = Array.isArray(response)
+        ? response
+        : response?.data || [];
       if (usersToMap.length === 0) {
         message.info("Không tìm thấy người dùng nào!");
       }
@@ -117,7 +128,8 @@ const UserList: React.FC = () => {
   const renderActions = (record: IUser) => (
     <Space>
       <Button
-        onClick={() => navigate(`${ADMIN_ROUTER_PATH.USER_DETAIL}/${record.id}`)}
+        type="primary"
+        onClick={() => navigate(ADMIN_ROUTER_PATH.USER_DETAIL(record.id))} 
       >
         Chi tiết
       </Button>
@@ -150,7 +162,10 @@ const UserList: React.FC = () => {
             onChange={handleSearchInputChange}
             className="search-input"
           />
-          <Button className="btn-search" onClick={() => handleSearch(searchQuery)}>
+          <Button
+            className="btn-search"
+            onClick={() => handleSearch(searchQuery)}
+          >
             <SearchOutlined />
           </Button>
         </div>

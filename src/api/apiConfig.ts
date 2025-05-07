@@ -13,6 +13,8 @@ export const API_KEY = {
   CAPACITY: "capacities",
   PURCHASE: "purchases",
   VENDORS: "vendors",
+  VENDOR_BILL: "vendor-bill",
+  DISCOUNT: "discount",
 };
 
 export const QUERY_KEY = {

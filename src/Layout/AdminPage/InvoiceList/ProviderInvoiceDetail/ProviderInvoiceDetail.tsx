@@ -16,8 +16,8 @@ interface IShipment {
 interface IProduct {
   id: number;
   name: string;
-  capacity: string; // Renamed from brand
-  color: string; // Renamed from category
+  capacity: string; 
+  color: string; 
   quantity: number;
   price: number;
   shipmentId: string;
