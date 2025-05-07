@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:3303";
+export const API_BASE_URL = "http://localhost:3300";
 
 export const API_KEY = {
   USER: "user",

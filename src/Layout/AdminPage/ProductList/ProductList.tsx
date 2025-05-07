@@ -75,7 +75,7 @@ const ProductList: React.FC = () => {
       const response = await productApi.getAllProducts({
         page,
         size,
-        order: "ASC",
+        order: "DESC",
       });
       const productsData = Array.isArray(response)
         ? response
@@ -83,7 +83,7 @@ const ProductList: React.FC = () => {
       if (!Array.isArray(productsData)) {
         throw new Error("Dữ liệu trả về không phải là mảng");
       }
-      console.log("Dữ liệu sản phẩm:", productsData); // Kiểm tra dữ liệu
+      console.log("Dữ liệu sản phẩm:", productsData); 
       setProducts(productsData);
       setFilteredProducts(productsData);
     } catch (err: any) {
