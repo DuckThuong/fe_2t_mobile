@@ -14,6 +14,7 @@ import { UploadOutlined, CloseCircleFilled } from "@ant-design/icons";
 import "./EditProduct.scss";
 import { ADMIN_ROUTER_PATH } from "../../../../Routers/Routers";
 import { productApi, vendorsApi } from "../../../../api/api";
+import axios from "axios";
 import { UpdateProductPayload } from "../../../../api/constants";
 
 interface ISpecs {
@@ -196,48 +197,63 @@ const EditProduct: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
+      // Merge form values with existing product data to preserve unchanged fields
       const updatedProductData: UpdateProductPayload = {
         id: Number(id),
-        name: values.name,
-        model: values.model,
-        description: values.description || "",
-        warranty_period: Number(values.warranty_period) || 0,
-        release_year: Number(values.release_year) || 0,
-        is_featured: values.is_featured || false,
-        status: values.status || "Active",
-        vendor_id: Number(values.vendor_id),
-        color_id: Number(values.color_id) || 0,
-        color_ids: values.color_ids || [],
-        capacity_id: Number(values.capacity_id) || 0,
-        stock_quantity: Number(values.stock_quantity) || 0,
-        serial_number: values.serial_number || "",
-        import_price: values.import_price || "",
-        selling_price: values.selling_price || "",
+        name: values.name || product!.name,
+        model: values.model || product!.model,
+        description: values.description || product!.description || "",
+        warranty_period:
+          values.warranty_period !== undefined
+            ? Number(values.warranty_period)
+            : product!.warranty_period || 0,
+        release_year:
+          values.release_year !== undefined
+            ? Number(values.release_year)
+            : product!.release_year || new Date().getFullYear(),
+        is_featured: values.is_featured ?? product!.is_featured ?? false,
+        status: values.status || product!.status || "Active",
+        vendor_id: Number(values.vendor_id) || product!.vendor_id,
+        color_id: Number(values.color_id) || product!.color_id || 0,
+        color_ids: values.color_ids || product!.color_ids || [],
+        capacity_id: Number(values.capacity_id) || product!.capacity_id || 0,
+        stock_quantity:
+          values.stock_quantity !== undefined
+            ? Number(values.stock_quantity)
+            : product!.stock_quantity || 0,
+        serial_number: values.serial_number || product!.serial_number || "",
+        import_price: values.import_price || product!.import_price || "",
+        selling_price: values.selling_price || product!.selling_price || "",
         specs: {
-          screen_size: values.specs?.screen_size || "",
-          resolution: values.specs?.resolution || "",
-          chipset: values.specs?.chipset || "",
-          ram: values.specs?.ram || "",
-          os: values.specs?.os || "",
-          battery_capacity: values.specs?.battery_capacity || "",
-          charging_tech: values.specs?.charging_tech || "",
+          screen_size: values.specs?.screen_size || product!.specs.screen_size || "",
+          resolution: values.specs?.resolution || product!.specs.resolution || "",
+          chipset: values.specs?.chipset || product!.specs.chipset || "",
+          ram: values.specs?.ram || product!.specs.ram || "",
+          os: values.specs?.os || product!.specs.os || "",
+          battery_capacity:
+            values.specs?.battery_capacity || product!.specs.battery_capacity || "",
+          charging_tech: values.specs?.charging_tech || product!.specs.charging_tech || "",
         },
-        image_urls: imageFiles.map((file) => file.url),
+        image_urls: imageFiles.map((file) => file.url) || product!.image_urls || [],
       };
 
       // Validation
       if (
         !updatedProductData.name ||
         !updatedProductData.model ||
-        !updatedProductData.vendor_id
+        !updatedProductData.vendor_id ||
+        !updatedProductData.selling_price
       ) {
-        message.error("Vui lòng điền đầy đủ các trường bắt buộc!");
+        message.error("Vui lòng điền đầy đủ các trường bắt buộc (Tên, Model, Nhà cung cấp, Giá bán)!");
         setLoading(false);
         return;
       }
 
       console.log("Payload gửi đi:", updatedProductData); // Kiểm tra payload
-      await productApi.updateProduct(id!, updatedProductData);
+      await axios.put(
+        `http://localhost:3303/product/update-product`,
+        updatedProductData
+      );
       message.success("Cập nhật sản phẩm thành công!");
       navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
     } catch (err: any) {
@@ -271,7 +287,7 @@ const EditProduct: React.FC = () => {
           name="name"
           rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm!" }]}
         >
-          <Input readOnly />
+          <Input />
         </Form.Item>
         <Form.Item
           label="Model"
@@ -326,8 +342,8 @@ const EditProduct: React.FC = () => {
           rules={[{ required: true, message: "Vui lòng nhập ID màu sắc!" }]}
         >
           <Input type="number" min={0} />
-        </Form.Item>
-        <Form.Item
+        </Form.Item> */}
+       {/*  <Form.Item
           label="Dung lượng (ID)"
           name="capacity_id"
           rules={[{ required: true, message: "Vui lòng nhập ID dung lượng!" }]}
@@ -407,7 +423,6 @@ const EditProduct: React.FC = () => {
             type="primary"
             htmlType="submit"
             className="btn-submit"
-            onClick={handleSubmit}
             loading={loading}
           >
             Lưu thay đổi

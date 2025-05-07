@@ -2,9 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 import { Button, Space, Input, Spin, message } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import CustomTable, { CustomTableRef } from "../../../Components/CustomTable/CustomTable";
+import CustomTable, {
+  CustomTableRef,
+} from "../../../Components/CustomTable/CustomTable";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
 import { productApi } from "../../../api/api";
+import axios from "axios";
 import dayjs from "dayjs";
 import "./ProductList.scss";
 
@@ -24,7 +27,7 @@ interface IProduct {
   stock_quantity?: number;
   serial_number?: string;
   import_price: string;
-  selling_price: string;
+  selling_price?: string; // Optional, as it's primarily in productDetails
   specs: {
     screen_size?: string;
     resolution?: string;
@@ -45,7 +48,13 @@ interface IProductDetail {
   serial_number: string | null;
   color: string | null;
   color_id: number | null;
-  capacity: { id: number; value: number; unit: string; display_name: string } | null;
+  selling_price: string;
+  capacity: {
+    id: number;
+    value: number;
+    unit: string;
+    display_name: string;
+  } | null;
 }
 
 const ProductList: React.FC = () => {
@@ -68,7 +77,9 @@ const ProductList: React.FC = () => {
         size,
         order: "ASC",
       });
-      const productsData = Array.isArray(response) ? response : response.data || [];
+      const productsData = Array.isArray(response)
+        ? response
+        : response.data || [];
       if (!Array.isArray(productsData)) {
         throw new Error("Dữ liệu trả về không phải là mảng");
       }
@@ -77,7 +88,9 @@ const ProductList: React.FC = () => {
       setFilteredProducts(productsData);
     } catch (err: any) {
       setError("Không thể tải danh sách sản phẩm. Vui lòng thử lại.");
-      message.error(err?.response?.data?.message || "Lỗi khi tải danh sách sản phẩm!");
+      message.error(
+        err?.response?.data?.message || "Lỗi khi tải danh sách sản phẩm!"
+      );
       console.error("Lỗi fetch sản phẩm:", err);
     } finally {
       setLoading(false);
@@ -110,7 +123,8 @@ const ProductList: React.FC = () => {
             product.name.toLowerCase(),
             product.model?.toLowerCase() || "",
             product.vendor?.name?.toLowerCase() || "",
-            product.productDetails?.[0]?.capacity?.display_name?.toLowerCase() || "",
+            product.productDetails?.[0]?.capacity?.display_name?.toLowerCase() ||
+              "",
             product.productDetails?.[0]?.color?.toLowerCase() || "",
           ].some((field) => field.includes(term))
         )
@@ -126,9 +140,11 @@ const ProductList: React.FC = () => {
   // Delete product
   const handleDeleteProduct = async (id: number) => {
     try {
-      await productApi.deleteProduct(id.toString());
+      await axios.delete(`http://localhost:3303/product/delete-product?id=${id}`);
       setProducts((prev) => prev.filter((product) => product.id !== id));
-      setFilteredProducts((prev) => prev.filter((product) => product.id !== id));
+      setFilteredProducts((prev) =>
+        prev.filter((product) => product.id !== id)
+      );
       message.success("Xóa sản phẩm thành công!");
     } catch (err: any) {
       message.error(err?.response?.data?.message || "Lỗi khi xóa sản phẩm!");
@@ -140,7 +156,9 @@ const ProductList: React.FC = () => {
   const handleEditProduct = async (product: IProduct) => {
     try {
       // Lấy chi tiết sản phẩm từ API để đảm bảo dữ liệu đầy đủ
-      const productData = await productApi.getProductById(product.id.toString());
+      const productData = await productApi.getProductById(
+        product.id.toString()
+      );
       console.log("Dữ liệu chi tiết sản phẩm:", productData);
       // Chuyển hướng đến trang chỉnh sửa với dữ liệu sản phẩm
       navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT(product.id), {
@@ -166,7 +184,8 @@ const ProductList: React.FC = () => {
     {
       title: "Màu sắc",
       key: "color",
-      render: (_: any, record: IProduct) => record.productDetails?.[0]?.color || "N/A",
+      render: (_: any, record: IProduct) =>
+        record.productDetails?.[0]?.color || "N/A",
     },
     {
       title: "Số lượng",
@@ -176,9 +195,12 @@ const ProductList: React.FC = () => {
     },
     {
       title: "Giá bán",
-      dataIndex: "selling_price",
       key: "selling_price",
-      render: (price: string) => (price ? `${price} VNĐ` : "N/A"),
+      render: (_: any, record: IProduct) => {
+        const price =
+          record.productDetails?.[0]?.selling_price || record.selling_price;
+        return price ? `${parseFloat(price).toLocaleString("vi-VN")} VNĐ` : "N/A";
+      },
     },
     {
       title: "Nhà cung cấp",

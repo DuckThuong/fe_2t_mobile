@@ -18,8 +18,17 @@ import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import "./AddBillProvider.scss";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { capacityApi, colorApi, productApi, vendorsApi } from "../../../api/api";
-import { PlusOutlined, UploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  capacityApi,
+  colorApi,
+  productApi,
+  vendorsApi,
+} from "../../../api/api";
+import {
+  PlusOutlined,
+  UploadOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import {
   CreateProductPayload,
   CreateVendorBillPayload,
@@ -105,7 +114,11 @@ const AddBillProvider: React.FC = () => {
       refetchProducts();
     },
     onError: (error: any) => {
-      message.error(`Thêm sản phẩm thất bại: ${error.response?.data?.message || error.message}`);
+      message.error(
+        `Thêm sản phẩm thất bại: ${
+          error.response?.data?.message || error.message
+        }`
+      );
     },
   });
 
@@ -136,8 +149,12 @@ const AddBillProvider: React.FC = () => {
   const handleProductChange = useCallback(
     (value: string, record: ProductRow) => {
       const selectedProduct = products.find((p: any) => p.id === value);
-      const capacity = capacities?.find((c: any) => c.id === selectedProduct?.capacity_id);
-      const productColors = colors?.filter((c: any) => selectedProduct?.color_ids?.includes(c.id));
+      const capacity = capacities?.find(
+        (c: any) => c.id === selectedProduct?.capacity_id
+      );
+      const productColors = colors?.filter((c: any) =>
+        selectedProduct?.color_ids?.includes(c.id)
+      );
 
       setProductRows((prev) =>
         prev.map((p) =>
@@ -157,15 +174,18 @@ const AddBillProvider: React.FC = () => {
     [products, capacities, colors]
   );
 
-  const handleChange = useCallback((key: string, value: number, record: ProductRow) => {
-    setProductRows((prev) =>
-      prev.map((p) => {
-        if (p.id !== record.id) return p;
-        const updated = { ...p, [key]: value };
-        return { ...updated, total: updated.quantity * updated.price };
-      })
-    );
-  }, []);
+  const handleChange = useCallback(
+    (key: string, value: number, record: ProductRow) => {
+      setProductRows((prev) =>
+        prev.map((p) => {
+          if (p.id !== record.id) return p;
+          const updated = { ...p, [key]: value };
+          return { ...updated, total: updated.quantity * updated.price };
+        })
+      );
+    },
+    []
+  );
 
   const addProductRow = useCallback(() => {
     setProductRows((prev) => [
@@ -184,13 +204,16 @@ const AddBillProvider: React.FC = () => {
     ]);
   }, []);
 
-  const removeProductRow = useCallback((id: string) => {
-    if (productRows.length === 1) {
-      message.warning("Phải có ít nhất một sản phẩm!");
-      return;
-    }
-    setProductRows((prev) => prev.filter((row) => row.id !== id));
-  }, [productRows.length]);
+  const removeProductRow = useCallback(
+    (id: string) => {
+      if (productRows.length === 1) {
+        message.warning("Phải có ít nhất một sản phẩm!");
+        return;
+      }
+      setProductRows((prev) => prev.filter((row) => row.id !== id));
+    },
+    [productRows.length]
+  );
 
   const columns: ColumnsType<ProductRow> = useMemo(
     () => [
@@ -225,7 +248,9 @@ const AddBillProvider: React.FC = () => {
             type="number"
             min={1}
             value={text}
-            onChange={(e) => handleChange("quantity", parseInt(e.target.value) || 0, record)}
+            onChange={(e) =>
+              handleChange("quantity", parseInt(e.target.value) || 0, record)
+            }
           />
         ),
       },
@@ -237,7 +262,9 @@ const AddBillProvider: React.FC = () => {
             type="number"
             min={0}
             value={text}
-            onChange={(e) => handleChange("price", parseInt(e.target.value) || 0, record)}
+            onChange={(e) =>
+              handleChange("price", parseInt(e.target.value) || 0, record)
+            }
           />
         ),
       },
@@ -361,19 +388,26 @@ const AddBillProvider: React.FC = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item
-          label="Nhà cung cấp"
-          name="provider"
-          rules={[{ required: true, message: "Vui lòng chọn nhà cung cấp" }]}
-        >
+        <Form.Item label="Nhà cung cấp" required>
           <div style={{ display: "flex", gap: 10 }}>
-            <Select placeholder="Chọn nhà cung cấp" style={{ flex: 1 }}>
-              {providers?.map((provider: any) => (
-                <Option key={provider.id} value={provider.id.toString()}>
-                  {provider.name}
-                </Option>
-              ))}
-            </Select>
+            <Form.Item
+              name="provider"
+              rules={[
+                { required: true, message: "Vui lòng chọn nhà cung cấp" },
+              ]}
+              noStyle
+            >
+              <Select placeholder="Chọn nhà cung cấp" style={{ flex: 1 }}>
+                {providers?.map((provider: any) => (
+                  <Select.Option
+                    key={provider.id}
+                    value={provider.id.toString()}
+                  >
+                    {provider.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
             <Button
               icon={<PlusOutlined />}
               onClick={() => setProviderModalOpen(true)}
@@ -386,7 +420,12 @@ const AddBillProvider: React.FC = () => {
             <Form.Item
               label="Phương thức thanh toán"
               name="paymentMethod"
-              rules={[{ required: true, message: "Vui lòng chọn phương thức thanh toán" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn phương thức thanh toán",
+                },
+              ]}
             >
               <Select placeholder="Chọn phương thức">
                 <Option value="cash">Tiền mặt</Option>
@@ -453,11 +492,7 @@ const AddBillProvider: React.FC = () => {
         footer={null}
         destroyOnClose
       >
-        <Form
-          layout="vertical"
-          form={providerForm}
-          onFinish={onProviderSubmit}
-        >
+        <Form layout="vertical" form={providerForm} onFinish={onProviderSubmit}>
           <Form.Item
             label="Tên nhà cung cấp"
             name="name"
@@ -468,7 +503,9 @@ const AddBillProvider: React.FC = () => {
           <Form.Item
             label="Số điện thoại"
             name="phone"
-            rules={[{ required: true, message: "Vui lòng nhập số điện thoại!" }]}
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại!" },
+            ]}
           >
             <Input />
           </Form.Item>
@@ -502,11 +539,7 @@ const AddBillProvider: React.FC = () => {
         onCancel={() => setShowNewProductModal(false)}
         footer={null}
       >
-        <Form
-          layout="vertical"
-          form={newProductForm}
-          onFinish={onModalSubmit}
-        >
+        <Form layout="vertical" form={newProductForm} onFinish={onModalSubmit}>
           <Form.Item
             name="name"
             label="Tên sản phẩm"
@@ -524,11 +557,13 @@ const AddBillProvider: React.FC = () => {
               loading={isCapacitiesLoading}
               disabled={isCapacitiesLoading}
             >
-              {capacities?.map((capacity: { id: number; display_name: string }) => (
-                <Option key={capacity.id} value={capacity.id.toString()}>
-                  {capacity.display_name}
-                </Option>
-              ))}
+              {capacities?.map(
+                (capacity: { id: number; display_name: string }) => (
+                  <Option key={capacity.id} value={capacity.id.toString()}>
+                    {capacity.display_name}
+                  </Option>
+                )
+              )}
             </Select>
           </Form.Item>
           <Form.Item
@@ -552,13 +587,9 @@ const AddBillProvider: React.FC = () => {
             name="images"
             label="Hình ảnh"
             valuePropName="fileList"
-            getValueFromEvent={(e) => Array.isArray(e) ? e : e?.fileList}
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}
           >
-            <Upload
-              beforeUpload={() => false}
-              listType="picture"
-              multiple
-            >
+            <Upload beforeUpload={() => false} listType="picture" multiple>
               <Button icon={<UploadOutlined />}>Chọn hình ảnh</Button>
             </Upload>
           </Form.Item>
