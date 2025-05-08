@@ -8,14 +8,17 @@ import CustomTable, {
 } from "../../../Components/CustomTable/CustomTable";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ADMIN_ROUTER_PATH } from "../../../Routers/Routers";
+import { discountApi } from "../../../api/api";
 
 interface IPromotion {
-  id: number;
-  name: string;
-  discountPercentage: number;
-  minInvoiceAmount: number;
-  created_at: string;
-  updated_at: string;
+  id: string;
+  title: string;
+  description: string;
+  discount_type: "percentage" | "fixed";
+  discount_value: number;
+  start_date: string;
+  end_date: string;
+  is_active: boolean;
 }
 
 const PromotionList: React.FC = () => {
@@ -23,37 +26,31 @@ const PromotionList: React.FC = () => {
   const location = useLocation();
   const updatedPromotion = location.state?.updatedPromotion as IPromotion | undefined;
 
-  const [promotions, setPromotions] = useState<IPromotion[]>([
-    {
-      id: 1,
-      name: "Khuyến mãi mùa hè",
-      discountPercentage: 20,
-      minInvoiceAmount: 1000000,
-      created_at: "2023-06-01",
-      updated_at: "2023-06-01",
-    },
-    {
-      id: 2,
-      name: "Black Friday",
-      discountPercentage: 30,
-      minInvoiceAmount: 2000000,
-      created_at: "2023-11-01",
-      updated_at: "2023-11-01",
-    },
-    {
-      id: 3,
-      name: "Tết Nguyên Đán",
-      discountPercentage: 15,
-      minInvoiceAmount: 500000,
-      created_at: "2024-01-15",
-      updated_at: "2024-01-15",
-    },
-  ]);
-
+  const [promotions, setPromotions] = useState<IPromotion[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredPromotions, setFilteredPromotions] = useState<IPromotion[]>(promotions);
+  const [filteredPromotions, setFilteredPromotions] = useState<IPromotion[]>([]);
+  const [loading, setLoading] = useState(false);
   const tableRef = useRef<CustomTableRef>(null);
 
+  // Fetch promotions from API
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      setLoading(true);
+      try {
+        const response = await discountApi.getAllDiscounts();
+        setPromotions(response.data); 
+        setFilteredPromotions(response.data);
+      } catch (error) {
+        message.error("Không thể tải danh sách khuyến mãi");
+        console.error("Error fetching promotions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPromotions();
+  }, []);
+
+  // Handle updated promotion
   useEffect(() => {
     if (updatedPromotion) {
       setPromotions((prev) => {
@@ -69,24 +66,48 @@ const PromotionList: React.FC = () => {
     }
   }, [updatedPromotion]);
 
+  // Update filtered promotions when promotions change
   useEffect(() => {
     setFilteredPromotions(promotions);
   }, [promotions]);
 
   const columns: ColumnsType<IPromotion> = [
     { title: "Mã khuyến mãi", dataIndex: "id", key: "id" },
-    { title: "Tên khuyến mãi", dataIndex: "name", key: "name" },
+    { title: "Tên khuyến mãi", dataIndex: "title", key: "title" },
     {
-      title: "Phần trăm khuyến mãi",
-      dataIndex: "discountPercentage",
-      key: "discountPercentage",
-      render: (value: number) => `${value}%`,
+      title: "Loại giảm giá",
+      dataIndex: "discount_type",
+      key: "discount_type",
+      render: (value: string) => (value === "percentage" ? "Phần trăm" : value === "fixed" ? "Cố định" : "N/A"),
     },
     {
-      title: "Hóa đơn áp dụng",
-      dataIndex: "minInvoiceAmount",
-      key: "minInvoiceAmount",
-      render: (value: number) => `${value.toLocaleString()} VNĐ`,
+      title: "Giá trị giảm",
+      dataIndex: "discount_value",
+      key: "discount_value",
+      render: (value: number | undefined, record: IPromotion) => {
+        if (value === undefined || record.discount_type === undefined) {
+          return "N/A";
+        }
+        return record.discount_type === "percentage" ? `${value}%` : `${value.toLocaleString()} VNĐ`;
+      },
+    },
+    {
+      title: "Ngày bắt đầu",
+      dataIndex: "start_date",
+      key: "start_date",
+      render: (value: string) => (value ? new Date(value).toLocaleDateString("vi-VN") : "N/A"),
+    },
+    {
+      title: "Ngày kết thúc",
+      dataIndex: "end_date",
+      key: "end_date",
+      render: (value: string) => (value ? new Date(value).toLocaleDateString("vi-VN") : "N/A"),
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "is_active",
+      key: "is_active",
+      render: (value: boolean) => (value ? "Hoạt động" : "Không hoạt động"),
     },
   ];
 
@@ -94,10 +115,20 @@ const PromotionList: React.FC = () => {
     navigate(ADMIN_ROUTER_PATH.ADD_PROMOTION);
   };
 
-  const handleReload = () => {
+  const handleReload = async () => {
     setSearchQuery("");
-    setFilteredPromotions(promotions);
-    message.info("Đã tải lại danh sách khuyến mãi");
+    setLoading(true);
+    try {
+      const response = await discountApi.getAllDiscounts();
+      setPromotions(response.data);
+      setFilteredPromotions(response.data);
+      message.info("Đã tải lại danh sách khuyến mãi");
+    } catch (error) {
+      message.error("Không thể tải lại danh sách khuyến mãi");
+      console.error("Error reloading promotions:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +151,7 @@ const PromotionList: React.FC = () => {
       searchTerms.every(
         (term) =>
           promotion.id.toString().includes(term) ||
-          promotion.name.toLowerCase().includes(term)
+          promotion.title.toLowerCase().includes(term)
       )
     );
     setFilteredPromotions(result);
@@ -130,10 +161,23 @@ const PromotionList: React.FC = () => {
     navigate(ADMIN_ROUTER_PATH.EDIT_PROMOTION(record.id), { state: { promotion: record } });
   };
 
-  const handleDelete = (id: number | string) => {
-    setPromotions((prev) => prev.filter((p) => p.id !== id));
-    setFilteredPromotions((prev) => prev.filter((p) => p.id !== id));
-    message.success(`Đã xóa khuyến mãi với ID: ${id}`);
+  const handleDelete = async (id: string) => {
+    try {
+      await discountApi.deleteDiscount(id);
+      setPromotions((prev) => {
+        const updated = prev.filter((p) => p.id !== id);
+        return updated;
+      });
+      setFilteredPromotions((prev) => {
+        const updated = prev.filter((p) => p.id !== id);
+        return updated;
+      });
+      message.success(`Đã xóa khuyến mãi!`);
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || "Không thể xóa khuyến mãi";
+      message.error(errorMessage);
+      console.error("Error deleting promotion:", error);
+    }
   };
 
   const customActions = (record: IPromotion) => (
@@ -152,7 +196,7 @@ const PromotionList: React.FC = () => {
   );
 
   const deleteConfirmMessage = (record: IPromotion) =>
-    `Bạn có chắc chắn muốn xóa khuyến mãi "${record.name}" không?`;
+    `Bạn có chắc chắn muốn xóa khuyến mãi "${record.title}" không?`;
 
   return (
     <div className="provider-list-container">
@@ -189,7 +233,7 @@ const PromotionList: React.FC = () => {
         rowKey="id"
         pagination={{ pageSize: 10 }}
         scroll={{ x: "max-content" }}
-        loading={false}
+        loading={loading}
         customActions={customActions}
         onDelete={handleDelete}
         deleteConfirmMessage={deleteConfirmMessage}

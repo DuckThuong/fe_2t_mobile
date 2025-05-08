@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 import CustomTable, {
@@ -16,8 +16,8 @@ interface IShipment {
 interface IProduct {
   id: number;
   name: string;
-  capacity: string; // Renamed from brand
-  color: string; // Renamed from category
+  capacity: string;
+  color: string;
   quantity: number;
   price: number;
   shipmentId: string;
@@ -38,103 +38,55 @@ interface ISupplierInvoice {
 const ProviderInvoiceDetail: React.FC = () => {
   const location = useLocation();
   const invoice = location.state?.invoice as ISupplierInvoice;
+  const purchaseOrder = location.state?.purchaseOrder;
 
   const shipmentTableRef = useRef<CustomTableRef>(null);
   const productTableRef = useRef<CustomTableRef>(null);
 
-  const [shipments, setShipments] = useState<IShipment[]>([
-    {
-      id: "LH7769",
-      name: "12 pro max",
-      date: "04/03/2025",
-      totalValue: 30000000,
-      quantity: 3,
-    },
-    {
-      id: "LH66c7c",
-      name: "13 pro max",
-      date: "04/04/2025",
-      totalValue: 13000,
-      quantity: 10,
-    },
-    {
-      id: "LH67357",
-      name: "14 PRO MAX",
-      date: "04/04/2025",
-      totalValue: 60000,
-      quantity: 20,
-    },
-  ]);
-
-  const [products, setProducts] = useState<IProduct[]>([
-    {
-      id: 1,
-      name: "OnePlus Nord N20",
-      capacity: "128GB", // Changed from brand
-      color: "Blue", // Changed from category
-      quantity: 1,
-      price: 899,
-      shipmentId: "LH7769",
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-07-13",
-    },
-    {
-      id: 2,
-      name: "Nokia G10",
-      capacity: "64GB",
-      color: "Black",
-      quantity: 2,
-      price: 689,
-      shipmentId: "LH7769",
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-07-13",
-    },
-    {
-      id: 3,
-      name: "Samsung Galaxy S21",
-      capacity: "256GB",
-      color: "White",
-      quantity: 5,
-      price: 799,
-      shipmentId: "LH66c7c",
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-08-05",
-    },
-    {
-      id: 4,
-      name: "iPhone 13",
-      capacity: "128GB",
-      color: "Red",
-      quantity: 3,
-      price: 999,
-      shipmentId: "LH67357",
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-09-01",
-    },
-    {
-      id: 5,
-      name: "Google Pixel 6",
-      capacity: "128GB",
-      color: "Green",
-      quantity: 4,
-      price: 899,
-      shipmentId: "LH67357",
-      image:
-        "https://muabandienthoai24h.vn/storage/images/GuMUm6Asw6_1679905172.jpg",
-      createdAt: "2023-08-15",
-    },
-  ]);
-
-  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(
-    null
-  );
+  const [shipments, setShipments] = useState<IShipment[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredShipments, setFilteredShipments] =
-    useState<IShipment[]>(shipments);
+  const [filteredShipments, setFilteredShipments] = useState<IShipment[]>([]);
+
+  // Map JSON data to shipments and products
+  useEffect(() => {
+    if (purchaseOrder) {
+      // Treat the purchase order as a single shipment
+      const totalQuantity = purchaseOrder.purchaseOrderItems.reduce(
+        (sum: number, item: any) => sum + item.quantity,
+        0
+      );
+      const totalValue = purchaseOrder.purchaseOrderItems.reduce(
+        (sum: number, item: any) => sum + parseFloat(item.totalPrice),
+        0
+      );
+
+      const shipment: IShipment = {
+        id: purchaseOrder.lotCode || `PO-${purchaseOrder.id}`,
+        name: purchaseOrder.itemType || "Purchase Order",
+        date: purchaseOrder.orderDate || new Date().toISOString().split("T")[0],
+        totalValue,
+        quantity: totalQuantity,
+      };
+
+      const mappedProducts: IProduct[] = purchaseOrder.purchaseOrderItems.map((item: any) => ({
+        id: parseInt(item.id),
+        name: item.product.name || "Unknown Product",
+        capacity: item.product.productDetails[0]?.capacity?.display_name || "N/A",
+        color: item.product.productDetails[0]?.color?.name || "N/A",
+        quantity: item.quantity,
+        price: parseFloat(item.unitPrice) || 0,
+        shipmentId: shipment.id,
+        image: item.product.image || "https://via.placeholder.com/150",
+        createdAt: item.created_at || new Date().toISOString().split("T")[0],
+      }));
+
+      setShipments([shipment]);
+      setFilteredShipments([shipment]);
+      setProducts(mappedProducts);
+    }
+  }, [purchaseOrder]);
 
   // Search for shipments
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,7 +115,7 @@ const ProviderInvoiceDetail: React.FC = () => {
     ? products.filter((product) => product.shipmentId === selectedShipment.id)
     : [];
 
-  // Shipment table columns (reordered: quantity before totalValue, no actions)
+  // Shipment table columns
   const shipmentColumns = [
     { title: "Mã lô hàng", dataIndex: "id", key: "id" },
     { title: "Tên lô hàng", dataIndex: "name", key: "name" },
@@ -173,13 +125,13 @@ const ProviderInvoiceDetail: React.FC = () => {
       title: "Tổng tiền",
       dataIndex: "totalValue",
       key: "totalValue",
-      render: (value: number) => `${value.toLocaleString()} VND`,
+      render: (value: number) => `${value.toLocaleString()} VNĐ`,
     },
   ];
 
-  // Product table columns (renamed brand to Dung lượng, category to Màu sắc, no actions)
+  // Product table columns
   const productColumns = [
-    { title: "Mã sản phẩm", dataIndex: "id", key: "id" },
+    { title: " Mã sản phẩm", dataIndex: "id", key: "id" },
     { title: "Tên sản phẩm", dataIndex: "name", key: "name" },
     { title: "Dung lượng", dataIndex: "capacity", key: "capacity" },
     { title: "Màu sắc", dataIndex: "color", key: "color" },
@@ -194,12 +146,12 @@ const ProviderInvoiceDetail: React.FC = () => {
       title: "Giá bán",
       key: "sellingPrice",
       render: (_: any, record: IProduct) =>
-        `${(record.price * 2).toLocaleString()} VNĐ`,
+        `${(record.price * 1.1).toLocaleString()} VNĐ`, // Assume 10% markup
     },
   ];
 
-  if (!invoice) {
-    return <div>Không tìm thấy hóa đơn</div>;
+  if (!invoice || !purchaseOrder) {
+    return <div>Không tìm thấy hóa đơn hoặc dữ liệu đơn hàng</div>;
   }
 
   return (
