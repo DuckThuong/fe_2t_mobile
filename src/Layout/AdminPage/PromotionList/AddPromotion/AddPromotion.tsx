@@ -14,9 +14,10 @@ const AddPromotion: React.FC = () => {
   const handleSubmit = async (values: CreateDiscountsPayload) => {
     try {
       const response = await discountApi.createDiscount(values);
+      console.log("Response from server:", response.data); // Kiểm tra dữ liệu trả về
       message.success("Thêm khuyến mãi thành công");
       navigate(ADMIN_ROUTER_PATH.PROMOTION_LIST, {
-        state: { updatedPromotion: response.data }, // 
+        state: { updatedPromotion: response.data },
       });
     } catch (error) {
       message.error("Không thể thêm khuyến mãi");

@@ -90,7 +90,7 @@ export interface CreateVendorBillPayload {
 export interface CreateDiscountsPayload {
   title: string;
   description: string;
-  discount_type: "percentage" | "fixed"; 
+  discount_type: "percentage" | "fixed_amount"; 
   discount_value: number;
   start_date: string; 
   end_date: string; 

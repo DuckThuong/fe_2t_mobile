@@ -91,7 +91,7 @@ const AdminPromotionForm: React.FC<AdminPromotionFormProps> = ({
         >
           <Radio.Group>
             <Radio value="percentage">Phần trăm</Radio>
-            <Radio value="fixed">Cố định</Radio>
+            <Radio value="fixed_amount">Cố định</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item

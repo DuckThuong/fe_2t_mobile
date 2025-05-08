@@ -38,7 +38,7 @@ const PromotionList: React.FC = () => {
       setLoading(true);
       try {
         const response = await discountApi.getAllDiscounts();
-        setPromotions(response.data); // Giả sử response.data chứa danh sách khuyến mãi
+        setPromotions(response.data); 
         setFilteredPromotions(response.data);
       } catch (error) {
         message.error("Không thể tải danh sách khuyến mãi");
