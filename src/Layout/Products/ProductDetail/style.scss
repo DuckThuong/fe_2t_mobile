@@ -122,12 +122,22 @@ $hover-color: #f0f0f0;
   .product-info {
     flex: 3;
     padding: 10px;
+    display: flex;
+    flex-direction: column; // 🔸 sắp xếp dọc
+    align-items: flex-start; // 🔸 canh trái toàn bộ
+    gap: 16px;
 
     .product-title {
       font-size: 28px;
       font-weight: 600;
       color: $text-color;
       margin-bottom: 5px;
+    }
+
+    .product-subtitle {
+      color: #86868b;
+      margin-bottom: 20px;
+      font-size: 14px;
     }
 
     .option-group {
@@ -153,8 +163,6 @@ $hover-color: #f0f0f0;
           transition: all 0.2s;
           text-align: center;
           min-width: 80px;
-          background-color: #ffffff;
-          color: #000000;
 
           &.active {
             border-color: $primary-color;
@@ -163,6 +171,23 @@ $hover-color: #f0f0f0;
 
           &:hover:not(.active) {
             background-color: $hover-color;
+          }
+
+          // Style cho nút màu sắc
+          &[style*="background-color"] {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .color-name {
+              position: relative;
+              z-index: 1;
+              background: rgba(255, 255, 255, 0.7);
+              padding: 2px 5px;
+              border-radius: 3px;
+            }
           }
         }
       }
@@ -179,6 +204,12 @@ $hover-color: #f0f0f0;
         font-weight: 600;
         color: $primary-color;
       }
+
+      .promo-text {
+        color: #ff3b30;
+        font-size: 14px;
+        margin-top: 8px;
+      }
     }
 
     .action-buttons {
@@ -193,7 +224,7 @@ $hover-color: #f0f0f0;
         font-size: 16px;
 
         &.btn-primary {
-          background: red;
+          background: red; // hoặc #ff0000
           border: none;
 
           &:hover {
@@ -208,6 +239,23 @@ $hover-color: #f0f0f0;
           &:hover {
             background: darken($primary-color, 10%);
           }
+        }
+      }
+    }
+
+    .promo-section {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #86868b;
+
+      .promo-item {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+
+        &:before {
+          content: "•";
+          margin-right: 8px;
         }
       }
     }

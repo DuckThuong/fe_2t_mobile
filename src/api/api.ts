@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
-import { CreateProductPayload, RegisterPayload } from "./constants";
+import { CreateProductPayload, DeleteItemInCart, ProductDetailFilterParams, RegisterPayload, UpdateItemInCart } from "./constants";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -58,6 +58,8 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
   doSearchUsers: (query: string) =>
     apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
+ getUserAdminCheck: (id: string | number) => // Hàm mới
+    apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
 };
 
 export const imageApi = {
@@ -71,9 +73,22 @@ export const imageApi = {
 };
 
 export const productApi = {
-  getAllProducts: ({ page = 1, size = 10 }: { page?: number; size?: number } = {}) =>
+  getAllProducts: ({ page = 1, size = 1000 }: { page?: number; size?: number } = {}) =>
     apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, { page, size }),
+  getAllProductsWithoutPagination: (params = {}) =>
+    apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, {
+      ...params,
+      size: 1000, // Số lượng lớn để lấy tất cả
+      page: 1
+    }),
   getProductById: (id: string) => apiRequest(`product/get-product-by-ID?id=${id}`, "GET"),
+  getProductDetailByFilters: (params: ProductDetailFilterParams) =>
+    apiRequest(
+      `${API_KEY.PRODUCT}/get-product-detail-id-by-product-id-and-color-id-and-capacity-id`,
+      "GET",
+      null,
+      params
+    ),
   createProduct: (productData: CreateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
   updateProduct: (id: string, productData: any) =>
@@ -82,16 +97,24 @@ export const productApi = {
     apiRequest(`${API_KEY.PRODUCT}/${id}`, "DELETE"),
 };
 
+// export const colorApi = {
+//   getAllColors: () => apiRequest(`color/get-all-colors`, "GET"),
+//   getColorById: (id: string) => apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
+// };
+
+// export const capacityApi = {
+//   getAllCapacities: () => apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
+//   getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
+// };
 export const colorApi = {
-  getAllColors: () => apiRequest(`${API_KEY.COLOR}/get-all-colors`, "GET"),
-  getColorById: (id: string) => apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
+  getAllColors: () => apiRequest(`colors/get-all-colors`, "GET"),
+  getColorById: (id: string) => apiRequest(`colors/get-color-by-id?id=${id}`, "GET"),
 };
 
 export const capacityApi = {
-  getAllCapacities: () => apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
-  getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
+  getAllCapacities: () => apiRequest(`capacities/get-all-capacities`, "GET"),
+  getCapacityById: (id: string) => apiRequest(`capacities/get-capacity-by-id?id=${id}`, "GET"),
 };
-
 export const cartApi = {
   creatCart :(id: string) => apiRequest(`${API_KEY.CART}/create-cart`, "POST",id),
   getAllCartItems: () => apiRequest(API_KEY.CART),
@@ -101,11 +124,19 @@ export const cartApi = {
   GetCardByUserAndCartId: (userId: string, cartID: string) =>
     axios.get(`/api/getCart/${userId}`, { params: { cartID } }),
   addCartItem: (itemData: any) => apiRequest(`${API_KEY.CART}/add-item-to-cart`, "POST", itemData),
-  updateCartItem: (id: number, itemData: any) =>
-    apiRequest(`${API_KEY.CART}/update/${id}`, "PATCH", itemData),
-  deleteCartItem: (id: string) =>
-    apiRequest(`${API_KEY.CART}/delete/${id}`, "DELETE"),
+ updateCartItem: (itemData: UpdateItemInCart) => {
+    const url = `${API_KEY.CART}/update-cart-item?cart_id=${encodeURIComponent(itemData.cart_id)}&item_id=${encodeURIComponent(itemData.item_id)}`;
+    console.log('Update URL:', url);
+    return apiRequest(url, "PUT", itemData);
+  },
+  deleteCartItem: (params: DeleteItemInCart) => {
+    const url = `${API_KEY.CART}/delete-cart-item?cart_id=${encodeURIComponent(params.cart_id)}&item_id=${encodeURIComponent(params.item_id)}`;
+    console.log('Delete URL:', url);
+    return apiRequest(url, "DELETE", null);
+  },
+
 };
+
 
 export const reviewApi = {
   getAllReview: () => apiRequest(API_KEY.REVIEW),

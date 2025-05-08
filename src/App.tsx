@@ -2,7 +2,6 @@ import React from "react";
 import RoutesApp from "./routers";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from "antd";
-import { CartProvider } from "./Layout/Cart";
 
 const App = () => {
   

@@ -9,7 +9,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../../Routers/Routers";
 import { useQuery } from "@tanstack/react-query";
 import { productApi } from "../../../api/api";
-import { cartApi } from "../../../api/api"; // Import cartApi
+import { cartApi } from "../../../api/api";
+import { useUser } from "../../../api/useHook";
 
 interface Capacity {
   id: number;
@@ -84,7 +85,14 @@ interface ProductDetail {
 
 type ApiResponse = ProductDetail;
 
+export interface ProductDetailFilterParams {
+  product_id: string;
+  color_id: string;
+  capacity_id: string;
+}
+
 export const ProductDetail = () => {
+  const user =useUser();
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
   const navigate = useNavigate();
@@ -105,21 +113,43 @@ export const ProductDetail = () => {
 
   // Khởi tạo selectedColorId và selectedCapacityId khi product thay đổi
   useEffect(() => {
-  if (product && product.productDetails.length > 0) {
-    const firstDetail = product.productDetails[0];
-    // Khởi tạo với giá trị mặc định an toàn
-    const defaultColorId = product.productColor[0]?.id || (firstDetail.color?.id || 0);
-    const defaultCapacityId = firstDetail.capacity?.id || null;
-    setSelectedColorId(defaultColorId);
-    setSelectedCapacityId(defaultCapacityId);
-    setSelectedImageIndex(0);
-    console.log("Selected Color on Load:", product.productColor[0]?.name || firstDetail.color?.name || "N/A");
-  } else {
-    setSelectedColorId(0); // Giá trị mặc định nếu không có dữ liệu
-    setSelectedCapacityId(null);
-    setSelectedImageIndex(0);
-  }
-}, [product]);
+    if (product && product.productDetails.length > 0) {
+      const firstDetail = product.productDetails[0];
+      const defaultCapacityId = firstDetail.capacity?.id || null;
+      const availableColorsForCapacity = product.productDetails
+        .filter((detail) => detail.capacity?.id === defaultCapacityId)
+        .map((detail) => detail.color?.id);
+      const defaultColorId =
+        product.productColor.find((color) => availableColorsForCapacity.includes(color.id))?.id ||
+        product.productColor[0]?.id ||
+        firstDetail.color?.id ||
+        null;
+
+      setSelectedCapacityId(defaultCapacityId);
+      setSelectedColorId(defaultColorId);
+      setSelectedImageIndex(0);
+      console.log("Selected Capacity on Load:", defaultCapacityId);
+      console.log("Selected Color on Load:", defaultColorId);
+    } else {
+      setSelectedColorId(null);
+      setSelectedCapacityId(null);
+      setSelectedImageIndex(0);
+    }
+  }, [product]);
+
+  // Xử lý khi thay đổi dung lượng
+  useEffect(() => {
+    if (selectedCapacityId && product) {
+      const availableColorsForCapacity = product.productDetails
+        .filter((detail) => detail.capacity?.id === selectedCapacityId)
+        .map((detail) => detail.color?.id);
+      const newColorId =
+        product.productColor.find((color) => availableColorsForCapacity.includes(color.id))?.id ||
+        null;
+      setSelectedColorId(newColorId);
+    }
+  }, [selectedCapacityId, product]);
+
   const handlePrevImage = () => {
     const images = product?.images || [];
     setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
@@ -134,54 +164,63 @@ export const ProductDetail = () => {
     return new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(price);
   };
 
-  // Hàm kiểm tra và thêm sản phẩm vào giỏ hàng
-    const addToCart = async (redirectPath: string) => {
-      if (!product || !selectedDetail) {
-        message.error("Vui lòng chọn sản phẩm hợp lệ!");
+  // Hàm thêm sản phẩm vào giỏ hàng
+  const addToCart = async (redirectPath: string) => {
+    if (!product || !selectedColorId || !selectedCapacityId) {
+      message.error("Vui lòng chọn đầy đủ màu sắc và dung lượng!");
+      return;
+    }
+
+    
+    if (!id) {
+      message.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
+    try {
+      // Lấy product_detail_id từ API getProductDetailByFilters
+      const filterParams: ProductDetailFilterParams = {
+        product_id: productId.toString(),
+        color_id: selectedColorId.toString(),
+        capacity_id: selectedCapacityId.toString(),
+      };
+      const productDetailResponse = await productApi.getProductDetailByFilters(filterParams);
+      const productDetailId = productDetailResponse?.id;
+
+      if (!productDetailId) {
+        message.error("Không thể tìm thấy sản phẩm với thông tin đã chọn!");
         return;
       }
 
-      // const userId = localStorage.getItem("13");
-      // if (!userId) {
-      //   message.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!");
-      //   return;
-      // }
-      const userId = "13"; // Fix cứng userId
+      // Tính giá hiện tại hiển thị cho user
+      const sellingPrice = selectedDetail?.selling_price
+        ? parseFloat(selectedDetail.selling_price.replace(/[^0-9.-]+/g, "")) || 0
+        : 0;
+      const capacityPrice = selectedDetail?.capacity?.price?.price
+        ? parseFloat(selectedDetail.capacity.price.price.replace(/[^0-9.-]+/g, "")) || 0
+        : 0;
+      const totalPrice = sellingPrice + capacityPrice;
 
-      try {
-        // Kiểm tra xem người dùng đã có giỏ hàng chưa
-        const cartResponse = await cartApi.GetCartByUserId(userId);
-        console.log("Cart Response:", cartResponse); // Debug response từ GetCartByUserId
-        let cartId = cartResponse?.data?.id || cartResponse?.data?.cart_id; // Thử cả hai trường hợp
+      // Dữ liệu gửi đi cho API addCartItem
+      const itemData = {
+        user_id: user?.id,
+        product_detail_id: productDetailId,
+        quantity: 1, // Mặc định là 1
+        price: totalPrice.toString(), // Sử dụng giá hiện tại hiển thị
+        
+      };console.error({itemData});
+      
 
-        // Nếu chưa có giỏ hàng, tạo giỏ hàng mới
-        if (!cartId) {
-          const createCartResponse = await cartApi.creatCart(userId);
-          console.log("Create Cart Response:", createCartResponse); // Debug response từ creatCart
-          cartId = createCartResponse?.data?.id || createCartResponse?.data?.cart_id; // Thử cả hai trường hợp
-          if (!cartId) {
-            throw new Error("Không thể lấy cart_id từ response khi tạo giỏ hàng");
-          }
-        }
+      await cartApi.addCartItem(itemData);
+      message.success("Đã thêm sản phẩm vào giỏ hàng thành công!");
+      navigate(redirectPath);
+    } catch (err: any) {
+      console.error("Error adding to cart:", err.response?.data || err.message);
+      console.error("gọi api lỗi:", err.response?.data || err.message);
 
-        // Thêm sản phẩm vào giỏ hàng dựa trên selectedDetail
-        const itemData = {
-          cart_id: cartId,
-          product_detail_id: selectedDetail.id,
-          quantity: 1,
-          price: totalPrice.toString(),
-        };
-
-        await cartApi.addCartItem(itemData);
-        message.success("Đã thêm sản phẩm vào giỏ hàng thành công!");
-        navigate(redirectPath);
-      } catch (err: any) {
-        console.error("Error adding to cart:", err.response?.data || err.message); // Debug lỗi chi tiết
-        message.error("Không thể thêm sản phẩm vào giỏ hàng: " + (err.response?.data?.message || err.message));
-      }
-    };
-
-
+      message.error("Không thể thêm sản phẩm vào giỏ hàng: " + (err.response?.data?.message || err.message));
+    }
+  };
 
   if (isLoading) return <div>Đang tải...</div>;
   if (error || !product)
@@ -200,8 +239,15 @@ export const ProductDetail = () => {
     )
     .filter((capacity): capacity is Capacity => !!capacity);
 
-  // Lấy danh sách màu sắc
-  const availableColors = product.productColor;
+  // Lọc danh sách màu sắc dựa trên dung lượng đã chọn
+  const availableColors = selectedCapacityId
+    ? product.productColor.filter((color) =>
+        product.productDetails.some(
+          (detail) =>
+            detail.capacity?.id === selectedCapacityId && detail.color_id === color.id
+        )
+      )
+    : product.productColor;
 
   // Tìm productDetail phù hợp với color_id và capacity_id đã chọn
   const selectedDetail = product.productDetails.find(
@@ -214,16 +260,16 @@ export const ProductDetail = () => {
     (detail) => detail.capacity?.id === selectedCapacityId
   ) || product.productDetails[0];
 
-  // Tính giá bán: selling_price + capacity.price.price
-  const sellingPrice = selectedDetail.selling_price
+  // Tính giá bán
+  const sellingPrice = selectedDetail?.selling_price
     ? parseFloat(selectedDetail.selling_price.replace(/[^0-9.-]+/g, "")) || 0
     : 0;
-  const capacityPrice = selectedDetail.capacity?.price?.price
+  const capacityPrice = selectedDetail?.capacity?.price?.price
     ? parseFloat(selectedDetail.capacity.price.price.replace(/[^0-9.-]+/g, "")) || 0
     : 0;
   const totalPrice = sellingPrice + capacityPrice;
 
-  // Lấy danh sách ảnh từ sản phẩm
+  // Lấy danh sách ảnh
   const images = product.images || [];
   const thumbnailImage = images.find((img) => img.isThumbnail)?.imageUrl || "";
   const otherImages = images.filter((img) => !img.isThumbnail);
@@ -233,15 +279,18 @@ export const ProductDetail = () => {
       <Navbar />
       <div className="product-detail-container">
         <div className="product-detail">
-          {/* Phần ảnh (chiếm 3/5) */}
           <div className="product-gallery">
             <div
               className="main-image-container"
               onMouseEnter={() => setShowNavButtons(true)}
               onMouseLeave={() => setShowNavButtons(false)}
             >
-              {thumbnailImage ? (
-                <img src={thumbnailImage} alt={product.name} className="main-image" />
+              {images.length > 0 ? (
+                <img 
+                  src={images[selectedImageIndex].imageUrl} 
+                  alt={product.name} 
+                  className="main-image" 
+                />
               ) : (
                 <div className="image-placeholder">Ảnh sản phẩm (chưa có)</div>
               )}
@@ -256,7 +305,6 @@ export const ProductDetail = () => {
                 </>
               )}
             </div>
-            {/* Hiển thị các ảnh phụ */}
             <div className="thumbnail-gallery">
               {images.map((img, index) => (
                 <img
@@ -270,17 +318,15 @@ export const ProductDetail = () => {
             </div>
           </div>
 
-          {/* Phần thông tin (chiếm 2/5) */}
           <div className="product-info">
             <h1 className="product-title">{product.name}</h1>
 
-            {/* Phần chọn dung lượng */}
             <div className="option-group">
               <span className="option-title">Dung lượng</span>
               <div className="option-list">
-                {uniqueCapacities.map((capacity, index) => (
+                {uniqueCapacities.map((capacity) => (
                   <div
-                    key={index}
+                    key={capacity.id}
                     className={`option-item ${selectedCapacityId === capacity.id ? "active" : ""}`}
                     onClick={() => setSelectedCapacityId(capacity.id)}
                   >
@@ -290,16 +336,14 @@ export const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Phần chọn màu sắc */}
             <div className="option-group">
               <span className="option-title">Màu sắc</span>
               <div className="option-list">
-                {availableColors.map((color, index) => (
+                {availableColors.map((color) => (
                   <div
-                    key={index}
+                    key={color.id}
                     className={`option-item ${selectedColorId === color.id ? "active" : ""}`}
                     onClick={() => setSelectedColorId(color.id)}
-                    
                   >
                     {color.name}
                   </div>
@@ -307,18 +351,16 @@ export const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Phần giá */}
             <div className="price-section">
               <div className="current-price">{formatPrice(totalPrice)}</div>
             </div>
 
-            {/* Nút hành động */}
             <div className="action-buttons">
               <Button
                 type="primary"
                 className="btn btn-primary"
                 size="large"
-                onClick={() => addToCart(CUSTOMER_ROUTER_PATH.CATERGORIES)} // Thêm vào giỏ hàng và chuyển đến trang giỏ hàng
+                onClick={() => addToCart(CUSTOMER_ROUTER_PATH.CATERGORIES)}
               >
                 Mua Ngay
               </Button>
@@ -326,7 +368,7 @@ export const ProductDetail = () => {
                 type="default"
                 className="btn btn-secondary"
                 size="large"
-                onClick={() => addToCart(CUSTOMER_ROUTER_PATH.TRANG_CHU)} // Thêm vào giỏ hàng và chuyển về trang chủ
+                onClick={() => addToCart(CUSTOMER_ROUTER_PATH.TRANG_CHU)}
               >
                 Thêm Vào Giỏ Hàng
               </Button>

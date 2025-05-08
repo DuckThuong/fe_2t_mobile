@@ -7,12 +7,14 @@ import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { ADMIN_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
 import { login } from "../../api/authApi";
 import { selectAuth, setAuthUser } from "../../store/authSlice";
-import { RootState } from "../../store"; // Đảm bảo import RootState
+import { RootState } from "../../store";
+import { userApi } from "../../api/api";
 
 const Login = () => {
   const [form] = useForm();
@@ -24,16 +26,34 @@ const Login = () => {
     type: "success" | "error";
   } | null>(null);
 
-  // Sử dụng selectAuth để lấy toàn bộ state.auth
-  const auth = useSelector(selectAuth); // Sử dụng selector từ authSlice
+  const auth = useSelector(selectAuth);
   console.log("ID người dùng:", auth.id);
   console.log("Email:", auth.email);
   console.log("Họ tên:", auth.fullName);
 
   useEffect(() => {
-    // Kiểm tra nếu auth có id (nghĩa là đã đăng nhập)
     if (auth && auth.id) {
-      navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
+      const checkAdminStatus = async () => {
+        try {
+          const userResponse = await userApi.getUserAdminCheck(auth.id);
+          console.log("User Response:", userResponse); // Log toàn bộ dữ liệu trả về
+          console.log("is_admin value:", userResponse?.is_admin); // Log giá trị is_admin
+
+          // Kiểm tra is_admin với cả 1/true
+          const isAdmin = userResponse?.isAdmin === true;
+          if (isAdmin) {
+            navigate(ADMIN_ROUTER_PATH.ADMIN, { replace: true });
+          } else {
+            navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
+            console.error("Error fetching user admin status:111111111111111");
+          }
+        } catch (error) {
+          console.error("Error fetching user admin status:", error);
+          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
+        }
+      };
+
+      checkAdminStatus();
     }
   }, [auth, navigate]);
 
@@ -51,8 +71,6 @@ const Login = () => {
       setLoading(true);
       const PhoneNumber = form.getFieldValue("phone");
       const Password = form.getFieldValue("password");
-
-     
 
       const response = await login(PhoneNumber, Password);
 
@@ -75,12 +93,18 @@ const Login = () => {
           type: "success",
         });
 
-        setTimeout(() => {
-          if (navigate) {
-            console.log("Navigating to:", CUSTOMER_ROUTER_PATH.TRANG_CHU);
-            navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
-          }
-        }, 1500);
+        // Gọi API để kiểm tra is_admin
+        const userResponse = await userApi.getUserAdminCheck(id);
+        console.log("User Response (onFinish):", userResponse); // Log dữ liệu trả về
+        console.log("is_admin value (onFinish):", userResponse?.is_admin); // Log giá trị is_admin
+
+        // Kiểm tra is_admin với cả 1/true
+        const isAdmin = userResponse?.is_admin === 1 || userResponse?.is_admin === true;
+        if (isAdmin) {
+          setTimeout(() => navigate(ADMIN_ROUTER_PATH.DASHBOARD, { replace: true }), 1500);
+        } else {
+          setTimeout(() => navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true }), 1500);
+        }
       } else {
         throw new Error("Phản hồi API không hợp lệ");
       }
