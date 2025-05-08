@@ -7,6 +7,7 @@ import "./productCard.scss";
 interface ProductProps {
   id: number;
   name: string;
+  capacity: string,
   price: number;
   image: string;
   description?: string;
@@ -21,10 +22,17 @@ interface ProductProps {
   }>;
 }
 
-export const ProductCard: React.FC<{ product: ProductProps }> = ({
-  product,
-}) => {
-  const navigate = useNavigate();
+export const ProductCard: React.FC<{ product: ProductProps }> = ({ product }) => {
+  const navigate = useNavigate(); // Hook để điều hướng
+
+  const handleImageClick = () => {
+    navigate(`/trang-chu/${product.id}`); // Điều hướng đến trang chi tiết với id
+  };
+
+// export const ProductCard: React.FC<{ product: ProductProps }> = ({
+//   product,
+// }) => {
+//   const navigate = useNavigate();
   
   return (
     <div className={`product-card ${product.className}`}>
@@ -33,11 +41,11 @@ export const ProductCard: React.FC<{ product: ProductProps }> = ({
         src={product.image} 
         alt={product.name} 
         className="product-image"
-        onClick={() => navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU+ `/${product.id}`)}
+        onClick={handleImageClick}
         style={{ cursor: "pointer" }} // Thêm hiệu ứng con trỏ
       />
       
-      <h3>{product.name}</h3>
+      <h3>{product.name} {product.capacity}</h3>
       {/* <h4>Chỉ từ</h4> */}
       {product.description && (
         <Tooltip  title={product.description} overlayClassName="custom-tooltip">
@@ -66,14 +74,14 @@ export const ProductCard: React.FC<{ product: ProductProps }> = ({
         <p className="product-price">
           {product.price.toLocaleString("vi-VN")} VNĐ
         </p>
-        <Button
+        {/* <Button
           className="product-button_item"
           onClick={() => {
-            navigate(CUSTOMER_ROUTER_PATH.CATERGORIES);
+            navigate(CUSTOMER_ROUTER_PATH.PRODUCT_DETAIL);
           }}
         >
           Mua ngay
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

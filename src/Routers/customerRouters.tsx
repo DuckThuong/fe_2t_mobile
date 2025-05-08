@@ -21,7 +21,7 @@ export const CustomerRouter = () => (
     <Route
       path={CUSTOMER_ROUTER_PATH.LOG_IN}
       element={<SuspenseWrapper component={<Login />} />}
-    ></Route>
+    />
     {/* Signup */}
     <Route
       path={CUSTOMER_ROUTER_PATH.SIGN_UP}

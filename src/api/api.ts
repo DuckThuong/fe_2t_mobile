@@ -1,8 +1,7 @@
 import axios from "axios";
+import { DeleteItemInCart, UpdateItemInCart } from "../Layout/Cart";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
 import { CreateDiscountsPayload, CreateProductPayload, CreatePurchasePayload, CreateVendorBillPayload, CreateVendorsPayload, RegisterPayload, UpdateProductPayload } from "./constants";
-import { Purchase } from "../Layout/Purchase";
-import { create } from "lodash";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -49,6 +48,8 @@ export enum OrderStateEnum {
 }
 
 export const userApi = {
+  doUpdateProfile: (data: any) =>
+    apiRequest('user/update-profile', 'PUT', null, data),
   doRegister: (data: RegisterPayload) =>
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
@@ -56,9 +57,11 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
 
   doGetUserById: (id: string | number) =>
+    apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
+  doSearchUsers: (query: string) =>
+    apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
+ getUserAdminCheck: (id: string | number) => // Hàm mới
     apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
-  doSearchUsers: (keyword: string) =>
-    apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { keyword }),
 };
 
 export const imageApi = {
@@ -94,6 +97,15 @@ export const productApi = {
     apiRequest(`${API_KEY.PRODUCT}/delete-product?id=${id}`, "DELETE"),
 };
 
+// export const colorApi = {
+//   getAllColors: () => apiRequest(`color/get-all-colors`, "GET"),
+//   getColorById: (id: string) => apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
+// };
+
+// export const capacityApi = {
+//   getAllCapacities: () => apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
+//   getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
+// };
 export const colorApi = {
   getAllColors: () => apiRequest(`${API_KEY.COLOR}/get-all-colors`, "GET"),
   getColorById: (id: string) =>
@@ -145,18 +157,28 @@ export const discountApi = {
   deleteDiscount: (id: string) =>
     apiRequest(`${API_KEY.DISCOUNT}/delete-discount?id=${id}`, "DELETE"),
 };
-
 export const cartApi = {
+  creatCart :(id: string) => apiRequest(`${API_KEY.CART}/create-cart`, "POST",id),
   getAllCartItems: () => apiRequest(API_KEY.CART),
-  GetCartByUserId: (id: string) => apiRequest(`${API_KEY.CART}/${id}`),
+  GetCartByUserId: (id: string) => apiRequest(`cart/get-cart-by-user?user_id=${id}`, "GET"),
+  //GetCartByUserId: (id: string) => apiRequest(`${API_KEY.CART}/get-cart-by-user/${id}`, "GET"),
+
   GetCardByUserAndCartId: (userId: string, cartID: string) =>
     axios.get(`/api/getCart/${userId}`, { params: { cartID } }),
-  addCartItem: (itemData: any) => apiRequest(API_KEY.CART, "POST", itemData),
-  updateCartItem: (id: number, itemData: any) =>
-    apiRequest(`${API_KEY.CART}/update/${id}`, "PATCH", itemData),
-  deleteCartItem: (id: string) =>
-    apiRequest(`${API_KEY.CART}/delete/${id}`, "DELETE"),
+  addCartItem: (itemData: any) => apiRequest(`${API_KEY.CART}/add-item-to-cart`, "POST", itemData),
+ updateCartItem: (itemData: UpdateItemInCart) => {
+    const url = `${API_KEY.CART}/update-cart-item?cart_id=${encodeURIComponent(itemData.cart_id)}&item_id=${encodeURIComponent(itemData.item_id)}`;
+    console.log('Update URL:', url);
+    return apiRequest(url, "PUT", itemData);
+  },
+  deleteCartItem: (params: DeleteItemInCart) => {
+    const url = `${API_KEY.CART}/delete-cart-item?cart_id=${encodeURIComponent(params.cart_id)}&item_id=${encodeURIComponent(params.item_id)}`;
+    console.log('Delete URL:', url);
+    return apiRequest(url, "DELETE", null);
+  },
+
 };
+
 
 export const reviewApi = {
   getAllReview: () => apiRequest(API_KEY.REVIEW),

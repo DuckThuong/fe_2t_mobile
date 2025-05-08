@@ -1,118 +1,182 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./styles.scss";
-import { Cartergories } from "../Cart";
+import { useNavigate, useLocation } from "react-router-dom";
+import { cartApi, colorApi, capacityApi, productApi } from '../../api/api'; // Thêm productApi
+import { message } from 'antd';
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
-import { useNavigate } from "react-router-dom";
 
-// Dữ liệu giả lập
-const allProvinces = [
-  { id: 1, name: "Hà Nội" },
-  { id: 2, name: "Hồ Chí Minh" },
-  { id: 3, name: "Đà Nẵng" },
-];
+interface CartItem {
+  id: string;
+  name: string;
+  image: string;
+  capacity: string;
+  color: string;
+  quantity: number;
+  price: number;
+}
 
-const allDistricts = {
-  1: [
-    { id: 101, name: "Ba Đình" },
-    { id: 102, name: "Hoàn Kiếm" },
-  ],
-  2: [
-    { id: 201, name: "Quận 1" },
-    { id: 202, name: "Quận 3" },
-  ],
-  3: [
-    { id: 301, name: "Hải Châu" },
-    { id: 302, name: "Thanh Khê" },
-  ],
-};
+interface DeleteItemInCart {
+  cart_id: string;
+  item_id: string;
+}
 
-const allWards = {
-  101: [{ id: 10101, name: "Phường Phúc Xá" }],
-  102: [{ id: 10201, name: "Phường Hàng Bạc" }],
-  201: [{ id: 20101, name: "Phường Bến Nghé" }],
-  202: [{ id: 20201, name: "Phường Võ Thị Sáu" }],
-  301: [{ id: 30101, name: "Phường Thanh Bình" }],
-  302: [{ id: 30201, name: "Phường An Khê" }],
-};
-//  Dữ liệu đơn hàng
-
-// Dữ liệu sản phẩm
-const phoneProducts = [
-  {
-    id: 1,
-    name: "iPhone 16 Pro Max",
-    color: "Black",
-    capacity: "128GB",
-    currentPrice: "100000đ",
-    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max-2.png",
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: "iPhone 13 128GB",
-    color: "Titanium Gray",
-    capacity: "128GB",
-    currentPrice: "200000đ",
-    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/2/12_3_8_2_8.jpg",
-    quantity: 1,
-  },
-  
-];
-const idOrderCode = "hd213";
-const encodedOrderCode = encodeURIComponent(idOrderCode); // Đảm bảo mã hóa đúng
-// Dữ liệu khách hàng
 const customerData = {
-  name: "Trần Khánh Hùng",
-  phone: "0948682103",
   email: "khanhhhungg213@gmail.com",
   memberId: "S-NULL",
-  
 };
 
 export const Purchase = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedProvince, setSelectedProvince] = useState("");
-  const [selectedDistrict, setSelectedDistrict] = useState("");
-  const [selectedWard, setSelectedWard] = useState("");
-  const [street, setStreet] = useState("");
+  const [recipientName, setRecipientName] = useState("");
+  const [recipientPhone, setRecipientPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [deliveryNote, setDeliveryNote] = useState("");
   const [acceptMarketing, setAcceptMarketing] = useState(false);
   const [isProductListCollapsed, setIsProductListCollapsed] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState("cod"); // Thêm state cho phương thức thanh toán
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartId, setCartId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const { selectedItems = [], discount = 'none' } = location.state || {};
+  const userId = localStorage.getItem('user_id') || '18';
+  const idOrderCode = "hd213";
+  const encodedOrderCode = encodeURIComponent(idOrderCode);
 
-  const handleNextStep = () => {
-      if (currentStep === 1) {
-        setCurrentStep(2);
-      } else {
-        alert("Đặt hàng thành công!");
-        // Thêm timeout để người dùng đọc thông báo
-        // setTimeout(() => {
-        //   navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-        // }, 1500);
-         
-          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-        
+  useEffect(() => {
+    const fetchCart = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // Lấy toàn bộ danh sách colors và capacities trước
+        const colorsResponse = await colorApi.getAllColors();
+        const capacitiesResponse = await capacityApi.getAllCapacities();
+        console.log('Colors Response:', colorsResponse);
+        console.log('Capacities Response:', capacitiesResponse);
+
+        // Tạo map để tra cứu nhanh
+        const colorsMap = colorsResponse.reduce((map: { [key: string]: string }, color: any) => {
+          map[color.id] = color.name || 'Không xác định';
+          return map;
+        }, {});
+        const capacitiesMap = capacitiesResponse.reduce((map: { [key: string]: string }, capacity: any) => {
+          map[capacity.id] = capacity.display_name || 'Unknown';
+          return map;
+        }, {});
+
+        console.log('Fetching cart for userId:', userId);
+        const response = await cartApi.GetCartByUserId(userId);
+        console.log('Cart Response:', response);
+
+        if (response && response.cartDetails) {
+          const items: CartItem[] = Array.isArray(response.cartDetails)
+            ? await Promise.all(
+                response.cartDetails
+                  .filter((detail: any) => selectedItems.includes(detail.id.toString()))
+                  .map(async (detail: any) => {
+                    const productDetail = detail.productDetail;
+                    const product = productDetail.product;
+
+                    // Gọi API getProductById để lấy thông tin hình ảnh
+                    let productImage = 'https://via.placeholder.com/150';
+                    try {
+                      const productResponse = await productApi.getProductById(product.id.toString());
+                      console.log(`Product Response for product_id ${product.id}:`, productResponse);
+                      const thumbnailImage = productResponse.images.find((img: any) => img.isThumbnail === true);
+                      productImage = thumbnailImage ? thumbnailImage.imageUrl : productResponse.images[0]?.imageUrl || productImage;
+                    } catch (err) {
+                      console.error(`Lỗi khi lấy thông tin sản phẩm cho product_id ${product.id}:`, err);
+                    }
+
+                    // Tính giá mới: price + selling_price
+                    const price = parseFloat(detail.price || '0');
+                    const sellingPrice = parseFloat(productDetail.selling_price || '0');
+                    const totalPrice = price + sellingPrice;
+
+                    return {
+                      id: detail.id.toString(),
+                      name: product.name || 'Sản phẩm không xác định',
+                      image: productImage,
+                      capacity: capacitiesMap[productDetail.capacity_id] || 'Unknown',
+                      color: colorsMap[productDetail.color_id] || 'Không xác định',
+                      quantity: detail.quantity,
+                      price: totalPrice,
+                    };
+                  })
+              )
+            : [];
+          setCartItems(items);
+          const fetchedCartId = response.id ? response.id.toString() : null;
+          setCartId(fetchedCartId);
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
+        setError('Không thể tải dữ liệu đơn hàng. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
       }
     };
+
+    if (selectedItems.length > 0) {
+      fetchCart();
+    } else {
+      setError('Không có sản phẩm nào được chọn.');
+      setLoading(false);
+    }
+  }, [userId, selectedItems]);
+
+  const deleteCartItems = async () => {
+    if (!cartId || selectedItems.length === 0) {
+      message.error('Thiếu thông tin giỏ hàng hoặc không có sản phẩm để xóa!');
+      return false;
+    }
+
+    try {
+      for (const itemId of selectedItems) {
+        const deleteParams: DeleteItemInCart = {
+          cart_id: cartId,
+          item_id: itemId,
+        };
+        console.log('Delete Params:', deleteParams);
+        const response = await cartApi.deleteCartItem(deleteParams);
+        if (!response) {
+          throw new Error(`Xóa sản phẩm ${itemId} thất bại`);
+        }
+      }
+      message.success('Đã xóa các sản phẩm khỏi giỏ hàng!');
+      return true;
+    } catch (err: any) {
+      console.error('Lỗi khi xóa sản phẩm:', err.response?.data || err.message);
+      message.error('Không thể xóa sản phẩm: ' + (err.response?.data?.message || err.message || 'Lỗi không xác định'));
+      return false;
+    }
+  };
+
+  const handleNextStep = async () => {
+    if (currentStep === 1) {
+      if (!recipientName || !recipientPhone || !address) {
+        message.error('Vui lòng nhập đầy đủ tên, số điện thoại và địa chỉ!');
+        return;
+      }
+      setCurrentStep(2);
+    } else {
+      const deleted = await deleteCartItems();
+      if (deleted) {
+        alert("Đặt hàng thành công!");
+        navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
+      }
+    }
+  };
 
   const handlePrevStep = () => {
     setCurrentStep(1);
   };
 
-  const handleProvinceChange = (e) => {
-    setSelectedProvince(e.target.value);
-    setSelectedDistrict("");
-    setSelectedWard("");
-  };
-
-  const handleDistrictChange = (e) => {
-    setSelectedDistrict(e.target.value);
-    setSelectedWard("");
-  };
-
-  const handleStepClick = (step) => {
+  const handleStepClick = (step: number) => {
     if (step === 1 && currentStep === 2) {
       setCurrentStep(1);
     }
@@ -122,30 +186,27 @@ export const Purchase = () => {
     setIsProductListCollapsed(!isProductListCollapsed);
   };
 
-  // Tính tổng tiền
-  const totalPrice = phoneProducts.reduce((total, product) => {
-    const price = parseInt(product.currentPrice.replace(/\./g, "").replace("đ", ""));
-    return total + price * product.quantity;
+  const totalPrice = cartItems.reduce((total, product) => {
+    return total + product.price * product.quantity;
   }, 0);
+  const discountedTotal = discount === '10off' ? totalPrice * 0.9 : totalPrice;
 
   const formattedTotalPrice = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(totalPrice).replace("₫", "đ");
+  }).format(discountedTotal).replace("₫", "đ");
 
   return (
     <div className="order-create">
-      {/* Header với nút back (chỉ hiện ở trang thông tin) */}
       {currentStep === 1 && (
         <div className="page-header">
           <button className="back-button" onClick={() => navigate(CUSTOMER_ROUTER_PATH.CATERGORIES)}>
-            &lt; Quay lại
+            Quay lại
           </button>
           <h1>Thông tin đơn hàng</h1>
         </div>
       )}
 
-      {/* Steps indicator - có thể click để quay lại */}
       <div className="order-steps">
         <div
           className={`step ${currentStep === 1 ? "active" : ""} ${currentStep === 2 ? "clickable" : ""}`}
@@ -158,14 +219,16 @@ export const Purchase = () => {
         </div>
       </div>
 
-      {/* Nội dung chính */}
       <div className="content-wrapper">
-        {currentStep === 1 ? (
+        {loading ? (
+          <p>Đang tải đơn hàng...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : currentStep === 1 ? (
           <>
-            {/* Card thông tin sản phẩm với chức năng thu gọn */}
             <div className="info-card product-info">
               <div className="product-list-header">
-                <h3>Danh sách sản phẩm ({phoneProducts.length})</h3>
+                <h3>Danh sách sản phẩm ({cartItems.length})</h3>
                 <button className="collapse-button" onClick={toggleProductList}>
                   {isProductListCollapsed ? "Mở rộng" : "Thu gọn"}
                 </button>
@@ -173,18 +236,18 @@ export const Purchase = () => {
 
               {!isProductListCollapsed && (
                 <div className="product-list">
-                  {phoneProducts.map((product) => (
+                  {cartItems.map((product) => (
                     <div key={product.id} className="product-item">
                       <div className="product-image">
                         <img src={product.image} alt={product.name} />
                       </div>
                       <div className="product-details">
                         <div className="product-name">
-                          {product.name} <br/> {product.capacity} {product.color}
+                          {product.name} <br /> {product.capacity} - {product.color}
                         </div>
                         <div className="product-price-quantity">
                           <span className="current-price">
-                            {product.currentPrice}
+                            {(product.price * product.quantity).toLocaleString()}đ
                           </span>
                           <span className="quantity">
                             Số lượng: {product.quantity}
@@ -197,7 +260,6 @@ export const Purchase = () => {
               )}
             </div>
 
-            {/* Card thông tin giao hàng */}
             <div className="info-card delivery-info">
               <h2>THÔNG TIN GIAO HÀNG</h2>
 
@@ -205,71 +267,32 @@ export const Purchase = () => {
                 <div className="form-row">
                   <div className="form-group">
                     <label>Tên người nhận</label>
-                    <div className="value-display">{customerData.name}</div>
+                    <input
+                      type="text"
+                      value={recipientName}
+                      onChange={(e) => setRecipientName(e.target.value)}
+                      placeholder="Nhập tên người nhận"
+                    />
                   </div>
                   <div className="form-group">
                     <label>SĐT người nhận</label>
-                    <div className="value-display">{customerData.phone}</div>
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Tỉnh/Thành phố</label>
-                    <select
-                      value={selectedProvince}
-                      onChange={handleProvinceChange}
-                    >
-                      <option value="">-- Chọn tỉnh/thành phố --</option>
-                      {allProvinces.map((province) => (
-                        <option key={province.id} value={province.id}>
-                          {province.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Quận/Huyện</label>
-                    <select
-                      value={selectedDistrict}
-                      onChange={handleDistrictChange}
-                      disabled={!selectedProvince}
-                    >
-                      <option value="">-- Chọn quận/huyện --</option>
-                      {selectedProvince &&
-                        allDistricts[selectedProvince]?.map((district) => (
-                          <option key={district.id} value={district.id}>
-                            {district.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Phường/Xã</label>
-                    <select
-                      value={selectedWard}
-                      onChange={(e) => setSelectedWard(e.target.value)}
-                      disabled={!selectedDistrict}
-                    >
-                      <option value="">-- Chọn phường/xã --</option>
-                      {selectedDistrict &&
-                        allWards[selectedDistrict]?.map((ward) => (
-                          <option key={ward.id} value={ward.id}>
-                            {ward.name}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                  <div className="form-group">
-                    <label>Số nhà, tên đường</label>
                     <input
                       type="text"
-                      value={street}
-                      onChange={(e) => setStreet(e.target.value)}
-                      placeholder="Nhập số nhà và tên đường"
+                      value={recipientPhone}
+                      onChange={(e) => setRecipientPhone(e.target.value)}
+                      placeholder="Nhập số điện thoại"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group full-width">
+                    <label>Địa chỉ giao hàng</label>
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="Nhập số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
                     />
                   </div>
                 </div>
@@ -287,7 +310,6 @@ export const Purchase = () => {
             </div>
           </>
         ) : (
-          /* Trang thanh toán */
           <div className="info-card payment-info">
             <h1>Thanh toán</h1>
             <h2>PHƯƠNG THỨC THANH TOÁN</h2>
@@ -317,26 +339,15 @@ export const Purchase = () => {
               
               {paymentMethod === "banking" && (
                 <div className="bank-transfer-details">
-                  
                   <div className="transfer-info">
-                    {/* Thêm ảnh QR ở đây */}
-                      <div className="qr-code-box">
-                        <img
-                          // src={`https://img.vietqr.io/image/techcombank-19028903445567-compact2.jpg?amount=
-                          //   ${totalPrice}&addInfo=${encodeURIComponent(customerData.name + customerData.phone)}
-                          //   &accountName=${encodeURIComponent("NGO VAN THUAN")}`}
-                          
-                          src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=
-                            ${totalPrice}&addInfo=${encodedOrderCode}`}  
-                          
-
-                          
-                          alt="Mã QR chuyển khoản"
-                          style={{ width: "200px", marginTop: "10px" }}
-                        />
-                      </div>
+                    <div className="qr-code-box">
+                      <img
+                        src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=${discountedTotal}&addInfo=${encodedOrderCode}`}
+                        alt="Mã QR chuyển khoản"
+                        style={{ width: "200px", marginTop: "10px" }}
+                      />
+                    </div>
                   </div>
-                  
                 </div>
               )}
             </div>
@@ -344,14 +355,12 @@ export const Purchase = () => {
         )}
       </div>
 
-      {/* Phần cố định ở dưới */}
       <div className="fixed-footer">
         <div className="total-price">
           <div className="price-row">
             <span>Tổng tiền tạm tính:</span>
             <span className="amount">{formattedTotalPrice}</span>
           </div>
-          
         </div>
 
         <button
@@ -359,11 +368,10 @@ export const Purchase = () => {
           onClick={handleNextStep}
           disabled={
             currentStep === 1 &&
-            (!selectedProvince || !selectedDistrict || !selectedWard || !street)
+            (!recipientName || !recipientPhone || !address)
           }
         >
           {currentStep === 1 ? "Tiếp tục" : "Đặt hàng"}
-          
         </button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { 
+  UnorderedListOutlined,
   AndroidFilled, 
   AppleFilled, 
   CustomerServiceOutlined,
@@ -72,6 +73,11 @@ const App: React.FC = () => {
 
   // Menu data
   const menuItems = {
+     list: [
+      { key: "1", label: "Dòng iPhone 16" },
+      
+      
+    ],
     ios: [
       { key: "1", label: "Dòng iPhone 16" },
       { key: "2", label: "Dòng iPhone 15" },
@@ -119,6 +125,17 @@ const App: React.FC = () => {
           {/* Menu bên trái */}
           <Sider className="menu-sider" width={200}>
             <div className="menu-container">
+             
+                
+                <Button 
+                  icon={<UnorderedListOutlined />} 
+                  block 
+                  className="menu-button"
+                  onClick={() => navigate(CUSTOMER_ROUTER_PATH.TRANG_DS_SP)}
+                >
+                  LIST
+                </Button>
+              
               <Dropdown
                 overlay={
                   <Menu

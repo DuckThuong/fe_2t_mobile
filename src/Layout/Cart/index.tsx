@@ -1,52 +1,146 @@
-import React, { useState } from 'react';
-import CartProduct from './CartProduct';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { cartApi, colorApi, capacityApi, productApi } from '../../api/api'; // Thêm productApi
 import './style.scss';
 import Navbar from '../HeaderWeb';
-import { FooterWeb } from '../FooterWeb';
+import { message } from 'antd';
 import { CUSTOMER_ROUTER_PATH } from '../../Routers/Routers';
-import { useNavigate } from "react-router-dom";
 
 interface CartItem {
   id: string;
   name: string;
-  color:string;
-  capacity:string;
-  price: number;
-  
-  quantity: number;
   image: string;
-  selected?: boolean;
+  capacity: string;
+  color: string;
+  quantity: number;
+  price: number;
+  selected: boolean;
+}
+
+export interface DeleteItemInCart {
+  cart_id: string;
+  item_id: string;
+}
+
+export interface UpdateItemInCart {
+  cart_id: string;
+  item_id: string;
+  quantity: number;
+  price: number;
 }
 
 export const Cartergories = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: '1',
-      name: 'iPhone 16 Pro Max',
-      color: 'Black',
-      capacity:'128GB',
-      price: 100000,
-      quantity: 1,
-      image: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-16-pro-max.png',
-      selected: false,
-    },
-    {
-      id: '2',
-      name: 'iPhone 13 128GB',
-      color: 'Titanium Gray',
-      capacity:'128GB',
-      price: 200000,
-      quantity: 1,
-    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:0:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/1/2/12_3_8_2_8.jpg",
-      selected: false,
-    },
-  ]);
+  const userId = localStorage.getItem('user_id') || '18';
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartId, setCartId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [selectAll, setSelectAll] = useState(false);
+  const [discount, setDiscount] = useState<string>('none');
+
   const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalAmount = cartItems.reduce((sum, item) => {
-    return item.selected ? sum + item.price * item.quantity : sum;
-  }, 0);
+  const totalAmount = cartItems.reduce((sum, item) => 
+    item.selected ? sum + item.price * item.quantity : sum, 0
+  );
+  const discountedTotal = discount === '10off' ? totalAmount * 0.9 : totalAmount;
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        console.log('Fetching cart for userId:', userId);
+        const response = await cartApi.GetCartByUserId(userId);
+        console.log('Cart Response:', response);
+
+        if (response && response.cartDetails) {
+          const items: CartItem[] = Array.isArray(response.cartDetails)
+            ? await Promise.all(
+                response.cartDetails.map(async (detail: any) => {
+                  const productDetail = detail.productDetail;
+                  const product = productDetail.product;
+                  console.log('Product Detail:', productDetail);
+
+                  // Lấy thông tin capacity
+                  let capacityDisplayName = 'Unknown';
+                  try {
+                    const capacityResponse = await capacityApi.getCapacityById(productDetail.capacity_id.toString());
+                    console.log(`Capacity Response for capacity_id ${productDetail.capacity_id}:`, capacityResponse);
+                    capacityDisplayName = capacityResponse.display_name || 'Unknown';
+                  } catch (err) {
+                    console.error(`Lỗi khi lấy capacity cho capacity_id ${productDetail.capacity_id}:`, err);
+                  }
+
+                  // Lấy thông tin color
+                  let colorName = 'Unknown';
+                  try {
+                    const colorResponse = await colorApi.getColorById(productDetail.color_id.toString());
+                    console.log(`Color Response for color_id ${productDetail.color_id}:`, colorResponse);
+                    colorName = colorResponse.name || 'Unknown';
+                  } catch (err) {
+                    console.error(`Lỗi khi lấy color cho color_id ${productDetail.color_id}:`, err);
+                  }
+
+                  // Gọi API getProductById để lấy hình ảnh và giá
+                  let productImage = 'https://via.placeholder.com/150';
+                  let totalPrice = 0;
+
+                  try {
+                    const productResponse = await productApi.getProductById(product.id.toString());
+                    console.log(`Product Response for product_id ${product.id}:`, productResponse);
+
+                    // Lấy hình ảnh có isThumbnail: true
+                    const thumbnailImage = productResponse.images.find((img: any) => img.isThumbnail === true);
+                    productImage = thumbnailImage ? thumbnailImage.imageUrl : productResponse.images[0]?.imageUrl || productImage;
+
+                    // Tính giá mới: price + discount_price từ getProductById
+                    const productDetailFromApi = productResponse.productDetails.find(
+                      (pd: any) => pd.capacity.id === productDetail.capacity_id
+                    );
+                    if (productDetailFromApi && productDetailFromApi.capacity.price) {
+                      const price = parseFloat(productDetailFromApi.capacity.price.price || '0');
+                      const discountPrice = parseFloat(productDetailFromApi.capacity.price.discount_price || '0');
+                      totalPrice = price + discountPrice;
+                    } else {
+                      // Fallback nếu không có dữ liệu giá từ getProductById
+                      totalPrice = parseFloat(productDetail.selling_price || '0');
+                    }
+                  } catch (err) {
+                    console.error(`Lỗi khi lấy thông tin sản phẩm cho product_id ${product.id}:`, err);
+                    // Fallback nếu gọi API thất bại
+                    totalPrice = parseFloat(productDetail.selling_price || '0');
+                  }
+
+                  return {
+                    id: detail.id.toString(),
+                    name: product.name || 'Sản phẩm không xác định',
+                    image: productImage,
+                    capacity: capacityDisplayName,
+                    color: colorName,
+                    quantity: detail.quantity,
+                    price: totalPrice,
+                    selected: false,
+                  };
+                })
+              )
+            : [];
+          setCartItems(items);
+          const fetchedCartId = response.id ? response.id.toString() : null;
+          console.log('Fetched cartId:', fetchedCartId);
+          setCartId(fetchedCartId);
+        }
+      } catch (error) {
+        console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
+        setError('Không thể tải giỏ hàng. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCart();
+  }, [userId]);
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
@@ -54,77 +148,166 @@ export const Cartergories = () => {
     setCartItems(cartItems.map(item => ({ ...item, selected: newSelectAll })));
   };
 
-  const updateProduct = (id: string, updates: Partial<CartItem>) => {
-    setCartItems(
-      cartItems.map(item => 
-        item.id === id ? { ...item, ...updates } : item
-      )
-    );
+  const handleCheckboxChange = (id: string) => {
+    setCartItems(cartItems.map(item => 
+      item.id === id ? { ...item, selected: !item.selected } : item
+    ));
   };
 
-  const handleRemoveProduct = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-    // Nếu xóa hết sản phẩm thì tắt chọn tất cả
-    if (cartItems.length === 1) {
-      setSelectAll(false);
+  const updateProduct = async (id: string, updates: Partial<CartItem>) => {
+    try {
+      const itemIndex = cartItems.findIndex(item => item.id === id);
+      if (itemIndex === -1 || !cartId) {
+        console.log('Invalid itemIndex or cartId:', { itemIndex, cartId });
+        return;
+      }
+
+      const newQuantity = Math.max(1, updates.quantity || cartItems[itemIndex].quantity);
+      const currentPrice = cartItems[itemIndex].price;
+
+      const updateParams: UpdateItemInCart = {
+        cart_id: cartId,
+        item_id: id,
+        quantity: newQuantity,
+        price: currentPrice
+      };
+      console.log('Update Params:', updateParams);
+
+      const response = await cartApi.updateCartItem(updateParams);
+
+      if (response) {
+        console.log('Update successful, response:', response);
+        message.success('Cập nhật số lượng thành công!');
+        setCartItems(cartItems.map(item => 
+          item.id === id ? { ...item, quantity: newQuantity } : item
+        ));
+      }
+    } catch (err: any) {
+      console.error('Lỗi khi cập nhật sản phẩm:', err.response?.data || err.message);
+      message.error('Không thể cập nhật số lượng: ' + (err.response?.data?.message || err.message));
     }
+  };
+
+  const handleRemoveProduct = async (id: string) => {
+    try {
+      if (!cartId || !id) {
+        console.log('Missing cartId or itemId:', { cartId, itemId: id });
+        message.error('Thiếu thông tin giỏ hàng hoặc sản phẩm!');
+        return;
+      }
+
+      const deleteParams: DeleteItemInCart = {
+        cart_id: cartId,
+        item_id: id
+      };
+      console.log('Delete Params:', deleteParams);
+
+      const response = await cartApi.deleteCartItem(deleteParams);
+
+      if (response) {
+        console.log('Delete successful, response:', response);
+        message.success('Xóa sản phẩm thành công!');
+        setCartItems(cartItems.filter(item => item.id !== id));
+        if (cartItems.length === 1) setSelectAll(false);
+      } else {
+        console.log('Delete failed, no response');
+        message.error('Xóa sản phẩm thất bại. Vui lòng kiểm tra lại!');
+      }
+    } catch (err: any) {
+      console.error('Lỗi khi xóa sản phẩm:', err.response?.data || err.message);
+      message.error('Không thể xóa sản phẩm: ' + (err.response?.data?.message || err.message || 'Lỗi không xác định'));
+    }
+  };
+
+  const handleCheckout = () => {
+    const selectedItems = cartItems.filter(item => item.selected).map(item => item.id);
+    if (selectedItems.length === 0) {
+      message.error('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
+      return;
+    }
+    navigate(CUSTOMER_ROUTER_PATH.MUA_HANG, { state: { selectedItems, discount } });
   };
 
   return (
     <div>
-      <div>
-        <Navbar cartCount={totalCartItems} />
+      <Navbar />
+      <div className="cart-container">
+        <h2>Giỏ hàng của bạn</h2>
+        {loading ? (
+          <p>Đang tải giỏ hàng...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : cartItems.length > 0 ? (
+          <>
+            <div className="cart-header">
+              <div className="select-all">
+                <input
+                  type="checkbox"
+                  checked={selectAll}
+                  onChange={toggleSelectAll}
+                />
+                <span>Chọn tất cả ({totalCartItems} sản phẩm)</span>
+              </div>
+            </div>
+
+            <div className="cart-items">
+              {cartItems.map((item) => (
+                <div key={item.id} className="cart-product">
+                  <div className="product-select">
+                    <input
+                      type="checkbox"
+                      checked={item.selected}
+                      onChange={() => handleCheckboxChange(item.id)}
+                    />
+                  </div>
+                  <div className="product-info">
+                    <img src={item.image} alt={item.name} className="product-image" />
+                    <div>
+                      <h3>{item.name}</h3>
+                      <p>Dung lượng: {item.capacity}</p>
+                      <p>Màu sắc: {item.color}</p>
+                    </div>
+                  </div>
+                  <div className="product-quantity">
+                    <button onClick={() => updateProduct(item.id, { quantity: item.quantity - 1 })}>-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => updateProduct(item.id, { quantity: item.quantity + 1 })}>+</button>
+                  </div>
+                  <div className="product-total">
+                    {(item.price * item.quantity).toLocaleString()}đ
+                  </div>
+                  <div className="product-remove">
+                    <button onClick={() => handleRemoveProduct(item.id)} className="remove-btn">Xóa</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="discount-section">
+              <label htmlFor="discount">Khuyến mãi: </label>
+              <select id="discount" value={discount} onChange={(e) => setDiscount(e.target.value)}>
+                <option value="none">Không áp dụng</option>
+                <option value="10off">Giảm 10%</option>
+              </select>
+            </div>
+
+            <div className="cart-summary fixed-summary">
+              <div className="total-amount">
+                Tổng thanh toán ({cartItems.filter(item => item.selected).length} sản phẩm):
+                <span>{discountedTotal.toLocaleString()}đ</span>
+              </div>
+              <button className="checkout-btn" onClick={handleCheckout}>
+                Mua hàng
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="empty-cart">
+            <p>Giỏ hàng của bạn đang trống</p>
+            <button className="continue-shopping">Tiếp tục mua sắm</button>
+          </div>
+        )}
       </div>
-    <div className="cart-container">
-      <h2>Giỏ hàng của bạn</h2>
-      
-      {cartItems.length > 0 ? (
-        <>
-          <div className="cart-header">
-            <div className="select-all">
-              <input
-                type="checkbox"
-                checked={selectAll}
-                onChange={toggleSelectAll}
-              />
-              <span>Chọn tất cả ({cartItems.length} sản phẩm)</span>
-            </div>
-          </div>
-
-          <div className="cart-items">
-            {cartItems.map((item) => (
-              <CartProduct
-                key={item.id}
-                product={item}
-                onUpdate={updateProduct}
-                onRemove={handleRemoveProduct}
-              />
-            ))}
-          </div>
-
-          <div className="cart-summary">
-            <div className="total-amount">
-              Tổng thanh toán ({cartItems.filter(item => item.selected).length} sản phẩm):
-              <span>{totalAmount.toLocaleString()}đ</span>
-            </div>
-            {/* <button className="checkout-btn" onClick={=>{navigate(CUSTOMER_ROUTER_PATH.MUA_HANG);}}>Mua hàng</button> */}
-            <button className="checkout-btn" onClick={() => { navigate(CUSTOMER_ROUTER_PATH.MUA_HANG); }}>
-               Mua hàng
-            </button>
-          </div>
-        </>
-      ) : (
-        <div className="empty-cart">
-          <p>Giỏ hàng của bạn đang trống</p>
-          <button className="continue-shopping">Tiếp tục mua sắm</button>
-        </div>
-      )}
-    </div>
-    <div>
-      <FooterWeb/>
-    </div>
     </div>
   );
 };
-
-//export default Cart;

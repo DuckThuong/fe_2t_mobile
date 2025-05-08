@@ -1,19 +1,20 @@
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
-import { FormCheckbox } from "../../Components/Form/FormCheckbox";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
 import { LogoForm } from "../../Components/LogoForm/LogoForm";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { ADMIN_ROUTER_PATH } from "../../Routers/Routers";
 import { ValidateLibrary } from "../../validate";
 import NotificationPopup from "../Notification";
 import "./login.scss";
 import { login } from "../../api/authApi";
-import { setAuthUser } from "../../store/authSlice";
-import { message } from "antd";
+import { selectAuth, setAuthUser } from "../../store/authSlice";
+import { RootState } from "../../store";
+import { userApi } from "../../api/api";
 
 const Login = () => {
   const [form] = useForm();
@@ -24,6 +25,37 @@ const Login = () => {
     message: string;
     type: "success" | "error";
   } | null>(null);
+
+  const auth = useSelector(selectAuth);
+  console.log("ID người dùng:", auth.id);
+  console.log("Email:", auth.email);
+  console.log("Họ tên:", auth.fullName);
+
+  useEffect(() => {
+    if (auth && auth.id) {
+      const checkAdminStatus = async () => {
+        try {
+          const userResponse = await userApi.getUserAdminCheck(auth.id);
+          console.log("User Response:", userResponse); // Log toàn bộ dữ liệu trả về
+          console.log("is_admin value:", userResponse?.is_admin); // Log giá trị is_admin
+
+          // Kiểm tra is_admin với cả 1/true
+          const isAdmin = userResponse?.isAdmin === true;
+          if (isAdmin) {
+            navigate(ADMIN_ROUTER_PATH.ADMIN, { replace: true });
+          } else {
+            navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
+            console.error("Error fetching user admin status:111111111111111");
+          }
+        } catch (error) {
+          console.error("Error fetching user admin status:", error);
+          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
+        }
+      };
+
+      checkAdminStatus();
+    }
+  }, [auth, navigate]);
 
   useEffect(() => {
     if (notification) {
@@ -37,35 +69,54 @@ const Login = () => {
   const onFinish = async () => {
     try {
       setLoading(true);
-      const phone = form.getFieldValue("phone");
-      const password = form.getFieldValue("password");
+      const PhoneNumber = form.getFieldValue("phone");
+      const Password = form.getFieldValue("password");
 
-      const response = await login(phone, password);
+      const response = await login(PhoneNumber, Password);
 
-      if (response && response.user) {
-        dispatch(
-          setAuthUser({
-            id: response.user.id,
-            email: response.user.email,
-            fullName: response.user.full_name || response.user.user_name,
-          })
-        );
+      if (response && response.user && response.token) {
+        const { id, email, full_name, user_name } = response.user;
+        if (!id || !email) {
+          throw new Error("Dữ liệu người dùng không đầy đủ");
+        }
+        const userData = {
+          id,
+          email,
+          fullName: full_name || user_name || "Unknown",
+        };
+        dispatch(setAuthUser(userData));
+
+        console.log("Dispatched authUser:", userData);
 
         setNotification({
           message: "Đăng nhập thành công!",
           type: "success",
         });
 
-        // Wait a bit before navigating to show the success message
-        setTimeout(() => {
-          navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU);
-        }, 1000);
+        // Gọi API để kiểm tra is_admin
+        const userResponse = await userApi.getUserAdminCheck(id);
+        console.log("User Response (onFinish):", userResponse); // Log dữ liệu trả về
+        console.log("is_admin value (onFinish):", userResponse?.is_admin); // Log giá trị is_admin
+
+        // Kiểm tra is_admin với cả 1/true
+        const isAdmin = userResponse?.is_admin === 1 || userResponse?.is_admin === true;
+        if (isAdmin) {
+          setTimeout(() => navigate(ADMIN_ROUTER_PATH.DASHBOARD, { replace: true }), 1500);
+        } else {
+          setTimeout(() => navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true }), 1500);
+        }
+      } else {
+        throw new Error("Phản hồi API không hợp lệ");
       }
     } catch (error: any) {
+      console.error("Login error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        (error.message === "No token in response"
+          ? "Không nhận được token từ server"
+          : "Đăng nhập thất bại. Vui lòng thử lại!");
       setNotification({
-        message:
-          error.response?.data?.message ||
-          "Đăng nhập thất bại. Vui lòng thử lại!",
+        message: errorMessage,
         type: "error",
       });
     } finally {
@@ -130,7 +181,6 @@ const Login = () => {
               }}
             />
           </div>
-
           <div className="login_form-login">
             <FormButtonSubmit
               content="Đăng nhập"

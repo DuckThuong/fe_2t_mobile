@@ -26,7 +26,7 @@ $hover-color: #f0f0f0;
 
     .main-image-container {
       position: relative;
-      width: 90%;
+      width: 100%;
       padding-bottom: 100%;
       background: $secondary-color;
       border-radius: 12px;
@@ -39,7 +39,6 @@ $hover-color: #f0f0f0;
         width: 100%;
         height: 100%;
         object-fit: contain;
-        background: white;
       }
 
       .image-placeholder {
@@ -93,35 +92,27 @@ $hover-color: #f0f0f0;
       }
     }
 
-    .thumbnail-container {
+    .thumbnail-gallery {
       display: flex;
       gap: 10px;
       margin-top: 15px;
-      flex-wrap: wrap;
+      overflow-x: auto;
 
-      .thumbnail {
-        width: 70px;
-        height: 70px;
-        border-radius: 8px;
-        border: 1px solid $border-color;
+      .thumbnail-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border: 2px solid $border-color;
+        border-radius: 6px;
         cursor: pointer;
-        overflow: hidden;
-        background: $secondary-color;
-        transition: all 0.2s;
+        transition: border-color 0.3s;
 
         &.active {
           border-color: $primary-color;
-          box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
         }
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        &:hover:not(.active) {
-          border-color: darken($border-color, 10%);
+        &:hover {
+          border-color: darken($primary-color, 10%);
         }
       }
     }
@@ -131,6 +122,10 @@ $hover-color: #f0f0f0;
   .product-info {
     flex: 3;
     padding: 10px;
+    display: flex;
+    flex-direction: column; // 🔸 sắp xếp dọc
+    align-items: flex-start; // 🔸 canh trái toàn bộ
+    gap: 16px;
 
     .product-title {
       font-size: 28px;
@@ -278,6 +273,11 @@ $hover-color: #f0f0f0;
       width: 100%;
     }
   }
+
+  .thumbnail-gallery {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }
 
 .tech-specs-container {
@@ -333,7 +333,7 @@ $hover-color: #f0f0f0;
   }
 }
 
-// Responsive
+/* Responsive */
 @media (max-width: 768px) {
   .tech-specs-content {
     flex-direction: column;
@@ -343,3 +343,19 @@ $hover-color: #f0f0f0;
     }
   }
 }
+
+// /* Điều chỉnh chiều rộng của danh sách sản phẩm liên quan */
+// .home_content {
+//   width: 90%;
+//   margin: 0 auto;
+
+//   .home-list_header {
+//     margin-bottom: 20px;
+
+//     .home-list_header-title {
+//       font-size: 20px;
+//       font-weight: 600;
+//       color: #333;
+//     }
+//   }
+// }
