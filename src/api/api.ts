@@ -1,7 +1,7 @@
 import axios from "axios";
 import { DeleteItemInCart, UpdateItemInCart } from "../Layout/Cart";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
-import { CreateDiscountsPayload, CreateProductPayload, CreatePurchasePayload, CreateVendorBillPayload, CreateVendorsPayload, RegisterPayload, UpdateProductPayload } from "./constants";
+import { CreateDiscountsPayload, CreateProductPayload, CreatePurchasePayload, CreateVendorBillPayload, CreateVendorsPayload, ProductDetailFilterParams, RegisterPayload, UpdateProductPayload } from "./constants";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -95,6 +95,19 @@ export const productApi = {
     apiRequest(`${API_KEY.PRODUCT}/update-product`, "PUT", productData),
   deleteProduct: (id: string) =>
     apiRequest(`${API_KEY.PRODUCT}/delete-product?id=${id}`, "DELETE"),
+  getProductDetailByFilters: (params: ProductDetailFilterParams) =>
+    apiRequest(
+      `${API_KEY.PRODUCT}/get-product-detail-id-by-product-id-and-color-id-and-capacity-id`,
+      "GET",
+      null,
+      params
+    ),
+    getAllProductsWithoutPagination: (params = {}) =>
+      apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, {
+        ...params,
+        size: 1000, // Số lượng lớn để lấy tất cả
+        page: 1
+      }),
 };
 
 // export const colorApi = {
