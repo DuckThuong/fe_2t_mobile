@@ -6,8 +6,6 @@ import EditProduct from "../Layout/AdminPage/ProductList/EditProduct/EditProduct
 import Orders from "../Layout/AdminPage/InvoiceList/InvoiceList";
 import UsersList from "../Layout/AdminPage/UserList/UserList";
 import UserDetail from "../Layout/AdminPage/UserList/UserDetail/UserDetail";
-import ProviderAdd from "../Layout/AdminPage/ProviderList/ProviderAdd/ProviderAdd";
-import ProviderEdit from "../Layout/AdminPage/ProviderList/ProviderEdit/ProviderEdit";
 import ProviderList from "../Layout/AdminPage/ProviderList/ProviderList";
 import AddBill_Client from "../Layout/AdminPage/addbill_client/index";
 import AddBillProvider from "../Layout/AdminPage/AddBillProvider/AddBillProvider";
@@ -24,10 +22,8 @@ export const AdminRouters = () => {
         <Route index element={<Dashboard />} />
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="user-list" element={<UsersList />} />
-        <Route path="user-list/:id" element={<UserDetail />} />
+        <Route path="user-list/user-detail/:id" element={<UserDetail />} />
         <Route path="provider-list" element={<ProviderList />} />
-        <Route path="provider-list/add-provider" element={<ProviderAdd />} />
-        <Route path="provider-list/edit-provider/:id" element={<ProviderEdit />} />
         <Route path="product-list" element={<ProductList />} />
         <Route path="product-list/edit-product/:id" element={<EditProduct />} />
         <Route path="order" element={<Orders />} />

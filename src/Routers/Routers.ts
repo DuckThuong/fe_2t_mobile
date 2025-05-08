@@ -60,13 +60,15 @@ export const ADMIN_ROUTER_PATH = {
   ADMIN: `/${ADMIN}`,
   DASHBOARD: `/${ADMIN}/dashboard`,
   USER_LIST: `/${ADMIN}/user-list`,
+  USER_DETAIL: (id: string | number) => `/${ADMIN}/user-list/user-detail/${id}`,
   PROVIDER_LIST: `/${ADMIN}/provider-list`,
   ADD_PROVIDER: `/${ADMIN}/provider-list/add-provider`,
   EDIT_PROVIDER: (id: string | number) =>
     `/${ADMIN}/provider-list/edit-provider/${id}`,
 
   PRODUCT_LIST: `/${ADMIN}/product-list`,
-  EDIT_PRODUCT: (id: string | number) => `/${ADMIN}/product-list/edit-product/${id}`,
+  EDIT_PRODUCT: (id: string | number) =>
+    `/${ADMIN}/product-list/edit-product/${id}`,
   ORDER: `/${ADMIN}/order`,
   CUSTOMER_INVOICE_DETAIL: (id: string | number) =>
     `/${ADMIN}/order/customer-invoice-detail/${id}`,

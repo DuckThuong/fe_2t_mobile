@@ -1,6 +1,7 @@
 import axios from "axios";
+import { DeleteItemInCart, UpdateItemInCart } from "../Layout/Cart";
 import { API_BASE_URL, API_KEY } from "./apiConfig";
-import { CreateProductPayload, DeleteItemInCart, ProductDetailFilterParams, RegisterPayload, UpdateItemInCart } from "./constants";
+import { CreateDiscountsPayload, CreateProductPayload, CreatePurchasePayload, CreateVendorBillPayload, CreateVendorsPayload, RegisterPayload, UpdateProductPayload } from "./constants";
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -53,7 +54,8 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
   doDeleteUser: (id: string | number) =>
-    apiRequest(`${API_KEY.USER}/delete-user-by-id/${id}`, "DELETE"),
+    apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
+
   doGetUserById: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
   doSearchUsers: (query: string) =>
@@ -73,28 +75,26 @@ export const imageApi = {
 };
 
 export const productApi = {
-  getAllProducts: ({ page = 1, size = 1000 }: { page?: number; size?: number } = {}) =>
-    apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, { page, size }),
-  getAllProductsWithoutPagination: (params = {}) =>
-    apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, {
-      ...params,
-      size: 1000, // Số lượng lớn để lấy tất cả
-      page: 1
-    }),
-  getProductById: (id: string) => apiRequest(`product/get-product-by-ID?id=${id}`, "GET"),
-  getProductDetailByFilters: (params: ProductDetailFilterParams) =>
-    apiRequest(
-      `${API_KEY.PRODUCT}/get-product-detail-id-by-product-id-and-color-id-and-capacity-id`,
-      "GET",
-      null,
-      params
-    ),
+  getAllProducts: (params?: {
+    name?: string;
+    model?: string;
+    provider_id?: number;
+    color_ids?: number[];
+    capacity_id?: number;
+    status?: string;
+    is_featured?: boolean;
+    page?: number;
+    size?: number;
+    sort_by?: string;
+    order?: string;
+  }) => apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", undefined, params),
+  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/get-product-by-id?id=${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
-  updateProduct: (id: string, productData: any) =>
-    apiRequest(`${API_KEY.PRODUCT}/${id}`, "PATCH", productData),
+  updateProduct: (id: string, productData: UpdateProductPayload) =>
+    apiRequest(`${API_KEY.PRODUCT}/update-product`, "PUT", productData),
   deleteProduct: (id: string) =>
-    apiRequest(`${API_KEY.PRODUCT}/${id}`, "DELETE"),
+    apiRequest(`${API_KEY.PRODUCT}/delete-product?id=${id}`, "DELETE"),
 };
 
 // export const colorApi = {
@@ -107,13 +107,55 @@ export const productApi = {
 //   getCapacityById: (id: string) => apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
 // };
 export const colorApi = {
-  getAllColors: () => apiRequest(`colors/get-all-colors`, "GET"),
-  getColorById: (id: string) => apiRequest(`colors/get-color-by-id?id=${id}`, "GET"),
+  getAllColors: () => apiRequest(`${API_KEY.COLOR}/get-all-colors`, "GET"),
+  getColorById: (id: string) =>
+    apiRequest(`${API_KEY.COLOR}/get-color-by-id/${id}`, "GET"),
 };
 
 export const capacityApi = {
-  getAllCapacities: () => apiRequest(`capacities/get-all-capacities`, "GET"),
-  getCapacityById: (id: string) => apiRequest(`capacities/get-capacity-by-id?id=${id}`, "GET"),
+  getAllCapacities: () =>
+    apiRequest(`${API_KEY.CAPACITY}/get-all-capacities`, "GET"),
+  getCapacityById: (id: string) =>
+    apiRequest(`${API_KEY.CAPACITY}/get-capacity-by-id/${id}`, "GET"),
+};
+
+export const purchaseApi = {
+  createPurchase: (PurchaseData: CreatePurchasePayload) =>
+    apiRequest(`${API_KEY.PURCHASE}`, "POST", PurchaseData),
+  getAllPurchase: () =>
+    apiRequest(`${API_KEY.PURCHASE}`, "GET"),
+  getPurchaseById: (id: string) =>
+    apiRequest(`${API_KEY.PURCHASE}/${id}`, "GET"),
+  deletePurchase: (id: string) =>
+    apiRequest(`${API_KEY.PURCHASE}/${id}`, "DELETE"),
+  updatePurchase: (id: string, purchaseData: CreatePurchasePayload) =>
+    apiRequest(`${API_KEY.PURCHASE}/${id}`, "PATCH", purchaseData),
+};
+
+export const vendorsApi = {
+  getAllVendors: () => apiRequest(`${API_KEY.VENDORS}/get-all-vendors`, "GET"),
+  getVendorById: (id: string) =>
+    apiRequest(`${API_KEY.VENDORS}/get-vendor-by-id?id=${id}`, "GET"),
+  createVendor: (vendorData: CreateVendorsPayload) =>
+    apiRequest(`${API_KEY.VENDORS}/create`, "POST", vendorData),
+  updateVendor: (id: string, vendorData: CreateVendorsPayload) =>
+    apiRequest(`${API_KEY.VENDORS}/update`, "PUT", { ...vendorData, id }),
+  deleteVendor: (id: string) =>
+    apiRequest(`${API_KEY.VENDORS}/delete`, "DELETE", { id }),
+  createVendorBill: (billData: CreateVendorBillPayload) =>
+    apiRequest(`${API_KEY.VENDOR_BILL}`, "POST", billData)
+};
+
+export const discountApi = {
+  getAllDiscounts: () => apiRequest(`${API_KEY.DISCOUNT}/get-all-discount`, "GET"),
+  getDiscountById: (id: string) =>
+    apiRequest(`${API_KEY.DISCOUNT}/get-discount-by-id?id=${id}`, "GET"),
+  createDiscount: (vendorData: CreateDiscountsPayload) =>
+    apiRequest(`${API_KEY.DISCOUNT}/create-discount`, "POST", vendorData),
+  updateDiscount: (id: string, vendorData: CreateDiscountsPayload) =>
+    apiRequest(`${API_KEY.DISCOUNT}/update-discount`, "PUT", { ...vendorData, id }),
+  deleteDiscount: (id: string) =>
+    apiRequest(`${API_KEY.DISCOUNT}/delete-discount?id=${id}`, "DELETE"),
 };
 export const cartApi = {
   creatCart :(id: string) => apiRequest(`${API_KEY.CART}/create-cart`, "POST",id),
@@ -163,16 +205,11 @@ export const paymentApi = {
 
 export const orderApi = {
   getAllOrders: () => apiRequest(API_KEY.ORDER),
-  getOrderById: (id: string) => apiRequest(`${API_KEY.ORDER}/orderbyId/${id}`),
+  getOrderById: (id: string) => apiRequest(`${API_KEY.ORDER}/orderby/${id}`),
   createOrder: (orderData: any) => apiRequest(API_KEY.ORDER, "POST", orderData),
   updateOrder: (id: string, orderData: any) =>
     apiRequest(`${API_KEY.ORDER}/${id}`, "PATCH", orderData),
   deleteOrder: (id: string) => apiRequest(`${API_KEY.ORDER}/${id}`, "DELETE"),
-  getOrderByIdAndState: (userID: string, state: OrderStateEnum) =>
-    apiRequest(`${API_KEY.ORDER}/by-state`, "GET", null, {
-      userID,
-      state,
-    }),
 };
 
 export const orderDetailApi = {
