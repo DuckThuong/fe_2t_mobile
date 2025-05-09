@@ -130,8 +130,8 @@ const InvoiceList: React.FC = () => {
         const fetchedOrders: IOrder[] = Array.isArray(response.data)
           ? response.data
           : [];
-          console.log(response);
-          
+        console.log(response);
+
         console.log("Fetched orders:", fetchedOrders);
 
         if (fetchedOrders.length === 0) {
@@ -151,9 +151,7 @@ const InvoiceList: React.FC = () => {
                 paymentStatus:
                   order.payment_method === "BANKING" ? "Completed" : "Pending",
                 invoiceStatus: mapOrderStatusToInvoiceStatus(order.status),
-                created_at: order.order_date
-                  ? order.order_date.split("T")[0]
-                  : "N/A",
+                created_at: order.expected_delivery_date,
               };
             } catch (error) {
               console.error(`Error mapping order ID ${order.id}:`, error);

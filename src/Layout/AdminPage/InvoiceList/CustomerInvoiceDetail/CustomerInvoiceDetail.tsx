@@ -18,6 +18,7 @@ interface IOrderDetail {
   quantity: number;
   price: number;
   productDetail: { name: string };
+  id?: number; // Add optional id for rowKey
 }
 
 interface IOrder {
@@ -65,18 +66,34 @@ const CustomerInvoiceDetail: React.FC = () => {
       try {
         const response = await axios.get(`${API_URL}/orders/${id}`);
         const orderData: IOrder = response.data;
-        const invoiceFromState: ICustomerInvoice = state?.invoice || {
+
+        // Create invoice object using API response
+        const invoiceData: ICustomerInvoice = {
           id: orderData.id,
           user_id: orderData.user?.id || 0,
           userName: orderData.user?.email || "Unknown",
           total: parseFloat(orderData.total_price),
           payment_method: orderData.payment_method,
-          paymentStatus: orderData.payment_method === "BANKING" ? "Completed" : "Pending",
+          paymentStatus:
+            orderData.payment_method === "BANKING" ? "Completed" : "Pending",
           invoiceStatus: orderData.status as "Pending" | "Paid" | "Cancelled",
           created_at: orderData.order_date.split("T")[0],
+          order: orderData,
         };
-        setInvoice(invoiceFromState);
-        setOrderDetails(orderData.orderDetails || []);
+
+        // Add unique id to orderDetails if missing
+        const enrichedOrderDetails = orderData.orderDetails.map(
+          (detail, index) => ({
+            ...detail,
+            id: detail.id || index + 1, // Fallback to index-based id
+          })
+        );
+
+        setInvoice(invoiceData);
+        setOrderDetails(enrichedOrderDetails);
+
+        // Log for debugging
+        console.log("Order Details:", enrichedOrderDetails);
       } catch (error: any) {
         console.error("Error fetching order details:", error);
       } finally {
@@ -85,7 +102,7 @@ const CustomerInvoiceDetail: React.FC = () => {
     };
 
     fetchOrderDetails();
-  }, [id, state]);
+  }, [id]);
 
   if (loading) {
     return <Spin tip="Đang tải chi tiết hóa đơn..." />;
@@ -141,15 +158,29 @@ const CustomerInvoiceDetail: React.FC = () => {
           </div>
           <div className="invoice-info-item">
             <span>Ngày lập hóa đơn:</span>
-            <span>{new Date(invoice.created_at).toLocaleDateString("vi-VN")}</span>
+            <span>
+              {new Date(invoice.created_at).toLocaleDateString("vi-VN")}
+            </span>
           </div>
           <div className="invoice-info-item">
             <span>Trạng thái thanh toán:</span>
-            <span>{invoice.paymentStatus === "Pending" ? "Chờ xử lý" : invoice.paymentStatus === "Completed" ? "Hoàn tất" : "Thất bại"}</span>
+            <span>
+              {invoice.paymentStatus === "Pending"
+                ? "Chờ xử lý"
+                : invoice.paymentStatus === "Completed"
+                ? "Hoàn tất"
+                : "Thất bại"}
+            </span>
           </div>
           <div className="invoice-info-item">
             <span>Trạng thái hóa đơn:</span>
-            <span>{invoice.invoiceStatus === "Pending" ? "Chờ xử lý" : invoice.invoiceStatus === "Paid" ? "Đã thanh toán" : "Đã hủy"}</span>
+            <span>
+              {invoice.invoiceStatus === "Pending"
+                ? "Chờ xử lý"
+                : invoice.invoiceStatus === "Paid"
+                ? "Đã thanh toán"
+                : "Đã hủy"}
+            </span>
           </div>
         </div>
       </div>
@@ -161,7 +192,7 @@ const CustomerInvoiceDetail: React.FC = () => {
         className="purchased-products-table"
         columns={purchasedProductsColumns}
         dataSource={orderDetails}
-        rowKey="id"
+        rowKey="id" // Use enriched id
         pagination={false}
         locale={{ emptyText: "Không có sản phẩm" }}
       />
@@ -177,7 +208,9 @@ const CustomerInvoiceDetail: React.FC = () => {
         </div>
         <div className="summary-item">
           <span>Tổng từ API:</span>
-          <span>{parseFloat(invoice.total.toString()).toLocaleString()} VNĐ</span>
+          <span>
+            {parseFloat(invoice.total.toString()).toLocaleString()} VNĐ
+          </span>
         </div>
       </div>
 

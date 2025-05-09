@@ -107,18 +107,23 @@ const AddBill_Client: React.FC = () => {
       const apiData = result.data || [];
 
       // Định dạng dữ liệu từ API sang cấu trúc IProductOption
-      const formattedProducts: IProductOption[] = apiData.map((product: any) => ({
-        name: product.name,
-        colors: product.productColor.map((color: any) => ({
-          color: color.name,
-          capacities: product.productDetails
-            .filter((detail: any) => detail.color_id === color.id)
-            .map((detail: any) => ({
-              capacity: detail.capacity.display_name,
-              price: parseFloat(detail.capacity.price.discount_price || detail.capacity.price.price),
-            })),
-        })),
-      }));
+      const formattedProducts: IProductOption[] = apiData.map(
+        (product: any) => ({
+          name: product.name,
+          colors: product.productColor.map((color: any) => ({
+            color: color.name,
+            capacities: product.productDetails
+              .filter((detail: any) => detail.color_id === color.id)
+              .map((detail: any) => ({
+                capacity: detail.capacity.display_name,
+                price: parseFloat(
+                  detail.capacity.price.discount_price ||
+                    detail.capacity.price.price
+                ),
+              })),
+          })),
+        })
+      );
 
       setProductOptions(formattedProducts);
     } catch (error) {
@@ -130,13 +135,15 @@ const AddBill_Client: React.FC = () => {
   // Hàm lấy danh sách mã khuyến mại từ API
   const fetchDiscounts = async () => {
     try {
-    
-      const response = await fetch("http://localhost:3300/discount/get-all-discount", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:3300/discount/get-all-discount",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch discounts");
@@ -278,7 +285,7 @@ const AddBill_Client: React.FC = () => {
     const orderData = {
       user_id: values.user_id,
       payment_method: paymentMethod.toUpperCase(),
-      expected_delivery_date: "2025/05/08",
+      expected_delivery_date: "2025/05/09",
       status: "PENDING",
       discount_id: selectedSale.id || null,
       discount_amount: selectedSale.value,
@@ -474,9 +481,11 @@ const AddBill_Client: React.FC = () => {
               .filter((d) => d.is_active && new Date(d.end_date) >= new Date())
               .map((discount) => (
                 <Option key={discount.id} value={discount.id}>
-                  {discount.title} ({discount.discount_type === "fixed_amount"
+                  {discount.title} (
+                  {discount.discount_type === "fixed_amount"
                     ? `${parseFloat(discount.discount_value).toLocaleString()}₫`
-                    : `${discount.discount_value}%`})
+                    : `${discount.discount_value}%`}
+                  )
                 </Option>
               ))}
           </Select>
