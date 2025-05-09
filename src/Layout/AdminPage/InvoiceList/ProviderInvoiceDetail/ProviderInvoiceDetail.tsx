@@ -45,7 +45,9 @@ const ProviderInvoiceDetail: React.FC = () => {
 
   const [shipments, setShipments] = useState<IShipment[]>([]);
   const [products, setProducts] = useState<IProduct[]>([]);
-  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(null);
+  const [selectedShipment, setSelectedShipment] = useState<IShipment | null>(
+    null
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredShipments, setFilteredShipments] = useState<IShipment[]>([]);
 
@@ -70,17 +72,20 @@ const ProviderInvoiceDetail: React.FC = () => {
         quantity: totalQuantity,
       };
 
-      const mappedProducts: IProduct[] = purchaseOrder.purchaseOrderItems.map((item: any) => ({
-        id: parseInt(item.id),
-        name: item.product.name || "Unknown Product",
-        capacity: item.product.productDetails[0]?.capacity?.display_name || "N/A",
-        color: item.product.productDetails[0]?.color?.name || "N/A",
-        quantity: item.quantity,
-        price: parseFloat(item.unitPrice) || 0,
-        shipmentId: shipment.id,
-        image: item.product.image || "https://via.placeholder.com/150",
-        createdAt: item.created_at || new Date().toISOString().split("T")[0],
-      }));
+      const mappedProducts: IProduct[] = purchaseOrder.purchaseOrderItems.map(
+        (item: any) => ({
+          id: parseInt(item.id),
+          name: item.product?.name || "Unknown Product", // Thêm optional chaining
+          capacity:
+            item.product?.productDetails[0]?.capacity?.display_name || "N/A",
+          color: item.product?.productDetails[0]?.color?.name || "N/A",
+          quantity: item.quantity,
+          price: parseFloat(item.unitPrice) || 0,
+          shipmentId: shipment.id,
+          image: item.product?.image || "https://via.placeholder.com/150",
+          createdAt: item.created_at || new Date().toISOString().split("T")[0],
+        })
+      );
 
       setShipments([shipment]);
       setFilteredShipments([shipment]);

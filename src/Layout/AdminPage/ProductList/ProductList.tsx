@@ -218,16 +218,16 @@ const ProductList: React.FC = () => {
           : "Không có chi tiết";
       },
     },
-    {
-      title: "Nhà cung cấp",
-      key: "vendor",
-      render: (_: any, record: IProduct) => record.vendor?.name || "Không có chi tiết",
-    },
+    // {
+    //   title: "Nhà cung cấp",
+    //   key: "vendor",
+    //   render: (_: any, record: IProduct) => record.vendor?.name || "Không có chi tiết",
+    // },
     {
       title: "Ngày tạo",
       key: "created_at",
       render: (_: any, record: IProduct) =>
-        dayjs(record.created_at).format("DD/MM/YYYY HH:mm"),
+        dayjs(record.created_at).format("DD/MM/YYYY"),
     },
   ];
 
