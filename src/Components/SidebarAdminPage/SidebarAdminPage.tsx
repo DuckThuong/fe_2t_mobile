@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
 import "../SidebarAdminPage/SidebarAdminPage.scss";
-import { Menu } from "antd";
+import { Button, Menu, notification } from "antd";
 import {
   BankFilled,
   HomeFilled,
@@ -12,9 +12,40 @@ import {
   SwapOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { ADMIN_ROUTER_PATH} from "../../Routers/Routers";
+import { ADMIN_ROUTER_PATH, CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import { logout } from "../../api/authApi";
 
 const SidebarAdminPage = () => {
+  const navigate = useNavigate();
+  const handleLogOut = async () => {
+    try {
+      await logout();
+      navigate(CUSTOMER_ROUTER_PATH.LOG_IN);
+      notification.open({
+        message: "Thông báo!",
+        description: "Đăng xuất thành công.",
+        placement: "topRight",
+        showProgress: true,
+        pauseOnHover: true,
+        style: {
+          backgroundColor: "#ffffff",
+          borderLeft: "4px solid #007bff",
+        },
+      });
+    } catch (error) {
+      notification.open({
+        message: "Thông báo!",
+        description: "Đăng xuất thất bại.",
+        placement: "topRight",
+        showProgress: true,
+        pauseOnHover: true,
+        style: {
+          backgroundColor: "#ffffff",
+          borderLeft: "4px solid #007bff",
+        },
+      });
+    }
+  };
   return (
     <Sider className="admin-sidebar">
       <img src="/logo.jpg" alt="" className="logo" />
@@ -41,12 +72,14 @@ const SidebarAdminPage = () => {
           <Link to={ADMIN_ROUTER_PATH.ADDBILL_CLIENT}>Thêm HĐ khách hàng</Link>
         </Menu.Item>
         <Menu.Item key="7" icon={<PlusCircleOutlined />}>
-          <Link to={ADMIN_ROUTER_PATH.ADDBILL_PROVIDER}>Thêm HĐ nhà cung cấp</Link>
+          <Link to={ADMIN_ROUTER_PATH.ADDBILL_PROVIDER}>
+            Thêm HĐ nhà cung cấp
+          </Link>
         </Menu.Item>
         <Menu.Item key="8" icon={<PercentageOutlined />}>
           <Link to={ADMIN_ROUTER_PATH.PROMOTION_LIST}>Khuyến mãi</Link>
         </Menu.Item>
-        <Menu.Item key="9" icon={<LogoutOutlined />}>
+        <Menu.Item onClick={handleLogOut} key="9" icon={<LogoutOutlined />}>
           Đăng xuất
         </Menu.Item>
       </Menu>

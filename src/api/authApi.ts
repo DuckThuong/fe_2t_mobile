@@ -60,7 +60,6 @@ const compressImage = (file: File): Promise<File> => {
   });
 };
 
-// Utility function to convert image to base64
 export const convertImageToBase64 = async (file: File): Promise<string> => {
   try {
     // Compress image first
