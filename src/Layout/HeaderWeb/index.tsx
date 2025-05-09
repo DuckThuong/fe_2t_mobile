@@ -1,5 +1,6 @@
 import {
   HomeOutlined,
+  LoginOutlined,
   LogoutOutlined,
   OrderedListOutlined,
   SettingOutlined,
@@ -84,6 +85,9 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
       },
     });
   };
+  const login = ()=>{
+    navigate(CUSTOMER_ROUTER_PATH.LOG_IN, { replace: true });
+  }
 
   React.useEffect(() => {
     setSelectedKey(getSelectedKey(location.pathname));
@@ -161,6 +165,10 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
             <Menu.Item key="logout" onClick={handleLogout} danger>
               <LogoutOutlined /> Đăng xuất
             </Menu.Item>
+            <Menu.Item key="login" onClick={login} danger>
+              <LoginOutlined /> Đăng nhập
+            </Menu.Item>
+            
           </Menu.SubMenu>
         </Menu>
       </Header>

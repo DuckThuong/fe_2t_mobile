@@ -218,7 +218,8 @@ export const ProductDetail = () => {
       console.error("Error adding to cart:", err.response?.data || err.message);
       console.error("gọi api lỗi:", err.response?.data || err.message);
 
-      message.error("Không thể thêm sản phẩm vào giỏ hàng: " + (err.response?.data?.message || err.message));
+      //message.error("Không thể thêm sản phẩm vào giỏ hàng khi chưa đăng nhập. " + (err.response?.data?.message || err.message));
+      message.error("Không thể thêm sản phẩm vào giỏ hàng khi chưa đăng nhập. " );
     }
   };
 

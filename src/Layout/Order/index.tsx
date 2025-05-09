@@ -24,7 +24,8 @@ const Order = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const userId = localStorage.getItem("user_id") || "23";
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = userData.id || "unknown";
 
   useEffect(() => {
     const fetchOrders = async () => {

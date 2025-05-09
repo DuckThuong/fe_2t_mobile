@@ -48,15 +48,7 @@ interface DeleteItemInCart {
   item_id: string;
 }
 
-interface CustomerData {
-  email: string;
-  memberId: string;
-}
 
-const customerData: CustomerData = {
-  email: "khanhhhungg213@gmail.com",
-  memberId: "S-NULL",
-};
 
 export const Purchase = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
