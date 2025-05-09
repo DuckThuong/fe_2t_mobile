@@ -56,8 +56,29 @@
         width: 100%;
         border-bottom: 1px solid #e0e0e0;
         .ant-table {
+          .ant-table-thead {
+            .ant-table-cell {
+              font-weight: bold;
+              font-size: 18px;
+              line-height: 20px;
+              color: #000000;
+              background-color: #f5f5f5;
+              border-bottom: 1px solid #e0e0e0;
+            }
+            .ant-table-cell::after {
+              content: "";
+              position: absolute;
+              top: 50%;
+              right: 0;
+              transform: translateY(-50%);
+              width: 2px;
+              height: 50%;
+              background-color: #e0e0e0;
+            }
+          }
           .ant-table-row {
             .ant-table-cell {
+              width: fit-content !important;
               vertical-align: middle !important;
               .form__select {
                 .ant-form-item {
@@ -67,6 +88,25 @@
                   }
                 }
               }
+              .form__input {
+                width: 90px !important;
+                margin-bottom: 0px !important;
+                .ant-col-14 {
+                  max-width: 100% !important;
+                }
+              }
+            }
+            .ant-table-cell:nth-child(1) {
+              min-width: 300px !important;
+            }
+            .ant-table-cell:nth-child(2) {
+              min-width: 200px !important;
+            }
+            .ant-table-cell:nth-child(3) {
+              min-width: 200px !important;
+            }
+            .ant-table-cell:nth-child(4) {
+              max-width: 90px !important;
             }
             .ant-table-cell:last-child {
               width: 120px !important;

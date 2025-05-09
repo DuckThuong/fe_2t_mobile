@@ -1,31 +1,209 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Row } from "antd";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button, Col, Form, notification, Row } from "antd";
 import { useState } from "react";
+import {
+  capacityApi,
+  colorApi,
+  discountApi,
+  orderApi,
+  productApi,
+} from "../../../api/api";
+import { API_KEY } from "../../../api/apiConfig";
 import ColWrap from "../../../Components/ColWrap";
 import { FormInput } from "../../../Components/Form/FormInput";
+import { FormSelect } from "../../../Components/Form/FormSelect";
 import FormWrap from "../../../Components/Form/FormWrap";
 import TableWrap from "../../../Components/TableWrap";
 import "./style.scss";
-import { FormSelect } from "../../../Components/Form/FormSelect";
-import { Form } from "react-router-dom";
-export const AddBillClient = () => {
-  interface Product {
-    key: string;
-    productName: JSX.Element;
-    colorId: JSX.Element;
-    quantity: JSX.Element;
-    price: number;
-    totalPrice: number;
-    action: JSX.Element;
-  }
+import { useUser } from "../../../api/useHook";
+import dayjs from "dayjs";
+interface Product {
+  key: string;
+  productName: JSX.Element;
+  productDetailId: number | undefined;
+  colorId: JSX.Element;
+  capacityId: JSX.Element;
+  quantity: JSX.Element;
+  price: string;
+  totalPrice: string;
+  action: JSX.Element;
+}
 
+interface OrderDetail {
+  product_id?: number;
+  product_detail_id?: number;
+  color_id: number;
+  capacity_id: number;
+  quantity: number;
+  price: number;
+}
+
+interface CreateOrderPayload {
+  user_id: number | undefined;
+  payment_method: "CAST" | "BANKING";
+  expected_delivery_date: string;
+  status: string;
+  userName: string;
+  userPhone: string;
+  userLocation: string;
+  note: string;
+  order_details: OrderDetail[];
+}
+
+export const AddBillClient = () => {
+  const [form] = Form.useForm();
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [discountedPrice, setDiscountedPrice] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [discountPrice, setDiscountPrice] = useState(0);
   const [dataSource, setDataSource] = useState<Product[]>([]);
+  const user = useUser();
+  const { data: productData } = useQuery({
+    queryKey: [API_KEY.PRODUCT],
+    queryFn: () => productApi.getAllProducts(),
+  });
+
+  const productOptions = productData?.data?.map(
+    (product: { id: number; name: string }) => ({
+      value: product.id,
+      label: product.name,
+    })
+  );
+
+  const { data: colorData } = useQuery({
+    queryKey: [API_KEY.COLOR],
+    queryFn: () => colorApi.getAllColors(),
+  });
+
+  const colorOptions = colorData?.map(
+    (color: { id: number; name: string }) => ({
+      value: color.id,
+      label: color.name,
+    })
+  );
+
+  const { data: capacityData } = useQuery({
+    queryKey: [API_KEY.CAPACITY],
+    queryFn: () => capacityApi.getAllCapacities(),
+  });
+
+  const capacityOptions = capacityData?.map(
+    (capacity: { id: number; name: string }) => ({
+      value: capacity.id,
+      label: capacity.name,
+    })
+  );
+
+  const { data: discountData } = useQuery({
+    queryKey: [API_KEY.DISCOUNT],
+    queryFn: () => discountApi.getAllDiscounts(),
+  });
+
+  const discountOptions = discountData?.data?.map(
+    (discount: {
+      id: number;
+      title: string;
+      discount_type: string;
+      discount_value: number;
+    }) => ({
+      value: discount.id,
+      label: discount.title,
+      type: discount.discount_type,
+      discountValue: discount.discount_value,
+    })
+  );
+
+  const doGetProductInfo = useMutation({
+    mutationFn: (productId: string) => productApi.getProductById(productId),
+    onSuccess: (data) => {
+      const totalProductPrice = Array.isArray(data?.productDetails)
+        ? data.productDetails.reduce(
+            (sum, product: { selling_price: number }) =>
+              sum + (product?.selling_price || 0),
+            0
+          )
+        : 0;
+      const totalProductPriceWithCapacity = Array.isArray(data?.productDetails)
+        ? data.productDetails.reduce(
+            (sum, product) =>
+              sum + parseFloat(product?.capacity?.price?.discount_price || "0"),
+            0
+          )
+        : 0;
+      const totalProductPriceWithQuantity =
+        (totalProductPrice + totalProductPriceWithCapacity) *
+        form.getFieldValue("quantity");
+
+      const sumPrice = (
+        totalProductPrice + totalProductPriceWithCapacity
+      ).toLocaleString();
+      const totalSumPrice = totalProductPriceWithQuantity.toLocaleString();
+      setDataSource((prev) =>
+        prev.map((product) =>
+          product.key === dataSource.length.toString()
+            ? {
+                ...product,
+                price: sumPrice,
+                totalPrice: totalSumPrice,
+                productDetailId: data?.productDetails[0]?.id,
+              }
+            : product
+        )
+      );
+      setPrice(totalProductPrice + totalProductPriceWithCapacity);
+      setTotalPrice(totalProductPriceWithQuantity);
+    },
+    onError: (error) => {
+      console.error("Error fetching product info:", error);
+    },
+  });
+
+  const doCreateOrder = useMutation({
+    mutationFn: (data: any) => orderApi.createOrder(data),
+    onSuccess: () => {
+      form.resetFields();
+      setDataSource([]);
+      notification.open({
+        message: "Thông báo!",
+        description: "Đặt hàng thành công.",
+        placement: "topRight",
+        showProgress: true,
+        pauseOnHover: true,
+        style: {
+          backgroundColor: "#ffffff",
+          borderLeft: "4px solid #007bff",
+        },
+      });
+    },
+    onError: (error) => {
+      console.error("Error creating order:", error);
+      notification.open({
+        message: "Thông báo!",
+        description: "Đặt hàng thất bại.",
+        placement: "topRight",
+        showProgress: true,
+        pauseOnHover: true,
+        style: {
+          backgroundColor: "#ffffff",
+          borderLeft: "4px solid #007bff",
+        },
+      });
+    },
+  });
+
+  const handleGetProductInfo = (productId: string) => {
+    doGetProductInfo.mutate(productId);
+  };
+
   const handleDeleteProduct = (key: string) => {
     setDataSource(dataSource.filter((product) => product.key !== key));
   };
+
   const handleAddProduct = () => {
     const newProduct = {
       key: (dataSource.length + 1).toString(),
+      productDetailId: undefined,
       productName: (
         <FormSelect
           name={"productName"}
@@ -40,16 +218,10 @@ export const AddBillClient = () => {
           }}
           selectProps={{
             className: "bill-client_content-product-table-name-select",
-            options: [
-              {
-                label: "Sản phẩm 1",
-                value: "product1",
-              },
-              {
-                label: "Sản phẩm 2",
-                value: "product2",
-              },
-            ],
+            options: productOptions,
+            onChange: (value) => {
+              form.setFieldValue("productName", value);
+            },
           }}
         />
       ),
@@ -67,21 +239,35 @@ export const AddBillClient = () => {
           }}
           selectProps={{
             className: "bill-client_content-product-table-color-select",
-            options: [
+            options: colorOptions,
+            onChange: (value) => {
+              form.setFieldValue("colorId", value);
+            },
+          }}
+        />
+      ),
+      capacityId: (
+        <FormSelect
+          name={"capacityId"}
+          formItemProps={{
+            rules: [
               {
-                label: "Màu 1",
-                value: "color1",
-              },
-              {
-                label: "Màu 2",
-                value: "color2",
+                required: true,
+                message: "Vui lòng chọn dung lượng",
               },
             ],
+          }}
+          selectProps={{
+            className: "bill-client_content-product-table-capacity-select",
+            options: capacityOptions,
+            onChange: (value) => {
+              form.setFieldValue("capacityId", value);
+            },
           }}
         />
       ),
       quantity: (
-        <FormSelect
+        <FormInput
           name={"quantity"}
           formItemProps={{
             className: "bill-client_content-product-table-quantity",
@@ -92,23 +278,17 @@ export const AddBillClient = () => {
               },
             ],
           }}
-          selectProps={{
-            className: "bill-client_content-product-table-quantity-select",
-            options: [
-              {
-                label: "1",
-                value: 1,
-              },
-              {
-                label: "2",
-                value: 2,
-              },
-            ],
+          inputProps={{
+            className: "bill-client_content-product-table-quantity-input",
+            onChange: (e) => {
+              form.setFieldValue("quantity", e.target.value);
+              handleGetProductInfo(form.getFieldValue("productName"));
+            },
           }}
         />
       ),
-      price: 1,
-      totalPrice: 100000,
+      price: "0",
+      totalPrice: "0",
       action: (
         <Button
           onClick={() =>
@@ -122,6 +302,54 @@ export const AddBillClient = () => {
     };
     setDataSource([...dataSource, newProduct]);
   };
+
+  const handleDiscountChange = (selectedDiscount: any) => {
+    if (!selectedDiscount) {
+      setDiscountedPrice(totalPrice);
+      return;
+    }
+
+    const { type, discountValue } = selectedDiscount;
+    let finalPrice = totalPrice;
+
+    if (type === "percentage") {
+      finalPrice = totalPrice - (totalPrice * discountValue) / 100;
+      setDiscountPrice((totalPrice * discountValue) / 100);
+    } else if (type === "fixed_amount") {
+      finalPrice = totalPrice - discountValue;
+      setDiscountPrice(discountValue);
+    }
+
+    setDiscountedPrice(finalPrice > 0 ? finalPrice : 0);
+  };
+
+  const handleSubmit = () => {
+    const expectedDeliveryDate = dayjs().add(3, "day").format("YYYY/MM/DD");
+
+    const orderDetails = dataSource.map((product) => ({
+      product_id: product.productName.props.selectProps.value,
+      product_detail_id: product.productDetailId,
+      color_id: product.colorId.props.selectProps.value,
+      capacity_id: product.capacityId.props.selectProps.value,
+      quantity: parseInt(product.quantity.props.inputProps.value, 10) || 0,
+      price: parseFloat(product.price) || 0,
+    }));
+
+    console.log(orderDetails);
+
+    const payload: CreateOrderPayload = {
+      user_id: user?.id,
+      payment_method: form.getFieldValue("paymentMethod"),
+      expected_delivery_date: expectedDeliveryDate,
+      userName: form.getFieldValue("userName"),
+      userPhone: form.getFieldValue("userPhone"),
+      userLocation: form.getFieldValue("userAddress"),
+      note: form.getFieldValue("note"),
+      status: "PENDING",
+      order_details: orderDetails,
+    };
+    doCreateOrder.mutate(payload);
+  };
   const tableColumns = [
     {
       title: "Tên sản phẩm",
@@ -132,6 +360,11 @@ export const AddBillClient = () => {
       title: "Màu sắc",
       dataIndex: "colorId",
       key: "colorId",
+    },
+    {
+      title: "Dung lượng",
+      dataIndex: "capacityId",
+      key: "capacityId",
     },
     {
       title: "Số lượng",
@@ -154,10 +387,9 @@ export const AddBillClient = () => {
       key: "action",
     },
   ];
-
   return (
     <div className="bill">
-      <FormWrap className="bill-client">
+      <FormWrap form={form} className="bill-client">
         <Row className="bill-client_header">
           <h1>Tạo hóa đơn khách hàng</h1>
         </Row>
@@ -242,18 +474,35 @@ export const AddBillClient = () => {
           </ColWrap>
           <Col span={12} className="bill-client_content-price">
             <h3>Mã giảm giá</h3>
-            <FormSelect name={"discount"} selectProps={{ options: [] }} />
+            <FormSelect
+              name={"discount"}
+              selectProps={{
+                options: discountOptions,
+                onChange: (value) => {
+                  const selectedDiscount = discountOptions.find(
+                    (option) => option.value === value
+                  );
+                  handleDiscountChange(selectedDiscount);
+                },
+              }}
+            />
             <div className="price">
               <span className="price_label">Tổng tiền hàng: </span>
-              <span className="price_amount">kkk</span>
-            </div>
-            <div className="price">
-              <span className="price_label">Giảm giá: </span>
-              <span className="price_amount">kkk</span>
+              <span className="price_amount">
+                {totalPrice.toLocaleString()} VND
+              </span>
             </div>
             <div className="price">
               <span className="price_label">Thành tiền: </span>
-              <span className="price_amount">kk</span>
+              <span className="price_amount">
+                {discountPrice.toLocaleString()} VND
+              </span>
+            </div>
+            <div className="price">
+              <span className="price_label">Thành tiền: </span>
+              <span className="price_amount">
+                {discountedPrice.toLocaleString()} VND
+              </span>
             </div>
           </Col>
           <Col span={8} className="bill-client_content-purchase">
@@ -285,7 +534,7 @@ export const AddBillClient = () => {
           </Col>
         </Row>
         <Row className="bill-client_footer">
-          <Button>Xác nhận</Button>
+          <Button onClick={handleSubmit}>Xác nhận</Button>
         </Row>
       </FormWrap>
     </div>
