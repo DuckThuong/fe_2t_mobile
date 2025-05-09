@@ -99,6 +99,11 @@ export const convertImagesToBase64 = async (
 
 export const login = async (PhoneNumber: string, Password: string) => {
   try {
+    if (localStorage.getItem("token") || localStorage.getItem("user")) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    }
+
     const response = (await apiRequest(API_KEY.USER + "/log-in", "POST", {
       PhoneNumber,
       Password,
@@ -112,6 +117,34 @@ export const login = async (PhoneNumber: string, Password: string) => {
     }
   } catch (error) {
     console.error("Login failed:", error);
+    throw error;
+  }
+};
+
+export const getUserAdminCheck = async () => {
+  const response = (await apiRequest(
+    API_KEY.USER + "/get-user-by-id",
+    "GET"
+  )) as LoginResponse;
+  return response;
+};
+
+export const logout = async () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user?.id) {
+      const response = await apiRequest(`${API_KEY.USER}/log-out`, "POST", {
+        id: user.id,
+      });
+      if (response?.isLogin === false) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      } else {
+        throw new Error("Logout failed");
+      }
+    }
+  } catch (error) {
+    console.error("Logout error:", error);
     throw error;
   }
 };

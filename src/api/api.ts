@@ -7,7 +7,6 @@ import {
   CreatePurchasePayload,
   CreateVendorBillPayload,
   CreateVendorsPayload,
-  ProductDetailFilterParams,
   RegisterPayload,
   UpdateProductPayload,
 } from "./constants";
@@ -64,7 +63,6 @@ export const userApi = {
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
   doDeleteUser: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
-
   doGetUserById: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
   doSearchUsers: (query: string) =>
