@@ -15,10 +15,10 @@ const HeaderAdminPage = () => {
         {/* <Badge count={10}>
           <BellFilled className="admin-icon"/>
         </Badge> */}
-        <Avatar
+        {/* <Avatar
           className="admin-avatar"
           src="https://yt3.googleusercontent.com/qGrcViAdsmfdL8NhR03s6jZVi2AP4A03XeBFShu2M4Jd88k1fNXDnpMEmHU6CvNJuMyA2z1maA0=s900-c-k-c0x00ffffff-no-rj"
-        ></Avatar>
+        ></Avatar> */}
       </Space>
     </Header>
   );

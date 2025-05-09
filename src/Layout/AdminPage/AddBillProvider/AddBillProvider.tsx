@@ -33,6 +33,7 @@ import {
   CreateProductPayload,
   CreateVendorBillPayload,
 } from "../../../api/constants";
+import { convertImagesToBase64 } from "../../../api/authApi";
 
 const { Option } = Select;
 
@@ -149,11 +150,13 @@ const AddBillProvider: React.FC = () => {
   const handleProductChange = useCallback(
     (value: string, record: ProductRow) => {
       const selectedProduct = products.find((p: any) => p.id === value);
+
       const capacity = capacities?.find(
-        (c: any) => c.id === selectedProduct?.capacity_id
+        (c: any) => c.id === selectedProduct?.productDetails[0].capacity.id
       );
-      const productColors = colors?.filter((c: any) =>
-        selectedProduct?.color_ids?.includes(c.id)
+
+      const productColors = colors?.filter(
+        (c: any) => c.id === selectedProduct?.productColor[0].id
       );
 
       setProductRows((prev) =>
@@ -293,11 +296,18 @@ const AddBillProvider: React.FC = () => {
   const onModalSubmit = useCallback(async () => {
     try {
       const values = await newProductForm.validateFields();
+
+      // Convert images to base64
+      const base64Images = await convertImagesToBase64(
+        values.images?.map((img: any) => img.originFileObj).filter(Boolean) ||
+          []
+      );
+
       const payload: CreateProductPayload = {
         name: values.name,
         capacity_id: parseInt(values.capacity) || 0,
         color_ids: values.color ? [parseInt(values.color)] : [],
-        images: values.images?.map((img: any) => img.url || img.name) || [],
+        images: base64Images,
         description: "",
         release_year: new Date().getFullYear(),
         warranty_period: 0,

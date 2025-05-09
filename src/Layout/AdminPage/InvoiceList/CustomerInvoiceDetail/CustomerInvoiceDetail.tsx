@@ -1,92 +1,127 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Button, Table, Divider } from "antd";
+import { Button, Table, Divider, Spin } from "antd";
 import { ColumnsType } from "antd/es/table";
+import axios from "axios";
 import "./CustomerInvoiceDetail.scss";
 import { ADMIN_ROUTER_PATH } from "../../../../Routers/Routers";
 
-// Interface from InvoiceList
-interface ICustomerInvoiceList {
+// Interfaces aligned with API response
+interface IUser {
+  id: number;
+  phoneNumber: string | null;
+  email: string;
+  userRank: string;
+}
+
+interface IOrderDetail {
+  quantity: number;
+  price: number;
+  productDetail: { name: string };
+  id?: number; // Add optional id for rowKey
+}
+
+interface IOrder {
+  id: number;
+  total_price: string;
+  payment_method: string;
+  order_date: string;
+  expected_delivery_date: string | null;
+  status: string;
+  delivered_date: string | null;
+  user: IUser | null;
+  orderDetails: IOrderDetail[];
+}
+
+interface ICustomerInvoice {
   id: number;
   user_id: number;
   userName: string;
   total: number;
   payment_method: string;
-  paymentStatus: "Pending" | "Completed" | "Failed";
-  invoiceStatus: "Pending" | "Paid" | "Cancelled";
+  paymentStatus: "PENDING" | "COMPLETED" | "CANCLED";
+  invoiceStatus: "PENDING" | "COMPLETED" | "CANCLED";
   created_at: string;
+  order?: IOrder;
 }
 
-// Interface for CustomerInvoiceDetail
-interface ICustomerInvoiceDetail {
-  id: number;
-  user_id: number | null;
-  customer_id: number;
-  total: number;
-  payment_method: "Cash" | "Bank Transfer" | "Credit Card";
-  status: "Pending" | "Paid" | "Cancelled";
-  created_at: string;
-}
-
-interface IInvoiceDetail {
-  id: number;
-  invoice_id: number;
-  product_detail_id: number;
-  product_name: string;
-  quantity: number;
-  price: number;
-}
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:3300";
 
 const CustomerInvoiceDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [invoice, setInvoice] = useState<ICustomerInvoiceDetail | null>(null);
-  const [invoiceDetails, setInvoiceDetails] = useState<IInvoiceDetail[]>([]);
+  const [invoice, setInvoice] = useState<ICustomerInvoice | null>(null);
+  const [orderDetails, setOrderDetails] = useState<IOrderDetail[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (state?.invoice) {
-      const invoiceFromState: ICustomerInvoiceList = state.invoice;
-      setInvoice({
-        id: invoiceFromState.id,
-        user_id: invoiceFromState.user_id,
-        customer_id: invoiceFromState.user_id,
-        total: invoiceFromState.total,
-        payment_method: invoiceFromState.payment_method as "Cash" | "Bank Transfer" | "Credit Card",
-        status: invoiceFromState.invoiceStatus,
-        created_at: invoiceFromState.created_at,
-      });
-      setInvoiceDetails(state?.details || []);
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  }, [state]);
+    const fetchOrderDetails = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const response = await axios.get(`${API_URL}/orders/${id}`);
+        const orderData: IOrder = response.data;
+
+        // Create invoice object using API response
+        const invoiceData: ICustomerInvoice = {
+          id: orderData.id,
+          user_id: orderData.user?.id || 0,
+          userName: orderData.user?.email || "Unknown",
+          total: parseFloat(orderData.total_price),
+          payment_method: orderData.payment_method,
+          paymentStatus:
+            orderData.payment_method === "BANKING" ? "COMPLETED" : "PENDING",
+          invoiceStatus: orderData.status as "PENDING" | "COMPLETED" | "CANCLED",
+          created_at: orderData.order_date.split("T")[0],
+          order: orderData,
+        };
+
+        // Add unique id to orderDetails if missing
+        const enrichedOrderDetails = orderData.orderDetails.map(
+          (detail, index) => ({
+            ...detail,
+            id: detail.id || index + 1, // Fallback to index-based id
+          })
+        );
+
+        setInvoice(invoiceData);
+        setOrderDetails(enrichedOrderDetails);
+
+        // Log for debugging
+        console.log("Order Details:", enrichedOrderDetails);
+      } catch (error: any) {
+        console.error("Error fetching order details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [id]);
 
   if (loading) {
-    return <div>Đang tải...</div>;
+    return <Spin tip="Đang tải chi tiết hóa đơn..." />;
   }
 
   if (!invoice) {
     return <div>Không tìm thấy thông tin hóa đơn!</div>;
   }
 
-  // Tính toán tổng phụ, thuế và tổng cộng
-  const subtotal = invoiceDetails.reduce(
+  const subtotal = orderDetails.reduce(
     (sum, item) => sum + item.quantity * item.price,
     0
   );
-  const taxRate = 0.08; // Thuế 8%
-  const tax = subtotal * taxRate;
-  const total = subtotal + tax;
 
-  // Cột cho bảng danh sách sản phẩm đã mua
-  const purchasedProductsColumns: ColumnsType<IInvoiceDetail> = [
+  const purchasedProductsColumns: ColumnsType<IOrderDetail> = [
     {
       title: "Tên sản phẩm",
-      dataIndex: "product_name",
-      key: "product_name",
+      dataIndex: ["productDetail", "name"],
+      key: "productName",
     },
     {
       title: "Số lượng",
@@ -97,38 +132,58 @@ const CustomerInvoiceDetail: React.FC = () => {
       title: "Giá tiền",
       dataIndex: "price",
       key: "price",
-      render: (price: number) => `${price} VNĐ`,
+      render: (price: number) => `${price.toLocaleString()} VNĐ`,
+    },
+    {
+      title: "Tổng cộng",
+      key: "total",
+      render: (_: any, record: IOrderDetail) =>
+        `${(record.quantity * record.price).toLocaleString()} VNĐ`,
     },
   ];
 
   return (
     <div className="invoice-detail-container">
-      <h3>Chi tiết hóa đơn</h3>
+      <h3>Chi tiết hóa đơn #{invoice.id}</h3>
       <div className="invoice-header">
         <div className="customer-info">
-          <h4>Antonio Banderas</h4>
-          <p>1954 Bloor Street West</p>
-          <p>Toronto ON, M6P 3K9</p>
-          <p>Canada</p>
-          <p>example@gmail.com</p>
-          <p>+4444-6666-7777</p>
+          <h4>{invoice.userName || "Unknown"}</h4>
+          <p>
+            Số điện thoại:{" "}
+            {invoice.order?.user?.phoneNumber || "Không có số điện thoại"}
+          </p>
+          <p>Email: {invoice.order?.user?.email || "Không có email"}</p>
         </div>
         <div className="invoice-info">
           <div className="invoice-info-item">
             <span>Mã đơn hàng:</span>
-            <span>AD2029{invoice.id}</span>
+            <span>{invoice.id}</span>
           </div>
           <div className="invoice-info-item">
             <span>Ngày lập hóa đơn:</span>
-            <span>{invoice.created_at}</span>
+            <span>
+              {new Date(invoice.created_at).toLocaleDateString("vi-VN")}
+            </span>
           </div>
           <div className="invoice-info-item">
             <span>Trạng thái thanh toán:</span>
-            <span>{state.invoice.paymentStatus === "Pending" ? "Chờ xử lý" : state.invoice.paymentStatus === "Completed" ? "Hoàn tất" : "Thất bại"}</span>
+            <span>
+              {invoice.paymentStatus === "PENDING"
+                ? "PENDING"
+                : invoice.paymentStatus === "COMPLETED"
+                ? "COMPLETED"
+                : "CANCLED"}
+            </span>
           </div>
           <div className="invoice-info-item">
             <span>Trạng thái hóa đơn:</span>
-            <span>{invoice.status === "Pending" ? "Chờ xử lý" : invoice.status === "Paid" ? "Đã thanh toán" : "Đã hủy"}</span>
+            <span>
+              {invoice.invoiceStatus === "PENDING"
+                ? "PENDING"
+                : invoice.invoiceStatus === "COMPLETED"
+                ? "COMPLETED"
+                : "CANCLED"}
+            </span>
           </div>
         </div>
       </div>
@@ -139,7 +194,7 @@ const CustomerInvoiceDetail: React.FC = () => {
       <Table
         className="purchased-products-table"
         columns={purchasedProductsColumns}
-        dataSource={invoiceDetails}
+        dataSource={orderDetails}
         rowKey="id"
         pagination={false}
         locale={{ emptyText: "Không có sản phẩm" }}
@@ -148,15 +203,17 @@ const CustomerInvoiceDetail: React.FC = () => {
       <div className="invoice-summary">
         <div className="summary-item">
           <span>Tổng tiền:</span>
-          <span>${subtotal.toFixed(2)}</span>
-        </div>
-        <div className="summary-item">
-          <span>Khuyến mãi:</span>
-          <span>${tax.toFixed(2)}</span>
+          <span>{subtotal.toLocaleString()} VNĐ</span>
         </div>
         <div className="summary-item total">
           <span>Tổng cộng:</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{subtotal.toLocaleString()} VNĐ</span>
+        </div>
+        <div className="summary-item">
+          <span>Tổng từ API:</span>
+          <span>
+            {parseFloat(invoice.total.toString()).toLocaleString()} VNĐ
+          </span>
         </div>
       </div>
 
