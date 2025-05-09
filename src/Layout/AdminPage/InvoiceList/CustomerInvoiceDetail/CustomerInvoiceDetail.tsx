@@ -39,8 +39,8 @@ interface ICustomerInvoice {
   userName: string;
   total: number;
   payment_method: string;
-  paymentStatus: "Pending" | "Completed" | "Failed";
-  invoiceStatus: "Pending" | "Paid" | "Cancelled";
+  paymentStatus: "PENDING" | "COMPLETED" | "CANCLED";
+  invoiceStatus: "PENDING" | "COMPLETED" | "CANCLED";
   created_at: string;
   order?: IOrder;
 }
@@ -75,8 +75,8 @@ const CustomerInvoiceDetail: React.FC = () => {
           total: parseFloat(orderData.total_price),
           payment_method: orderData.payment_method,
           paymentStatus:
-            orderData.payment_method === "BANKING" ? "Completed" : "Pending",
-          invoiceStatus: orderData.status as "Pending" | "Paid" | "Cancelled",
+            orderData.payment_method === "BANKING" ? "COMPLETED" : "PENDING",
+          invoiceStatus: orderData.status as "PENDING" | "COMPLETED" | "CANCLED",
           created_at: orderData.order_date.split("T")[0],
           order: orderData,
         };
@@ -148,8 +148,11 @@ const CustomerInvoiceDetail: React.FC = () => {
       <div className="invoice-header">
         <div className="customer-info">
           <h4>{invoice.userName || "Unknown"}</h4>
-          <p>{invoice.order?.user?.email || "Không có email"}</p>
-          <p>{invoice.order?.user?.phoneNumber || "Không có số điện thoại"}</p>
+          <p>
+            Số điện thoại:{" "}
+            {invoice.order?.user?.phoneNumber || "Không có số điện thoại"}
+          </p>
+          <p>Email: {invoice.order?.user?.email || "Không có email"}</p>
         </div>
         <div className="invoice-info">
           <div className="invoice-info-item">
@@ -165,21 +168,21 @@ const CustomerInvoiceDetail: React.FC = () => {
           <div className="invoice-info-item">
             <span>Trạng thái thanh toán:</span>
             <span>
-              {invoice.paymentStatus === "Pending"
-                ? "Chờ xử lý"
-                : invoice.paymentStatus === "Completed"
-                ? "Hoàn tất"
-                : "Thất bại"}
+              {invoice.paymentStatus === "PENDING"
+                ? "PENDING"
+                : invoice.paymentStatus === "COMPLETED"
+                ? "COMPLETED"
+                : "CANCLED"}
             </span>
           </div>
           <div className="invoice-info-item">
             <span>Trạng thái hóa đơn:</span>
             <span>
-              {invoice.invoiceStatus === "Pending"
-                ? "Chờ xử lý"
-                : invoice.invoiceStatus === "Paid"
-                ? "Đã thanh toán"
-                : "Đã hủy"}
+              {invoice.invoiceStatus === "PENDING"
+                ? "PENDING"
+                : invoice.invoiceStatus === "COMPLETED"
+                ? "COMPLETED"
+                : "CANCLED"}
             </span>
           </div>
         </div>
@@ -192,7 +195,7 @@ const CustomerInvoiceDetail: React.FC = () => {
         className="purchased-products-table"
         columns={purchasedProductsColumns}
         dataSource={orderDetails}
-        rowKey="id" // Use enriched id
+        rowKey="id"
         pagination={false}
         locale={{ emptyText: "Không có sản phẩm" }}
       />
