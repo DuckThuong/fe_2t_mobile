@@ -103,7 +103,7 @@ export const productApi = {
     apiRequest(`${API_KEY.PRODUCT}/get-product-by-id?id=${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}`, "POST", productData),
-  updateProduct: (id: string, productData: UpdateProductPayload) =>
+  updateProduct: (id: string, productData: UpdateProductPayload, newImageFiles: File[]) =>
     apiRequest(`${API_KEY.PRODUCT}/update-product`, "PUT", productData),
   deleteProduct: (id: string) =>
     apiRequest(`${API_KEY.PRODUCT}/delete-product?id=${id}`, "DELETE"),

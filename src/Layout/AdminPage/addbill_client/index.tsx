@@ -11,6 +11,7 @@ interface IProductOption {
     capacities: {
       capacity: string;
       price: number;
+      product_detail_id?: number; // Thêm trường để lưu product_detail_id
     }[];
   }[];
 }
@@ -23,18 +24,6 @@ interface ISelectedProduct {
   quantity: number;
   price: number;
   totalPrice: number;
-}
-
-interface IUser {
-  id: number;
-  userName: string | null;
-  phoneNumber: string;
-  email: string;
-  isAdmin: boolean;
-  userRank: string;
-  isActive: boolean;
-  createdAt: string;
-  userInformation: any;
 }
 
 interface IDiscount {
@@ -59,32 +48,8 @@ const AddBill_Client: React.FC = () => {
     type: "fixed_amount" | "percentage";
   }>({ id: 0, value: 0, type: "fixed_amount" });
   const [paymentMethod, setPaymentMethod] = useState("cast");
-  const [finalbill, setfinalbill] = useState(0);
-  const [users, setUsers] = useState<IUser[]>([]);
   const [productOptions, setProductOptions] = useState<IProductOption[]>([]);
   const [discounts, setDiscounts] = useState<IDiscount[]>([]);
-
-  // Hàm lấy danh sách người dùng
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch("http://localhost:3300/user/get-all-user", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const result = await response.json();
-      setUsers(result.data || []);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      message.error("Không thể tải danh sách người dùng. Vui lòng thử lại!");
-    }
-  };
 
   // Hàm lấy danh sách sản phẩm từ API
   const fetchProducts = async () => {
@@ -120,6 +85,7 @@ const AddBill_Client: React.FC = () => {
                   detail.capacity.price.discount_price ||
                     detail.capacity.price.price
                 ),
+                product_detail_id: detail.id, // Lưu product_detail_id
               })),
           })),
         })
@@ -180,9 +146,8 @@ const AddBill_Client: React.FC = () => {
     }
   };
 
-  // Gọi API lấy danh sách người dùng, sản phẩm và mã khuyến mại khi component mount
+  // Gọi API lấy danh sách sản phẩm và mã khuyến mại khi component mount
   useEffect(() => {
-    fetchUsers();
     fetchProducts();
     fetchDiscounts();
   }, []);
@@ -283,18 +248,31 @@ const AddBill_Client: React.FC = () => {
 
     // Chuẩn bị dữ liệu cho API
     const orderData = {
-      user_id: values.user_id,
+      user_id: 23,
       payment_method: paymentMethod.toUpperCase(),
-      expected_delivery_date: "2025/05/09",
       status: "PENDING",
-      discount_id: selectedSale.id || null,
-      discount_amount: selectedSale.value,
-      order_details: products.map((product) => ({
-        product_id: 49,
-        product_color_id: 1,
-        quantity: product.quantity,
-        price: finalBill,
-      })),
+      expected_delivery_date: "2025/05/10",
+      note: values.note || "string",
+      userLocation: values.address || "av",
+      userPhone: values.phone || "022222222",
+      userName: values.userName || "abca",
+      order_details: products.map((product) => {
+        const selectedProduct = productOptions.find(
+          (p) => p.name === product.name
+        );
+        const selectedColor = selectedProduct?.colors.find(
+          (c) => c.color === product.color
+        );
+        const selectedCapacity = selectedColor?.capacities.find(
+          (cap) => cap.capacity === product.capacity
+        );
+
+        return {
+          product_detail_id: selectedCapacity?.product_detail_id || 104, // Lấy product_detail_id từ API hoặc mặc định
+          quantity: product.quantity,
+          price: product.price, // Giá của sản phẩm được chọn
+        };
+      }),
     };
 
     try {
@@ -333,26 +311,11 @@ const AddBill_Client: React.FC = () => {
       >
         <div className="form-row">
           <Form.Item
-            label="Khách hàng"
-            name="user_id"
-            rules={[{ required: true, message: "Vui lòng chọn khách hàng" }]}
+            label="Tên khách hàng"
+            name="userName"
+            rules={[{ required: true, message: "Vui lòng nhập tên khách hàng" }]}
           >
-            <Select
-              placeholder="Chọn khách hàng"
-              showSearch
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.children as unknown as string)
-                  ?.toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-            >
-              {users.map((user) => (
-                <Option key={user.id} value={user.id}>
-                  {user.userName || user.email || user.phoneNumber}
-                </Option>
-              ))}
-            </Select>
+            <Input placeholder="Nhập tên khách hàng" />
           </Form.Item>
 
           <Form.Item
@@ -360,7 +323,7 @@ const AddBill_Client: React.FC = () => {
             name="phone"
             rules={[{ required: true, message: "Vui lòng nhập số điện thoại" }]}
           >
-            <Input />
+            <Input placeholder="Nhập số điện thoại" />
           </Form.Item>
         </div>
 
@@ -369,11 +332,11 @@ const AddBill_Client: React.FC = () => {
           name="address"
           rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
         >
-          <Input />
+          <Input placeholder="Nhập địa chỉ" />
         </Form.Item>
 
         <Form.Item label="Ghi chú" name="note">
-          <Input.TextArea rows={3} />
+          <Input.TextArea rows={3} placeholder="Nhập ghi chú" />
         </Form.Item>
 
         <h3>Thông tin sản phẩm</h3>

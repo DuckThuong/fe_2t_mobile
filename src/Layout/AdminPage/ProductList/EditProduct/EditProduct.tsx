@@ -14,7 +14,6 @@ import { UploadOutlined, CloseCircleFilled } from "@ant-design/icons";
 import "./EditProduct.scss";
 import { ADMIN_ROUTER_PATH } from "../../../../Routers/Routers";
 import { productApi, vendorsApi } from "../../../../api/api";
-import axios from "axios";
 import { UpdateProductPayload } from "../../../../api/constants";
 
 interface ISpecs {
@@ -55,8 +54,6 @@ interface ImageFile {
   file?: File;
   name: string;
 }
-
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3300";
 
 const EditProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -175,32 +172,19 @@ const EditProduct: React.FC = () => {
     setImageFiles((prev) => prev.filter((file) => file.uid !== uid));
   }, []);
 
-  // Upload images to backend
-  const uploadImages = async (files: ImageFile[]): Promise<string[]> => {
-    const uploadedUrls: string[] = [];
-    for (const file of files) {
-      if (file.file) {
-        const formData = new FormData();
-        formData.append("image", file.file);
-        const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        uploadedUrls.push(response.data.url);
-      } else if (file.url) {
-        uploadedUrls.push(file.url);
-      }
-    }
-    return uploadedUrls;
-  };
-
   // Handle form submission
   const handleSubmit = async (values: any) => {
-    if (!product) return;
+    if (!product || !id) return;
 
     setLoading(true);
     try {
-      // Upload new images
-      const uploadedImageUrls = await uploadImages(imageFiles);
+      const newImageFiles = imageFiles
+        .filter((file) => file.file)
+        .map((file) => file.file) as File[];
+
+      const existingImageUrls = imageFiles
+        .filter((file) => file.url && !file.file)
+        .map((file) => file.url) as string[];
 
       const updatedProductData: UpdateProductPayload = {
         id: Number(id),
@@ -224,10 +208,10 @@ const EditProduct: React.FC = () => {
           battery_capacity: values.specs?.battery_capacity || product.specs.battery_capacity || "",
           charging_tech: values.specs?.charging_tech || product.specs.charging_tech || "",
         },
-        image_urls: uploadedImageUrls,
+        image_urls: existingImageUrls,
       };
 
-      await axios.put(`${API_BASE_URL}/product/update-product`, updatedProductData);
+      await productApi.updateProduct(id, updatedProductData, newImageFiles);
       message.success("Cập nhật sản phẩm thành công!");
       navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
     } catch (err: any) {
@@ -311,9 +295,6 @@ const EditProduct: React.FC = () => {
         <Form.Item label="Số serial" name="serial_number">
           <Input />
         </Form.Item>
-        {/* <Form.Item label="Giá nhập" name="import_price">
-          <Input type="text" />
-        </Form.Item> */}
         <Form.Item
           label="Giá bán"
           name="selling_price"
@@ -321,7 +302,7 @@ const EditProduct: React.FC = () => {
         >
           <Input type="text" />
         </Form.Item>
-        <Form.Item label="Ảnh" name="image_urls">
+        {/* <Form.Item label="Ảnh" name="image_urls">
           <Upload
             listType="picture"
             showUploadList={false}
@@ -342,7 +323,7 @@ const EditProduct: React.FC = () => {
               </div>
             ))}
           </div>
-        </Form.Item>
+        </Form.Item> */}
         <h3>Thông số kỹ thuật</h3>
         <Form.Item label="Kích thước màn hình" name={["specs", "screen_size"]}>
           <Input />

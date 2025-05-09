@@ -62,9 +62,7 @@ const InvoiceList: React.FC = () => {
   const navigate = useNavigate();
   const tableRef = useRef<CustomTableRef>(null);
 
-  const [tableType, setTableType] = useState<"customer" | "supplier">(
-    "customer"
-  );
+  const [tableType, setTableType] = useState<"customer" | "supplier">("customer");
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [customerInvoices, setCustomerInvoices] = useState<ICustomerInvoice[]>([]);
   const [supplierInvoices, setSupplierInvoices] = useState<ISupplierInvoice[]>([]);
@@ -119,9 +117,7 @@ const InvoiceList: React.FC = () => {
       try {
         const response = await orderApi.getAllOrders();
         console.log("API response:", response);
-        const fetchedOrders: IOrder[] = Array.isArray(response.data)
-          ? response.data
-          : [];
+        const fetchedOrders: IOrder[] = Array.isArray(response.data) ? response.data : [];
         console.log("Fetched orders:", fetchedOrders);
 
         if (fetchedOrders.length === 0) {
@@ -138,10 +134,9 @@ const InvoiceList: React.FC = () => {
                 userName: order.user!.email || "Unknown",
                 total: parseFloat(order.total_price) || 0,
                 payment_method: order.payment_method || "N/A",
-                paymentStatus:
-                  order.payment_method === "BANKING" ? "Completed" : "Pending",
+                paymentStatus: order.payment_method === "BANKING" ? "Completed" : "Pending",
                 invoiceStatus: mapOrderStatusToInvoiceStatus(order.status),
-                created_at: order.expected_delivery_date,
+                created_at: order.expected_delivery_date || order.order_date,
               };
             } catch (error) {
               console.error(`Error mapping order ID ${order.id}:`, error);
@@ -157,9 +152,7 @@ const InvoiceList: React.FC = () => {
       } catch (error: any) {
         console.error("Detailed error fetching orders:", error);
         message.error(
-          `Không thể tải danh sách hóa đơn khách hàng: ${
-            error.message || "Lỗi không xác định"
-          }`
+          `Không thể tải danh sách hóa đơn khách hàng: ${error.message || "Lỗi không xác định"}`
         );
       } finally {
         setLoading(false);
@@ -222,12 +215,8 @@ const InvoiceList: React.FC = () => {
       try {
         await axios.delete(`http://localhost:3300/orders/${id}`);
         setOrders((prev) => prev.filter((order) => order.id !== id));
-        setCustomerInvoices((prev) =>
-          prev.filter((invoice) => invoice.id !== id)
-        );
-        setFilteredCustomerInvoices((prev) =>
-          prev.filter((invoice) => invoice.id !== id)
-        );
+        setCustomerInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
+        setFilteredCustomerInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
         message.success(`Đã xóa hóa đơn khách hàng ID: ${id}`);
       } catch (error: any) {
         const errorMessage =
@@ -238,12 +227,8 @@ const InvoiceList: React.FC = () => {
     } else {
       try {
         await axios.delete(`http://localhost:3300/vendor-bill?id=${id}`);
-        setSupplierInvoices((prev) =>
-          prev.filter((invoice) => invoice.id !== id)
-        );
-        setFilteredSupplierInvoices((prev) =>
-          prev.filter((invoice) => invoice.id !== id)
-        );
+        setSupplierInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
+        setFilteredSupplierInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
         message.success(`Đã xóa hóa đơn nhà cung cấp ID: ${id}`);
       } catch (error: any) {
         const errorMessage =
@@ -268,7 +253,7 @@ const InvoiceList: React.FC = () => {
       navigate(ADMIN_ROUTER_PATH.PROVIDER_INVOICE_DETAIL(record.id), {
         state: {
           invoice: record,
-          purchaseOrder: (record as ISupplierInvoice).purchaseOrder,
+          purchaseOrder: (record as ISupplierInvoice).purchaseOrder || {},
         },
       });
     }
@@ -278,28 +263,45 @@ const InvoiceList: React.FC = () => {
     id: number,
     value: "Pending" | "Completed" | "Failed"
   ) => {
-    setTempStatuses((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], paymentStatus: value },
-    }));
+    setTempStatuses((prev) => {
+      const newStatuses = {
+        ...prev,
+        [id]: { ...prev[id], paymentStatus: value },
+      };
+      console.log("Updated tempStatuses:", newStatuses); // Debug
+      return newStatuses;
+    });
   };
 
   const handleInvoiceStatusChange = (
     id: number,
     value: "PENDING" | "COMPLETED" | "CANCLED"
   ) => {
-    setTempStatuses((prev) => ({
-      ...prev,
-      [id]: { ...prev[id], invoiceStatus: value },
-    }));
+    setTempStatuses((prev) => {
+      const newStatuses = {
+        ...prev,
+        [id]: { ...prev[id], invoiceStatus: value },
+      };
+      console.log("Updated tempStatuses:", newStatuses); // Debug
+      return newStatuses;
+    });
   };
 
   const handleSave = async (id: number) => {
     const tempStatus = tempStatuses[id];
-    if (!tempStatus || !tempStatus.invoiceStatus) {
-      console.warn(`No invoice status to save for ID: ${id}`);
-      message.warning("Vui lòng chọn trạng thái hóa đơn trước khi lưu");
-      return;
+
+    if (tableType === "customer") {
+      if (!tempStatus || !tempStatus.invoiceStatus) {
+        console.warn(`No invoice status to save for ID: ${id}`);
+        message.warning("Vui lòng chọn trạng thái hóa đơn trước khi lưu");
+        return;
+      }
+    } else {
+      if (!tempStatus || !tempStatus.paymentStatus) {
+        console.warn(`No payment status to save for ID: ${id}`);
+        message.warning("Vui lòng chọn trạng thái thanh toán trước khi lưu");
+        return;
+      }
     }
 
     if (tableType === "customer") {
@@ -315,38 +317,28 @@ const InvoiceList: React.FC = () => {
         setOrders((prev) =>
           prev.map((order) =>
             order.id === id
-              ? {
-                  ...order,
-                  status: updateData.status,
-                }
+              ? { ...order, status: updateData.status || "PENDING" }
               : order
           )
         );
         setCustomerInvoices((prevInvoices) =>
           prevInvoices.map((invoice) =>
-            invoice.id === id && tempStatus.invoiceStatus
-              ? {
-                  ...invoice,
-                  invoiceStatus: tempStatus.invoiceStatus,
-                }
+            invoice.id === id
+              ? { ...invoice, invoiceStatus: tempStatus.invoiceStatus! }
               : invoice
           )
         );
         setFilteredCustomerInvoices((prevFilteredInvoices) =>
           prevFilteredInvoices.map((invoice) =>
-            invoice.id === id && tempStatus.invoiceStatus
-              ? {
-                  ...invoice,
-                  invoiceStatus: tempStatus.invoiceStatus,
-                }
+            invoice.id === id
+              ? { ...invoice, invoiceStatus: tempStatus.invoiceStatus! }
               : invoice
           )
         );
         message.success(`Đã cập nhật trạng thái hóa đơn khách hàng ID: ${id}`);
       } catch (error: any) {
         const errorMessage =
-          error.response?.data?.message ||
-          "Không thể cập nhật trạng thái hóa đơn khách hàng";
+          error.response?.data?.message || "Không thể cập nhật trạng thái hóa đơn khách hàng";
         console.error("Error updating customer invoice status:", {
           error,
           response: error.response?.data,
@@ -358,7 +350,7 @@ const InvoiceList: React.FC = () => {
       try {
         const updateData: { id: number; status: string } = {
           id,
-          status: tempStatus.paymentStatus || "Pending",
+          status: tempStatus.paymentStatus || "Pending", // Provide default value
         };
         console.log(`Sending PUT request to http://localhost:3300/vendor-bill with data:`, updateData);
         await axios.put(`http://localhost:3300/vendor-bill`, updateData);
@@ -368,17 +360,13 @@ const InvoiceList: React.FC = () => {
             invoice.id === id
               ? {
                   ...invoice,
-                  paymentStatus: tempStatus.paymentStatus || invoice.paymentStatus,
+                  paymentStatus: tempStatus.paymentStatus!,
                   invoiceStatus:
-                    tempStatus.invoiceStatus === "PENDING"
+                    tempStatus.paymentStatus === "Pending"
                       ? "Pending"
-                      : tempStatus.invoiceStatus === "COMPLETED"
+                      : tempStatus.paymentStatus === "Completed"
                       ? "Paid"
-                      : tempStatus.invoiceStatus === "CANCLED"
-                      ? "Cancelled"
-                      : invoice.invoiceStatus,
-                  total: invoice.total,
-                  purchaseOrder: invoice.purchaseOrder,
+                      : "Cancelled",
                 }
               : invoice
           )
@@ -388,17 +376,13 @@ const InvoiceList: React.FC = () => {
             invoice.id === id
               ? {
                   ...invoice,
-                  paymentStatus: tempStatus.paymentStatus || invoice.paymentStatus,
+                  paymentStatus: tempStatus.paymentStatus!,
                   invoiceStatus:
-                    tempStatus.invoiceStatus === "PENDING"
+                    tempStatus.paymentStatus === "Pending"
                       ? "Pending"
-                      : tempStatus.invoiceStatus === "COMPLETED"
+                      : tempStatus.paymentStatus === "Completed"
                       ? "Paid"
-                      : tempStatus.invoiceStatus === "CANCLED"
-                      ? "Cancelled"
-                      : invoice.invoiceStatus,
-                  total: invoice.total,
-                  purchaseOrder: invoice.purchaseOrder,
+                      : "Cancelled",
                 }
               : invoice
           )
@@ -406,8 +390,7 @@ const InvoiceList: React.FC = () => {
         message.success(`Đã cập nhật trạng thái hóa đơn nhà cung cấp ID: ${id}`);
       } catch (error: any) {
         const errorMessage =
-          error.response?.data?.message ||
-          "Không thể cập nhật trạng thái hóa đơn nhà cung cấp";
+          error.response?.data?.message || "Không thể cập nhật trạng thái hóa đơn nhà cung cấp";
         console.error("Error updating supplier invoice status:", error);
         message.error(errorMessage);
       }
@@ -447,15 +430,11 @@ const InvoiceList: React.FC = () => {
       render: (_: any, record: ICustomerInvoice) => {
         const status = tempStatuses[record.id]?.paymentStatus || record.paymentStatus;
         const colorMap = {
-          Pending: '#faad14', // Vàng
-          Completed: '#52c41a', // Xanh
-          Failed: '#ff4d4f', // Đỏ
+          Pending: "#faad14", // Yellow
+          Completed: "#52c41a", // Green
+          Failed: "#ff4d4f", // Red
         };
-        return (
-          <span style={{ color: colorMap[status] }}>
-            {status}
-          </span>
-        );
+        return <span style={{ color: colorMap[status] }}>{status}</span>;
       },
     },
     {
@@ -540,7 +519,11 @@ const InvoiceList: React.FC = () => {
       <Button
         type="primary"
         onClick={() => handleSave(record.id)}
-        disabled={!tempStatuses[record.id]?.invoiceStatus}
+        disabled={
+          tableType === "customer"
+            ? !tempStatuses[record.id]?.invoiceStatus
+            : !tempStatuses[record.id]?.paymentStatus
+        }
       >
         Lưu
       </Button>
@@ -592,11 +575,7 @@ const InvoiceList: React.FC = () => {
       </div>
       <CustomTable
         ref={tableRef}
-        data={
-          tableType === "customer"
-            ? filteredCustomerInvoices
-            : filteredSupplierInvoices
-        }
+        data={tableType === "customer" ? filteredCustomerInvoices : filteredSupplierInvoices}
         columns={tableType === "customer" ? customerColumns : supplierColumns}
         rowKey="id"
         pagination={{ pageSize: 10 }}
