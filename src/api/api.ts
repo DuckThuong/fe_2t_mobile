@@ -50,19 +50,19 @@ export enum OrderStateEnum {
 
 export const userApi = {
   doUpdateProfile: (data: any) =>
-    apiRequest('user/update-profile', 'PUT', null, data),
+    apiRequest("user/update-profile", "PUT", null, data),
   doRegister: (data: RegisterPayload) =>
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
   doDeleteUser: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
-
   doGetUserById: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
   doSearchUsers: (query: string) =>
     apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
- getUserAdminCheck: (id: string | number) => // Hàm mới
-    apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
+  getUserAdminCheck: (
+    id: string | number // Hàm mới
+  ) => apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
 };
 
 export const imageApi = {
@@ -88,8 +88,10 @@ export const productApi = {
     size?: number;
     sort_by?: string;
     order?: string;
-  }) => apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", undefined, params),
-  getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/get-product-by-id?id=${id}`, "GET"),
+  }) =>
+    apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", undefined, params),
+  getProductById: (id: string) =>
+    apiRequest(`${API_KEY.PRODUCT}/get-product-by-id?id=${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
   updateProduct: (id: string, productData: UpdateProductPayload) =>
@@ -139,8 +141,7 @@ export const capacityApi = {
 export const purchaseApi = {
   createPurchase: (PurchaseData: CreatePurchasePayload) =>
     apiRequest(`${API_KEY.PURCHASE}`, "POST", PurchaseData),
-  getAllPurchase: () =>
-    apiRequest(`${API_KEY.PURCHASE}`, "GET"),
+  getAllPurchase: () => apiRequest(`${API_KEY.PURCHASE}`, "GET"),
   getPurchaseById: (id: string) =>
     apiRequest(`${API_KEY.PURCHASE}/${id}`, "GET"),
   deletePurchase: (id: string) =>
@@ -160,42 +161,51 @@ export const vendorsApi = {
   deleteVendor: (id: string) =>
     apiRequest(`${API_KEY.VENDORS}/delete`, "DELETE", { id }),
   createVendorBill: (billData: CreateVendorBillPayload) =>
-    apiRequest(`${API_KEY.VENDOR_BILL}`, "POST", billData)
+    apiRequest(`${API_KEY.VENDOR_BILL}`, "POST", billData),
 };
 
 export const discountApi = {
-  getAllDiscounts: () => apiRequest(`${API_KEY.DISCOUNT}/get-all-discount`, "GET"),
+  getAllDiscounts: () =>
+    apiRequest(`${API_KEY.DISCOUNT}/get-all-discount`, "GET"),
   getDiscountById: (id: string) =>
     apiRequest(`${API_KEY.DISCOUNT}/get-discount-by-id?id=${id}`, "GET"),
   createDiscount: (vendorData: CreateDiscountsPayload) =>
     apiRequest(`${API_KEY.DISCOUNT}/create-discount`, "POST", vendorData),
   updateDiscount: (id: string, vendorData: CreateDiscountsPayload) =>
-    apiRequest(`${API_KEY.DISCOUNT}/update-discount`, "PUT", { ...vendorData, id }),
+    apiRequest(`${API_KEY.DISCOUNT}/update-discount`, "PUT", {
+      ...vendorData,
+      id,
+    }),
   deleteDiscount: (id: string) =>
     apiRequest(`${API_KEY.DISCOUNT}/delete-discount?id=${id}`, "DELETE"),
 };
 export const cartApi = {
-  creatCart :(id: string) => apiRequest(`${API_KEY.CART}/create-cart`, "POST",id),
+  creatCart: (id: string) =>
+    apiRequest(`${API_KEY.CART}/create-cart`, "POST", id),
   getAllCartItems: () => apiRequest(API_KEY.CART),
-  GetCartByUserId: (id: string) => apiRequest(`cart/get-cart-by-user?user_id=${id}`, "GET"),
+  GetCartByUserId: (id: string) =>
+    apiRequest(`cart/get-cart-by-user?user_id=${id}`, "GET"),
   //GetCartByUserId: (id: string) => apiRequest(`${API_KEY.CART}/get-cart-by-user/${id}`, "GET"),
 
   GetCardByUserAndCartId: (userId: string, cartID: string) =>
     axios.get(`/api/getCart/${userId}`, { params: { cartID } }),
-  addCartItem: (itemData: any) => apiRequest(`${API_KEY.CART}/add-item-to-cart`, "POST", itemData),
- updateCartItem: (itemData: UpdateItemInCart) => {
-    const url = `${API_KEY.CART}/update-cart-item?cart_id=${encodeURIComponent(itemData.cart_id)}&item_id=${encodeURIComponent(itemData.item_id)}`;
-    console.log('Update URL:', url);
+  addCartItem: (itemData: any) =>
+    apiRequest(`${API_KEY.CART}/add-item-to-cart`, "POST", itemData),
+  updateCartItem: (itemData: UpdateItemInCart) => {
+    const url = `${API_KEY.CART}/update-cart-item?cart_id=${encodeURIComponent(
+      itemData.cart_id
+    )}&item_id=${encodeURIComponent(itemData.item_id)}`;
+    console.log("Update URL:", url);
     return apiRequest(url, "PUT", itemData);
   },
   deleteCartItem: (params: DeleteItemInCart) => {
-    const url = `${API_KEY.CART}/delete-cart-item?cart_id=${encodeURIComponent(params.cart_id)}&item_id=${encodeURIComponent(params.item_id)}`;
-    console.log('Delete URL:', url);
+    const url = `${API_KEY.CART}/delete-cart-item?cart_id=${encodeURIComponent(
+      params.cart_id
+    )}&item_id=${encodeURIComponent(params.item_id)}`;
+    console.log("Delete URL:", url);
     return apiRequest(url, "DELETE", null);
   },
-
 };
-
 
 export const reviewApi = {
   getAllReview: () => apiRequest(API_KEY.REVIEW),
