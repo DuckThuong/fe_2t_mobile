@@ -6,6 +6,7 @@ import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
 import App from "./Content";
 import { ListProduct } from "./ListProducts";
+import { ListPage } from "../TrangList";
 export const Home = () => {
   const { data: imageData } = useQuery({
     queryKey: [QUERY_KEY.GET_IMAGE],
@@ -28,29 +29,31 @@ export const Home = () => {
         <div>
           <App />
         </div>
-        <div className="home_content">
-          <div className="home-list_header">
-            <p className="home-list_header-title">
-              Danh sách sản phẩm bán chạy
-            </p>
-          </div>
-          <ListProduct itemPerPage={4} />
+            <div className="home_content">
+              <div className="home-list_header">
+                <p className="home-list_header-title">
+                  Danh sách sản phẩm bán chạy
+                </p>
+              </div>
+              <ListProduct itemPerPage={4} />
+            </div>
+            <div className="home_content">
+              <div className="home-list_header">
+                <p className="home-list_header-title">Danh sách sản phẩm mới</p>
+              </div>
+              <ListProduct itemPerPage={4} />
+            </div>
+            <div className="home_content">
+              <div className="home-list_header">
+                <p className="home-list_header-title">
+                  Danh sách sản phẩm phụ kiện
+                </p>
+              </div>
+              <ListProduct itemPerPage={4} />
+            </div>
+             {/* <ListPage/> */}
+            
         </div>
-        <div className="home_content">
-          <div className="home-list_header">
-            <p className="home-list_header-title">Danh sách sản phẩm mới</p>
-          </div>
-          <ListProduct itemPerPage={4} />
-        </div>
-        <div className="home_content">
-          <div className="home-list_header">
-            <p className="home-list_header-title">
-              Danh sách sản phẩm phụ kiện
-            </p>
-          </div>
-          <ListProduct itemPerPage={4} />
-        </div>
-      </div>
       <div style={{ width: "auto", height: "30px" }}></div>
       <FooterWeb />
     </>

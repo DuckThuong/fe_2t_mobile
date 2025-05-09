@@ -50,12 +50,13 @@ export const apiRequest = async (
 export enum OrderStateEnum {
   ALL = "ALL",
   PENDING = "PENDING",
-  CONFIRMING = "Confirming",
-  DELIVERING = "Delivering",
-  COMPLETED = "Completed",
-  CANCELLED = "Cancelled",
-  RETURNED = "Returned",
+  RETURNING = "RETURNING",
+  DELIVERY = "DELIVERY",
+  COMPLETED = "COMPLETED",
+  CANCLED = "CANCLED",
+  RETURNED = "RETURNED",
 }
+
 
 export const userApi = {
   doUpdateProfile: (data: any) =>
@@ -244,10 +245,13 @@ export const orderApi = {
   getOrderById: (id: string) => apiRequest(`${API_KEY.ORDER}/orderby/${id}`),
   // getOrderByUserID: (id: string) =>
   //   apiRequest(`${API_KEY.ORDER}/orders/user/${id}`),
+  updateOrderClient: (id:string,status: any) =>
+    apiRequest(`${API_KEY.ORDER}/${id}`, "PATCH",  status ),
   getOrderByUserID: (id: string) => apiRequest(`${API_KEY.ORDER}/user/${id}`),
   createOrder: (orderData: any) => apiRequest(API_KEY.ORDER, "POST", orderData),
   updateOrder: (id: string, orderData: any) =>
     apiRequest(`${API_KEY.ORDER}/${id}`, "PATCH", orderData),
+  
   deleteOrder: (id: string) => apiRequest(`${API_KEY.ORDER}/${id}`, "DELETE"),
 };
 

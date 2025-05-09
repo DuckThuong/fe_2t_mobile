@@ -37,22 +37,22 @@ interface CartItem {
 }
 
 interface OrderDetail {
-  product_detail_id: number; // Thay đổi từ product_detail_id
+  product_detail_id: number;
   color_id: number;
   capacity_id: number;
   quantity: number;
   price: number;
-  userName: string; // Thêm từ Swagger
-  userPhone: string; // Thêm từ Swagger
-  userLocation: string; // Thêm từ Swagger
-  note: string; // Thêm từ Swagger
 }
 
 interface CreateOrderPayload {
   user_id: number;
   payment_method: "CAST" | "BANKING";
-  expected_delivery_date: string; // Thay đổi từ order_date
-  status: string; // Thêm từ Swagger
+  expected_delivery_date: string;
+  status: string;
+  userName: string;
+  userPhone: string;
+  userLocation: string;
+  note: string;
   order_details: OrderDetail[];
 }
 
@@ -60,8 +60,6 @@ interface DeleteItemInCart {
   cart_id: string;
   item_id: string;
 }
-
-
 
 export const Purchase = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -210,7 +208,7 @@ export const Purchase = () => {
                   capacity: capacityDisplayName,
                   color: colorName,
                   quantity: detail.quantity || 0,
-                  price: purchaseAmount,
+                  price: totalPrice,
                 };
               } catch (error) {
                 console.error("Lỗi khi xử lý item trong cart:", error);
@@ -290,6 +288,7 @@ export const Purchase = () => {
       return false;
     }
   };
+
   const handleCreateOrder = async () => {
     if (!cartId || cartItems.length === 0) {
       message.error("Không có sản phẩm để đặt hàng!");
@@ -302,10 +301,6 @@ export const Purchase = () => {
       capacity_id: item.capacityId,
       quantity: item.quantity,
       price: purchaseAmount / cartItems.length,
-      userName: recipientName,
-      userPhone: recipientPhone,
-      userLocation: address,
-      note: deliveryNote || "",
     }));
 
     const today = new Date();
@@ -317,10 +312,15 @@ export const Purchase = () => {
       payment_method: paymentMethod === "cast" ? "CAST" : "BANKING",
       expected_delivery_date: expectedDeliveryDate,
       status: "PENDING",
+      userName: recipientName,
+      userPhone: recipientPhone,
+      userLocation: address,
+      note: deliveryNote || "",
       order_details: orderDetails,
     };
 
     try {
+      console.log("Order Data:", orderData); // Ghi log để kiểm tra payload
       const response = await orderApi.createOrder(orderData);
       message.success("Đặt hàng thành công!");
       const deleted = await deleteCartItems();
@@ -373,6 +373,7 @@ export const Purchase = () => {
   })
     .format(totalPrice)
     .replace("₫", "đ");
+
   const { data: discountData } = useQuery({
     queryKey: [API_KEY.DISCOUNT],
     queryFn: () => discountApi.getAllDiscounts(),
@@ -627,9 +628,9 @@ export const Purchase = () => {
                   <div className="transfer-info">
                     <div className="qr-code-box">
                       <img
-                        src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=${totalPrice}&addInfo=${encodedOrderCode}`}
+                        src={`https://api.vietqr.io/image/970436-1019234868-P4ra6tV.jpg?accountName=TRAN%20KHANH%20HUNG&amount=${purchaseAmount}&addInfo=${encodedOrderCode}`}
                         alt="Mã QR chuyển khoản"
-                        style={{ width: "200px", marginTop: "10px" }}
+                        style={{ width: "300px", marginTop: "10px" }}
                       />
                     </div>
                   </div>
