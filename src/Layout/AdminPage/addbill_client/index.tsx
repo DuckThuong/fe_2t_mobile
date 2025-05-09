@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Form, Input, InputNumber, Select, Space } from "antd";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Input, InputNumber, Select, Space, message } from "antd";
 import "./style.scss";
 
 const { Option } = Select;
@@ -25,55 +25,160 @@ interface ISelectedProduct {
   totalPrice: number;
 }
 
-const productOptions: IProductOption[] = [
-  {
-    name: "iPhone 14",
-    colors: [
-      {
-        color: "Đen",
-        capacities: [
-          { capacity: "128GB", price: 20000000 },
-          { capacity: "256GB", price: 22000000 },
-        ],
-      },
-      {
-        color: "Trắng",
-        capacities: [
-          { capacity: "128GB", price: 20000000 },
-          { capacity: "256GB", price: 22000000 },
-        ],
-      },
-    ],
-  },
-  {
-    name: "iPhone 15 Pro",
-    colors: [
-      {
-        color: "Titan",
-        capacities: [
-          { capacity: "128GB", price: 27000000 },
-          { capacity: "256GB", price: 29000000 },
-          { capacity: "512GB", price: 33000000 },
-        ],
-      },
-    ],
-  },
-];
+interface IUser {
+  id: number;
+  userName: string | null;
+  phoneNumber: string;
+  email: string;
+  isAdmin: boolean;
+  userRank: string;
+  isActive: boolean;
+  createdAt: string;
+  userInformation: any;
+}
 
-const saleOptions = [
-  { label: "Không áp dụng", value: 0 },
-  { label: "Giảm 500.000₫", value: 500000 },
-  { label: "Giảm 1.000.000₫", value: 1000000 },
-  { label: "Giảm 5.000.000₫", value: 5000000 },
-];
-const idOrderCode = "hd213";
-const encodedOrderCode = encodeURIComponent(idOrderCode);
+interface IDiscount {
+  id: number;
+  title: string;
+  description: string;
+  discount_type: "fixed_amount" | "percentage";
+  discount_value: string;
+  start_date: string;
+  end_date: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
 
 const AddBill_Client: React.FC = () => {
   const [form] = Form.useForm();
   const [products, setProducts] = useState<ISelectedProduct[]>([]);
-  const [selectedSale, setSelectedSale] = useState<number>(0);
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [selectedSale, setSelectedSale] = useState<{
+    id: number;
+    value: number;
+    type: "fixed_amount" | "percentage";
+  }>({ id: 0, value: 0, type: "fixed_amount" });
+  const [paymentMethod, setPaymentMethod] = useState("cast");
+  const [finalbill, setfinalbill] = useState(0);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [productOptions, setProductOptions] = useState<IProductOption[]>([]);
+  const [discounts, setDiscounts] = useState<IDiscount[]>([]);
+
+  // Hàm lấy danh sách người dùng
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("http://localhost:3300/user/get-all-user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+
+      const result = await response.json();
+      setUsers(result.data || []);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      message.error("Không thể tải danh sách người dùng. Vui lòng thử lại!");
+    }
+  };
+
+  // Hàm lấy danh sách sản phẩm từ API
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3300/product/get-all-product?page=1&size=10&sort_by=created_at&sort_order=DESC",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+
+      const result = await response.json();
+      const apiData = result.data || [];
+
+      // Định dạng dữ liệu từ API sang cấu trúc IProductOption
+      const formattedProducts: IProductOption[] = apiData.map((product: any) => ({
+        name: product.name,
+        colors: product.productColor.map((color: any) => ({
+          color: color.name,
+          capacities: product.productDetails
+            .filter((detail: any) => detail.color_id === color.id)
+            .map((detail: any) => ({
+              capacity: detail.capacity.display_name,
+              price: parseFloat(detail.capacity.price.discount_price || detail.capacity.price.price),
+            })),
+        })),
+      }));
+
+      setProductOptions(formattedProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      message.error("Không thể tải danh sách sản phẩm. Vui lòng thử lại!");
+    }
+  };
+
+  // Hàm lấy danh sách mã khuyến mại từ API
+  const fetchDiscounts = async () => {
+    try {
+    
+      const response = await fetch("http://localhost:3300/discount/get-all-discount", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch discounts");
+      }
+
+      const result = await response.json();
+      setDiscounts(result.data || []);
+    } catch (error) {
+      console.error("Error fetching discounts:", error);
+      message.error("Không thể tải danh sách mã khuyến mại. Vui lòng thử lại!");
+    }
+  };
+
+  // Hàm gọi API tạo đơn hàng
+  const callCreateOrderApi = async (orderData: any) => {
+    try {
+      const response = await fetch("http://localhost:3300/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error("Error creating order:", error);
+      throw error;
+    }
+  };
+
+  // Gọi API lấy danh sách người dùng, sản phẩm và mã khuyến mại khi component mount
+  useEffect(() => {
+    fetchUsers();
+    fetchProducts();
+    fetchDiscounts();
+  }, []);
 
   const addProduct = () => {
     setProducts([
@@ -116,10 +221,11 @@ const AddBill_Client: React.FC = () => {
           }
 
           if (field === "capacity") {
-            const price = productOptions
-              .find((prod) => prod.name === updated.name)
-              ?.colors.find((c) => c.color === updated.color)
-              ?.capacities.find((cap) => cap.capacity === value)?.price || 0;
+            const price =
+              productOptions
+                .find((prod) => prod.name === updated.name)
+                ?.colors.find((c) => c.color === updated.color)
+                ?.capacities.find((cap) => cap.capacity === value)?.price || 0;
             updated.price = price;
           }
 
@@ -132,15 +238,80 @@ const AddBill_Client: React.FC = () => {
   };
 
   const totalBill = products.reduce((sum, p) => sum + p.totalPrice, 0);
-  const finalBill = Math.max(0, totalBill - selectedSale);
 
-  const handleFinish = (values: any) => {
-    console.log("Thông tin hóa đơn:", {
-      ...values,
-      products,
-      discount: selectedSale,
-      finalBill,
-    });
+  // Tính giá trị giảm giá dựa trên loại khuyến mại
+  const calculateDiscount = (discountId: number) => {
+    if (discountId === 0) {
+      return { id: 0, value: 0, type: "fixed_amount" as const };
+    }
+
+    const discount = discounts.find((d) => d.id === discountId);
+    if (!discount) {
+      return { id: 0, value: 0, type: "fixed_amount" as const };
+    }
+
+    let discountValue = 0;
+    if (discount.discount_type === "fixed_amount") {
+      discountValue = parseFloat(discount.discount_value);
+    } else if (discount.discount_type === "percentage") {
+      discountValue = (totalBill * parseFloat(discount.discount_value)) / 100;
+    }
+
+    return {
+      id: discount.id,
+      value: discountValue,
+      type: discount.discount_type,
+    };
+  };
+
+  const finalBill = Math.max(0, totalBill - selectedSale.value);
+  const idOrderCode = "hd213";
+  const encodedOrderCode = encodeURIComponent(idOrderCode);
+
+  const handleFinish = async (values: any) => {
+    if (products.length === 0) {
+      message.error("Vui lòng thêm ít nhất một sản phẩm!");
+      return;
+    }
+
+    // Chuẩn bị dữ liệu cho API
+    const orderData = {
+      user_id: values.user_id,
+      payment_method: paymentMethod.toUpperCase(),
+      expected_delivery_date: "2025/05/08",
+      status: "PENDING",
+      discount_id: selectedSale.id || null,
+      discount_amount: selectedSale.value,
+      order_details: products.map((product) => ({
+        product_detail_id: 49,
+        cart_detail_id: 0,
+        quantity: product.quantity,
+        price: finalBill,
+      })),
+    };
+
+    try {
+      const result = await callCreateOrderApi(orderData);
+      console.log("Đơn hàng đã được tạo:", result);
+
+      // Log thông tin hóa đơn
+      console.log("Thông tin hóa đơn:", {
+        ...values,
+        products,
+        discount: selectedSale,
+        finalBill,
+      });
+
+      // Reset form và state
+      form.resetFields();
+      setProducts([]);
+      setSelectedSale({ id: 0, value: 0, type: "fixed_amount" });
+      setPaymentMethod("cast");
+      message.success("Tạo đơn hàng thành công!");
+    } catch (error) {
+      message.error("Lỗi khi tạo đơn hàng. Vui lòng thử lại!");
+      console.error("Error creating order:", error);
+    }
   };
 
   return (
@@ -155,11 +326,26 @@ const AddBill_Client: React.FC = () => {
       >
         <div className="form-row">
           <Form.Item
-            label="Tên khách hàng"
-            name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên khách hàng" }]}
+            label="Khách hàng"
+            name="user_id"
+            rules={[{ required: true, message: "Vui lòng chọn khách hàng" }]}
           >
-            <Input />
+            <Select
+              placeholder="Chọn khách hàng"
+              showSearch
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                (option?.children as unknown as string)
+                  ?.toLowerCase()
+                  .includes(input.toLowerCase())
+              }
+            >
+              {users.map((user) => (
+                <Option key={user.id} value={user.id}>
+                  {user.userName || user.email || user.phoneNumber}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <Form.Item
@@ -185,8 +371,12 @@ const AddBill_Client: React.FC = () => {
 
         <h3>Thông tin sản phẩm</h3>
         {products.map((product) => {
-          const selectedProduct = productOptions.find((p) => p.name === product.name);
-          const selectedColor = selectedProduct?.colors.find((c) => c.color === product.color);
+          const selectedProduct = productOptions.find(
+            (p) => p.name === product.name
+          );
+          const selectedColor = selectedProduct?.colors.find(
+            (c) => c.color === product.color
+          );
           const capacities = selectedColor?.capacities || [];
 
           return (
@@ -227,7 +417,9 @@ const AddBill_Client: React.FC = () => {
                   <Select
                     placeholder="Chọn dung lượng"
                     value={product.capacity}
-                    onChange={(val) => updateProduct(product.id, "capacity", val)}
+                    onChange={(val) =>
+                      updateProduct(product.id, "capacity", val)
+                    }
                     disabled={!product.color}
                     style={{ width: 140 }}
                   >
@@ -243,7 +435,9 @@ const AddBill_Client: React.FC = () => {
                   <InputNumber
                     min={1}
                     value={product.quantity}
-                    onChange={(val) => updateProduct(product.id, "quantity", val || 1)}
+                    onChange={(val) =>
+                      updateProduct(product.id, "quantity", val || 1)
+                    }
                   />
                 </Form.Item>
 
@@ -269,41 +463,47 @@ const AddBill_Client: React.FC = () => {
 
         <Form.Item label="Mã giảm giá">
           <Select
-            value={selectedSale}
-            onChange={(value) => setSelectedSale(value)}
+            value={selectedSale.id}
+            onChange={(value) => setSelectedSale(calculateDiscount(value))}
             style={{ width: 200 }}
           >
-            {saleOptions.map((option) => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
+            <Option key={0} value={0}>
+              Không áp dụng
+            </Option>
+            {discounts
+              .filter((d) => d.is_active && new Date(d.end_date) >= new Date())
+              .map((discount) => (
+                <Option key={discount.id} value={discount.id}>
+                  {discount.title} ({discount.discount_type === "fixed_amount"
+                    ? `${parseFloat(discount.discount_value).toLocaleString()}₫`
+                    : `${discount.discount_value}%`})
+                </Option>
+              ))}
           </Select>
         </Form.Item>
 
         <div className="bill-footer">
           <div className="summary">
             <p>Tổng tiền hàng: {totalBill.toLocaleString()}₫</p>
-            <p>Giảm giá: {selectedSale.toLocaleString()}₫</p>
+            <p>Giảm giá: {selectedSale.value.toLocaleString()}₫</p>
             <p>
-              <strong>Thành tiền: {finalBill.toLocaleString()}₫</strong>
+              <strong>Thành tiền: {finalBill.toLocaleString()} ₫</strong>
             </p>
           </div>
-
           <div className="info-card payment-info">
             <h1>PHƯƠNG THỨC THANH TOÁN</h1>
-            
+
             <div className="payment-methods">
               <div className="payment-method">
                 <input
                   type="radio"
-                  id="cod"
+                  id="cast"
                   name="payment"
-                  value="cod"
-                  checked={paymentMethod === "cod"}
-                  onChange={() => setPaymentMethod("cod")}
+                  value="cast"
+                  checked={paymentMethod === "cast"}
+                  onChange={() => setPaymentMethod("cast")}
                 />
-                <label htmlFor="cod">Thanh toán bằng tiền mặt</label>
+                <label htmlFor="cast">Thanh toán bằng tiền mặt</label>
               </div>
               <div className="payment-method">
                 <input

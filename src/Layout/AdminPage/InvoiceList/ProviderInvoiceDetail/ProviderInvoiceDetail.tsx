@@ -137,17 +137,17 @@ const ProviderInvoiceDetail: React.FC = () => {
     { title: "Màu sắc", dataIndex: "color", key: "color" },
     { title: "Số lượng", dataIndex: "quantity", key: "quantity" },
     {
-      title: "Giá gốc",
+      title: "Giá nhập",
       dataIndex: "price",
       key: "price",
       render: (price: number) => `${price.toLocaleString()} VNĐ`,
     },
-    {
-      title: "Giá bán",
-      key: "sellingPrice",
-      render: (_: any, record: IProduct) =>
-        `${(record.price * 1.1).toLocaleString()} VNĐ`, // Assume 10% markup
-    },
+    // {
+    //   title: "Giá bán",
+    //   key: "sellingPrice",
+    //   render: (_: any, record: IProduct) =>
+    //     `${(record.price * 1.1).toLocaleString()} VNĐ`, // Assume 10% markup
+    // },
   ];
 
   if (!invoice || !purchaseOrder) {

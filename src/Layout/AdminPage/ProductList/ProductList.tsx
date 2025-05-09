@@ -21,13 +21,9 @@ interface IProduct {
   is_featured?: boolean;
   status?: "Active" | "Inactive";
   vendor: { id: number; name: string } | null;
-  color_id: number;
-  color_ids?: number[];
-  capacity_id: number;
-  stock_quantity?: number;
   serial_number?: string;
-  import_price: string;
-  selling_price?: string; // Optional, as it's primarily in productDetails
+  import_price?: string;
+  selling_price?: string;
   specs: {
     screen_size?: string;
     resolution?: string;
@@ -46,7 +42,11 @@ interface IProductDetail {
   id: number;
   stock_quantity: number;
   serial_number: string | null;
-  color: string | null;
+  color: {
+    id: number;
+    name: string;
+    color_code: string;
+  } | null;
   color_id: number | null;
   selling_price: string;
   capacity: {
@@ -57,6 +57,8 @@ interface IProductDetail {
   } | null;
 }
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3300";
+
 const ProductList: React.FC = () => {
   const navigate = useNavigate();
   const productTableRef = useRef<CustomTableRef>(null);
@@ -66,9 +68,11 @@ const ProductList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   // Fetch products from API
-  const fetchProducts = async (page: number = 1, size: number = 10) => {
+  const fetchProducts = async (page: number = 1, size: number = 5) => {
     setLoading(true);
     setError(null);
     try {
@@ -77,15 +81,20 @@ const ProductList: React.FC = () => {
         size,
         order: "DESC",
       });
+      console.log("Raw API Response:", response);
       const productsData = Array.isArray(response)
         ? response
         : response.data || [];
+      const total = response.pagination?.total || productsData.length;
       if (!Array.isArray(productsData)) {
         throw new Error("Dữ liệu trả về không phải là mảng");
       }
-      console.log("Dữ liệu sản phẩm:", productsData); 
+      productsData.forEach((product, index) => {
+        console.log(`Product ${index + 1} Details:`, product.productDetails);
+      });
       setProducts(productsData);
       setFilteredProducts(productsData);
+      setTotalProducts(total);
     } catch (err: any) {
       setError("Không thể tải danh sách sản phẩm. Vui lòng thử lại.");
       message.error(
@@ -99,8 +108,12 @@ const ProductList: React.FC = () => {
 
   // Initial fetch
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    fetchProducts(currentPage);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // Handle search input
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,7 +138,7 @@ const ProductList: React.FC = () => {
             product.vendor?.name?.toLowerCase() || "",
             product.productDetails?.[0]?.capacity?.display_name?.toLowerCase() ||
               "",
-            product.productDetails?.[0]?.color?.toLowerCase() || "",
+            product.productDetails?.[0]?.color?.name?.toLowerCase() || "",
           ].some((field) => field.includes(term))
         )
       );
@@ -140,7 +153,7 @@ const ProductList: React.FC = () => {
   // Delete product
   const handleDeleteProduct = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:3303/product/delete-product?id=${id}`);
+      await axios.delete(`${API_BASE_URL}/product/delete-product?id=${id}`);
       setProducts((prev) => prev.filter((product) => product.id !== id));
       setFilteredProducts((prev) =>
         prev.filter((product) => product.id !== id)
@@ -155,12 +168,10 @@ const ProductList: React.FC = () => {
   // Edit product
   const handleEditProduct = async (product: IProduct) => {
     try {
-      // Lấy chi tiết sản phẩm từ API để đảm bảo dữ liệu đầy đủ
       const productData = await productApi.getProductById(
         product.id.toString()
       );
       console.log("Dữ liệu chi tiết sản phẩm:", productData);
-      // Chuyển hướng đến trang chỉnh sửa với dữ liệu sản phẩm
       navigate(ADMIN_ROUTER_PATH.EDIT_PRODUCT(product.id), {
         state: { productData },
       });
@@ -179,19 +190,22 @@ const ProductList: React.FC = () => {
       title: "Dung lượng",
       key: "capacity",
       render: (_: any, record: IProduct) =>
-        record.productDetails?.[0]?.capacity?.display_name || "N/A",
+        record.productDetails?.[0]?.capacity?.display_name || "Không có chi tiết",
     },
     {
       title: "Màu sắc",
       key: "color",
-      render: (_: any, record: IProduct) =>
-        record.productDetails?.[0]?.color || "N/A",
+      render: (_: any, record: IProduct) => {
+        const color = record.productDetails?.[0]?.color?.name;
+        console.log(`Color for product ${record.id}:`, color);
+        return color || "Không có chi tiết";
+      },
     },
     {
       title: "Số lượng",
       key: "quantity",
       render: (_: any, record: IProduct) =>
-        record.productDetails?.[0]?.stock_quantity ?? 0,
+        record.productDetails?.[0]?.stock_quantity ?? "Không có chi tiết",
     },
     {
       title: "Giá bán",
@@ -199,13 +213,15 @@ const ProductList: React.FC = () => {
       render: (_: any, record: IProduct) => {
         const price =
           record.productDetails?.[0]?.selling_price || record.selling_price;
-        return price ? `${parseFloat(price).toLocaleString("vi-VN")} VNĐ` : "N/A";
+        return price
+          ? `${parseFloat(price).toLocaleString("vi-VN")} VNĐ`
+          : "Không có chi tiết";
       },
     },
     {
       title: "Nhà cung cấp",
       key: "vendor",
-      render: (_: any, record: IProduct) => record.vendor?.name || "N/A",
+      render: (_: any, record: IProduct) => record.vendor?.name || "Không có chi tiết",
     },
     {
       title: "Ngày tạo",
@@ -251,7 +267,11 @@ const ProductList: React.FC = () => {
             className="search-input"
             style={{ width: 200 }}
           />
-          <Button className="btn-search" onClick={handleSearchClick}>
+          <Button
+            className="btn-search"
+            onClick={handleSearchClick}
+            aria-label="Tìm kiếm sản phẩm"
+          >
             <SearchOutlined />
           </Button>
         </div>
@@ -275,7 +295,12 @@ const ProductList: React.FC = () => {
           deleteConfirmMessage={(record) =>
             `Bạn có chắc chắn muốn xóa sản phẩm ${record.name} không?`
           }
-          pagination={{ pageSize: 5 }}
+          pagination={{
+            pageSize: 5,
+            current: currentPage,
+            total: totalProducts,
+            onChange: handlePageChange,
+          }}
         />
       )}
     </div>

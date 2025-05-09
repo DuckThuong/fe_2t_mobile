@@ -149,12 +149,16 @@ const AddBillProvider: React.FC = () => {
   const handleProductChange = useCallback(
     (value: string, record: ProductRow) => {
       const selectedProduct = products.find((p: any) => p.id === value);
+      
       const capacity = capacities?.find(
-        (c: any) => c.id === selectedProduct?.capacity_id
+        (c: any) => c.id === selectedProduct?.productDetails[0].capacity.id
       );
+      
       const productColors = colors?.filter((c: any) =>
-        selectedProduct?.color_ids?.includes(c.id)
+        c.id === selectedProduct?.productColor[0].id
       );
+   
+ 
 
       setProductRows((prev) =>
         prev.map((p) =>

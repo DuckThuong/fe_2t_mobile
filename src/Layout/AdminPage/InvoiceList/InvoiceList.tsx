@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Button, Space, Input, Select, message } from "antd";
+import { Button, Space, Select, message } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import "./InvoiceList.scss";
@@ -130,6 +130,8 @@ const InvoiceList: React.FC = () => {
         const fetchedOrders: IOrder[] = Array.isArray(response.data)
           ? response.data
           : [];
+          console.log(response);
+          
         console.log("Fetched orders:", fetchedOrders);
 
         if (fetchedOrders.length === 0) {
@@ -245,7 +247,7 @@ const InvoiceList: React.FC = () => {
       }
     } else {
       try {
-        await axios.delete(`http://localhost:3303/vendor-bill?id=${id}`);
+        await axios.delete(`http://localhost:3300/vendor-bill?id=${id}`);
         setSupplierInvoices((prev) =>
           prev.filter((invoice) => invoice.id !== id)
         );

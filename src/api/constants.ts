@@ -55,9 +55,9 @@ export interface UpdateProductPayload {
   is_featured?: boolean;
   status?: string;
   vendor_id: number;
-  color_id: number; // Bắt buộc
+  color_id?: number; // Bắt buộc
   color_ids?: number[];
-  capacity_id: number; // Bắt buộc
+  capacity_id?: number; // Bắt buộc
   stock_quantity?: number;
   serial_number?: string;
   import_price?: string | number; 

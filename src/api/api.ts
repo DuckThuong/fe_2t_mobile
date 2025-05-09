@@ -54,10 +54,10 @@ export const userApi = {
     apiRequest(`${API_KEY.USER}/sign-up`, "POST", data),
   doGetAllUsers: () => apiRequest(`${API_KEY.USER}/get-all-user`, "GET"),
   doDeleteUser: (id: string | number) =>
-    apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
+    apiRequest(`${API_KEY.USER}/delete-user-by-id?id=${id}`, "DELETE"),
 
   doGetUserById: (id: string | number) =>
-    apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
+    apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
   doSearchUsers: (query: string) =>
     apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
  getUserAdminCheck: (id: string | number) => // Hàm mới
@@ -90,7 +90,7 @@ export const productApi = {
   }) => apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", undefined, params),
   getProductById: (id: string) => apiRequest(`${API_KEY.PRODUCT}/get-product-by-id?id=${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
-    apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
+    apiRequest(`${API_KEY.PRODUCT}`, "POST", productData),
   updateProduct: (id: string, productData: UpdateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/update-product`, "PUT", productData),
   deleteProduct: (id: string) =>
