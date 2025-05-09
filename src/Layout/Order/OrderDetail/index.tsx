@@ -6,19 +6,19 @@ import { OrderStateEnum } from "../../../api/api";
 interface ProductImage {
   ImageURL: string;
 }
+
 interface OrderItem {
   Product: {
-    ProductName: string;
-    //images:ProductImage;
+    ProductName: string | null;
+    images: ProductImage[];
   };
   Quantity: number;
   Price: number;
- 
 }
 
 interface Order {
   orderID: string;
-  paymentmethod:number,
+  paymentmethod: string;
   status: OrderStateEnum;
   orderDetails: OrderItem[];
   totalAmount: number;
@@ -33,6 +33,8 @@ interface OrderDetailProps {
 export const OrderDetail = ({ order }: OrderDetailProps) => {
   const getStatusText = (status: OrderStateEnum) => {
     switch (status) {
+      case OrderStateEnum.PENDING:
+        return "Chờ xử lý";
       case OrderStateEnum.CONFIRMING:
         return "Đang xác nhận";
       case OrderStateEnum.DELIVERING:
@@ -49,12 +51,10 @@ export const OrderDetail = ({ order }: OrderDetailProps) => {
   };
 
   const handleCancelOrder = () => {
-    // Xử lý hủy đơn hàng
     console.log("Hủy đơn hàng", order.orderID);
   };
 
   const handleRepurchase = () => {
-    // Xử lý mua lại
     console.log("Mua lại đơn hàng", order.orderID);
   };
 
@@ -71,22 +71,17 @@ export const OrderDetail = ({ order }: OrderDetailProps) => {
 
       {order.orderDetails.map((item, index) => (
         <div className="order-item" key={index}>
-          <div className="product-image" style={{
-              // backgroundImage: `url(${item.Product.images[0]?.ImageURL || ''})`
-            }}></div>
           <div className="product-info">
-            <p className="product-name">{item.Product.ProductName}</p>
-            <p className="product-quantity">x {item.Quantity}</p>
-            <p className="product-price">{item.Price.toLocaleString()} đ</p>
+            <p className="product-name">Sản phẩm: Không có thông tin</p>
+            <p className="product-quantity">Số lượng: {item.Quantity}</p>
+            <p className="product-price">Giá: {item.Price.toLocaleString()} đ</p>
           </div>
         </div>
       ))}
 
       <div className="order-total">
         <p>Tổng tiền: {order.totalAmount.toLocaleString()} đ</p>
-        
       </div>
-      
 
       <div className="order-footer">
         <div className="order-meta">
@@ -95,19 +90,13 @@ export const OrderDetail = ({ order }: OrderDetailProps) => {
           <p>Phương thức thanh toán: {order.paymentmethod}</p>
         </div>
         <div className="action-buttons">
-          {order.status === OrderStateEnum.CONFIRMING && (
-            <Button 
-              className="action-button cancel" 
-              onClick={handleCancelOrder}
-            >
+          {order.status === OrderStateEnum.PENDING && (
+            <Button className="action-button cancel" onClick={handleCancelOrder}>
               Hủy đơn hàng
             </Button>
           )}
           {order.status === OrderStateEnum.COMPLETED && (
-            <Button 
-              className="action-button repurchase" 
-              onClick={handleRepurchase}
-            >
+            <Button className="action-button repurchase" onClick={handleRepurchase}>
               Mua lại
             </Button>
           )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { cartApi, colorApi, capacityApi, productApi } from '../../api/api'; // Thêm productApi
+import { cartApi, colorApi, capacityApi, productApi } from '../../api/api';
 import './style.scss';
 import Navbar from '../HeaderWeb';
 import { message } from 'antd';
@@ -30,20 +30,20 @@ export interface UpdateItemInCart {
 }
 
 export const Cartergories = () => {
-  const userId = localStorage.getItem('user_id') || '18';
+  const userData = JSON.parse(localStorage.getItem('user') || '{}');
+  const userId = userData.id || 'unknown';
+  console.log('bạn đang lấy ra userId =', userId);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartId, setCartId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const [selectAll, setSelectAll] = useState(false);
-  const [discount, setDiscount] = useState<string>('none');
 
   const totalCartItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalAmount = cartItems.reduce((sum, item) => 
     item.selected ? sum + item.price * item.quantity : sum, 0
   );
-  const discountedTotal = discount === '10off' ? totalAmount * 0.9 : totalAmount;
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -51,96 +51,112 @@ export const Cartergories = () => {
       setError(null);
 
       try {
-        console.log('Fetching cart for userId:', userId);
         const response = await cartApi.GetCartByUserId(userId);
-        console.log('Cart Response:', response);
+        console.log('Biến const Response đang trả về:', response);
 
         if (response && response.cartDetails) {
           const items: CartItem[] = Array.isArray(response.cartDetails)
             ? await Promise.all(
                 response.cartDetails.map(async (detail: any) => {
-                  const productDetail = detail.productDetail;
-                  const product = productDetail.product;
-                  console.log('Product Detail:', productDetail);
-
-                  // Lấy thông tin capacity
                   let capacityDisplayName = 'Unknown';
-                  try {
-                    const capacityResponse = await capacityApi.getCapacityById(productDetail.capacity_id.toString());
-                    console.log(`Capacity Response for capacity_id ${productDetail.capacity_id}:`, capacityResponse);
-                    capacityDisplayName = capacityResponse.display_name || 'Unknown';
-                  } catch (err) {
-                    console.error(`Lỗi khi lấy capacity cho capacity_id ${productDetail.capacity_id}:`, err);
-                  }
-
-                  // Lấy thông tin color
                   let colorName = 'Unknown';
-                  try {
-                    const colorResponse = await colorApi.getColorById(productDetail.color_id.toString());
-                    console.log(`Color Response for color_id ${productDetail.color_id}:`, colorResponse);
-                    colorName = colorResponse.name || 'Unknown';
-                  } catch (err) {
-                    console.error(`Lỗi khi lấy color cho color_id ${productDetail.color_id}:`, err);
-                  }
-
-                  // Gọi API getProductById để lấy hình ảnh và giá
                   let productImage = 'https://via.placeholder.com/150';
                   let totalPrice = 0;
 
                   try {
-                    const productResponse = await productApi.getProductById(product.id.toString());
-                    console.log(`Product Response for product_id ${product.id}:`, productResponse);
+                    const productDetail = detail.productDetail || {};
+                    const product = productDetail.product || {};
+                    console.log('Product Detail:', productDetail);
+                    console.log('Product:', product);
 
-                    // Lấy hình ảnh có isThumbnail: true
-                    const thumbnailImage = productResponse.images.find((img: any) => img.isThumbnail === true);
-                    productImage = thumbnailImage ? thumbnailImage.imageUrl : productResponse.images[0]?.imageUrl || productImage;
+                    // Lấy capacity
+                    try {
+                      if (productDetail.capacity_id) {
+                        const capacityResponse = await capacityApi.getCapacityById(productDetail.capacity_id.toString(), "GB");
+                        capacityDisplayName = capacityResponse?.display_name || 'Unknown';
+                      }
+                    } catch (err) {
+                      console.error(`Lỗi khi lấy capacity cho capacity_id ${productDetail.capacity_id}:`, err);
+                    }
 
-                    // Tính giá mới: price + discount_price từ getProductById
-                    const productDetailFromApi = productResponse.productDetails.find(
-                      (pd: any) => pd.capacity.id === productDetail.capacity_id
-                    );
-                    if (productDetailFromApi && productDetailFromApi.capacity.price) {
-                      const price = parseFloat(productDetailFromApi.capacity.price.price || '0');
-                      const discountPrice = parseFloat(productDetailFromApi.capacity.price.discount_price || '0');
-                      totalPrice = price + discountPrice;
-                    } else {
-                      // Fallback nếu không có dữ liệu giá từ getProductById
+                    // Lấy color
+                    try {
+                      if (productDetail.color_id) {
+                        const colorResponse = await colorApi.getColorById(productDetail.color_id.toString());
+                        colorName = colorResponse?.name || 'Unknown';
+                      }
+                    } catch (err) {
+                      console.error(`Lỗi khi lấy color cho color_id ${productDetail.color_id}:`, err);
+                    }
+
+                    // Lấy product
+                    try {
+                      if (product.id) {
+                        const productResponse = await productApi.getProductById(product.id.toString());
+                        console.log('Product Response:', productResponse);
+                        const thumbnailImage = productResponse?.images?.find((img: any) => img.isThumbnail === true);
+                        productImage = thumbnailImage?.imageUrl || productResponse?.images?.[0]?.imageUrl || productImage;
+
+                        const productDetailFromApi = productResponse?.productDetails?.find(
+                          (pd: any) => pd.capacity.id === productDetail.capacity_id
+                        );
+                        let sellingPrice = 0;
+                        let capacityPrice = 0;
+
+                        if (productDetail.selling_price) {
+                          sellingPrice = parseFloat(productDetail.selling_price.replace(/[^0-9.-]+/g, "") || '0');
+                        }
+                        if (productDetailFromApi && productDetailFromApi.capacity?.price) {
+                          capacityPrice = parseFloat(productDetailFromApi.capacity.price.price || '0');
+                        }
+                        totalPrice = sellingPrice + capacityPrice;
+                      }
+                    } catch (err) {
+                      console.error(`Lỗi khi lấy thông tin sản phẩm cho product_id ${product.id}:`, err);
                       totalPrice = parseFloat(productDetail.selling_price || '0');
                     }
-                  } catch (err) {
-                    console.error(`Lỗi khi lấy thông tin sản phẩm cho product_id ${product.id}:`, err);
-                    // Fallback nếu gọi API thất bại
-                    totalPrice = parseFloat(productDetail.selling_price || '0');
-                  }
 
-                  return {
-                    id: detail.id.toString(),
-                    name: product.name || 'Sản phẩm không xác định',
-                    image: productImage,
-                    capacity: capacityDisplayName,
-                    color: colorName,
-                    quantity: detail.quantity,
-                    price: totalPrice,
-                    selected: false,
-                  };
+                    return {
+                      id: detail.id?.toString() || '',
+                      name: product.name || 'Sản phẩm không xác định',
+                      image: productImage,
+                      capacity: capacityDisplayName,
+                      color: colorName,
+                      quantity: detail.quantity || 0,
+                      price: totalPrice,
+                      selected: false,
+                    };
+                  } catch (error) {
+                    console.error('Lỗi khi xử lý item trong cart:', error);
+                    return {
+                      id: detail.id?.toString() || '',
+                      name: 'Sản phẩm không xác định',
+                      image: 'https://via.placeholder.com/150',
+                      capacity: 'Unknown',
+                      color: 'Unknown',
+                      quantity: 0,
+                      price: 0,
+                      selected: false,
+                    };
+                  }
                 })
               )
-            : [];
-          setCartItems(items);
-          const fetchedCartId = response.id ? response.id.toString() : null;
-          console.log('Fetched cartId:', fetchedCartId);
-          setCartId(fetchedCartId);
+              : [];
+            setCartItems(items);
+            const fetchedCartId = response.id ? response.id.toString() : null;
+            console.log('Fetched cartId:', fetchedCartId);
+            setCartId(fetchedCartId);
+          }
+        } catch (error) {
+          console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
+          setError('Không thể tải giỏ hàng. Vui lòng thử lại sau.');
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
-        setError('Không thể tải giỏ hàng. Vui lòng thử lại sau.');
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchCart();
-  }, [userId]);
+      fetchCart();
+    }, [userId]);
 
   const toggleSelectAll = () => {
     const newSelectAll = !selectAll;
@@ -220,12 +236,16 @@ export const Cartergories = () => {
   };
 
   const handleCheckout = () => {
-    const selectedItems = cartItems.filter(item => item.selected).map(item => item.id);
+    const selectedItems = cartItems.filter(item => item.selected).map(item => ({
+      id: item.id,
+      quantity: item.quantity,
+      price: item.price
+    }));
     if (selectedItems.length === 0) {
       message.error('Vui lòng chọn ít nhất một sản phẩm để thanh toán!');
       return;
     }
-    navigate(CUSTOMER_ROUTER_PATH.MUA_HANG, { state: { selectedItems, discount } });
+    navigate(CUSTOMER_ROUTER_PATH.MUA_HANG, { state: { selectedItems } });
   };
 
   return (
@@ -283,18 +303,10 @@ export const Cartergories = () => {
               ))}
             </div>
 
-            <div className="discount-section">
-              <label htmlFor="discount">Khuyến mãi: </label>
-              <select id="discount" value={discount} onChange={(e) => setDiscount(e.target.value)}>
-                <option value="none">Không áp dụng</option>
-                <option value="10off">Giảm 10%</option>
-              </select>
-            </div>
-
             <div className="cart-summary fixed-summary">
               <div className="total-amount">
                 Tổng thanh toán ({cartItems.filter(item => item.selected).length} sản phẩm):
-                <span>{discountedTotal.toLocaleString()}đ</span>
+                <span>{totalAmount.toLocaleString()}đ</span>
               </div>
               <button className="checkout-btn" onClick={handleCheckout}>
                 Mua hàng
@@ -304,7 +316,7 @@ export const Cartergories = () => {
         ) : (
           <div className="empty-cart">
             <p>Giỏ hàng của bạn đang trống</p>
-            <button className="continue-shopping">Tiếp tục mua sắm</button>
+            <button onClick={() => navigate(CUSTOMER_ROUTER_PATH.MUA_HANG)} className="continue-shopping">Tiếp tục mua sắm</button>
           </div>
         )}
       </div>

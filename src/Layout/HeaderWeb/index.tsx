@@ -6,8 +6,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge } from "antd"; 
-import { Layout, Menu, Modal } from "antd";
+import { Badge, Layout, Menu, Modal } from "antd";
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
@@ -48,7 +47,39 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount = 0 }) => {
       title: "Bạn có muốn đăng xuất?",
       content: "Bạn sẽ cần đăng nhập lại để tiếp tục sử dụng dịch vụ.",
       onOk() {
-        console.log("Đăng xuất thành công");
+        console.log("Xác nhận đăng xuất, bắt đầu xóa dữ liệu khỏi localStorage...");
+        
+        // Xóa cả token và user_id cùng với user
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          localStorage.removeItem('user');
+          console.log("Đã xóa user khỏi localStorage.");
+        }
+
+        const token = localStorage.getItem('token');
+        if (token) {
+          localStorage.removeItem('token');
+          console.log("Đã xóa token khỏi localStorage.");
+        }
+
+        const userId = localStorage.getItem('user_id');
+        if (userId) {
+          localStorage.removeItem('user_id');
+          console.log("Đã xóa user_id khỏi localStorage.");
+        }
+
+        // Kiểm tra lại để xác nhận tất cả đã được xóa
+        const userDataAfterRemoval = localStorage.getItem('user');
+        const tokenAfterRemoval = localStorage.getItem('token');
+        const userIdAfterRemoval = localStorage.getItem('user_id');
+        if (!userDataAfterRemoval && !tokenAfterRemoval && !userIdAfterRemoval) {
+          console.log("Xác nhận: Tất cả dữ liệu (user, token, user_id) đã được xóa khỏi localStorage.");
+        } else {
+          console.log("Cảnh báo: Một số dữ liệu vẫn còn trong localStorage!");
+        }
+
+        console.log("Chuyển hướng về trang chủ...");
+        navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true }); // Chuyển hướng về trang chủ
       },
       onCancel() {
         console.log("Hủy đăng xuất");

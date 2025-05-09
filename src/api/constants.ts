@@ -129,6 +129,24 @@ export interface CreatePurchasePayload {
   }[];
 }
 
+
+export interface OrderDetail {
+  product_detail_id: number;
+  cart_detail_id: number;
+  quantity: number;
+  price: number;
+}
+
+export interface CreateOrderPayload {
+  user_id: number;
+  payment_method: "COD" | "BANKING";
+  order_date: string;
+  order_details: OrderDetail[];
+  recipient_name?: string;
+  recipient_phone?: string;
+  address?: string;
+  delivery_note?: string;
+}
 export interface ProductDetailFilterParams {
   product_id: string;
   color_id: string;
