@@ -36,12 +36,15 @@ const Order = () => {
         console.log("UserId gửi đi:", userId);
         const response = await orderApi.getOrderByUserID(userId);
         console.log("Mảng đơn hàng trả về:", response);
+       
 
         if (response && Array.isArray(response)) {
           const mappedOrders = response.map((order: any) => ({
             orderID: order.id.toString(),
             paymentmethod: order.payment_method,
+            //name_consignee : order.name_consignee ,
             status: order.status,
+            address: order.address ,
             orderDate: order.order_date,
             shippingAddress: order.user?.address || "Không có địa chỉ",
             totalAmount: order.total_price,
