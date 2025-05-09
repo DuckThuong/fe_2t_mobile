@@ -17,7 +17,13 @@ interface IUser {
 interface IOrderDetail {
   quantity: number;
   price: number;
-  productDetail: { name: string };
+  productDetail: {
+    name: string;
+    id?: number;
+    product_id?: number;
+    color?: string; // Add color field
+    capacity?: string; // Add capacity field
+  };
   id?: number; // Add optional id for rowKey
 }
 
@@ -31,6 +37,10 @@ interface IOrder {
   delivered_date: string | null;
   user: IUser | null;
   orderDetails: IOrderDetail[];
+  userName: string;
+  userPhone: string;
+  userLocation: string;
+  note: string;
 }
 
 interface ICustomerInvoice {
@@ -64,28 +74,95 @@ const CustomerInvoiceDetail: React.FC = () => {
 
       setLoading(true);
       try {
-        const response = await axios.get(`${API_URL}/orders/${id}`);
-        const orderData: IOrder = response.data;
+        // Fetch order data
+        const orderResponse = await axios.get(`${API_URL}/orders/${id}`);
+        const orderData: IOrder = orderResponse.data;
 
         // Create invoice object using API response
         const invoiceData: ICustomerInvoice = {
           id: orderData.id,
           user_id: orderData.user?.id || 0,
-          userName: orderData.user?.email || "Unknown",
+          userName: orderData.userName || "Unknown",
           total: parseFloat(orderData.total_price),
           payment_method: orderData.payment_method,
           paymentStatus:
             orderData.payment_method === "BANKING" ? "COMPLETED" : "PENDING",
-          invoiceStatus: orderData.status as "PENDING" | "COMPLETED" | "CANCLED",
+          invoiceStatus: orderData.status as
+            | "PENDING"
+            | "COMPLETED"
+            | "CANCLED",
           created_at: orderData.order_date.split("T")[0],
           order: orderData,
         };
 
-        // Add unique id to orderDetails if missing
-        const enrichedOrderDetails = orderData.orderDetails.map(
-          (detail, index) => ({
-            ...detail,
-            id: detail.id || index + 1, // Fallback to index-based id
+        // Fetch product names, colors, and capacities for each order detail
+        const enrichedOrderDetails = await Promise.all(
+          orderData.orderDetails.map(async (detail, index) => {
+            const productId = detail.productDetail?.product_id;
+            console.log(
+              `Processing orderDetail id: ${
+                detail.id || index + 1
+              }, product_id: ${productId}`
+            );
+
+            // Validate product_id
+            if (!productId || isNaN(productId)) {
+              console.warn(
+                `Invalid or missing product_id for orderDetail id: ${
+                  detail.id || index + 1
+                }`
+              );
+              return {
+                ...detail,
+                id: detail.id || index + 1,
+                productDetail: {
+                  ...detail.productDetail,
+                  name: "Unknown Product",
+                  color: "Unknown Color",
+                  capacity: "Unknown Capacity",
+                },
+              };
+            }
+
+            try {
+              const productResponse = await axios.get(
+                `${API_URL}/product/get-product-by-id?id=${productId}`
+              );
+              const productData = productResponse.data;
+
+              // Extract color and capacity from productDetails (use first item for simplicity)
+              const productDetailItem = productData.productDetails?.[0] || {};
+              const colorName =
+                productDetailItem.color?.name || "Unknown Color";
+              const capacityName =
+                productDetailItem.capacity?.display_name || "Unknown Capacity";
+
+              return {
+                ...detail,
+                id: detail.id || index + 1,
+                productDetail: {
+                  ...detail.productDetail,
+                  name: productData.name || "Unknown Product",
+                  color: colorName,
+                  capacity: capacityName,
+                },
+              };
+            } catch (error) {
+              console.error(
+                `Error fetching product data for product_id ${productId}:`,
+                error
+              );
+              return {
+                ...detail,
+                id: detail.id || index + 1,
+                productDetail: {
+                  ...detail.productDetail,
+                  name: "Unknown Product",
+                  color: "Unknown Color",
+                  capacity: "Unknown Capacity",
+                },
+              };
+            }
           })
         );
 
@@ -93,7 +170,7 @@ const CustomerInvoiceDetail: React.FC = () => {
         setOrderDetails(enrichedOrderDetails);
 
         // Log for debugging
-        console.log("Order Details:", enrichedOrderDetails);
+        console.log("Enriched Order Details:", enrichedOrderDetails);
       } catch (error: any) {
         console.error("Error fetching order details:", error);
       } finally {
@@ -124,6 +201,16 @@ const CustomerInvoiceDetail: React.FC = () => {
       key: "productName",
     },
     {
+      title: "Màu sắc",
+      dataIndex: ["productDetail", "color"],
+      key: "color",
+    },
+    {
+      title: "Dung lượng",
+      dataIndex: ["productDetail", "capacity"],
+      key: "capacity",
+    },
+    {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
@@ -147,13 +234,16 @@ const CustomerInvoiceDetail: React.FC = () => {
       <h3>Chi tiết hóa đơn #{invoice.id}</h3>
       <div className="invoice-header">
         <div className="customer-info">
-          <h4>{invoice.userName || "Unknown"}</h4>
+          <h4>Người nhận: {invoice.userName || "Unknown"}</h4>
           <p>
             Số điện thoại:{" "}
-            {invoice.order?.user?.phoneNumber || "Không có số điện thoại"}
+            {invoice.order?.userPhone || "Không có số điện thoại"}
           </p>
           <p>Email: {invoice.order?.user?.email || "Không có email"}</p>
+          <p>Địa chỉ: {invoice.order?.userLocation || "Không có địa chỉ"}</p>
+          <p>Ghi chú: {invoice.order?.note || "Không có ghi chú"}</p>
         </div>
+
         <div className="invoice-info">
           <div className="invoice-info-item">
             <span>Mã đơn hàng:</span>
@@ -208,12 +298,6 @@ const CustomerInvoiceDetail: React.FC = () => {
         <div className="summary-item total">
           <span>Tổng cộng:</span>
           <span>{subtotal.toLocaleString()} VNĐ</span>
-        </div>
-        <div className="summary-item">
-          <span>Tổng từ API:</span>
-          <span>
-            {parseFloat(invoice.total.toString()).toLocaleString()} VNĐ
-          </span>
         </div>
       </div>
 
