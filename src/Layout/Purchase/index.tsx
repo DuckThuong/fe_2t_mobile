@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import "./styles.scss";
 import { useNavigate, useLocation } from "react-router-dom";
-import { cartApi, orderApi, capacityApi, colorApi, productApi } from "../../api/api";
+import {
+  cartApi,
+  orderApi,
+  capacityApi,
+  colorApi,
+  productApi,
+} from "../../api/api";
 import { message } from "antd";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 
@@ -19,12 +25,14 @@ interface CartItem {
   image: string;
   capacity: string;
   color: string;
+  colorId: number;
+  capacityId: number;
   quantity: number;
   price: number;
 }
 
 interface OrderDetail {
-  product_id: number; // Thay đổi từ product_detail_id
+  product_detail_id: number; // Thay đổi từ product_detail_id
   color_id: number;
   capacity_id: number;
   quantity: number;
@@ -56,8 +64,11 @@ export const Purchase = () => {
   const [recipientPhone, setRecipientPhone] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [deliveryNote, setDeliveryNote] = useState<string>("");
-  const [isProductListCollapsed, setIsProductListCollapsed] = useState<boolean>(false);
-  const [paymentMethod, setPaymentMethod] = useState<"cast" | "banking">("cast");
+  const [isProductListCollapsed, setIsProductListCollapsed] =
+    useState<boolean>(false);
+  const [paymentMethod, setPaymentMethod] = useState<"cast" | "banking">(
+    "cast"
+  );
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartId, setCartId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -65,10 +76,11 @@ export const Purchase = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const { selectedItems = [] } = location.state as { selectedItems?: SelectedItem[] } || {};
+  const { selectedItems = [] } =
+    (location.state as { selectedItems?: SelectedItem[] }) || {};
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
   const userId = userData.id || "unknown";
-  
+
   const encodedOrderCode = encodeURIComponent(userId);
 
   useEffect(() => {
@@ -85,6 +97,8 @@ export const Purchase = () => {
             response.cartDetails.map(async (detail: any) => {
               let capacityDisplayName = "Unknown";
               let colorName = "Unknown";
+              let colorId = null;
+              let capacityId = null;
               let productImage = "https://via.placeholder.com/150";
               let totalPrice = 0;
 
@@ -98,7 +112,8 @@ export const Purchase = () => {
                       productDetail.capacity_id.toString(),
                       "GB"
                     );
-                    capacityDisplayName = capacityResponse?.display_name || "Unknown";
+                    capacityDisplayName =
+                      capacityResponse?.display_name || "Unknown";
                   } catch (err) {
                     console.error(
                       `Lỗi khi lấy capacity cho capacity_id ${productDetail.capacity_id}:`,
@@ -135,21 +150,30 @@ export const Purchase = () => {
                       productResponse?.images?.[0]?.imageUrl ||
                       productImage;
 
-                    const productDetailFromApi = productResponse?.productDetails?.find(
-                      (pd: any) => pd.id === productDetail.id
-                    );
+                    const productDetailFromApi =
+                      productResponse?.productDetails?.find(
+                        (pd: any) => pd.id === productDetail.id
+                      );
                     let sellingPrice = 0;
                     let capacityPrice = 0;
 
                     if (productDetail.selling_price) {
                       sellingPrice =
                         parseFloat(
-                          productDetail.selling_price.replace(/[^0-9.-]+/g, "") || "0"
+                          productDetail.selling_price.replace(
+                            /[^0-9.-]+/g,
+                            ""
+                          ) || "0"
                         ) || 0;
                     }
-                    if (productDetailFromApi && productDetailFromApi.capacity?.price) {
+                    if (
+                      productDetailFromApi &&
+                      productDetailFromApi.capacity?.price
+                    ) {
                       capacityPrice =
-                        parseFloat(productDetailFromApi.capacity.price.price || "0") || 0;
+                        parseFloat(
+                          productDetailFromApi.capacity.price.price || "0"
+                        ) || 0;
                     }
                     totalPrice = sellingPrice + capacityPrice;
                   } catch (err) {
@@ -157,7 +181,9 @@ export const Purchase = () => {
                       `Lỗi khi lấy thông tin sản phẩm cho product_id ${product.id}:`,
                       err
                     );
-                    totalPrice = parseFloat(productDetail.selling_price || detail.price || "0");
+                    totalPrice = parseFloat(
+                      productDetail.selling_price || detail.price || "0"
+                    );
                   }
                 } else {
                   totalPrice = parseFloat(detail.price || "0");
@@ -168,6 +194,8 @@ export const Purchase = () => {
                   productDetailId: productDetail.id || 0,
                   name: product.name || "Sản phẩm không xác định",
                   image: productImage,
+                  colorId: productDetail?.color_id,
+                  capacityId: productDetail?.capacity_id,
                   capacity: capacityDisplayName,
                   color: colorName,
                   quantity: detail.quantity || 0,
@@ -253,7 +281,7 @@ export const Purchase = () => {
       return false;
     }
   };
-
+  console.log(cartItems);
   const handleCreateOrder = async () => {
     if (!cartId || cartItems.length === 0) {
       message.error("Không có sản phẩm để đặt hàng!");
@@ -261,9 +289,9 @@ export const Purchase = () => {
     }
 
     const orderDetails: OrderDetail[] = cartItems.map((item) => ({
-      product_id: item.productDetailId, // Ánh xạ từ productDetailId
-      color_id: 0, // Giả định, cần lấy từ productDetail nếu có
-      capacity_id: 0, // Giả định, cần lấy từ productDetail nếu có
+      product_detail_id: item.productDetailId, // Ánh xạ từ productDetailId
+      color_id: item?.colorId, // Giả định, cần lấy từ productDetail nếu có
+      capacity_id: item.capacityId, // Giả định, cần lấy từ productDetail nếu có
       quantity: item.quantity,
       price: item.price,
       userName: recipientName, // Lấy từ state
@@ -272,9 +300,6 @@ export const Purchase = () => {
       note: deliveryNote || "", // Lấy từ state, mặc định rỗng nếu không có
     }));
 
-    console.log("Order Details:", orderDetails);
-
-    
     const today = new Date();
     today.setDate(today.getDate() + 3);
     const expectedDeliveryDate = today.toISOString().split("T")[0];
@@ -304,7 +329,6 @@ export const Purchase = () => {
           (err.response?.data?.message || err.message || "Lỗi không xác định")
       );
     }
-    
   };
 
   const handleNextStep = async () => {
@@ -397,13 +421,19 @@ export const Purchase = () => {
                       </div>
                       <div className="product-details">
                         <div className="product-name">
-                          {product.name} <br /> {product.capacity} - {product.color}
+                          {product.name} <br /> {product.capacity} -{" "}
+                          {product.color}
                         </div>
                         <div className="product-price-quantity">
                           <span className="current-price">
-                            {(product.price * product.quantity).toLocaleString()}đ
+                            {(
+                              product.price * product.quantity
+                            ).toLocaleString()}
+                            đ
                           </span>
-                          <span className="quantity">Số lượng: {product.quantity}</span>
+                          <span className="quantity">
+                            Số lượng: {product.quantity}
+                          </span>
                         </div>
                       </div>
                     </div>
