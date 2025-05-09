@@ -22,6 +22,10 @@ interface Product {
   key: string;
   productName: JSX.Element;
   productDetailId: number | undefined;
+  product: number | undefined;
+  color: number | undefined;
+  capacity: number | undefined;
+  quantityCost: number | undefined;
   colorId: JSX.Element;
   capacityId: JSX.Element;
   quantity: JSX.Element;
@@ -31,11 +35,12 @@ interface Product {
 }
 
 interface OrderDetail {
-  product_id?: number;
+  product_id?: number | undefined;
   product_detail_id?: number;
-  color_id: number;
-  capacity_id: number;
-  quantity: number;
+  color_id: number | undefined;
+  capacity_id: number | undefined;
+  quantity?: number;
+  quantityCost: number | undefined;
   price: number;
 }
 
@@ -147,6 +152,10 @@ export const AddBillClient = () => {
                 price: sumPrice,
                 totalPrice: totalSumPrice,
                 productDetailId: data?.productDetails[0]?.id,
+                product: data?.id,
+                color: data?.productDetails[0]?.color_id,
+                capacity: data?.productDetails[0]?.capacity?.id,
+                quantityCost: Number(form.getFieldValue("quantity")),
               }
             : product
         )
@@ -204,6 +213,10 @@ export const AddBillClient = () => {
     const newProduct = {
       key: (dataSource.length + 1).toString(),
       productDetailId: undefined,
+      product: undefined,
+      color: undefined,
+      capacity: undefined,
+      quantityCost: undefined,
       productName: (
         <FormSelect
           name={"productName"}
@@ -327,11 +340,12 @@ export const AddBillClient = () => {
     const expectedDeliveryDate = dayjs().add(3, "day").format("YYYY/MM/DD");
 
     const orderDetails = dataSource.map((product) => ({
-      product_id: product.productName.props.selectProps.value,
+      product_id: product.product,
       product_detail_id: product.productDetailId,
-      color_id: product.colorId.props.selectProps.value,
-      capacity_id: product.capacityId.props.selectProps.value,
-      quantity: parseInt(product.quantity.props.inputProps.value, 10) || 0,
+      color_id: product.color,
+      capacity_id: product.capacity,
+      quantity: product.quantityCost,
+      quantityCost: product.quantityCost,
       price: parseFloat(product.price) || 0,
     }));
 
