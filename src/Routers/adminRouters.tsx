@@ -14,6 +14,7 @@ import CustomerInvoiceDetail from "../Layout/AdminPage/InvoiceList/CustomerInvoi
 import ProviderInvoiceDetail from "../Layout/AdminPage/InvoiceList/ProviderInvoiceDetail/ProviderInvoiceDetail";
 import AddPromotion from "../Layout/AdminPage/PromotionList/AddPromotion/AddPromotion";
 import EditPromotion from "../Layout/AdminPage/PromotionList/EditPromotion/EditPromotion";
+import { AddBillClient } from "../Layout/AdminPage/AddBillClient";
 
 export const AdminRouters = () => {
   return (
@@ -27,13 +28,23 @@ export const AdminRouters = () => {
         <Route path="product-list" element={<ProductList />} />
         <Route path="product-list/edit-product/:id" element={<EditProduct />} />
         <Route path="order" element={<Orders />} />
-        <Route path="order/customer-invoice-detail/:id" element={<CustomerInvoiceDetail />} />
-        <Route path="order/provider-invoice-detail/:id" element={<ProviderInvoiceDetail />} />
-        <Route path="add-bill-client" element={<AddBill_Client />} />
+        <Route
+          path="order/customer-invoice-detail/:id"
+          element={<CustomerInvoiceDetail />}
+        />
+        <Route
+          path="order/provider-invoice-detail/:id"
+          element={<ProviderInvoiceDetail />}
+        />
+        {/* <Route path="add-bill-client" element={<AddBill_Client />} /> */}
+        <Route path="add-bill-client" element={<AddBillClient />} />
         <Route path="add-bill-provider" element={<AddBillProvider />} />
         <Route path="promotion-list" element={<PromotionList />} />
         <Route path="promotion-list/add-promotion" element={<AddPromotion />} />
-        <Route path="promotion-list/edit-promotion/:id" element={<EditPromotion />} />
+        <Route
+          path="promotion-list/edit-promotion/:id"
+          element={<EditPromotion />}
+        />
       </Route>
     </Routes>
   );
