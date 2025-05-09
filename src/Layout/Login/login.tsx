@@ -1,7 +1,7 @@
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // Thêm useLocation
 import { FormButtonSubmit } from "../../Components/Form/FormButtonSubmit";
 import { FormInput } from "../../Components/Form/FormInput";
 import FormWrap from "../../Components/Form/FormWrap";
@@ -20,6 +20,7 @@ const Login = () => {
   const [form] = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation(); // Khai báo useLocation
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState<{
     message: string;
@@ -27,25 +28,23 @@ const Login = () => {
   } | null>(null);
 
   const auth = useSelector(selectAuth);
-  console.log("ID người dùng:", auth.id);
-  console.log("Email:", auth.email);
-  console.log("Họ tên:", auth.fullName);
+  console.log("Auth state:", auth);
 
   useEffect(() => {
-    if (auth && auth.id) {
+    if (auth && auth.id && !location.pathname.includes(ADMIN_ROUTER_PATH.ADMIN) && !location.pathname.includes(CUSTOMER_ROUTER_PATH.TRANG_CHU)) {
       const checkAdminStatus = async () => {
         try {
           const userResponse = await userApi.getUserAdminCheck(auth.id);
-          console.log("User Response:", userResponse); // Log toàn bộ dữ liệu trả về
-          console.log("is_admin value:", userResponse?.is_admin); // Log giá trị is_admin
+          console.log("User Response (useEffect):", userResponse);
+          console.log("is_admin value (useEffect):", userResponse?.is_admin, typeof userResponse?.is_admin);
 
-          // Kiểm tra is_admin với cả 1/true
-          const isAdmin = userResponse?.isAdmin === true;
+          const isAdmin = userResponse?.is_admin === 1 || userResponse?.is_admin === "1" || userResponse?.is_admin === true;
           if (isAdmin) {
+            console.log("User là admin, chuyển hướng đến trang admin...");
             navigate(ADMIN_ROUTER_PATH.ADMIN, { replace: true });
           } else {
+            console.log("User không phải admin, chuyển hướng đến trang user...");
             navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true });
-            console.error("Error fetching user admin status:111111111111111");
           }
         } catch (error) {
           console.error("Error fetching user admin status:", error);
@@ -55,7 +54,7 @@ const Login = () => {
 
       checkAdminStatus();
     }
-  }, [auth, navigate]);
+  }, [auth, navigate, location.pathname]); // Thêm location.pathname vào dependency array
 
   useEffect(() => {
     if (notification) {
@@ -79,32 +78,24 @@ const Login = () => {
         if (!id || !email) {
           throw new Error("Dữ liệu người dùng không đầy đủ");
         }
+
         const userData = {
           id,
           email,
           fullName: full_name || user_name || "Unknown",
         };
-        dispatch(setAuthUser(userData));
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('user_id', id.toString());
+        localStorage.setItem('token', response.token);
+        console.log("Đã lưu user, user_id, token vào localStorage:", { userData, user_id: id, token: response.token });
 
+        dispatch(setAuthUser(userData));
         console.log("Dispatched authUser:", userData);
 
         setNotification({
           message: "Đăng nhập thành công!",
           type: "success",
         });
-
-        // Gọi API để kiểm tra is_admin
-        const userResponse = await userApi.getUserAdminCheck(id);
-        console.log("User Response (onFinish):", userResponse); // Log dữ liệu trả về
-        console.log("is_admin value (onFinish):", userResponse?.is_admin); // Log giá trị is_admin
-
-        // Kiểm tra is_admin với cả 1/true
-        const isAdmin = userResponse?.is_admin === 1 || userResponse?.is_admin === true;
-        if (isAdmin) {
-          setTimeout(() => navigate(ADMIN_ROUTER_PATH.DASHBOARD, { replace: true }), 1500);
-        } else {
-          setTimeout(() => navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU, { replace: true }), 1500);
-        }
       } else {
         throw new Error("Phản hồi API không hợp lệ");
       }

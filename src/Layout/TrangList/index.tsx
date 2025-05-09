@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { imageApi, productApi } from "../../api/api";
+import { imageApi } from "../../api/api";
 import { QUERY_KEY } from "../../api/apiConfig";
 import { FooterWeb } from "../FooterWeb";
 import Navbar from "../HeaderWeb";
-import App from "../TrangChu/Content";
 import { ListProduct2 } from "./ListProduct2/ListProduct2";
-import ListProducts from "../TrangChu/ListProducts";
 import React from "react";
 
 export const ListPage = () => {
@@ -40,7 +38,7 @@ export const ListPage = () => {
             <option value="all">Tất cả giá</option>
             <option value="<10m">Dưới 10 triệu</option>
             <option value="10m-20m">10 - 20 triệu</option>
-            <option value="">Trên 20 triệu</option>
+            <option value=">20m">Trên 20 triệu</option>
           </select>
         </div>
         <div className="home_content">
