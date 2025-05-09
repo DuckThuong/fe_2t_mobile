@@ -29,18 +29,6 @@ export const FormSelect: React.FC<Props> = ({ ...props }) => {
           showSearch={false}
           suffixIcon={<SvgSelect />}
           popupClassName={`form__select-popup-select ${selectProps?.popupClassName}`}
-          placeholder={
-            placeholder || (
-              <div className="select-checkbox__placeholder">
-                <div className="select-checkbox__placeholder-setting">
-                  Không có dữ liệu để hiển thị
-                </div>
-                <div className="select-checkbox__placeholder-hide">
-                  Vui lòng chọn một mục
-                </div>
-              </div>
-            )
-          }
         />
       </Form.Item>
     </div>
