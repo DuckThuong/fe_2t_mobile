@@ -380,3 +380,92 @@
     }
   }
 }
+.discount-section {
+  &_header {
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    width: 100% !important;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    .ant-row {
+      width: 100%;
+      align-items: center;
+      display: flex;
+      flex-direction: row;
+      .ant-col {
+        margin-bottom: 0px !important;
+      }
+      .ant-col-22 {
+        color: #333;
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+      .ant-col-2 {
+        .ant-btn {
+          border: none !important;
+          box-shadow: unset !important;
+        }
+        .ant-btn:hover {
+          svg {
+            fill: red !important;
+          }
+        }
+        .ant-btn:focus {
+          transform: rotate(90deg);
+          -webkit-transform: rotate(90deg);
+          -moz-transform: rotate(90deg);
+          -ms-transform: rotate(90deg);
+          -o-transform: rotate(90deg);
+        }
+      }
+    }
+    .applied-discount {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+
+      .applied-discount-title {
+        font-weight: 500;
+        color: #333;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      .applied-discount-detail {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        .discount-info {
+          color: #1890ff;
+          font-weight: 500;
+          font-size: 15px;
+        }
+        .discount-amount {
+          color: #52c41a;
+          font-weight: 500;
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  &_body {
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    width: 100% !important;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    height: fit-content;
+    margin-top: 12px;
+    .ant-row {
+      display: flex;
+      flex-direction: column;
+    }
+    &-item {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+  }
+}

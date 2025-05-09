@@ -7,9 +7,14 @@ import {
   capacityApi,
   colorApi,
   productApi,
+  discountApi,
 } from "../../api/api";
-import { message } from "antd";
+import { Button, Col, message, Radio } from "antd";
 import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
+import RowWrap from "../../Components/RowWrap";
+import { RightOutlined } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import { API_KEY } from "../../api/apiConfig";
 
 // Định nghĩa các interface
 interface SelectedItem {
@@ -77,10 +82,16 @@ export const Purchase = () => {
   const [paymentMethod, setPaymentMethod] = useState<"cast" | "banking">(
     "cast"
   );
+  const [purchaseAmount, setPurchaseAmount] = useState<number>(0);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartId, setCartId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedDiscount, setSelectedDiscount] = useState<string | null>(null);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
+  const [isDiscountExpanded, setIsDiscountExpanded] = useState<boolean>(false);
+  const [appliedDiscount, setAppliedDiscount] = useState<string | null>(null);
+  const [appliedDiscountAmount, setAppliedDiscountAmount] = useState<number>(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -207,7 +218,7 @@ export const Purchase = () => {
                   capacity: capacityDisplayName,
                   color: colorName,
                   quantity: detail.quantity || 0,
-                  price: totalPrice,
+                  price: purchaseAmount,
                 };
               } catch (error) {
                 console.error("Lỗi khi xử lý item trong cart:", error);
@@ -241,7 +252,6 @@ export const Purchase = () => {
           setCartItems(updatedItems);
           const fetchedCartId = response.id ? response.id.toString() : null;
           setCartId(fetchedCartId);
-          console.log("Filtered cartItems:", updatedItems);
 
           if (updatedItems.length === 0) {
             setError("Không có sản phẩm nào được chọn để mua hàng.");
@@ -272,7 +282,6 @@ export const Purchase = () => {
           cart_id: cartId,
           item_id: item.id,
         };
-        console.log("Delete Params:", deleteParams);
         const response = await cartApi.deleteCartItem(deleteParams);
         if (!response) {
           throw new Error(`Xóa sản phẩm ${item.id} thất bại`);
@@ -289,7 +298,6 @@ export const Purchase = () => {
       return false;
     }
   };
-  console.log(cartItems);
   const handleCreateOrder = async () => {
     if (!cartId || cartItems.length === 0) {
       message.error("Không có sản phẩm để đặt hàng!");
@@ -297,15 +305,15 @@ export const Purchase = () => {
     }
 
     const orderDetails: OrderDetail[] = cartItems.map((item) => ({
-      product_detail_id: item.productDetailId, // Ánh xạ từ productDetailId
-      color_id: item?.colorId, // Giả định, cần lấy từ productDetail nếu có
-      capacity_id: item.capacityId, // Giả định, cần lấy từ productDetail nếu có
+      product_detail_id: item.productDetailId,
+      color_id: item?.colorId,
+      capacity_id: item.capacityId,
       quantity: item.quantity,
-      price: item.price,
-      userName: recipientName, // Lấy từ state
-      userPhone: recipientPhone, // Lấy từ state
-      userLocation: address, // Lấy từ state
-      note: deliveryNote || "", // Lấy từ state, mặc định rỗng nếu không có
+      price: purchaseAmount / cartItems.length,
+      userName: recipientName,
+      userPhone: recipientPhone,
+      userLocation: address,
+      note: deliveryNote || "",
     }));
 
     const today = new Date();
@@ -321,10 +329,7 @@ export const Purchase = () => {
     };
 
     try {
-      console.log("UserId gắn vào đơn hàng:", userId);
-      console.log("Order Data gửi lên:", JSON.stringify(orderData, null, 2));
       const response = await orderApi.createOrder(orderData);
-      console.log("Order created successfully:", response);
       message.success("Đặt hàng thành công!");
       const deleted = await deleteCartItems();
       if (deleted) {
@@ -376,6 +381,38 @@ export const Purchase = () => {
   })
     .format(totalPrice)
     .replace("₫", "đ");
+  const { data: discountData } = useQuery({
+    queryKey: [API_KEY.DISCOUNT],
+    queryFn: () => discountApi.getAllDiscounts(),
+  });
+
+  const calculateDiscount = (discount: any) => {
+    if (!discount) return 0;
+
+    if (discount.discount_type === "percentage") {
+      return (totalPrice * parseFloat(discount.discount_value)) / 100;
+    } else if (discount.discount_type === "fixed_amount") {
+      return parseFloat(discount.discount_value);
+    }
+    return 0;
+  };
+
+  const handleApplyDiscount = () => {
+    if (selectedDiscount) {
+      const selectedDiscountData = discountData?.data.find(
+        (d) => d.id.toString() === selectedDiscount
+      );
+      const discount = calculateDiscount(selectedDiscountData);
+      setAppliedDiscount(selectedDiscount);
+      setAppliedDiscountAmount(discount);
+      setIsDiscountExpanded(false);
+    }
+  };
+
+  useEffect(() => {
+    const purchase = totalPrice - appliedDiscountAmount;
+    setPurchaseAmount(purchase);
+  }, [appliedDiscountAmount, totalPrice]);
 
   return (
     <div className="order-create">
@@ -503,6 +540,68 @@ export const Purchase = () => {
                 </div>
               </div>
             </div>
+            <RowWrap className="discount-section_header">
+              <Col span={22}>
+                {appliedDiscount ? (
+                  <div className="applied-discount">
+                    <div className="applied-discount-title">
+                      Phiếu giảm giá đã áp dụng:
+                    </div>
+                    <div className="applied-discount-detail">
+                      <span className="discount-info">
+                        {
+                          discountData?.data.find(
+                            (d) => d.id.toString() === appliedDiscount
+                          )?.description
+                        }
+                      </span>
+                      <span className="discount-amount">
+                        (-
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })
+                          .format(appliedDiscountAmount)
+                          .replace("₫", "đ")}
+                        )
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  "Phiếu giảm giá"
+                )}
+              </Col>
+              <Col span={2}>
+                <Button
+                  icon={<RightOutlined />}
+                  onClick={() => setIsDiscountExpanded(!isDiscountExpanded)}
+                />
+              </Col>
+            </RowWrap>
+            {isDiscountExpanded && (
+              <RowWrap className="discount-section_body">
+                <Radio.Group
+                  value={selectedDiscount}
+                  onChange={(e) => setSelectedDiscount(e.target.value)}
+                >
+                  {discountData?.data.map((item, index) => (
+                    <div key={index} className="discount-section_body-item">
+                      <Radio value={item.id.toString()}>
+                        {item.description}
+                      </Radio>
+                    </div>
+                  ))}
+                </Radio.Group>
+                <Button
+                  type="primary"
+                  onClick={handleApplyDiscount}
+                  disabled={!selectedDiscount}
+                  style={{ marginTop: "10px" }}
+                >
+                  Áp dụng
+                </Button>
+              </RowWrap>
+            )}
           </>
         ) : (
           <div className="info-card payment-info">
@@ -554,6 +653,31 @@ export const Purchase = () => {
           <div className="price-row">
             <span>Tổng tiền tạm tính:</span>
             <span className="amount">{formattedTotalPrice}</span>
+          </div>
+          {appliedDiscountAmount > 0 && (
+            <div className="price-row">
+              <span>Giảm giá:</span>
+              <span className="amount discount">
+                -
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                })
+                  .format(appliedDiscountAmount)
+                  .replace("₫", "đ")}
+              </span>
+            </div>
+          )}
+          <div className="price-row total">
+            <span>Thành tiền:</span>
+            <span className="amount">
+              {new Intl.NumberFormat("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })
+                .format(purchaseAmount)
+                .replace("₫", "đ")}
+            </span>
           </div>
         </div>
         <button
