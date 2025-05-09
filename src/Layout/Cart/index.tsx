@@ -316,7 +316,7 @@ export const Cartergories = () => {
         ) : (
           <div className="empty-cart">
             <p>Giỏ hàng của bạn đang trống</p>
-            <button onClick={() => navigate(CUSTOMER_ROUTER_PATH.MUA_HANG)} className="continue-shopping">Tiếp tục mua sắm</button>
+            <button onClick={() => navigate(CUSTOMER_ROUTER_PATH.TRANG_CHU)} className="continue-shopping">Tiếp tục mua sắm</button>
           </div>
         )}
       </div>
