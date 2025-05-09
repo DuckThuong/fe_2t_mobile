@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import {
   Button,
@@ -37,12 +37,8 @@ interface IProduct {
   is_featured?: boolean;
   status?: "Active" | "Inactive";
   vendor_id: number;
-  color_id: number;
-  color_ids?: number[];
-  capacity_id: number;
-  stock_quantity?: number;
   serial_number?: string;
-  import_price: string;
+  import_price?: string;
   selling_price: string;
   specs: ISpecs;
   image_urls?: string[];
@@ -55,9 +51,12 @@ interface IVendor {
 
 interface ImageFile {
   uid: string;
-  url: string;
+  url?: string;
+  file?: File;
   name: string;
 }
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:3300";
 
 const EditProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -69,35 +68,41 @@ const EditProduct: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<IProduct | null>(null);
 
-  // Lấy dữ liệu từ state nếu có (từ ProductList)
-  const initialProductData = (location.state as { productData?: IProduct })
-    ?.productData;
+  const initialProductData = (location.state as { productData?: IProduct })?.productData;
 
-  // Lấy danh sách nhà cung cấp
+  // Fetch vendors
   useEffect(() => {
+    let isMounted = true;
     const fetchVendors = async () => {
       try {
         const vendorsData = await vendorsApi.getAllVendors();
-        setVendors(vendorsData);
+        if (isMounted) setVendors(vendorsData);
       } catch (err) {
-        message.error("Không thể tải danh sách nhà cung cấp!");
+        if (isMounted) message.error("Không thể tải danh sách nhà cung cấp!");
         console.error("Lỗi fetch vendors:", err);
       }
     };
     fetchVendors();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Lấy dữ liệu sản phẩm
+  // Fetch product data
   useEffect(() => {
+    if (!id) {
+      message.error("Không tìm thấy ID sản phẩm!");
+      navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
+      return;
+    }
+
+    let isMounted = true;
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Sử dụng dữ liệu từ state nếu có, nếu không thì gọi API
-        const productData =
-          initialProductData || (await productApi.getProductById(id!));
-        console.log("Dữ liệu sản phẩm:", productData); // Kiểm tra dữ liệu
+        const productData = initialProductData || (await productApi.getProductById(id));
+        if (!isMounted) return;
 
-        // Chuẩn hóa dữ liệu
         const normalizedData: IProduct = {
           id: productData.id,
           name: productData.name || "",
@@ -108,14 +113,8 @@ const EditProduct: React.FC = () => {
           is_featured: productData.is_featured || false,
           status: productData.status || "Active",
           vendor_id: productData.vendor?.id || productData.vendor_id || 0,
-          color_id: productData.color_id || 0,
-          color_ids:
-            productData.color_ids?.filter((id: number | null) => id !== null) ||
-            [],
-          capacity_id: productData.capacity_id || 0,
-          stock_quantity: productData.stock_quantity || 0,
           serial_number: productData.serial_number || "",
-          import_price: productData.import_price || "",
+          import_price: productData.import_price || undefined,
           selling_price: productData.selling_price || "",
           specs: {
             screen_size: productData.specs?.screen_size || "",
@@ -126,35 +125,16 @@ const EditProduct: React.FC = () => {
             battery_capacity: productData.specs?.battery_capacity || "",
             charging_tech: productData.specs?.charging_tech || "",
           },
-          image_urls:
-            productData.image_urls?.filter(
-              (url: string | null) => url !== null
-            ) || [],
+          image_urls: productData.image_urls?.filter((url: string | null) => url !== null) || [],
         };
 
         setProduct(normalizedData);
-
-        // Set form values
         form.setFieldsValue({
-          name: normalizedData.name,
-          model: normalizedData.model,
-          description: normalizedData.description,
-          warranty_period: normalizedData.warranty_period,
-          release_year: normalizedData.release_year,
-          is_featured: normalizedData.is_featured,
-          status: normalizedData.status,
-          vendor_id: normalizedData.vendor_id,
-          color_id: normalizedData.color_id,
-          capacity_id: normalizedData.capacity_id,
-          stock_quantity: normalizedData.stock_quantity,
-          serial_number: normalizedData.serial_number,
-          import_price: normalizedData.import_price,
-          selling_price: normalizedData.selling_price,
+          ...normalizedData,
           specs: normalizedData.specs,
         });
 
-        // Set images
-        if (normalizedData.image_urls && normalizedData.image_urls.length > 0) {
+        if (normalizedData.image_urls?.length) {
           setImageFiles(
             normalizedData.image_urls.map((url, index) => ({
               uid: `-${index + 1}`,
@@ -164,102 +144,94 @@ const EditProduct: React.FC = () => {
           );
         }
       } catch (err) {
-        message.error("Không thể tải dữ liệu sản phẩm!");
-        navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
+        if (isMounted) {
+          message.error("Không thể tải dữ liệu sản phẩm!");
+          navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
-    if (id) {
-      fetchData();
-    } else {
-      message.error("Không tìm thấy ID sản phẩm!");
-      navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
-    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, [id, navigate, form, initialProductData]);
 
-  const handleImageChange = (info: any) => {
+  // Handle image changes
+  const handleImageChange = useCallback((info: any) => {
     const newFiles = info.fileList.map((file: any) => ({
       uid: file.uid,
-      url: file.originFileObj
-        ? URL.createObjectURL(file.originFileObj)
-        : file.url,
+      file: file.originFileObj,
+      url: file.originFileObj ? URL.createObjectURL(file.originFileObj) : file.url,
       name: file.name,
     }));
     setImageFiles(newFiles);
-  };
+  }, []);
 
-  const handleRemoveImage = (uid: string) => {
+  // Remove image
+  const handleRemoveImage = useCallback((uid: string) => {
     setImageFiles((prev) => prev.filter((file) => file.uid !== uid));
+  }, []);
+
+  // Upload images to backend
+  const uploadImages = async (files: ImageFile[]): Promise<string[]> => {
+    const uploadedUrls: string[] = [];
+    for (const file of files) {
+      if (file.file) {
+        const formData = new FormData();
+        formData.append("image", file.file);
+        const response = await axios.post(`${API_BASE_URL}/upload`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        uploadedUrls.push(response.data.url);
+      } else if (file.url) {
+        uploadedUrls.push(file.url);
+      }
+    }
+    return uploadedUrls;
   };
 
+  // Handle form submission
   const handleSubmit = async (values: any) => {
+    if (!product) return;
+
     setLoading(true);
     try {
-      // Merge form values with existing product data to preserve unchanged fields
+      // Upload new images
+      const uploadedImageUrls = await uploadImages(imageFiles);
+
       const updatedProductData: UpdateProductPayload = {
         id: Number(id),
-        name: values.name || product!.name,
-        model: values.model || product!.model,
-        description: values.description || product!.description || "",
-        warranty_period:
-          values.warranty_period !== undefined
-            ? Number(values.warranty_period)
-            : product!.warranty_period || 0,
-        release_year:
-          values.release_year !== undefined
-            ? Number(values.release_year)
-            : product!.release_year || new Date().getFullYear(),
-        is_featured: values.is_featured ?? product!.is_featured ?? false,
-        status: values.status || product!.status || "Active",
-        vendor_id: Number(values.vendor_id) || product!.vendor_id,
-        color_id: Number(values.color_id) || product!.color_id || 0,
-        color_ids: values.color_ids || product!.color_ids || [],
-        capacity_id: Number(values.capacity_id) || product!.capacity_id || 0,
-        stock_quantity:
-          values.stock_quantity !== undefined
-            ? Number(values.stock_quantity)
-            : product!.stock_quantity || 0,
-        serial_number: values.serial_number || product!.serial_number || "",
-        import_price: values.import_price || product!.import_price || "",
-        selling_price: values.selling_price || product!.selling_price || "",
+        name: values.name || product.name,
+        model: values.model || product.model,
+        description: values.description || product.description || "",
+        warranty_period: Number(values.warranty_period) || product.warranty_period || 0,
+        release_year: Number(values.release_year) || product.release_year || new Date().getFullYear(),
+        is_featured: values.is_featured ?? product.is_featured ?? false,
+        status: values.status || product.status || "Active",
+        vendor_id: Number(values.vendor_id) || product.vendor_id,
+        serial_number: values.serial_number || product.serial_number || "",
+        import_price: values.import_price || product.import_price || "",
+        selling_price: values.selling_price || product.selling_price || "",
         specs: {
-          screen_size: values.specs?.screen_size || product!.specs.screen_size || "",
-          resolution: values.specs?.resolution || product!.specs.resolution || "",
-          chipset: values.specs?.chipset || product!.specs.chipset || "",
-          ram: values.specs?.ram || product!.specs.ram || "",
-          os: values.specs?.os || product!.specs.os || "",
-          battery_capacity:
-            values.specs?.battery_capacity || product!.specs.battery_capacity || "",
-          charging_tech: values.specs?.charging_tech || product!.specs.charging_tech || "",
+          screen_size: values.specs?.screen_size || product.specs.screen_size || "",
+          resolution: values.specs?.resolution || product.specs.resolution || "",
+          chipset: values.specs?.chipset || product.specs.chipset || "",
+          ram: values.specs?.ram || product.specs.ram || "",
+          os: values.specs?.os || product.specs.os || "",
+          battery_capacity: values.specs?.battery_capacity || product.specs.battery_capacity || "",
+          charging_tech: values.specs?.charging_tech || product.specs.charging_tech || "",
         },
-        image_urls: imageFiles.map((file) => file.url) || product!.image_urls || [],
+        image_urls: uploadedImageUrls,
       };
 
-      // Validation
-      if (
-        !updatedProductData.name ||
-        !updatedProductData.model ||
-        !updatedProductData.vendor_id ||
-        !updatedProductData.selling_price
-      ) {
-        message.error("Vui lòng điền đầy đủ các trường bắt buộc (Tên, Model, Nhà cung cấp, Giá bán)!");
-        setLoading(false);
-        return;
-      }
-
-      console.log("Payload gửi đi:", updatedProductData); // Kiểm tra payload
-      await axios.put(
-        `http://localhost:3303/product/update-product`,
-        updatedProductData
-      );
+      await axios.put(`${API_BASE_URL}/product/update-product`, updatedProductData);
       message.success("Cập nhật sản phẩm thành công!");
       navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
     } catch (err: any) {
-      message.error(
-        err?.response?.data?.message || "Lỗi khi cập nhật sản phẩm!"
-      );
+      message.error(err?.response?.data?.message || "Lỗi khi cập nhật sản phẩm!");
       console.error("Lỗi update sản phẩm:", err);
     } finally {
       setLoading(false);
@@ -270,7 +242,7 @@ const EditProduct: React.FC = () => {
     navigate(ADMIN_ROUTER_PATH.PRODUCT_LIST);
   };
 
-  if (!product) {
+  if (loading || !product) {
     return (
       <div className="loading-container">
         <Spin tip="Đang tải dữ liệu..." />
@@ -336,35 +308,10 @@ const EditProduct: React.FC = () => {
             ))}
           </Select>
         </Form.Item>
-        {/* <Form.Item
-          label="Màu sắc chính (ID)"
-          name="color_id"
-          rules={[{ required: true, message: "Vui lòng nhập ID màu sắc!" }]}
-        >
-          <Input type="number" min={0} />
-        </Form.Item> */}
-       {/*  <Form.Item
-          label="Dung lượng (ID)"
-          name="capacity_id"
-          rules={[{ required: true, message: "Vui lòng nhập ID dung lượng!" }]}
-        >
-          <Input type="number" min={0} />
-        </Form.Item> */}
-        <Form.Item
-          label="Số lượng tồn kho"
-          name="stock_quantity"
-          rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
-        >
-          <Input type="number" min={0} />
-        </Form.Item>
         <Form.Item label="Số serial" name="serial_number">
           <Input />
         </Form.Item>
-        {/* <Form.Item
-          label="Giá nhập"
-          name="import_price"
-          rules={[{ required: true, message: "Vui lòng nhập giá nhập!" }]}
-        >
+        {/* <Form.Item label="Giá nhập" name="import_price">
           <Input type="text" />
         </Form.Item> */}
         <Form.Item

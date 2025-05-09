@@ -64,7 +64,7 @@ export const userApi = {
   doDeleteUser: (id: string | number) =>
     apiRequest(`${API_KEY.USER}/delete-user-by-id?Id=${id}`, "DELETE"),
   doGetUserById: (id: string | number) =>
-    apiRequest(`${API_KEY.USER}/get-user-by-id/${id}`, "GET"),
+    apiRequest(`${API_KEY.USER}/get-user-by-id?id=${id}`, "GET"),
   doSearchUsers: (query: string) =>
     apiRequest(`${API_KEY.USER}/search-user`, "GET", null, { query }),
   getUserAdminCheck: (
@@ -100,11 +100,24 @@ export const productApi = {
   getProductById: (id: string) =>
     apiRequest(`${API_KEY.PRODUCT}/get-product-by-id?id=${id}`, "GET"),
   createProduct: (productData: CreateProductPayload) =>
-    apiRequest(`${API_KEY.PRODUCT}/create-product`, "POST", productData),
+    apiRequest(`${API_KEY.PRODUCT}`, "POST", productData),
   updateProduct: (id: string, productData: UpdateProductPayload) =>
     apiRequest(`${API_KEY.PRODUCT}/update-product`, "PUT", productData),
   deleteProduct: (id: string) =>
     apiRequest(`${API_KEY.PRODUCT}/delete-product?id=${id}`, "DELETE"),
+  getProductDetailByFilters: (params: ProductDetailFilterParams) =>
+    apiRequest(
+      `${API_KEY.PRODUCT}/get-product-detail-id-by-product-id-and-color-id-and-capacity-id`,
+      "GET",
+      null,
+      params
+    ),
+  getAllProductsWithoutPagination: (params = {}) =>
+    apiRequest(`${API_KEY.PRODUCT}/get-all-product`, "GET", null, {
+      ...params,
+      size: 1000, // Số lượng lớn để lấy tất cả
+      page: 1,
+    }),
 };
 
 // export const colorApi = {

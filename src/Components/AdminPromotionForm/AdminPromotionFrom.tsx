@@ -40,6 +40,11 @@ const AdminPromotionForm: React.FC<AdminPromotionFormProps> = ({
     };
   }, [initialValues]);
 
+  // Handle discount_type change to re-validate discount_value
+  const handleDiscountTypeChange = () => {
+    form.validateFields(["discount_value"]);
+  };
+
   const handleFinish = (values: any) => {
     // Format dates to YYYY-MM-DD
     const formattedValues: CreateDiscountsPayload = {
@@ -89,7 +94,7 @@ const AdminPromotionForm: React.FC<AdminPromotionFormProps> = ({
           name="discount_type"
           rules={[{ required: true, message: "Vui lòng chọn loại giảm giá!" }]}
         >
-          <Radio.Group>
+          <Radio.Group onChange={handleDiscountTypeChange}>
             <Radio value="percentage">Phần trăm</Radio>
             <Radio value="fixed_amount">Cố định</Radio>
           </Radio.Group>
@@ -104,6 +109,19 @@ const AdminPromotionForm: React.FC<AdminPromotionFormProps> = ({
               min: 0,
               message: "Giá trị giảm phải lớn hơn hoặc bằng 0!",
             },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (
+                  getFieldValue("discount_type") === "percentage" &&
+                  value > 100
+                ) {
+                  return Promise.reject(
+                    new Error("Giá trị giảm không được vượt quá 100%!")
+                  );
+                }
+                return Promise.resolve();
+              },
+            }),
           ]}
         >
           <InputNumber min={0} style={{ width: "100%" }} />
