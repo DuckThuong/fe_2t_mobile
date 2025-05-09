@@ -291,7 +291,6 @@ const AddBill_Client: React.FC = () => {
       discount_amount: selectedSale.value,
       order_details: products.map((product) => ({
         product_detail_id: 49,
-        cart_detail_id: 0,
         quantity: product.quantity,
         price: finalBill,
       })),

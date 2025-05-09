@@ -40,9 +40,9 @@ export interface UpdateItemInCart {
   quantity: number;
   price: number;
 }
-export interface DeleteItemInCart{
-  cart_id :string;
-  item_id :string;
+export interface DeleteItemInCart {
+  cart_id: string;
+  item_id: string;
 }
 
 export interface UpdateProductPayload {
@@ -60,7 +60,7 @@ export interface UpdateProductPayload {
   capacity_id?: number; // Bắt buộc
   stock_quantity?: number;
   serial_number?: string;
-  import_price?: string | number; 
+  import_price?: string | number;
   selling_price: string | number; // Bắt buộc
   specs: {
     screen_size?: string;
@@ -74,14 +74,13 @@ export interface UpdateProductPayload {
   image_urls?: string[];
 }
 
-export interface CreateVendorsPayload 
-{
-  vendor_code: string,
-  name: string,
-  phone: string,
-  email: string,
-  address: string,
-  contact_person_id: number
+export interface CreateVendorsPayload {
+  vendor_code: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  contact_person_id: number;
 }
 
 export interface VendorBillItem {
@@ -101,15 +100,16 @@ export interface CreateVendorBillPayload {
   status: string;
   note: string;
   items: VendorBillItem[];
+  images?: string[]; // Base64 encoded images
 }
 
 export interface CreateDiscountsPayload {
   title: string;
   description: string;
-  discount_type: "percentage" | "fixed_amount"; 
+  discount_type: "percentage" | "fixed_amount";
   discount_value: number;
-  start_date: string; 
-  end_date: string; 
+  start_date: string;
+  end_date: string;
   is_active: boolean;
 }
 
@@ -127,7 +127,6 @@ export interface CreatePurchasePayload {
     Quantity: number;
     UnitPrice: number;
   }[];
-
 }
 
 export interface ProductDetailFilterParams {
@@ -141,7 +140,7 @@ export interface UpdateItemInCart {
   quantity: number;
   price: number;
 }
-export interface DeleteItemInCart{
-  cart_id :string;
-  item_id :string;
+export interface DeleteItemInCart {
+  cart_id: string;
+  item_id: string;
 }
