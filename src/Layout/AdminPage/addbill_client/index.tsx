@@ -290,7 +290,8 @@ const AddBill_Client: React.FC = () => {
       discount_id: selectedSale.id || null,
       discount_amount: selectedSale.value,
       order_details: products.map((product) => ({
-        product_detail_id: 49,
+        product_id: 49,
+        product_color_id: 1,
         quantity: product.quantity,
         price: finalBill,
       })),
