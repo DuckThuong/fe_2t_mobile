@@ -74,9 +74,10 @@ export const Purchase = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { selectedItems = [] } = location.state as { selectedItems?: SelectedItem[] } || {};
-  const userId = localStorage.getItem("user_id") || "19";
-  const idOrderCode = "hd213";
-  const encodedOrderCode = encodeURIComponent(idOrderCode);
+  const userData = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = userData.id || "unknown";
+  
+  const encodedOrderCode = encodeURIComponent(userId);
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -395,7 +396,7 @@ export const Purchase = () => {
                 </button>
               </div>
 
-              {!isProductListCollapsed && (
+              {isProductListCollapsed && (
                 <div className="product-list">
                   {cartItems.map((product) => (
                     <div key={product.id} className="product-item">
