@@ -297,7 +297,6 @@ const AddBillProvider: React.FC = () => {
     try {
       const values = await newProductForm.validateFields();
 
-      // Convert images to base64
       const base64Images = await convertImagesToBase64(
         values.images?.map((img: any) => img.originFileObj).filter(Boolean) ||
           []
