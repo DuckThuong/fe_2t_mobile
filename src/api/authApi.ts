@@ -83,7 +83,6 @@ export const convertImageToBase64 = async (file: File): Promise<string> => {
   }
 };
 
-// Utility function to handle multiple images
 export const convertImagesToBase64 = async (
   images: File[]
 ): Promise<string[]> => {
