@@ -11,31 +11,44 @@ import "./signup.scss";
 import { useMutation } from "@tanstack/react-query";
 import { userApi } from "../../api/api";
 import { RegisterPayload } from "../../api/constants";
+import { notification } from "antd";
+import { CUSTOMER_ROUTER_PATH } from "../../Routers/Routers";
 
 const Signup = () => {
   const [form] = useForm();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [notification, setNotification] = useState<{
-    message: string;
-    type: "success" | "error";
-  } | null>(null);
 
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
-  // :()=>{}
   const registerMutate = useMutation({
     mutationFn: (data: RegisterPayload) => {
       return userApi.doRegister(data);
     },
-    onSuccess: () => {},
-    onError: () => {},
+    onSuccess: () => {
+      notification.open({
+        message: "Thông báo!",
+        description: "Đăng ký thành công.",
+        placement: "topRight",
+        showProgress: true,
+        pauseOnHover: true,
+        style: {
+          backgroundColor: "#ffffff",
+          borderLeft: "4px solid #007bff",
+        },
+      });
+      navigate(CUSTOMER_ROUTER_PATH.LOG_IN);
+    },
+    onError: () => {
+      notification.open({
+        message: "Thông báo!",
+        description: "Đăng ký thất bại.",
+        placement: "topRight",
+        showProgress: true,
+        pauseOnHover: true,
+        style: {
+          backgroundColor: "#ffffff",
+          borderLeft: "4px solid #007bff",
+        },
+      });
+    },
   });
 
   const onFinish = () => {
@@ -49,14 +62,6 @@ const Signup = () => {
 
   return (
     <div className="signup">
-      {/* <video autoPlay muted loop id="signupVideo">
-        <source src="/112722-695433093.mp4" type="video/mp4" />
-      </video> */}
-
-      {/* <NotificationPopup
-        message={notification?.message}
-        type={notification?.type}
-      /> */}
       <div>
         <LogoForm />
       </div>
@@ -115,10 +120,7 @@ const Signup = () => {
               name={"CF_password"}
               formItemProps={{
                 className: "signup_form-input",
-                dependencies: ["password"], // 👈 theo dõi password
-                // rules: ValidateLibrary([], {
-                //   password: form.getFieldValue("password"),
-                // }).confirmPassword,
+                dependencies: ["password"],
               }}
               isPassword
               inputProps={{
